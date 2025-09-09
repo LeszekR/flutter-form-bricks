@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../../visual_params/app_color.dart';
+import '../../../visual_params/app_color.dart';
 
 class WidgetColor {
   Color makeColor(Set<WidgetState> states) {

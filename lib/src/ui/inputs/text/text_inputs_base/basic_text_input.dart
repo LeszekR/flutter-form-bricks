@@ -6,9 +6,9 @@ import '../../../forms/form_manager/form_manager.dart';
 import '../../../visual_params/app_color.dart';
 import '../../../visual_params/app_size.dart';
 import '../../../visual_params/app_style.dart';
-import '../../components/double_widget_states_controller.dart';
+import '../../states_controller/double_widget_states_controller.dart';
 import '../../components/e_label_position.dart';
-import '../../components/widget_color.dart';
+import 'widget_color.dart';
 import 'text_field_colored.dart';
 
 class BasicTextInput {
@@ -64,7 +64,7 @@ class BasicTextInput {
         widgetColor: widgetColor,
         initialValue: initialValue,
         readonly: readonly,
-        autovalidateMode: autoValidateMode,
+        autoValidateMode: autoValidateMode,
         inputFormatters: inputFormatters,
         formManager: formManager,
         validator: validator,
@@ -78,7 +78,7 @@ class BasicTextInput {
         withTextEditingController: withTextEditingController,
         textWidth: inputWidth,
         inputHeightMultiplier: inputHeightMultiplier,
-        notifierDoubleStatesController: statesController,
+        receiverStatesController: statesController,
         textInputAction: textInputAction ?? TextInputAction.none,
         onSubmitted: onSubmitted,
       );
@@ -129,10 +129,10 @@ class BasicTextInput {
     final inputText = TextFieldColored(
       keyString,
       widgetColor: widgetColor,
-      notifierDoubleStatesController: null,
+      receiverStatesController: null,
       initialValue: initialValue,
       readonly: readonly,
-      autovalidateMode: autoValidateMode,
+      autoValidateMode: autoValidateMode,
       inputFormatters: inputFormatters,
       formManager: formManager,
       validator: validator,
@@ -262,6 +262,7 @@ class BasicTextInput {
               ),
             ),
           ),
+          // TODO only build this Expanded when the input is multiline
           Expanded(
             child: SizedBox(
               width: mLabelWidth,
@@ -302,6 +303,7 @@ class BasicTextInput {
               ),
               child: button,
             ),
+            // TODO only build this Expanded when the input is multiline
             Expanded(
               child: Container(
                 width: mButtonWidth,
@@ -401,12 +403,13 @@ class BasicTextInput {
                 height: mButtonHeight,
                 padding: EdgeInsets.zero,
                 alignment: Alignment.center,
-                decoration: (BoxDecoration(
-                    border: Border(
-                  top: AppStyle.borderFieldSideEnabled,
-                  right: AppStyle.borderFieldSideEnabled,
-                  bottom: AppStyle.borderFieldSideEnabled,
-                ))),
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: AppStyle.borderFieldSideEnabled,
+                    right: AppStyle.borderFieldSideEnabled,
+                    bottom: AppStyle.borderFieldSideEnabled,
+                  ),
+                ),
                 child: Align(
                   alignment: Alignment.center,
                   child: button,

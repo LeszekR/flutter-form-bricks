@@ -10,6 +10,7 @@ class AppScale with ChangeNotifier {
 
   AppScale._();
 
+
   // double _currentScale = CacheService().cache.getDouble(_scaleKey) ?? 1.0;
   double _currentScale = 1.0;
 
