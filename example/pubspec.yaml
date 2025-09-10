@@ -1,0 +1,10 @@
+name: flutter_desktop_bricks_example
+
+environment:
+  sdk: '^3.7.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_desktop_bricks:
+    path: ../../flutter-desktop-bricks

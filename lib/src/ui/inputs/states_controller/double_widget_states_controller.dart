@@ -20,6 +20,7 @@ class DoubleWidgetStatesController extends WidgetStatesController implements Val
     lateWidgetStatesController.addListener(() => setNewWidgetState(lateWidgetStatesController));
   }
 
+  // TODO check whether can't be simplified to only manipulating Set<WidgetState> of regular WidgetStatesController
   void setNewWidgetState(WidgetStatesController controller) {
     WidgetState? newState;
 
