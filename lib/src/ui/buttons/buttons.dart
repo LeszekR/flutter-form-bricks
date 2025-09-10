@@ -12,7 +12,7 @@ import '../visual_params/app_color.dart';
 import '../visual_params/app_size.dart';
 import '../visual_params/app_style.dart';
 import 'elevated_button_with_disabling.dart';
-import '../inputs/text/text_inputs_base/icon_button_state_aware.dart';
+import '../inputs/text/text_inputs_base/state_aware_icon_button.dart';
 
 class Buttons {
   Buttons._();
@@ -83,7 +83,7 @@ class Buttons {
             padding: EdgeInsets.zero,
             alignment: Alignment.center,
             color: AppColor.makeColor(states).withOpacity(1),
-            child: IconButtonStateAware(
+            child: StateAwareIconButton(
               iconData,
               onPressed,
               autofocus: true,

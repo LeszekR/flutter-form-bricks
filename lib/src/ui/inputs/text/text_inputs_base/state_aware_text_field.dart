@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_desktop_bricks/src/ui/inputs/text/text_inputs_base/widget_color.dart';
+import 'package:flutter_desktop_bricks/src/ui/inputs/text/text_inputs_base/states_color_maker.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../../../forms/form_manager/form_manager.dart';
 import '../../states_controller/error_message_notifier.dart';
 
-class TextFieldColored extends StatefulWidget {
-  final WidgetColor widgetColor;
+class StateAwareTextField extends StatefulWidget {
   final String keyString;
   final FormManager formManager;
+  final WidgetStatesController? statesObserver;
+  final WidgetStatesController? statesNotifier;
+  final StatesColorMaker colorMaker;
   final AutovalidateMode autoValidateMode;
   final double? textWidth;
   final int? maxLines;
@@ -27,14 +29,14 @@ class TextFieldColored extends StatefulWidget {
   final dynamic onEditingComplete;
   final ValueChanged<String?>? onSubmitted;
   final TextInputAction? textInputAction;
-  final WidgetStatesController? receiverStatesController;
-  final WidgetStatesController? notifierStatesController;
 
-  TextFieldColored(
-    this.keyString, {
+  StateAwareTextField({
     super.key,
-    required this.widgetColor,
+    required this.keyString,
     required this.formManager,
+    this.statesObserver,
+    this.statesNotifier,
+    required this.colorMaker,
     required this.autoValidateMode,
     this.textWidth,
     this.maxLines,
@@ -48,8 +50,6 @@ class TextFieldColored extends StatefulWidget {
     this.keyboardType,
     this.valueTransformer,
     this.withTextEditingController,
-    this.receiverStatesController,
-    this.notifierStatesController,
     this.onChanged,
     this.onEditingComplete,
     this.onSubmitted,
@@ -57,10 +57,10 @@ class TextFieldColored extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _TextFieldColoredState();
+  State<StatefulWidget> createState() => _StateAwareTextFieldState();
 }
 
-class _TextFieldColoredState extends State<TextFieldColored> with ErrorMessageNotifier {
+class _StateAwareTextFieldState extends State<StateAwareTextField> with ErrorMessageNotifier {
   dynamic initialValue;
   Set<WidgetState>? _states;
 
@@ -70,8 +70,8 @@ class _TextFieldColoredState extends State<TextFieldColored> with ErrorMessageNo
 
     super.setErrorMessageListener(widget.formManager, widget.keyString);
 
-    _setStates(widget.notifierStatesController);
-    widget.receiverStatesController?.addListener(_onStatesChanged);
+    _setStates(widget.statesNotifier);
+    widget.statesObserver?.addListener(_onStatesChanged);
 
     if (widget.withTextEditingController ?? true) {
       var controllerValue = widget.initialValue;
@@ -84,13 +84,13 @@ class _TextFieldColoredState extends State<TextFieldColored> with ErrorMessageNo
 
   @override
   void dispose() {
-    widget.receiverStatesController?.removeListener(_onStatesChanged);
+    widget.statesObserver?.removeListener(_onStatesChanged);
     super.dispose();
   }
 
   void _onStatesChanged() {
     setState(() {
-      _setStates(widget.notifierStatesController);
+      _setStates(widget.statesNotifier);
     });
   }
 
@@ -107,9 +107,9 @@ class _TextFieldColoredState extends State<TextFieldColored> with ErrorMessageNo
         name: widget.keyString,
         decoration: InputDecoration(
           border: InputBorder.none,
-          fillColor: _states == null ? null : widget.widgetColor.makeColor(_states!),
+          fillColor: widget.colorMaker.makeColor(_states),
         ),
-        statesController: widget.receiverStatesController,
+        statesController: widget.statesObserver,
         validator: widget.validator,
         autovalidateMode: widget.autoValidateMode,
         controller: widget.formManager.getTextEditingController(widget.keyString),

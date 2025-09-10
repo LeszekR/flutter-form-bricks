@@ -8,8 +8,8 @@ import '../../../visual_params/app_size.dart';
 import '../../../visual_params/app_style.dart';
 import '../../states_controller/double_widget_states_controller.dart';
 import '../../components/e_label_position.dart';
-import 'widget_color.dart';
-import 'text_field_colored.dart';
+import 'states_color_maker.dart';
+import 'state_aware_text_field.dart';
 
 class BasicTextInput {
   BasicTextInput._();
@@ -19,7 +19,7 @@ class BasicTextInput {
       required final String label,
       required final ELabelPosition labelPosition,
       required final AutovalidateMode autoValidateMode,
-      required final WidgetColor widgetColor,
+      required final StatesColorMaker widgetColor,
       required final FormManager formManager,
       final FormFieldValidator<String>? validator,
       final dynamic initialValue,
@@ -59,9 +59,9 @@ class BasicTextInput {
     //  ========================================================================
     if (button != null && statesController != null) {
       //
-      final inputText = TextFieldColored(
+      final inputText = StateAwareTextField(
         keyString,
-        widgetColor: widgetColor,
+        colorMaker: widgetColor,
         initialValue: initialValue,
         readonly: readonly,
         autoValidateMode: autoValidateMode,
@@ -78,7 +78,7 @@ class BasicTextInput {
         withTextEditingController: withTextEditingController,
         textWidth: inputWidth,
         inputHeightMultiplier: inputHeightMultiplier,
-        receiverStatesController: statesController,
+        statesObserver: statesController,
         textInputAction: textInputAction ?? TextInputAction.none,
         onSubmitted: onSubmitted,
       );
@@ -126,10 +126,10 @@ class BasicTextInput {
     //
     //  NO STATES CONTROLLER - color controlled by AppStyle.theme
     //  ========================================================================
-    final inputText = TextFieldColored(
+    final inputText = StateAwareTextField(
       keyString,
-      widgetColor: widgetColor,
-      receiverStatesController: null,
+      colorMaker: widgetColor,
+      statesObserver: null,
       initialValue: initialValue,
       readonly: readonly,
       autoValidateMode: autoValidateMode,
@@ -238,7 +238,7 @@ class BasicTextInput {
       double mLabelHeight,
       Text inputLabel,
       double mTextWidth,
-      TextFieldColored inputText,
+      StateAwareTextField inputText,
       double mButtonWidth,
       double mButtonHeight,
       Widget button) {
@@ -322,7 +322,7 @@ class BasicTextInput {
   }
 
   static SizedBox makeTopLabelInputStateless(double mInputWidth, double mInputHeight, double mLabelHeight,
-      Text inputLabel, double mTextWidth, double mTextHeight, TextFieldColored inputText) {
+      Text inputLabel, double mTextWidth, double mTextHeight, StateAwareTextField inputText) {
     return SizedBox(
       width: mInputWidth,
       height: mInputHeight,
@@ -361,7 +361,7 @@ class BasicTextInput {
       Text inputLabel,
       double mTextWidth,
       double mTextHeight,
-      TextFieldColored inputText,
+      StateAwareTextField inputText,
       double mButtonWidth,
       double mButtonHeight,
       Widget button) {

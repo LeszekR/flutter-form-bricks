@@ -6,12 +6,17 @@ import '../../visual_params/app_style.dart';
 
 
 // LabelledBox
-//   - input position: top, left, right
-//   - input width? - when on the side
+//   - label position: top, left, right
+//   - label width? - when on the side
+//   - child
 //
 // StateAwareContainer
-//  - ValueListenableBuilder
 //  - WidgetStatesController - single or double depending on button absence/presence
+//  - ValueListenableBuilder
+//  - SizedBox: width, height
+//  - button? -> Row
+//  - TextFieldStateAware
+//  - button? -> IconButtonStateAware
 //
 // TextFieldWithButton
 //   - SizedBox -> Row

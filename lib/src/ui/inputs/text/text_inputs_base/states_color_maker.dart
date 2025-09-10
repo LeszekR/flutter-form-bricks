@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 
 import '../../../visual_params/app_color.dart';
 
-class WidgetColor {
-  Color makeColor(Set<WidgetState> states) {
+class StatesColorMaker {
+  Color? makeColor(Set<WidgetState>? states) {
+    if (states == null) return null;
+
     return switch (states) {
       _ when states.contains(WidgetState.disabled) => AppColor.formFieldFillDisabled,
       _ when states.contains(WidgetState.error) => AppColor.formFieldFillError,
