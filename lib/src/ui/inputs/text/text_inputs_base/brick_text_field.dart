@@ -1,16 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_desktop_bricks/src/ui/inputs/states_controller/double_widget_states_controller.dart';
-import 'package:flutter_desktop_bricks/src/ui/inputs/states_controller/update_once_widget_states_controller.dart';
-import 'package:flutter_desktop_bricks/src/ui/inputs/text/text_inputs_base/state_aware_icon_button.dart';
-import 'package:flutter_desktop_bricks/src/ui/inputs/text/text_inputs_base/state_aware_text_field.dart';
-import 'package:flutter_desktop_bricks/src/ui/inputs/text/text_inputs_base/states_color_maker.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_form_bricks/src/ui/inputs/states_controller/double_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/ui/inputs/states_controller/update_once_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/ui/inputs/text/text_inputs_base/state_aware_icon_button.dart';
+import 'package:flutter_form_bricks/src/ui/inputs/text/text_inputs_base/state_aware_text_field.dart';
+import 'package:flutter_form_bricks/src/ui/inputs/text/text_inputs_base/states_color_maker.dart';
 
 import '../../../forms/form_manager/form_manager.dart';
 import '../../../visual_params/app_size.dart';
+import '../../../visual_params/app_style.dart';
 
-class TextFieldColored extends StatelessWidget {
+class BrickTextField extends StatelessWidget {
   final String keyString;
   final FormManager formManager;
   final StatesColorMaker colorMaker;
@@ -27,14 +27,14 @@ class TextFieldColored extends StatelessWidget {
   final bool? withTextEditingController;
   final FormFieldValidator<String>? validator;
   final List<TextInputFormatter>? inputFormatters;
-  final ValueTransformer? valueTransformer;
+  // final ValueTransformer? valueTransformer;
   final ValueChanged<String?>? onChanged;
   final dynamic onEditingComplete;
   final ValueChanged<String?>? onSubmitted;
   final TextInputAction? textInputAction;
   final IconButtonParams? buttonParams;
 
-  TextFieldColored({
+  BrickTextField({
     super.key,
     required this.keyString,
     required this.formManager,
@@ -52,7 +52,7 @@ class TextFieldColored extends StatelessWidget {
     this.withTextEditingController,
     this.validator,
     this.inputFormatters,
-    this.valueTransformer,
+    // this.valueTransformer,
     this.onChanged,
     this.onEditingComplete,
     this.onSubmitted,
@@ -81,6 +81,8 @@ class TextFieldColored extends StatelessWidget {
     return Container(
       width: containerWidth,
       height: height ?? AppSize.inputTextHeight,
+      decoration: BoxDecoration(border: AppStyle.borderFieldAll),
+      padding: EdgeInsets.zero,
       child: ValueListenableBuilder(
         valueListenable: statesNotifier,
         builder: (__, states, _) {
@@ -116,10 +118,10 @@ class TextFieldColored extends StatelessWidget {
       statesObserver: statesObserver,
       statesNotifier: statesNotifier,
       colorMaker: colorMaker,
-      textWidth: textWidth,
+      width: textWidth,
       maxLines: maxLines,
       expands: expands,
-      inputHeightMultiplier: inputHeightMultiplier,
+      nLines: inputHeightMultiplier,
       autoValidateMode: autoValidateMode,
       readonly: readonly,
       obscureText: obscureText,
@@ -128,7 +130,7 @@ class TextFieldColored extends StatelessWidget {
       withTextEditingController: withTextEditingController,
       validator: validator,
       inputFormatters: inputFormatters,
-      valueTransformer: valueTransformer,
+      // valueTransformer: valueTransformer,
       onChanged: onChanged,
       onEditingComplete: onEditingComplete,
       onSubmitted: onSubmitted,
@@ -150,11 +152,3 @@ class TextFieldColored extends StatelessWidget {
   }
 }
 
-class IconButtonParams {
-  final IconData iconData;
-  final VoidCallback onPressed;
-  final String? tooltip;
-  final bool autofocus;
-
-  const IconButtonParams(this.iconData, this.onPressed, this.tooltip, this.autofocus);
-}

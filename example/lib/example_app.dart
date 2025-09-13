@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_desktop_bricks/shelf.dart';
+import 'package:flutter_form_bricks/shelf.dart';
 
 import 'empty_form_manager.dart';
 
@@ -15,8 +15,10 @@ class ExampleApp extends StatelessWidget {
             width: 200,
             height: 300,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              // mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextFieldColored(
+                BrickTextField(
                   keyString: 'test_text_input',
                   formManager: EmptyFormManager(),
                   colorMaker: StatesColorMaker(),
@@ -31,7 +33,7 @@ class ExampleApp extends StatelessWidget {
                   obscureText: false,
                   keyboardType: null,
                   withTextEditingController: true,
-                  validator: null,
+                  validator: _validator2Chars,
                   inputFormatters: null,
                   valueTransformer: null,
                   onChanged: null,
@@ -47,3 +49,5 @@ class ExampleApp extends StatelessWidget {
     );
   }
 }
+
+FormFieldValidator<String> _validator2Chars = (text) => text!.length > 1 ? '' : 'error';

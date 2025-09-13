@@ -10,8 +10,8 @@ class AppStyle {
   static var borderTabSideDouble = BorderSide(width: AppSize.tabBorderWidth * 2, color: AppColor.borderEnabled);
   static var borderFormGroupSide = BorderSide(width: AppSize.borderWidth, color: AppColor.borderEnabled);
 
-  static var borderFieldSideEnabled = BorderSide(width: AppSize.borderWidth, color: AppColor.borderEnabled);
-  static var borderFieldSideDisabled = BorderSide(width: AppSize.borderWidth, color: AppColor.borderEnabled);
+  static var borderFieldSide = BorderSide(width: AppSize.borderWidth, color: AppColor.borderEnabled);
+  static var borderFieldAll = Border.all(width: AppSize.borderWidth, color: AppColor.borderEnabled);
   static var borderRadio = OutlineInputBorder(borderSide: BorderSide(style: BorderStyle.none), gapPadding: 0);
   static var borderFieldSideError = BorderSide(width: AppSize.borderWidth * 2, color: AppColor.borderEnabled);
   static var borderRadius = BorderRadius.circular(AppSize.cornerRadius);
@@ -71,7 +71,7 @@ class AppStyle {
             dividerColor: AppColor.borderEnabled,
             indicatorSize: TabBarIndicatorSize.tab,
             indicator: ShapeDecoration(
-              shape: BeveledRectangleBorder(borderRadius: borderRadius, side: borderFieldSideEnabled),
+              shape: BeveledRectangleBorder(borderRadius: borderRadius, side: borderFieldSide),
             ),
             labelStyle: TextStyle(fontSize: AppSize.fontSize_5, fontWeight: FontWeight.normal),
             labelColor: AppColor.buttonFontEnabled,

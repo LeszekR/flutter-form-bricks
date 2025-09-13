@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_desktop_bricks/src/ui/inputs/labelled_box/e_label_position.dart';
+import 'package:flutter_form_bricks/src/ui/inputs/labelled_box/e_label_position.dart';
 
 import '../../visual_params/app_size.dart';
 import '../../visual_params/app_style.dart';

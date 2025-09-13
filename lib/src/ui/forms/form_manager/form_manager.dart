@@ -1,15 +1,32 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_form_bricks/src/ui/forms/base/form_schema.dart';
+import 'package:flutter_form_bricks/src/ui/inputs/state/brick_form_state_data.dart';
+import 'package:flutter_form_bricks/src/ui/inputs/text/format_and_validate/formatter_validator_chain.dart';
 
+import '../base/brick_form.dart';
 import 'e_form_status.dart';
 
 abstract class FormManager {
-  final _formKey = GlobalKey<FormBuilderState>();
+  final _formKey = GlobalKey<BrickFormState>();
+  final BrickFormStateData _stateData;
   final Map<String, dynamic> _inputInitialValuesMap = {};
+  final Map<String, String?> _errorsMap = {};
+
+  final Map<String, FormatterValidatorChain> _formatterValidatorChainMap = {};
+
+  final ValueNotifier<String> errorMessageNotifier = ValueNotifier<String>("");
   late final Map<String, TextEditingController> _controllers = {};
   late final Map<String, FocusNode> _focusNodes = {};
-  final ValueNotifier<String> errorMessageNotifier = ValueNotifier<String>("");
-  final Map<String, String?> _errorsMap = {};
+
+  void _fillFormattersValidatorsMap(FormSchema formSchema) {
+    for (var descriptor in formSchema.descriptors) {
+      _formatterValidatorChainMap[descriptor.keyString] = descriptor.formatterValidatorChain;
+    }
+  }
+
+  FormManager(this._stateData, FormSchema formSchema) {
+    _fillFormattersValidatorsMap(formSchema);
+  }
 
   void afterFieldChanged();
 
@@ -23,7 +40,7 @@ abstract class FormManager {
 
   Map<String, dynamic> collectInputs();
 
-  GlobalKey<FormBuilderState> get formKey => _formKey;
+  GlobalKey<BrickFormState> get formKey => _formKey;
 
   TextEditingController getTextEditingController(String keyString, {String? defaultValue}) {
     setEditingController(keyString, defaultValue);
@@ -69,7 +86,7 @@ abstract class FormManager {
 //   errorMessageNotifier.value = newMessages;
 // }
 
-  void setInitialValues(GlobalKey<FormBuilderState> contentGlobalKey) {
+  void setInitialValues(GlobalKey<BrickFormState> contentGlobalKey) {
     var currentState = contentGlobalKey.currentState;
     assert(currentState != null);
     currentState!.save();
@@ -83,7 +100,7 @@ abstract class FormManager {
     }
   }
 
-  EFormStatus getFormPartState(GlobalKey<FormBuilderState> formPartKey) {
+  EFormStatus getFormPartState(GlobalKey<BrickFormState> formPartKey) {
     final currentState = formPartKey.currentState;
     if (currentState == null) {
       return EFormStatus.invalid;
@@ -96,7 +113,7 @@ abstract class FormManager {
     var activeFields = fieldValuesList;
     // var activeFields = fieldValuesList.where((field) => !_isFieldIgnored(field.key));
 
-    if (activeFields.any((field) => !findField(field.key)!.isValid)) {
+    if (activeFields.any((field) => !findField(field.key)!.isStringValid)) {
       return EFormStatus.invalid;
     }
     if (activeFields.every((input) => input.value == _inputInitialValuesMap[input.key])) {
@@ -120,7 +137,6 @@ abstract class FormManager {
     validateField(keyString);
     afterFieldChanged();
   }
-
 
 // field validation functionality
 // ==============================================================================

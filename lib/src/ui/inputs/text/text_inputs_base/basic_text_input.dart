@@ -76,8 +76,8 @@ class BasicTextInput {
         valueTransformer: valueTransformer,
         onEditingComplete: onEditingComplete,
         withTextEditingController: withTextEditingController,
-        textWidth: inputWidth,
-        inputHeightMultiplier: inputHeightMultiplier,
+        width: inputWidth,
+        nLines: inputHeightMultiplier,
         statesObserver: statesController,
         textInputAction: textInputAction ?? TextInputAction.none,
         onSubmitted: onSubmitted,
@@ -144,8 +144,8 @@ class BasicTextInput {
       expands: expands,
       valueTransformer: valueTransformer,
       onEditingComplete: onEditingComplete,
-      textWidth: inputWidth,
-      inputHeightMultiplier: inputHeightMultiplier,
+      width: inputWidth,
+      nLines: inputHeightMultiplier,
       onSubmitted: onSubmitted,
     );
 
@@ -219,10 +219,10 @@ class BasicTextInput {
           height: mInputHeight,
           decoration: BoxDecoration(
             border: Border(
-              top: AppStyle.borderFieldSideEnabled,
-              left: AppStyle.borderFieldSideEnabled,
-              bottom: AppStyle.borderFieldSideEnabled,
-              right: AppStyle.borderFieldSideEnabled,
+              top: AppStyle.borderFieldSide,
+              left: AppStyle.borderFieldSide,
+              bottom: AppStyle.borderFieldSide,
+              right: AppStyle.borderFieldSide,
             ),
           ),
           child: inputText,
@@ -277,9 +277,9 @@ class BasicTextInput {
           height: mInputHeight,
           decoration: BoxDecoration(
             border: Border(
-              top: AppStyle.borderFieldSideEnabled,
-              left: AppStyle.borderFieldSideEnabled,
-              bottom: AppStyle.borderFieldSideEnabled,
+              top: AppStyle.borderFieldSide,
+              left: AppStyle.borderFieldSide,
+              bottom: AppStyle.borderFieldSide,
             ),
           ),
           child: inputText,
@@ -296,9 +296,9 @@ class BasicTextInput {
               height: mButtonHeight,
               decoration: BoxDecoration(
                 border: Border(
-                  top: AppStyle.borderFieldSideEnabled,
-                  bottom: AppStyle.borderFieldSideEnabled,
-                  right: AppStyle.borderFieldSideEnabled,
+                  top: AppStyle.borderFieldSide,
+                  bottom: AppStyle.borderFieldSide,
+                  right: AppStyle.borderFieldSide,
                 ),
               ),
               child: button,
@@ -309,7 +309,7 @@ class BasicTextInput {
                 width: mButtonWidth,
                 decoration: BoxDecoration(
                   border: Border(
-                    left: AppStyle.borderFieldSideEnabled,
+                    left: AppStyle.borderFieldSide,
                   ),
                   color: AppColor.formWorkAreaBackground,
                 ),
@@ -391,9 +391,9 @@ class BasicTextInput {
                 padding: EdgeInsets.zero,
                 decoration: BoxDecoration(
                   border: Border(
-                    top: AppStyle.borderFieldSideEnabled,
-                    left: AppStyle.borderFieldSideEnabled,
-                    bottom: AppStyle.borderFieldSideEnabled,
+                    top: AppStyle.borderFieldSide,
+                    left: AppStyle.borderFieldSide,
+                    bottom: AppStyle.borderFieldSide,
                   ),
                 ),
                 child: inputText,
@@ -405,9 +405,9 @@ class BasicTextInput {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   border: Border(
-                    top: AppStyle.borderFieldSideEnabled,
-                    right: AppStyle.borderFieldSideEnabled,
-                    bottom: AppStyle.borderFieldSideEnabled,
+                    top: AppStyle.borderFieldSide,
+                    right: AppStyle.borderFieldSide,
+                    bottom: AppStyle.borderFieldSide,
                   ),
                 ),
                 child: Align(

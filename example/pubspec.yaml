@@ -1,4 +1,4 @@
-name: flutter_desktop_bricks_example
+name: flutter_form_bricks_example
 
 environment:
   sdk: '^3.7.0'
@@ -6,5 +6,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_desktop_bricks:
-    path: ../../flutter-desktop-bricks
+  flutter_form_builder: ^9.4.0
+  form_builder_validators: ^11.0.0
+  flutter_form_bricks:
+    path: ../../flutter-form-bricks

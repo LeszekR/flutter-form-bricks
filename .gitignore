@@ -53,3 +53,5 @@ app.*.map.json
 .fvm/
 
 **/prod-config.json
+
+*/windows

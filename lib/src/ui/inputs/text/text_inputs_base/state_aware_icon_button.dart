@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_desktop_bricks/src/ui/inputs/text/text_inputs_base/states_color_maker.dart';
+import 'package:flutter_form_bricks/src/ui/inputs/text/text_inputs_base/states_color_maker.dart';
 
 import '../../../visual_params/app_color.dart';
 import '../../../visual_params/app_size.dart';
@@ -138,4 +138,13 @@ class _StateAwareIconButtonState extends State<StateAwareIconButton> {
     // TODO finish using this
     return Focus(child: child);
   }
+}
+
+class IconButtonParams {
+  final IconData iconData;
+  final VoidCallback onPressed;
+  final String? tooltip;
+  final bool autofocus;
+
+  const IconButtonParams(this.iconData, this.onPressed, this.tooltip, this.autofocus);
 }
