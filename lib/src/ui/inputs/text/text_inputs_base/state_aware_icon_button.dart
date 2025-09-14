@@ -15,6 +15,7 @@ class StateAwareIconButton extends StatefulWidget {
   final String? tooltip;
   final bool autofocus;
 
+  // TODO complete with all other fields of Flutter IconButton
   const StateAwareIconButton({
     super.key,
     required this.statesObserver,
@@ -76,8 +77,8 @@ class _StateAwareIconButtonState extends State<StateAwareIconButton> {
       child: makeGestureDetector(
         child: makeFocus(
           child: Container(
-            width: AppSize.inputTextHeight,
-            height: AppSize.inputTextHeight,
+            width: AppSize.inputTextLineHeight,
+            height: AppSize.inputTextLineHeight,
             padding: EdgeInsets.zero,
             alignment: Alignment.center,
             color: widget.colorMaker.makeColor(_states),

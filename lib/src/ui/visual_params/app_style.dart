@@ -112,7 +112,7 @@ class AppStyle {
           displaySmall: TextStyle(fontSize: AppSize.fontSize_1),
         ),
         inputDecorationTheme: InputDecorationTheme(
-          constraints: BoxConstraints(minWidth: AppSize.inputTextWidth, minHeight: AppSize.inputTextHeight),
+          constraints: BoxConstraints(minWidth: AppSize.inputTextWidth, minHeight: AppSize.inputTextLineHeight),
           filled: true,
           contentPadding: EdgeInsets.all(AppSize.paddingInputText),
           isDense: true,
@@ -128,7 +128,7 @@ class AppStyle {
           side: BorderSide(width: AppSize.borderWidth),
           overlayColor: WidgetStateProperty.all(AppColor.colorSchemeMain.surfaceContainerHighest),
           visualDensity: const VisualDensity(vertical: -4),
-          splashRadius: AppSize.inputTextHeight * 0.7,
+          splashRadius: AppSize.inputTextLineHeight * 0.7,
         ));
   }
 

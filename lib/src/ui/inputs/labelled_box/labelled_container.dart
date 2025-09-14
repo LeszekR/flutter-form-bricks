@@ -83,14 +83,14 @@ class LabelledContainer extends StatelessWidget {
     switch (labelPosition) {
       case ELabelPosition.left:
         {
-          mButtonWidth = AppSize.inputTextHeight;
-          mButtonHeight = AppSize.inputTextHeight;
+          mButtonWidth = AppSize.inputTextLineHeight;
+          mButtonHeight = AppSize.inputTextLineHeight;
 
           mLabelWidth = labelWidth ?? AppSize.inputLabelWidth;
-          mLabelHeight = AppSize.inputTextHeight;
+          mLabelHeight = AppSize.inputTextLineHeight;
 
           mTextWidth = (inputWidth ?? AppSize.inputTextWidth) - mButtonWidth;
-          mTextHeight = (AppSize.inputTextHeight * (inputHeightMultiplier ?? 1));
+          mTextHeight = (AppSize.inputTextLineHeight * (inputHeightMultiplier ?? 1));
 
           mInputWidth = mLabelWidth + mTextWidth + mButtonWidth + (2 * AppSize.paddingInputLabel);
           mInputHeight = mTextHeight;
@@ -101,11 +101,11 @@ class LabelledContainer extends StatelessWidget {
 
       default: // EInputNamePosition = topLeft
         {
-          mButtonWidth = AppSize.inputTextHeight;
-          mButtonHeight = AppSize.inputTextHeight;
+          mButtonWidth = AppSize.inputTextLineHeight;
+          mButtonHeight = AppSize.inputTextLineHeight;
 
           mTextWidth = inputWidth ?? AppSize.inputTextWidth;
-          mTextHeight = AppSize.inputTextHeight * (inputHeightMultiplier ?? 1);
+          mTextHeight = AppSize.inputTextLineHeight * (inputHeightMultiplier ?? 1);
 
           mLabelWidth = mTextWidth;
           mLabelHeight = AppSize.inputLabelHeight;

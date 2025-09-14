@@ -87,14 +87,14 @@ class BasicTextInput {
         // EInputNamePosition = left
         case ELabelPosition.left:
           {
-            mButtonWidth = AppSize.inputTextHeight;
-            mButtonHeight = AppSize.inputTextHeight;
+            mButtonWidth = AppSize.inputTextLineHeight;
+            mButtonHeight = AppSize.inputTextLineHeight;
 
             mLabelWidth = labelWidth ?? AppSize.inputLabelWidth;
-            mLabelHeight = AppSize.inputTextHeight;
+            mLabelHeight = AppSize.inputTextLineHeight;
 
             mTextWidth = (inputWidth ?? AppSize.inputTextWidth) - mButtonWidth;
-            mTextHeight = (AppSize.inputTextHeight * (inputHeightMultiplier ?? 1));
+            mTextHeight = (AppSize.inputTextLineHeight * (inputHeightMultiplier ?? 1));
 
             mInputWidth = mLabelWidth + mTextWidth + mButtonWidth + (2 * AppSize.paddingInputLabel);
             mInputHeight = mTextHeight;
@@ -106,11 +106,11 @@ class BasicTextInput {
         // EInputNamePosition = topLeft
         default:
           {
-            mButtonWidth = AppSize.inputTextHeight;
-            mButtonHeight = AppSize.inputTextHeight;
+            mButtonWidth = AppSize.inputTextLineHeight;
+            mButtonHeight = AppSize.inputTextLineHeight;
 
             mTextWidth = inputWidth ?? AppSize.inputTextWidth;
-            mTextHeight = AppSize.inputTextHeight * (inputHeightMultiplier ?? 1);
+            mTextHeight = AppSize.inputTextLineHeight * (inputHeightMultiplier ?? 1);
 
             mLabelWidth = mTextWidth;
             mLabelHeight = AppSize.inputLabelHeight;
@@ -153,10 +153,10 @@ class BasicTextInput {
       case ELabelPosition.left:
         {
           mTextWidth = inputWidth ?? AppSize.inputTextWidth;
-          mTextHeight = AppSize.inputTextHeight * (inputHeightMultiplier ?? 1);
+          mTextHeight = AppSize.inputTextLineHeight * (inputHeightMultiplier ?? 1);
 
           mLabelWidth = (labelWidth ?? AppSize.inputLabelWidth);
-          mLabelHeight = AppSize.inputTextHeight;
+          mLabelHeight = AppSize.inputTextLineHeight;
 
           mInputWidth = mLabelWidth + mTextWidth + (2 * AppSize.paddingInputLabel);
           mInputHeight = mTextHeight;
@@ -169,7 +169,7 @@ class BasicTextInput {
       default:
         {
           mTextWidth = (inputWidth ?? AppSize.inputTextWidth);
-          mTextHeight = AppSize.inputTextHeight * (inputHeightMultiplier ?? 1);
+          mTextHeight = AppSize.inputTextLineHeight * (inputHeightMultiplier ?? 1);
 
           mLabelWidth = mTextWidth;
           mLabelHeight = AppSize.inputLabelHeight;

@@ -36,8 +36,8 @@ class AppSize {
   static double inputNumberWidth = s * 50;
   static double inputLabelWidth = s * 180;
   static double inputLabelHeight = AppStyle.inputLabelStyle().fontSize! + AppSize.paddingInputLabel * 2;
-  static double inputTextHeight = s * 25;
-  static double iconSize = inputTextHeight * 0.7;
+  static double inputTextLineHeight = s * 25;
+  static double iconSize = inputTextLineHeight * 0.7;
   static double checkboxScaleSquare = 0.7;
   static double checkboxScaleRound = 0.8;
   static double radioScale = 0.8;

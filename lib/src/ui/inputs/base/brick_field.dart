@@ -24,5 +24,5 @@ abstract class BrickField extends StatefulWidget {
 }
 
 abstract class BrickFieldState<T extends BrickField> extends State<T> {
-
+  // TODO implement onChange common to all inputs
 }

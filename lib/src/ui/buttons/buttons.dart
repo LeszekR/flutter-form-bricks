@@ -78,8 +78,8 @@ class Buttons {
         valueListenable: statesController,
         builder: (context, states, _) {
           return Container(
-            width: AppSize.inputTextHeight,
-            height: AppSize.inputTextHeight,
+            width: AppSize.inputTextLineHeight,
+            height: AppSize.inputTextLineHeight,
             padding: EdgeInsets.zero,
             alignment: Alignment.center,
             color: AppColor.makeColor(states).withOpacity(1),
