@@ -23,6 +23,26 @@
 
 ###
 
+**Elaborate on**
+
+- `AppTheme` - global (scoped), dynamic, possibly scoped when overriding class used - less
+  boilerplate, consistent look
+- label position around BrickField
+- `BrickTextField` can have `IconButton` for any use
+- architecture: `LabelledContainer`, `TextFieldBox`, `BrickTextField`
+  containint `StateAwareIconButton`
+- formatting validation chain
+- `FormManager` role: formatting, validation, storing state, collecting data from inputs, initial
+  values
+
+**Visual params**
+- Refactored AppColor, AppSize, AppStyle to abstract class + default implementation
+- This way no static vars and dynamic change of theme, sizes are possible to implement
+- AppStyle can also be overriden by a dev
+- All three are accessed via InheritedWidget - this allows for scoping by replacing implementations for parts of the tree
+
+###
+
 **Architecture**
 
 - all inputs are put inside `LabelledContainer`
@@ -34,6 +54,7 @@
 - `ValueListenableBuilder` reacting to widget states with colors
 
 **Widget classes**
+
 - `TextFieldStateAware`
 - `IconButtonStateAware`
 - `(CheckBoxStateAware)`
@@ -41,6 +62,7 @@
 - `(DropBoxStateAware)`
 
 **Text input variants**
+
 - no button: `LabelledContainer` + `TextFieldColored`
 - with button: `LabelledContainer` + `TextFieldColored` + `IconButtonColored`
 

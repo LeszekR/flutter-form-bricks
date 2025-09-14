@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../../shelf.dart';
 import '../../buttons/buttons.dart';
 import '../../inputs/base/brick_field.dart';
-import '../../visual_params/app_size.dart';
+import '../../visual_params/app_size/app_size.dart';
 import '../form_manager/e_form_status.dart';
 import '../form_manager/form_manager.dart';
 

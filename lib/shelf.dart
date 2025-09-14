@@ -5,3 +5,5 @@ export 'src/ui/forms/base/form_schema.dart';
 export 'src/ui/state/brick_form_state_data.dart';
 export 'src/ui/inputs/base/brick_field.dart';
 export 'src/ui/state/brick_field_state_data.dart';
+export 'src/ui/visual_params/brick_theme.dart';
+export 'src/ui/visual_params/brick_theme_data.dart';

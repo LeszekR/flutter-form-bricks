@@ -8,7 +8,8 @@ import 'package:flutter_form_bricks/src/ui/inputs/states_controller/update_once_
 import 'package:flutter_form_bricks/src/ui/inputs/text/text_inputs_base/state_aware_icon_button.dart';
 import 'package:flutter_form_bricks/src/ui/inputs/text/text_inputs_base/text_field_container.dart';
 
-import '../../../visual_params/app_size.dart';
+import '../../../visual_params/app_size/app_size.dart';
+import '../../../visual_params/brick_theme.dart';
 import '../../base/brick_field.dart';
 import '../../states_controller/error_message_notifier.dart';
 
@@ -237,14 +238,15 @@ class _StateAwareTextFieldState extends BrickFieldState<BrickTextField> with Err
       button = _makeButton(statesObserver, statesNotifier);
     }
 
-    textField = _makeTextField(statesObserver, statesNotifier);
+    textField = _makeTextField(context, statesObserver, statesNotifier);
 
     return ValueListenableBuilder(
       valueListenable: statesNotifier,
-      builder: (__, states, _) {
+      builder: (context, states, _) {
         return TextFieldBorderedBox.build(
-          width: widget.width ?? AppSize.inputTextWidth,
-          lineHeight: widget.lineHeight ?? AppSize.inputTextLineHeight,
+          context: context,
+          width: widget.width ?? BrickTheme.of(context).sizes.inputTextWidth,
+          lineHeight: widget.lineHeight ?? BrickTheme.of(context).sizes.inputTextLineHeight,
           nLines: widget.nLines,
           textField: textField,
           button: button,
@@ -253,7 +255,11 @@ class _StateAwareTextFieldState extends BrickFieldState<BrickTextField> with Err
     );
   }
 
-  TextField _makeTextField(WidgetStatesController statesObserver, WidgetStatesController statesNotifier) {
+  TextField _makeTextField(
+    BuildContext context,
+    WidgetStatesController statesObserver,
+    WidgetStatesController statesNotifier,
+  ) {
     return TextField(
       key: Key(widget.keyString),
       groupId: widget.groupId,
@@ -264,7 +270,7 @@ class _StateAwareTextFieldState extends BrickFieldState<BrickTextField> with Err
 
       decoration: InputDecoration(
         border: InputBorder.none,
-        fillColor: widget.colorMaker.makeColor(_states),
+        fillColor: widget.colorMaker.makeColor(context, _states),
       ),
 
       keyboardType: widget.keyboardType,

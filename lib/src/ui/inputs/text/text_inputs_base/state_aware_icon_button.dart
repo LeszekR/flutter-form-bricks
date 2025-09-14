@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/ui/inputs/text/text_inputs_base/states_color_maker.dart';
+import 'package:flutter_form_bricks/src/ui/visual_params/brick_theme.dart';
 
-import '../../../visual_params/app_color.dart';
-import '../../../visual_params/app_size.dart';
-import '../../../visual_params/app_style.dart';
+import '../../../visual_params/app_color/app_color.dart';
+import '../../../visual_params/app_size/app_size.dart';
+import '../../../visual_params/app_style/app_style.dart';
 import '../../states_controller/update_once_widget_states_controller.dart';
 
 class StateAwareIconButton extends StatefulWidget {
@@ -77,19 +78,19 @@ class _StateAwareIconButtonState extends State<StateAwareIconButton> {
       child: makeGestureDetector(
         child: makeFocus(
           child: Container(
-            width: AppSize.inputTextLineHeight,
-            height: AppSize.inputTextLineHeight,
+            width: BrickTheme.of(context).sizes.inputTextLineHeight,
+            height: BrickTheme.of(context).sizes.inputTextLineHeight,
             padding: EdgeInsets.zero,
             alignment: Alignment.center,
-            color: widget.colorMaker.makeColor(_states),
+            color: widget.colorMaker.makeColor(context, _states),
             child: IconButton(
               icon: Icon(widget.iconData),
-              iconSize: AppSize.iconSize,
-              style: ButtonStyle(shape: AppStyle.makeShapeRectangleProperty(false)),
+              iconSize: BrickTheme.of(context).sizes.iconSize,
+              style: ButtonStyle(shape: BrickTheme.of(context).styles.makeShapeRectangleProperty(false)),
               padding: EdgeInsets.zero,
               alignment: Alignment.center,
               autofocus: widget.autofocus,
-              color: AppColor.iconColor,
+              color: BrickTheme.of(context).colors.iconColor,
               tooltip: widget.tooltip,
               focusNode: _focusNode,
               onPressed: widget.onPressed,

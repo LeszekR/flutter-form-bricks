@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/ui/inputs/text/text_inputs_base/state_aware_icon_button.dart';
-import 'package:flutter_form_bricks/src/ui/visual_params/app_size.dart';
+import 'package:flutter_form_bricks/src/ui/visual_params/app_size/app_size.dart';
 
-import '../../../visual_params/app_style.dart';
+import '../../../visual_params/app_style/app_style.dart';
+import '../../../visual_params/brick_theme.dart';
 
 class TextFieldBorderedBox {
   static Widget build({
+    required BuildContext context,
     required double width,
     required double lineHeight,
     required int nLines,
@@ -13,15 +15,16 @@ class TextFieldBorderedBox {
     StateAwareIconButton? button,
   }) {
     if (button == null) {
-      return _wrapTextField(width, lineHeight, nLines, textField);
+      return _wrapTextField(context, width, lineHeight, nLines, textField);
     }
     if (nLines == 1) {
-      return _wrapSingleLineTextFieldWithButton(width, lineHeight, textField, button);
+      return _wrapSingleLineTextFieldWithButton(context, width, lineHeight, textField, button);
     }
-    return _wrapMultiLineTextFieldWithButton(width, lineHeight, nLines, textField, button);
+    return _wrapMultiLineTextFieldWithButton(context, width, lineHeight, nLines, textField, button);
   }
 
   static Widget _wrapTextField(
+    BuildContext context,
     double width,
     double lineHeight,
     int nLines,
@@ -30,11 +33,16 @@ class TextFieldBorderedBox {
     return SizedBox(
       width: width,
       height: lineHeight * nLines,
-      child: _wrapInBorder(_BorderSet(true, true, true, true), textField),
+      child: _wrapInBorder(
+        context,
+        _BorderSet(true, true, true, true),
+        textField,
+      ),
     );
   }
 
   static Widget _wrapSingleLineTextFieldWithButton(
+    BuildContext context,
     double width,
     double lineHeight,
     TextField textField,
@@ -44,6 +52,7 @@ class TextFieldBorderedBox {
       width: width,
       height: lineHeight,
       child: _wrapInBorder(
+        context,
         _BorderSet(true, true, true, true),
         Row(children: [textField, button!]),
       ),
@@ -51,6 +60,7 @@ class TextFieldBorderedBox {
   }
 
   static Widget _wrapMultiLineTextFieldWithButton(
+    BuildContext context,
     double width,
     double lineHeight,
     int nLines,
@@ -63,17 +73,22 @@ class TextFieldBorderedBox {
       child: Row(
         children: [
           _wrapInBorder(
+            context,
             _BorderSet(true, true, true, false),
             textField,
           ),
           Column(
             children: [
               _wrapInBorder(
+                context,
                 _BorderSet(true, false, true, true),
                 button,
               ),
               Expanded(
-                child: _wrapInBorder(_BorderSet(false, true, false, false)),
+                child: _wrapInBorder(
+                  context,
+                  _BorderSet(false, true, false, false),
+                ),
               ),
             ],
           ),
@@ -82,14 +97,14 @@ class TextFieldBorderedBox {
     );
   }
 
-  static Widget _wrapInBorder(_BorderSet borderSet, [Widget? child]) {
+  static Widget _wrapInBorder(BuildContext context, _BorderSet borderSet, [Widget? child]) {
     return DecoratedBox(
       decoration: BoxDecoration(
         border: Border(
-          top: borderSet.top ? BorderSide.none : AppStyle.borderFieldSide,
-          left: borderSet.left ? BorderSide.none : AppStyle.borderFieldSide,
-          bottom: borderSet.bottom ? BorderSide.none : AppStyle.borderFieldSide,
-          right: borderSet.right ? BorderSide.none : AppStyle.borderFieldSide,
+          top: borderSet.top ?  BrickTheme.of(context).styles.borderFieldSide : BorderSide.none,
+          left: borderSet.left ?  BrickTheme.of(context).styles.borderFieldSide : BorderSide.none,
+          bottom: borderSet.bottom ?  BrickTheme.of(context).styles.borderFieldSide : BorderSide.none,
+          right: borderSet.right ?  BrickTheme.of(context).styles.borderFieldSide : BorderSide.none,
         ),
       ),
       child: child,
