@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_form_bricks/src/ui/inputs/states_controller/update_once_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/inputs/states_controller/update_once_widget_states_controller.dart';
 
 class DoubleWidgetStatesController extends WidgetStatesController implements ValueListenable<Set<WidgetState>> {
   final WidgetStatesController receiverStatesController = WidgetStatesController();

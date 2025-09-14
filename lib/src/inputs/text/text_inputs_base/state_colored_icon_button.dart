@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/ui/inputs/text/text_inputs_base/states_color_maker.dart';
-import 'package:flutter_form_bricks/src/ui/visual_params/brick_theme.dart';
+import 'package:flutter_form_bricks/src/inputs/text/text_inputs_base/states_color_maker.dart';
+import 'package:flutter_form_bricks/src/visual_params/brick_theme.dart';
 
-import '../../../visual_params/app_color/app_color.dart';
-import '../../../visual_params/app_size/app_size.dart';
-import '../../../visual_params/app_style/app_style.dart';
 import '../../states_controller/update_once_widget_states_controller.dart';
 
-class StateAwareIconButton extends StatefulWidget {
+class StateColoredIconButton extends StatefulWidget {
   final UpdateOnceWidgetStatesController statesObserver;
   final WidgetStatesController statesNotifier;
   final StatesColorMaker colorMaker;
@@ -17,7 +14,7 @@ class StateAwareIconButton extends StatefulWidget {
   final bool autofocus;
 
   // TODO complete with all other fields of Flutter IconButton
-  const StateAwareIconButton({
+  const StateColoredIconButton({
     super.key,
     required this.statesObserver,
     required this.statesNotifier,
@@ -29,10 +26,10 @@ class StateAwareIconButton extends StatefulWidget {
   });
 
   @override
-  State<StateAwareIconButton> createState() => _StateAwareIconButtonState();
+  State<StateColoredIconButton> createState() => _StateColoredIconButtonState();
 }
 
-class _StateAwareIconButtonState extends State<StateAwareIconButton> {
+class _StateColoredIconButtonState extends State<StateColoredIconButton> {
   final FocusNode _focusNode = FocusNode();
   Set<WidgetState>? _states;
 
@@ -142,11 +139,3 @@ class _StateAwareIconButtonState extends State<StateAwareIconButton> {
   }
 }
 
-class IconButtonParams {
-  final IconData iconData;
-  final VoidCallback onPressed;
-  final String? tooltip;
-  final bool autofocus;
-
-  const IconButtonParams(this.iconData, this.onPressed, this.tooltip, this.autofocus);
-}

@@ -3,15 +3,16 @@ import 'dart:ui' as ui;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_bricks/src/ui/inputs/states_controller/double_widget_states_controller.dart';
-import 'package:flutter_form_bricks/src/ui/inputs/states_controller/update_once_widget_states_controller.dart';
-import 'package:flutter_form_bricks/src/ui/inputs/text/text_inputs_base/state_aware_icon_button.dart';
-import 'package:flutter_form_bricks/src/ui/inputs/text/text_inputs_base/text_field_container.dart';
+import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/inputs/states_controller/update_once_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/inputs/text/text_inputs_base/state_colored_icon_button.dart';
+import 'package:flutter_form_bricks/src/inputs/text/text_inputs_base/text_field_container.dart';
 
 import '../../../visual_params/app_size/app_size.dart';
 import '../../../visual_params/brick_theme.dart';
 import '../../base/brick_field.dart';
 import '../../states_controller/error_message_notifier.dart';
+import 'icon_button_params.dart';
 
 class BrickTextField extends BrickField {
   // BrickTextField
@@ -224,7 +225,7 @@ class _StateAwareTextFieldState extends BrickFieldState<BrickTextField> with Err
     var statesObserver;
     var statesNotifier;
     TextField textField;
-    StateAwareIconButton? button;
+    StateColoredIconButton? button;
 
     if (widget.buttonParams == null) {
       var statesController = WidgetStatesController();
@@ -343,14 +344,14 @@ class _StateAwareTextFieldState extends BrickFieldState<BrickTextField> with Err
     );
   }
 
-  StateAwareIconButton? _makeButton(
+  StateColoredIconButton? _makeButton(
     UpdateOnceWidgetStatesController statesObserver,
     WidgetStatesController statesNotifier,
   ) {
     if (widget.buttonParams == null) {
       return null;
     }
-    return StateAwareIconButton(
+    return StateColoredIconButton(
       statesObserver: statesObserver,
       statesNotifier: statesNotifier,
       colorMaker: widget.colorMaker,

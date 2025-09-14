@@ -8,7 +8,7 @@ class ExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BrickTheme (
+    return BrickTheme(
       data: BrickThemeData(),
       child: MaterialApp(
         home: Scaffold(
@@ -21,10 +21,45 @@ class ExampleApp extends StatelessWidget {
                 // mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   BrickTextField(
-                    keyString: 'test_text_input',
+                    keyString: 'test_text_input_1',
                     formManager: EmptyFormManager(),
                     colorMaker: StatesColorMaker(),
                     width: 150,
+                  ),
+                  BrickTheme.of(context).sizes.spacerBoxVerticalMedium,
+                  BrickTextField(
+                    keyString: 'test_text_input_2',
+                    formManager: EmptyFormManager(),
+                    colorMaker: StatesColorMaker(),
+                    width: 150,
+                    nLines: 3,
+                  ),
+                  BrickTheme.of(context).sizes.spacerBoxVerticalMedium,
+                  BrickTextField(
+                    keyString: 'test_text_input_3',
+                    formManager: EmptyFormManager(),
+                    colorMaker: StatesColorMaker(),
+                    width: 150,
+                    buttonParams: IconButtonParams(
+                      iconData: Icons.arrow_drop_down,
+                      tooltip: 'podpowiedź niesłuszna',
+                      onPressed: () {},
+                      autofocus: false,
+                    ),
+                  ),
+                  BrickTheme.of(context).sizes.spacerBoxVerticalMedium,
+                  BrickTextField(
+                    keyString: 'test_text_input_4',
+                    formManager: EmptyFormManager(),
+                    colorMaker: StatesColorMaker(),
+                    width: 150,
+                    nLines: 3,
+                    buttonParams: IconButtonParams(
+                      iconData: Icons.arrow_drop_down,
+                      tooltip: 'podpowiedź słuszna',
+                      onPressed: () {},
+                      autofocus: false,
+                    ),
                   ),
                 ],
               ), // test your widget here
@@ -35,5 +70,3 @@ class ExampleApp extends StatelessWidget {
     );
   }
 }
-
-FormFieldValidator<String> _validator2Chars = (text) => text!.length > 1 ? '' : 'error';

@@ -6,6 +6,8 @@ import '../app_style/app_style.dart';
 abstract class AppSize {
   const AppSize();
 
+  // TODO go through all, remove redundant, correct names
+
   /// Base scaling factor (from AppScale, or const 1.0 if no scaling)
   double get s;
 

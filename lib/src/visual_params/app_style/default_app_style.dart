@@ -7,57 +7,50 @@ import 'app_style.dart';
 class DefaultAppStyle extends AppStyle {
   final AppColor appColor;
   final AppSize appSize;
-  
+
   const DefaultAppStyle(this.appColor, this.appSize);
 
   @override
-  BorderSide get borderTabSide =>
-      BorderSide(width: appSize.tabBorderWidth, color: appColor.borderEnabled);
+  BorderSide get borderTabSide => BorderSide(width: appSize.tabBorderWidth, color: appColor.borderEnabled);
 
   @override
-  BorderSide get borderTabSideDouble =>
-      BorderSide(width: appSize.tabBorderWidth * 2, color: appColor.borderEnabled);
+  BorderSide get borderTabSideDouble => BorderSide(width: appSize.tabBorderWidth * 2, color: appColor.borderEnabled);
 
   @override
-  BorderSide get borderFormGroupSide =>
-      BorderSide(width: appSize.borderWidth, color: appColor.borderEnabled);
+  BorderSide get borderFormGroupSide => BorderSide(width: appSize.borderWidth, color: appColor.borderEnabled);
 
   @override
-  BorderSide get borderFieldSide =>
-      BorderSide(width: appSize.borderWidth, color: appColor.borderEnabled);
+  BorderSide get borderFieldSide => BorderSide(width: appSize.borderWidth, color: appColor.borderEnabled);
 
   @override
-  Border get borderFieldAll =>
-      Border.all(width: appSize.borderWidth, color: appColor.borderEnabled);
+  Border get borderFieldAll => Border.all(width: appSize.borderWidth, color: appColor.borderEnabled);
 
   @override
   OutlineInputBorder get borderRadio =>
       const OutlineInputBorder(borderSide: BorderSide(style: BorderStyle.none), gapPadding: 0);
 
   @override
-  BorderSide get borderFieldSideError =>
-      BorderSide(width: appSize.borderWidth * 2, color: appColor.borderEnabled);
+  BorderSide get borderFieldSideError => BorderSide(width: appSize.borderWidth * 2, color: appColor.borderEnabled);
 
   @override
-  BorderRadius get borderRadius =>
-      BorderRadius.circular(appSize.cornerRadius);
+  BorderRadius get borderRadius => BorderRadius.circular(appSize.cornerRadius);
 
   @override
-  BeveledRectangleBorder get beveledRectangleBorderHardCorners =>
-      BeveledRectangleBorder(borderRadius: borderRadius);
+  BeveledRectangleBorder get beveledRectangleBorderHardCorners => BeveledRectangleBorder(borderRadius: borderRadius);
 
   @override
   BeveledRectangleBorder get beveledRectangleBorderHardCornersNoBorder =>
       BeveledRectangleBorder(side: borderFormGroupSide);
 
   @override
-  TextStyle get labelTextStyle =>
-      TextStyle(fontSize: appSize.fontSize3);
+  TextStyle get labelTextStyle => TextStyle(fontSize: appSize.fontSize3);
 
   @override
   FontStyle get tabFontEnabled => FontStyle.normal;
+
   @override
   FontStyle get tabFontDisabled => FontStyle.italic;
+
   @override
   FontStyle get tabFontError => FontStyle.normal;
 

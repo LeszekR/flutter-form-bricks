@@ -6,6 +6,7 @@ import '../app_size/app_size.dart';
 abstract class AppStyle {
   const AppStyle();
 
+  // TODO go through all, remove redundant, correct names
   BorderSide get borderTabSide;
   BorderSide get borderTabSideDouble;
   BorderSide get borderFormGroupSide;

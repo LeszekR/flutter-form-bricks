@@ -5,6 +5,8 @@ import '../app_style/app_style.dart';
 abstract class AppColor {
   const AppColor();
 
+  // TODO go through all, remove redundant, correct names
+
   /// Base scheme
   ColorScheme get colorSchemeMain;
 

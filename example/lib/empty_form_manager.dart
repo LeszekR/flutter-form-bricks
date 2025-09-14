@@ -1,5 +1,5 @@
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/ui/forms/form_manager/e_form_status.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/e_form_status.dart';
 
 class EmptyFormStateData extends BrickFormStateData {}
 class EmptyFormSchema extends FormSchema {
