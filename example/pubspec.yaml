@@ -1,12 +1,10 @@
 name: flutter_form_bricks_example
 
 environment:
-  sdk: '^3.7.0'
+  sdk: '>=3.0.0 <=3.9.2'
 
 dependencies:
   flutter:
     sdk: flutter
-  flutter_form_builder: ^9.4.0
-  form_builder_validators: ^11.0.0
   flutter_form_bricks:
     path: ../../flutter-form-bricks

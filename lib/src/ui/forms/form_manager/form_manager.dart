@@ -1,18 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/src/ui/forms/base/form_schema.dart';
-import 'package:flutter_form_bricks/src/ui/inputs/state/brick_form_state_data.dart';
 import 'package:flutter_form_bricks/src/ui/inputs/text/format_and_validate/formatter_validator_chain.dart';
 
+import '../../../../shelf.dart';
+import '../../inputs/base/brick_field.dart';
 import '../base/brick_form.dart';
 import 'e_form_status.dart';
 
-abstract class FormManager {
+abstract class FormManager extends ChangeNotifier {
   final _formKey = GlobalKey<BrickFormState>();
   final BrickFormStateData _stateData;
   final Map<String, dynamic> _inputInitialValuesMap = {};
   final Map<String, String?> _errorsMap = {};
 
-  final Map<String, FormatterValidatorChain> _formatterValidatorChainMap = {};
+  final Map<String, FormatterValidatorChain?> _formatterValidatorChainMap = {};
 
   final ValueNotifier<String> errorMessageNotifier = ValueNotifier<String>("");
   late final Map<String, TextEditingController> _controllers = {};
@@ -34,7 +35,7 @@ abstract class FormManager {
 
   void fillInitialInputValuesMap();
 
-  FormBuilderFieldState<FormBuilderField<dynamic>, dynamic>? findField(String keyString);
+  BrickFieldState<BrickField>? findField(String keyString);
 
   void resetForm();
 
@@ -87,55 +88,58 @@ abstract class FormManager {
 // }
 
   void setInitialValues(GlobalKey<BrickFormState> contentGlobalKey) {
-    var currentState = contentGlobalKey.currentState;
-    assert(currentState != null);
-    currentState!.save();
-    for (var field in currentState.value.entries) {
-      // TODO look up in the internet - if no solution then create KeyStringUniquenessGuard
-      // field keyStrings must be unique across all tabs
-      if (_inputInitialValuesMap.keys.contains(field.key)) continue;
-      // assert(!_inputInitialValuesMap.keys.contains(field.key));
-
-      _inputInitialValuesMap[field.key] = field.value;
-    }
+    // TODO uncomment and refactor
+    // var currentState = contentGlobalKey.currentState;
+    // assert(currentState != null);
+    // currentState!.save();
+    // for (var field in currentState.value.entries) {
+    //   // TODO look up in the internet - if no solution then create KeyStringUniquenessGuard
+    //   // field keyStrings must be unique across all tabs
+    //   if (_inputInitialValuesMap.keys.contains(field.key)) continue;
+    //   // assert(!_inputInitialValuesMap.keys.contains(field.key));
+    //
+    //   _inputInitialValuesMap[field.key] = field.value;
+    // }
   }
 
   EFormStatus getFormPartState(GlobalKey<BrickFormState> formPartKey) {
-    final currentState = formPartKey.currentState;
-    if (currentState == null) {
-      return EFormStatus.invalid;
-    }
-
-    currentState.save();
-    var fieldValuesList = currentState.value.entries;
-
-    // TODO check where disabled fields are excluded - if nowhere then do it here
-    var activeFields = fieldValuesList;
-    // var activeFields = fieldValuesList.where((field) => !_isFieldIgnored(field.key));
-
-    if (activeFields.any((field) => !findField(field.key)!.isStringValid)) {
-      return EFormStatus.invalid;
-    }
-    if (activeFields.every((input) => input.value == _inputInitialValuesMap[input.key])) {
-      return EFormStatus.noChange;
-    }
+    // TODO uncomment and refactor
+    // final currentState = formPartKey.currentState;
+    // if (currentState == null) {
+    //   return EFormStatus.invalid;
+    // }
+    //
+    // currentState.save();
+    // var fieldValuesList = currentState.value.entries;
+    //
+    // // TODO check where disabled fields are excluded - if nowhere then do it here
+    // var activeFields = fieldValuesList;
+    // // var activeFields = fieldValuesList.where((field) => !_isFieldIgnored(field.key));
+    //
+    // if (activeFields.any((field) => !findField(field.key)!.isStringValid)) {
+    //   return EFormStatus.invalid;
+    // }
+    // if (activeFields.every((input) => input.value == _inputInitialValuesMap[input.key])) {
+    //   return EFormStatus.noChange;
+    // }
     return EFormStatus.valid;
   }
 
   void onFieldChanged(final String keyString, dynamic value) {
-    var field = findField(keyString);
-    if (!(field?.isTouched ?? false)) {
-      return;
-    }
-
-    // sets state of the field with new value
-    // validates the field
-    // calls rebuild of all fields in the form
-    // if the form autoValidateMode is "always" or "onUserInteraction" revalidates all fields in the form
-    formKey.currentState?.fields[keyString]?.didChange(value ?? field?.value);
-
-    validateField(keyString);
-    afterFieldChanged();
+    // TODO uncomment and refactor
+    // var field = findField(keyString);
+    // if (!(field?.isTouched ?? false)) {
+    //   return;
+    // }
+    //
+    // // sets state of the field with new value
+    // // validates the field
+    // // calls rebuild of all fields in the form
+    // // if the form autoValidateMode is "always" or "onUserInteraction" revalidates all fields in the form
+    // formKey.currentState?.fields[keyString]?.didChange(value ?? field?.value);
+    //
+    // validateField(keyString);
+    // afterFieldChanged();
   }
 
 // field validation functionality
@@ -146,11 +150,12 @@ abstract class FormManager {
   }
 
   String? validateFieldQuietly(String keyString) {
-    var field = findField(keyString);
-    field?.validate();
-    var errorText = field?.errorText;
-    _errorsMap[keyString] = errorText;
-    return errorText;
+    // TODO uncomment and refactor
+    // var field = findField(keyString);
+    // field?.validate();
+    // var errorText = field?.errorText;
+    // _errorsMap[keyString] = errorText;
+    // return errorText;
   }
 
 // show error message functionality
@@ -194,6 +199,7 @@ abstract class FormManager {
 // data collection functionality
 // ==============================================================================
   Map<String, dynamic> collectInputData() {
+    // TODO uncomment and refactor
     return collectInputs().map((inputKey, _) => MapEntry(inputKey, _parseDataFromInput(_getInputValue(inputKey))));
   }
 
@@ -211,5 +217,9 @@ abstract class FormManager {
     return trimmed.isEmpty ? null : trimmed;
   }
 
-  _getInputValue(String inputIdString) => findField(inputIdString)!.value;
+  dynamic _getInputValue(String inputIdString) {
+    return null;
+  // TODO uncomment and refactor
+    // return findField(inputIdString)!.value;
+  }
 }

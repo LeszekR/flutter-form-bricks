@@ -66,7 +66,7 @@ class AppStyle {
           titleTextStyle: TextStyle(fontSize: AppSize.fontSize_5),
         ),
         //
-        tabBarTheme: TabBarTheme(
+        tabBarTheme: TabBarThemeData(
             tabAlignment: TabAlignment.start,
             dividerColor: AppColor.borderEnabled,
             indicatorSize: TabBarIndicatorSize.tab,
@@ -84,7 +84,7 @@ class AppStyle {
           radius: Radius.circular(AppSize.cornerRadius),
         ),
         //
-        dialogTheme: DialogTheme(
+        dialogTheme: DialogThemeData(
           backgroundColor: AppColor.formWindowBackground,
           contentTextStyle: TextStyle(
             fontSize: AppSize.fontSize_5,

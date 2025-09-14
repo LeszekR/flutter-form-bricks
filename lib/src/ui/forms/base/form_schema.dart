@@ -1,6 +1,4 @@
-import 'package:flutter_form_bricks/src/ui/inputs/state/brick_form_state_data.dart';
-
-import '../../inputs/state/brick_field_state_data.dart';
+import '../../../../shelf.dart';
 import 'field_descriptor.dart';
 
 abstract class FormSchema {

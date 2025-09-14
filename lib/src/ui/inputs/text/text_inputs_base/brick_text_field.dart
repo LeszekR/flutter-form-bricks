@@ -192,16 +192,18 @@ class _StateAwareTextFieldState extends BrickFieldState<BrickTextField> with Err
 
     super.setErrorMessageListener(widget.formManager, widget.keyString);
 
+    // TODO uncomment and finish
     _states = widget.statesNotifier?.value;
     widget.statesNotifier?.addListener(_onStatesChanged);
 
-    if (widget.withTextEditingController ?? true) {
-      var controllerValue = widget.initialValue;
-      if (controllerValue != null) controllerValue = controllerValue.toString();
-      widget.formManager.setEditingController(widget.keyString, controllerValue);
-    } else {
-      initialValue = widget.initialValue;
-    }
+    // TODO uncomment and finish
+    // if (widget.withTextEditingController ?? true) {
+    //   var controllerValue = widget.initialValue;
+    //   if (controllerValue != null) controllerValue = controllerValue.toString();
+    //   widget.formManager.setEditingController(widget.keyString, controllerValue);
+    // } else {
+    //   initialValue = widget.initialValue;
+    // }
   }
 
   @override
@@ -220,6 +222,8 @@ class _StateAwareTextFieldState extends BrickFieldState<BrickTextField> with Err
   Widget build(BuildContext context) {
     var statesObserver;
     var statesNotifier;
+    TextField textField;
+    StateAwareIconButton? button;
 
     if (widget.buttonParams == null) {
       var statesController = WidgetStatesController();
@@ -229,12 +233,11 @@ class _StateAwareTextFieldState extends BrickFieldState<BrickTextField> with Err
       var statesController = DoubleWidgetStatesController();
       statesObserver = statesController.lateWidgetStatesController;
       statesNotifier = statesController.receiverStatesController;
+
+      button = _makeButton(statesObserver, statesNotifier);
     }
 
-    TextField textField = _makeTextField(statesObserver, statesNotifier);
-
-    StateAwareIconButton? button;
-    if (widget.buttonParams != null) button = _makeButton(statesObserver, statesNotifier);
+    textField = _makeTextField(statesObserver, statesNotifier);
 
     return ValueListenableBuilder(
       valueListenable: statesNotifier,
@@ -334,10 +337,13 @@ class _StateAwareTextFieldState extends BrickFieldState<BrickTextField> with Err
     );
   }
 
-  StateAwareIconButton _makeButton(
+  StateAwareIconButton? _makeButton(
     UpdateOnceWidgetStatesController statesObserver,
     WidgetStatesController statesNotifier,
   ) {
+    if (widget.buttonParams == null) {
+      return null;
+    }
     return StateAwareIconButton(
       statesObserver: statesObserver,
       statesNotifier: statesNotifier,
@@ -367,9 +373,10 @@ class _StateAwareTextFieldState extends BrickFieldState<BrickTextField> with Err
   }
 
   void _onEditingComplete() {
-    _skipOnChanged = true;
-    var value = widget.onEditingComplete?.call();
-    _skipOnChanged = false;
-    widget.formManager.onFieldChanged(widget.keyString, value);
+    // TODO uncomment and finish
+    // _skipOnChanged = true;
+    // var value = widget.onEditingComplete?.call();
+    // _skipOnChanged = false;
+    // widget.formManager.onFieldChanged(widget.keyString, value);
   }
 }

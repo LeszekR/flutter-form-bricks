@@ -1,8 +1,14 @@
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/ui/forms/form_manager/e_form_status.dart';
-import 'package:flutter_form_builder/src/form_builder_field.dart';
+
+class EmptyFormStateData extends BrickFormStateData {}
+class EmptyFormSchema extends FormSchema {
+  EmptyFormSchema() : super([]);
+}
 
 class EmptyFormManager extends FormManager {
+  EmptyFormManager() : super(EmptyFormStateData(), EmptyFormSchema());
+
   @override
   void afterFieldChanged() {
   }
@@ -22,7 +28,7 @@ class EmptyFormManager extends FormManager {
   }
 
   @override
-  FormBuilderFieldState<FormBuilderField, dynamic>? findField(String keyString) {
+  BrickFieldState<BrickField>? findField(String keyString) {
     return null;
   }
 
