@@ -14,7 +14,7 @@ class BrickThemeData {
     this.colors = const DefaultAppColor(),
     this.sizes = const DefaultAppSize(),
     AppStyle? appStyle,
-  }) : styles = appStyle ?? DefaultAppStyle(colors, sizes);
+  }) : styles = appStyle ?? DefaultAppStyle(appColor: colors, appSize: sizes);
 
   BrickThemeData copyWith({
     AppColor? appColor,

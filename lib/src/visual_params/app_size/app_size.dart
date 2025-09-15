@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'app_scale.dart';
-import '../app_style/app_style.dart';
-
 abstract class AppSize {
   const AppSize();
 
   // TODO go through all, remove redundant, correct names
 
   /// Base scaling factor (from AppScale, or const 1.0 if no scaling)
-  double get s;
+  double get zoom;
 
   // dimensions
   double get cornerRadius;
@@ -26,14 +23,19 @@ abstract class AppSize {
   double get bottomPanelHeight;
 
   double get labelHeight;
+  double get inputLabelHeight;
 
   double get inputTextWidth;
   double get inputDateWidth;
   double get inputTimeWidth;
   double get inputNumberWidth;
   double get inputLabelWidth;
-  double get inputLabelHeight;
+
   double get inputTextLineHeight;
+
+  double get brickFieldButtonWidth;
+  double get brickFieldButtonHeight;
+
   double get iconSize;
   double get checkboxScaleSquare;
   double get checkboxScaleRound;

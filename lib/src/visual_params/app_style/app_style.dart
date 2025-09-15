@@ -4,17 +4,23 @@ import '../app_color/app_color.dart';
 import '../app_size/app_size.dart';
 
 abstract class AppStyle {
-  const AppStyle();
+  final AppColor appColor;
+  final AppSize appSize;
+
+  const AppStyle({
+    required this.appColor,
+    required this.appSize,
+  });
 
   // TODO go through all, remove redundant, correct names
   BorderSide get borderTabSide;
   BorderSide get borderTabSideDouble;
   BorderSide get borderFormGroupSide;
 
-  BorderSide get borderFieldSide;
   Border get borderFieldAll;
-  OutlineInputBorder get borderRadio;
+  BorderSide get borderFieldSide;
   BorderSide get borderFieldSideError;
+  OutlineInputBorder get borderRadio;
   BorderRadius get borderRadius;
   BeveledRectangleBorder get beveledRectangleBorderHardCorners;
   BeveledRectangleBorder get beveledRectangleBorderHardCornersNoBorder;
@@ -27,6 +33,7 @@ abstract class AppStyle {
 
   ThemeData mainTheme();
 
+  TextStyle textFieldStyle();
   TextStyle inputLabelStyle();
 
   WidgetStateProperty<OutlinedBorder> makeShapeRectangleProperty(bool hasBorder);

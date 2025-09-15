@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/gestures.dart';
@@ -6,9 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/inputs/states_controller/update_once_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_inputs_base/state_colored_icon_button.dart';
-import 'package:flutter_form_bricks/src/inputs/text/text_inputs_base/text_field_container.dart';
+import 'package:flutter_form_bricks/src/inputs/text/text_inputs_base/text_field_bordered_box.dart';
 
-import '../../../visual_params/app_size/app_size.dart';
 import '../../../visual_params/brick_theme.dart';
 import '../../base/brick_field.dart';
 import '../../states_controller/error_message_notifier.dart';
@@ -18,7 +18,6 @@ class BrickTextField extends BrickField {
   // BrickTextField
   final double? width;
   final double? lineHeight;
-  final int nLines;
   final bool? withTextEditingController;
 
   // Flutter TextField
@@ -70,6 +69,7 @@ class BrickTextField extends BrickField {
   final Brightness? keyboardAppearance;
   final EdgeInsets scrollPadding;
   final bool? enableInteractiveSelection;
+  final bool? selectAllOnFocus;
   final TextSelectionControls? selectionControls;
   final DragStartBehavior dragStartBehavior;
   final GestureTapCallback? onTap;
@@ -90,6 +90,7 @@ class BrickTextField extends BrickField {
   final bool canRequestFocus;
   final UndoHistoryController? undoController;
   final SpellCheckConfiguration? spellCheckConfiguration;
+  final List<Locale>? hintLocales;
 
   final IconButtonParams? buttonParams;
 
@@ -107,7 +108,6 @@ class BrickTextField extends BrickField {
     // BrickTextField
     this.width,
     this.lineHeight,
-    this.nLines = 1,
     this.withTextEditingController,
     //
     // TextField
@@ -115,7 +115,7 @@ class BrickTextField extends BrickField {
     this.controller,
     this.focusNode,
     this.undoController,
-    this.decoration = const InputDecoration(),
+    this.decoration,
     this.keyboardType,
     this.textInputAction,
     this.textCapitalization = TextCapitalization.none,
@@ -158,6 +158,7 @@ class BrickTextField extends BrickField {
     this.scrollPadding = const EdgeInsets.all(20.0),
     this.dragStartBehavior = DragStartBehavior.start,
     this.enableInteractiveSelection,
+    this.selectAllOnFocus,
     this.selectionControls,
     this.onTap,
     this.onTapAlwaysCalled = false,
@@ -178,6 +179,7 @@ class BrickTextField extends BrickField {
     this.spellCheckConfiguration,
     this.magnifierConfiguration,
     this.buttonParams,
+    this.hintLocales,
   });
 
   @override
@@ -222,10 +224,23 @@ class _StateAwareTextFieldState extends BrickFieldState<BrickTextField> with Err
 
   @override
   Widget build(BuildContext context) {
+    var theme = BrickTheme.of(context);
+
     var statesObserver;
     var statesNotifier;
     TextField textField;
+    TextStyle style;
+    double textHeight, buttonWidth, buttonHeight;
     StateColoredIconButton? button;
+
+    style = widget.style ?? theme.styles.textFieldStyle();
+
+    int maxLines = widget.maxLines ?? 1;
+    double width = widget.width ?? theme.sizes.inputTextWidth;
+
+    // TODO SizedBox still not tall correctly
+    var lineHeight = _calculateLineHeight(style);
+    textHeight = lineHeight * maxLines;
 
     if (widget.buttonParams == null) {
       var statesController = WidgetStatesController();
@@ -236,19 +251,25 @@ class _StateAwareTextFieldState extends BrickFieldState<BrickTextField> with Err
       statesObserver = statesController.lateWidgetStatesController;
       statesNotifier = statesController.receiverStatesController;
 
-      button = _makeButton(statesObserver, statesNotifier);
+      buttonWidth = widget.buttonParams!.width ?? theme.sizes.brickFieldButtonWidth;
+      assert(buttonWidth <= width / 2, 'BrickTextField button must not be wider than half of the field width');
+
+      buttonHeight = widget.buttonParams!.height ?? theme.sizes.brickFieldButtonHeight;
+      buttonHeight = min(buttonHeight, textHeight);
+
+      button = _makeButton(statesObserver, statesNotifier, buttonWidth, buttonHeight);
     }
 
-    textField = _makeTextField(context, statesObserver, statesNotifier);
+    textField = _makeTextField(context, statesObserver, statesNotifier, style);
 
     return ValueListenableBuilder(
       valueListenable: statesNotifier,
       builder: (context, states, _) {
         return TextFieldBorderedBox.build(
-          context: context,
-          width: widget.width ?? BrickTheme.of(context).sizes.inputTextWidth,
-          lineHeight: widget.lineHeight ?? BrickTheme.of(context).sizes.inputTextLineHeight,
-          nLines: widget.nLines,
+          theme: theme,
+          width: width,
+          lineHeight: lineHeight,
+          nLines: maxLines,
           textField: textField,
           button: button,
         );
@@ -260,24 +281,19 @@ class _StateAwareTextFieldState extends BrickFieldState<BrickTextField> with Err
     BuildContext context,
     WidgetStatesController statesObserver,
     WidgetStatesController statesNotifier,
+      TextStyle style,
   ) {
     return TextField(
       key: Key(widget.keyString),
       groupId: widget.groupId,
-
       controller: widget.formManager.getTextEditingController(widget.keyString),
       focusNode: widget.formManager.getFocusNode(widget.keyString),
       undoController: widget.undoController,
-
-      decoration: InputDecoration(
-        border: InputBorder.none,
-        fillColor: widget.colorMaker.makeColor(context, _states),
-      ),
-
+      decoration: _makeInputDecoration(widget.decoration),
       keyboardType: widget.keyboardType,
       textInputAction: widget.textInputAction,
       textCapitalization: widget.textCapitalization,
-      style: widget.style,
+      style: style,
       strutStyle: widget.strutStyle,
       textAlign: widget.textAlign,
       textAlignVertical: widget.textAlignVertical,
@@ -319,6 +335,7 @@ class _StateAwareTextFieldState extends BrickFieldState<BrickTextField> with Err
       scrollPadding: widget.scrollPadding,
       dragStartBehavior: widget.dragStartBehavior,
       enableInteractiveSelection: widget.enableInteractiveSelection,
+      selectAllOnFocus: widget.selectAllOnFocus,
       selectionControls: widget.selectionControls,
       onTap: widget.onTap,
       onTapAlwaysCalled: widget.onTapAlwaysCalled,
@@ -341,17 +358,22 @@ class _StateAwareTextFieldState extends BrickFieldState<BrickTextField> with Err
       canRequestFocus: widget.canRequestFocus,
       spellCheckConfiguration: widget.spellCheckConfiguration,
       magnifierConfiguration: widget.magnifierConfiguration,
+      hintLocales: widget.hintLocales,
     );
   }
 
   StateColoredIconButton? _makeButton(
     UpdateOnceWidgetStatesController statesObserver,
     WidgetStatesController statesNotifier,
+    double width,
+    double height,
   ) {
     if (widget.buttonParams == null) {
       return null;
     }
     return StateColoredIconButton(
+      width: width,
+      height: height,
       statesObserver: statesObserver,
       statesNotifier: statesNotifier,
       colorMaker: widget.colorMaker,
@@ -361,6 +383,33 @@ class _StateAwareTextFieldState extends BrickFieldState<BrickTextField> with Err
       tooltip: widget.buttonParams!.tooltip,
     );
   }
+
+  // TODO move helper methods to a singleton
+  InputDecoration _makeInputDecoration(InputDecoration? decoration) {
+    if (decoration == null) {
+      return InputDecoration(
+        isDense: true,
+        contentPadding: EdgeInsets.zero,
+        border: InputBorder.none,
+        fillColor: _makeColor(),
+      );
+    }
+    return decoration.copyWith(
+      fillColor: _makeColor(),
+    );
+  }
+
+  // TODO move helper methods to a singleton
+  double _calculateLineHeight(TextStyle style) {
+    final fontSize = style.fontSize!;
+    // TODO SizedBox still not tall correctly
+    final heightFactor = style.height ?? 1.2;
+    return fontSize * heightFactor;
+  }
+
+
+  // TODO move helper methods to a singleton
+  ui.Color? _makeColor() => widget.colorMaker.makeColor(context, _states);
 
   var _skipOnChanged = false;
 

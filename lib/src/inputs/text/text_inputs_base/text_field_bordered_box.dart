@@ -3,11 +3,11 @@ import 'package:flutter_form_bricks/src/inputs/text/text_inputs_base/state_color
 import 'package:flutter_form_bricks/src/visual_params/app_size/app_size.dart';
 
 import '../../../visual_params/app_style/app_style.dart';
-import '../../../visual_params/brick_theme.dart';
+import '../../../visual_params/brick_theme_data.dart';
 
 class TextFieldBorderedBox {
   static Widget build({
-    required BuildContext context,
+    required BrickThemeData theme,
     required double width,
     required double lineHeight,
     required int nLines,
@@ -15,16 +15,16 @@ class TextFieldBorderedBox {
     StateColoredIconButton? button,
   }) {
     if (button == null) {
-      return _wrapTextField(context, width, lineHeight, nLines, textField);
+      return _wrapTextField(theme, width, lineHeight, nLines, textField);
     }
     if (nLines == 1) {
-      return _wrapSingleLineTextFieldWithButton(context, width, lineHeight, textField, button);
+      return _wrapSingleLineTextFieldWithButton(theme, width, lineHeight, textField, button);
     }
-    return _wrapMultiLineTextFieldWithButton(context, width, lineHeight, nLines, textField, button);
+    return _wrapMultiLineTextFieldWithButton(theme, width, lineHeight, nLines, textField, button);
   }
 
   static Widget _wrapTextField(
-    BuildContext context,
+    BrickThemeData theme,
     double width,
     double lineHeight,
     int nLines,
@@ -34,7 +34,7 @@ class TextFieldBorderedBox {
       width: width,
       height: lineHeight * nLines,
       child: _wrapInBorder(
-        context,
+        theme,
         _BorderSet(true, true, true, true),
         textField,
       ),
@@ -42,7 +42,7 @@ class TextFieldBorderedBox {
   }
 
   static Widget _wrapSingleLineTextFieldWithButton(
-    BuildContext context,
+    BrickThemeData theme,
     double width,
     double lineHeight,
     TextField textField,
@@ -52,7 +52,7 @@ class TextFieldBorderedBox {
       width: width,
       height: lineHeight,
       child: _wrapInBorder(
-        context,
+        theme,
         _BorderSet(true, true, true, true),
         Row(children: [textField, button!]),
       ),
@@ -60,7 +60,7 @@ class TextFieldBorderedBox {
   }
 
   static Widget _wrapMultiLineTextFieldWithButton(
-    BuildContext context,
+    BrickThemeData theme,
     double width,
     double lineHeight,
     int nLines,
@@ -73,20 +73,20 @@ class TextFieldBorderedBox {
       child: Row(
         children: [
           _wrapInBorder(
-            context,
+            theme,
             _BorderSet(true, true, true, false),
             textField,
           ),
           Column(
             children: [
               _wrapInBorder(
-                context,
+                theme,
                 _BorderSet(true, false, true, true),
                 button,
               ),
               Expanded(
                 child: _wrapInBorder(
-                  context,
+                  theme,
                   _BorderSet(false, true, false, false),
                 ),
               ),
@@ -97,17 +97,27 @@ class TextFieldBorderedBox {
     );
   }
 
-  static Widget _wrapInBorder(BuildContext context, _BorderSet borderSet, [Widget? child]) {
+  static Widget _wrapInBorder(BrickThemeData theme, _BorderSet borderSet, [Widget? child]) {
+    var borderWidth = theme.sizes.borderWidth;
+    var borderFieldSide = theme.styles.borderFieldSide;
     return DecoratedBox(
       decoration: BoxDecoration(
         border: Border(
-          top: borderSet.top ?  BrickTheme.of(context).styles.borderFieldSide : BorderSide.none,
-          left: borderSet.left ?  BrickTheme.of(context).styles.borderFieldSide : BorderSide.none,
-          bottom: borderSet.bottom ?  BrickTheme.of(context).styles.borderFieldSide : BorderSide.none,
-          right: borderSet.right ?  BrickTheme.of(context).styles.borderFieldSide : BorderSide.none,
+          top: borderSet.top ? borderFieldSide : BorderSide.none,
+          left: borderSet.left ? borderFieldSide : BorderSide.none,
+          bottom: borderSet.bottom ? borderFieldSide : BorderSide.none,
+          right: borderSet.right ? borderFieldSide : BorderSide.none,
         ),
       ),
-      child: child,
+      child: Padding(
+        padding: EdgeInsets.only(
+          top: borderSet.top ? borderWidth : 0,
+          left: borderSet.left ? borderWidth : 0,
+          bottom: borderSet.bottom ? borderWidth : 0,
+          right: borderSet.right ? borderWidth : 0,
+        ),
+        child: child,
+      ),
     );
   }
 }

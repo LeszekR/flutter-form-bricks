@@ -6,6 +6,8 @@ import '../../states_controller/update_once_widget_states_controller.dart';
 
 class StateColoredIconButton extends StatefulWidget {
   final UpdateOnceWidgetStatesController statesObserver;
+  final double width;
+  final double height;
   final WidgetStatesController statesNotifier;
   final StatesColorMaker colorMaker;
   final IconData iconData;
@@ -16,6 +18,8 @@ class StateColoredIconButton extends StatefulWidget {
   // TODO complete with all other fields of Flutter IconButton
   const StateColoredIconButton({
     super.key,
+    required this.width,
+    required this.height,
     required this.statesObserver,
     required this.statesNotifier,
     required this.colorMaker,
@@ -75,8 +79,8 @@ class _StateColoredIconButtonState extends State<StateColoredIconButton> {
       child: makeGestureDetector(
         child: makeFocus(
           child: Container(
-            width: BrickTheme.of(context).sizes.inputTextLineHeight,
-            height: BrickTheme.of(context).sizes.inputTextLineHeight,
+            width: widget.width,
+            height: widget.height,
             padding: EdgeInsets.zero,
             alignment: Alignment.center,
             color: widget.colorMaker.makeColor(context, _states),

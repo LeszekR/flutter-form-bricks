@@ -11,6 +11,7 @@ class ExampleApp extends StatelessWidget {
     return BrickTheme(
       data: BrickThemeData(),
       child: MaterialApp(
+        theme: BrickTheme.of(context).styles.mainTheme(),
         home: Scaffold(
           body: Center(
             child: SizedBox(
@@ -32,35 +33,35 @@ class ExampleApp extends StatelessWidget {
                     formManager: EmptyFormManager(),
                     colorMaker: StatesColorMaker(),
                     width: 150,
-                    nLines: 3,
+                    maxLines: 3,
                   ),
-                  BrickTheme.of(context).sizes.spacerBoxVerticalMedium,
-                  BrickTextField(
-                    keyString: 'test_text_input_3',
-                    formManager: EmptyFormManager(),
-                    colorMaker: StatesColorMaker(),
-                    width: 150,
-                    buttonParams: IconButtonParams(
-                      iconData: Icons.arrow_drop_down,
-                      tooltip: 'podpowiedź niesłuszna',
-                      onPressed: () {},
-                      autofocus: false,
-                    ),
-                  ),
-                  BrickTheme.of(context).sizes.spacerBoxVerticalMedium,
-                  BrickTextField(
-                    keyString: 'test_text_input_4',
-                    formManager: EmptyFormManager(),
-                    colorMaker: StatesColorMaker(),
-                    width: 150,
-                    nLines: 3,
-                    buttonParams: IconButtonParams(
-                      iconData: Icons.arrow_drop_down,
-                      tooltip: 'podpowiedź słuszna',
-                      onPressed: () {},
-                      autofocus: false,
-                    ),
-                  ),
+                    // BrickTheme.of(context).sizes.spacerBoxVerticalMedium,
+                  // BrickTextField(
+                  //   keyString: 'test_text_input_3',
+                  //   formManager: EmptyFormManager(),
+                  //   colorMaker: StatesColorMaker(),
+                  //   width: 150,
+                  //   buttonParams: IconButtonParams(
+                  //     iconData: Icons.arrow_drop_down,
+                  //     tooltip: 'podpowiedź niesłuszna',
+                  //     onPressed: () {},
+                  //     autofocus: false,
+                  //   ),
+                  // ),
+                  // BrickTheme.of(context).sizes.spacerBoxVerticalMedium,
+                  // BrickTextField(
+                  //   keyString: 'test_text_input_4',
+                  //   formManager: EmptyFormManager(),
+                  //   colorMaker: StatesColorMaker(),
+                  //   width: 150,
+                  //   maxLines: 3,
+                  //   buttonParams: IconButtonParams(
+                  //     iconData: Icons.arrow_drop_down,
+                  //     tooltip: 'podpowiedź słuszna',
+                  //     onPressed: () {},
+                  //     autofocus: false,
+                  //   ),
+                  // ),
                 ],
               ), // test your widget here
             ),

@@ -4,9 +4,9 @@ import 'app_size.dart';
 
 class DefaultAppSize extends AppSize {
   @override
-  final double s;
+  final double zoom;
 
-  const DefaultAppSize({this.s = 1.0});
+  const DefaultAppSize({this.zoom = 1.0});
 
   static const double fontSmallest = 7;
   static const double fontIncrement = 1.5;
@@ -14,7 +14,7 @@ class DefaultAppSize extends AppSize {
   @override
   double get cornerRadius => 0;
 
-  double get _barHeight => s * 34;
+  double get _barHeight => zoom * 34;
 
   @override
   double get appBarHeight => _barHeight;
@@ -26,45 +26,52 @@ class DefaultAppSize extends AppSize {
   double get menuBarHeight => _barHeight;
 
   @override
-  double get menuButtonWidth => s * 110;
+  double get menuButtonWidth => zoom * 110;
 
   @override
-  double get tabHeight => s * 28;
+  double get tabHeight => zoom * 28;
 
   @override
-  double get tabWidth => s * 70;
+  double get tabWidth => zoom * 70;
 
   @override
-  double get borderWidth => s * 0.5;
+  double get borderWidth => zoom * 0.5;
 
   @override
-  double get tabBorderWidth => s * 1.5;
+  double get tabBorderWidth => zoom * 1.5;
 
   @override
-  double get bottomPanelHeight => s * 120;
+  double get bottomPanelHeight => zoom * 120;
 
   @override
-  double get labelHeight => s * 20;
+  double get labelHeight => zoom * 20;
 
   @override
-  double get inputTextWidth => s * 200;
+  double get inputTextWidth => zoom * 200;
 
   @override
-  double get inputDateWidth => s * 105;
+  double get inputDateWidth => zoom * 105;
 
   @override
-  double get inputTimeWidth => s * 65;
+  double get inputTimeWidth => zoom * 65;
 
   @override
-  double get inputNumberWidth => s * 50;
+  double get inputNumberWidth => zoom * 50;
 
   @override
-  double get inputLabelWidth => s * 180;
+  double get inputLabelWidth => zoom * 180;
 
   @override
   double get inputLabelHeight => fontSize2 + paddingInputLabel * 2; // using fontSize2 as proxy
+
   @override
-  double get inputTextLineHeight => s * 25;
+  double get inputTextLineHeight => zoom * 25;
+
+  @override
+  double get brickFieldButtonWidth => inputTextLineHeight;
+
+  @override
+  double get brickFieldButtonHeight => inputTextLineHeight;
 
   @override
   double get iconSize => inputTextLineHeight * 0.7;
@@ -79,122 +86,122 @@ class DefaultAppSize extends AppSize {
   double get radioScale => 0.8;
 
   @override
-  double get popupFormSpacing => s * 10;
+  double get popupFormSpacing => zoom * 10;
 
   @override
-  double get tabMinWidth => s * 90;
+  double get tabMinWidth => zoom * 90;
 
   @override
-  double get buttonWidth => s * 120;
+  double get buttonWidth => zoom * 120;
 
   @override
-  double get buttonHeight => s * 35;
+  double get buttonHeight => zoom * 35;
 
   @override
-  double get buttonFontSize => s * 14;
+  double get buttonFontSize => zoom * 14;
 
   @override
-  double get buttonScaleWidth => s * 90;
+  double get buttonScaleWidth => zoom * 90;
 
   @override
-  double get buttonSpacingHorizontal => s * 10;
+  double get buttonSpacingHorizontal => zoom * 10;
 
   @override
-  double get buttonScaleHeight => s * 60;
+  double get buttonScaleHeight => zoom * 60;
 
   @override
-  double get tableRowHeight => s * 30;
+  double get tableRowHeight => zoom * 30;
 
   @override
-  double get scrollBarWidth => s * 15;
+  double get scrollBarWidth => zoom * 15;
 
   @override
-  double get paddingTabsConstant => s * 5;
+  double get paddingTabsConstant => zoom * 5;
 
   @override
-  double get paddingTabsVertical => s * 8;
+  double get paddingTabsVertical => zoom * 8;
 
   @override
-  double get paddingButton => s * 7;
+  double get paddingButton => zoom * 7;
 
   @override
-  double get paddingTableCell => s * 2;
+  double get paddingTableCell => zoom * 2;
 
   @override
-  double get paddingForm => s * 10;
+  double get paddingForm => zoom * 10;
 
   @override
-  double get paddingInputText => s * 4;
+  double get paddingInputText => zoom * 4;
 
   @override
-  double get paddingInputLabel => s * 4;
+  double get paddingInputLabel => zoom * 4;
 
   @override
-  double get dialogContentInsetTop => s * 30;
+  double get dialogContentInsetTop => zoom * 30;
 
   @override
-  double get dialogContentInsetBottom => s * 22;
+  double get dialogContentInsetBottom => zoom * 22;
 
   @override
-  double get dialogContentInsetSide => s * 27;
+  double get dialogContentInsetSide => zoom * 27;
 
   @override
-  double get scaffoldInsetsHorizontal => s * 10;
+  double get scaffoldInsetsHorizontal => zoom * 10;
 
   @override
-  double get scaffoldInsetsVertical => s * 10;
+  double get scaffoldInsetsVertical => zoom * 10;
 
   @override
-  double get dashboardTileInsets => s * 10;
+  double get dashboardTileInsets => zoom * 10;
 
   @override
-  double get dashboardTileShadowOffset => s * 2;
+  double get dashboardTileShadowOffset => zoom * 2;
 
   @override
-  double get spinnerInsets => s * 20;
+  double get spinnerInsets => zoom * 20;
 
   @override
-  double get fontSize1 => s * (fontSmallest + fontIncrement * 1);
+  double get fontSize1 => zoom * (fontSmallest + fontIncrement * 1);
 
   @override
-  double get fontSize2 => s * (fontSmallest + fontIncrement * 2);
+  double get fontSize2 => zoom * (fontSmallest + fontIncrement * 2);
 
   @override
-  double get fontSize3 => s * (fontSmallest + fontIncrement * 3);
+  double get fontSize3 => zoom * (fontSmallest + fontIncrement * 3);
 
   @override
-  double get fontSize4 => s * (fontSmallest + fontIncrement * 4);
+  double get fontSize4 => zoom * (fontSmallest + fontIncrement * 4);
 
   @override
-  double get fontSize5 => s * (fontSmallest + fontIncrement * 5);
+  double get fontSize5 => zoom * (fontSmallest + fontIncrement * 5);
 
   @override
-  double get fontSize6 => s * (fontSmallest + fontIncrement * 6);
+  double get fontSize6 => zoom * (fontSmallest + fontIncrement * 6);
 
   @override
-  double get fontSize7 => s * (fontSmallest + fontIncrement * 7);
+  double get fontSize7 => zoom * (fontSmallest + fontIncrement * 7);
 
   @override
-  double get fontSize8 => s * (fontSmallest + fontIncrement * 8);
+  double get fontSize8 => zoom * (fontSmallest + fontIncrement * 8);
 
   @override
-  double get fontSize9 => s * (fontSmallest + fontIncrement * 9);
+  double get fontSize9 => zoom * (fontSmallest + fontIncrement * 9);
 
   @override
-  SizedBox get spacerBoxVerticalSmallest => SizedBox(height: s * 3.0);
+  SizedBox get spacerBoxVerticalSmallest => SizedBox(height: zoom * 3.0);
 
   @override
-  SizedBox get spacerBoxVerticalSmall => SizedBox(height: s * 10.0);
+  SizedBox get spacerBoxVerticalSmall => SizedBox(height: zoom * 10.0);
 
   @override
-  SizedBox get spacerBoxVerticalMedium => SizedBox(height: s * 20);
+  SizedBox get spacerBoxVerticalMedium => SizedBox(height: zoom * 20);
 
   @override
-  SizedBox get spacerBoxHorizontalSmallest => SizedBox(width: s * 3.0);
+  SizedBox get spacerBoxHorizontalSmallest => SizedBox(width: zoom * 3.0);
 
   @override
-  SizedBox get spacerBoxHorizontalSmall => SizedBox(width: s * 10.0);
+  SizedBox get spacerBoxHorizontalSmall => SizedBox(width: zoom * 10.0);
 
   @override
-  SizedBox get spacerBoxHorizontalMedium => SizedBox(width: s * 20);
+  SizedBox get spacerBoxHorizontalMedium => SizedBox(width: zoom * 20);
 }
