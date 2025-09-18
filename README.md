@@ -1,5 +1,16 @@
 # Flutter Form Bricks
 
+
+## Gap analysis
+
+As part of building this form library, I performed a **systematic gap analysis between Flutter’s
+native form APIs (Form, FormField, RestorationMixin, etc.) and the advanced requirements of
+enterprise-grade forms**. This involved surveying existing framework capabilities, identifying
+overlaps, and defining clear boundaries for reuse, extension, or replacement. The outcome was an
+architecture where Flutter’s proven primitives are leveraged wherever possible, and this library adds
+missing features such as centralized validation, error summaries, tabbed form state, built-in
+state restoration, etc. 
+
 ## TODO
 
 **describe / explain / elaborate on:**
@@ -36,10 +47,12 @@
   values
 
 **Visual params**
+
 - Refactored AppColor, AppSize, AppStyle to abstract class + default implementation
 - This way no static vars and dynamic change of theme, sizes are possible to implement
 - AppStyle can also be overriden by a dev
-- All three are accessed via InheritedWidget - this allows for scoping by replacing implementations for parts of the tree
+- All three are accessed via InheritedWidget - this allows for scoping by replacing implementations
+  for parts of the tree
 
 ###
 

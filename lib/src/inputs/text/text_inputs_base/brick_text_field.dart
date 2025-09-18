@@ -281,7 +281,7 @@ class _StateAwareTextFieldState extends BrickFieldState<BrickTextField> with Err
     BuildContext context,
     WidgetStatesController statesObserver,
     WidgetStatesController statesNotifier,
-      TextStyle style,
+    TextStyle style,
   ) {
     return TextField(
       key: Key(widget.keyString),
@@ -401,12 +401,19 @@ class _StateAwareTextFieldState extends BrickFieldState<BrickTextField> with Err
 
   // TODO move helper methods to a singleton
   double _calculateLineHeight(TextStyle style) {
-    final fontSize = style.fontSize!;
-    // TODO SizedBox still not tall correctly
-    final heightFactor = style.height ?? 1.2;
-    return fontSize * heightFactor;
+    // final fontSize = style.fontSize!;
+    // // TODO SizedBox still not tall correctly
+    // final heightFactor = style.height ?? 1.2;
+    // return fontSize * heightFactor;
+    return (TextPainter(
+      text: TextSpan(
+        text: 'Óy',
+        style: style,
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout())
+        .height;
   }
-
 
   // TODO move helper methods to a singleton
   ui.Color? _makeColor() => widget.colorMaker.makeColor(context, _states);

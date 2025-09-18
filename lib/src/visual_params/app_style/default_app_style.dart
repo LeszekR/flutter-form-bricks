@@ -202,4 +202,12 @@ class DefaultAppStyle extends AppStyle {
           : const BeveledRectangleBorder(side: BorderSide(width: 0, style: BorderStyle.none)),
     );
   }
+
+  // final double tp = (TextPainter(
+  //   text: const TextSpan(
+  //     text: 'A',
+  //     style: const TextStyle(fontSize: 14),
+  //   ),
+  //   textDirection: TextDirection.ltr,
+  // )..layout()).height;
 }

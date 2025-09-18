@@ -13,6 +13,7 @@ abstract class BrickField extends StatefulWidget {
   final AutovalidateMode autoValidateMode;
 
   BrickField({
+    // TODO refactor to obligatory use of KeyString class guaranteeing key uniqueness
     super.key,
     required this.keyString,
     required this.formManager,
