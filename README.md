@@ -1,15 +1,57 @@
 # Flutter Form Bricks
 
-
 ## Gap analysis
 
 As part of building this form library, I performed a **systematic gap analysis between Flutter’s
 native form APIs (Form, FormField, RestorationMixin, etc.) and the advanced requirements of
 enterprise-grade forms**. This involved surveying existing framework capabilities, identifying
 overlaps, and defining clear boundaries for reuse, extension, or replacement. The outcome was an
-architecture where Flutter’s proven primitives are leveraged wherever possible, and this library adds
-missing features such as centralized validation, error summaries, tabbed form state, built-in
-state restoration, etc. 
+architecture where Flutter’s proven primitives are leveraged wherever possible, and this library
+adds missing features such as centralized validation, error summaries, tabbed form state, built-in
+state restoration, etc.
+
+### Key uniqueness guard
+
+This project includes a **key-uniqueness guard** to prevent subtle Flutter bugs caused by duplicate
+keys.
+
+- **Classes**: `KeyGen` (marker), `KeyRegistry` (debug-time uniqueness checks), `ValueKeyGen`
+  , `ObjectKeyGen`, `UniqueKeyGen`, `GlobalKeyGen`.
+- **Mechanism**: In debug mode, every generated key is checked against a global registry. Duplicates
+  immediately throw an error. In release builds, all checks are tree-shaken out → no runtime cost.
+- **Why**: Flutter only enforces key uniqueness among siblings. Two widgets in the same form can
+  share a `ValueKey("x")` and behave unpredictably. Our guard enforces **global uniqueness** during
+  development to catch such mistakes.
+- **Testing**: `KeyRegistry.reset()` is provided for unit tests to clear the registry between runs.
+- **Future**: Eventually, all keys in this app will be supplied only through `KeyGen`
+  implementations, ensuring full coverage.
+
+### AutoValidateModeBrick
+
+`AutoValidateModeBrick` defines when form fields automatically validate in Brick forms.
+
+Unlike Flutter’s `AutovalidateMode`, Brick **always validates once before the first build**.  
+This replaces Flutter’s default post-build validation and ensures that the form knows its initial
+validity immediately.
+
+This approach also allows `TabbedFormBrick` to validate `initialValue`s without instantiating states
+for invisible tabs.  
+Errors in those initial values (or their absence) can immediately mark the tab header with an error
+state, even if the tab’s content hasn’t been built yet.
+
+Modes:
+
+- **onCreateOrSave** → validate before the first build, then only again when the form is saved (
+  equivalent to Flutter’s `disabled`, but using pre-build instead of post-build validation).
+- **onChange** → validate before the first build and on every change to the field’s value (
+  equivalent to Flutter’s `onUserInteraction`, but using pre-build instead of post-build validation)
+  .
+- **onEditingComplete** → validate before the first build and when editing completes (focus loss, or
+  user presses “done”). Useful when a `FormatterValidatorChain` can only complete its work on
+  finished multi-character input, e.g. shortened date/time input.
+
+There is no `always` mode: it is redundant in Brick, since every field already validates once before
+the first build.
 
 ## TODO
 
