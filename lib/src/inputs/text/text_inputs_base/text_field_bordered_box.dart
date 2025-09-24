@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_inputs_base/state_colored_icon_button.dart';
-import 'package:flutter_form_bricks/src/visual_params/app_size/app_size.dart';
 
-import '../../../visual_params/app_style/app_style.dart';
-import '../../../visual_params/brick_theme_data.dart';
+import '../../../visual_params/bricks_theme_data.dart';
 
 class TextFieldBorderedBox {
   static Widget build({
-    required BrickThemeData theme,
+    required BricksThemeData theme,
     required double width,
     required double lineHeight,
     required int nLines,
@@ -24,7 +22,7 @@ class TextFieldBorderedBox {
   }
 
   static Widget _wrapTextField(
-    BrickThemeData theme,
+    BricksThemeData theme,
     double width,
     double lineHeight,
     int nLines,
@@ -42,7 +40,7 @@ class TextFieldBorderedBox {
   }
 
   static Widget _wrapSingleLineTextFieldWithButton(
-    BrickThemeData theme,
+    BricksThemeData theme,
     double width,
     double lineHeight,
     TextField textField,
@@ -60,7 +58,7 @@ class TextFieldBorderedBox {
   }
 
   static Widget _wrapMultiLineTextFieldWithButton(
-    BrickThemeData theme,
+    BricksThemeData theme,
     double width,
     double lineHeight,
     int nLines,
@@ -97,7 +95,7 @@ class TextFieldBorderedBox {
     );
   }
 
-  static Widget _wrapInBorder(BrickThemeData theme, _BorderSet borderSet, [Widget? child]) {
+  static Widget _wrapInBorder(BricksThemeData theme, _BorderSet borderSet, [Widget? child]) {
     var borderWidth = theme.sizes.borderWidth;
     var borderFieldSide = theme.styles.borderFieldSide;
     return DecoratedBox(

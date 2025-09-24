@@ -33,8 +33,8 @@ abstract class AppSize {
 
   double get inputTextLineHeight;
 
-  double get brickFieldButtonWidth;
-  double get brickFieldButtonHeight;
+  double get textFieldButtonWidth;
+  double get textFieldButtonHeight;
 
   double get iconSize;
   double get checkboxScaleSquare;

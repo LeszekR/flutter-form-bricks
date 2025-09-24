@@ -9,12 +9,12 @@ import 'package:flutter_form_bricks/src/inputs/states_controller/update_once_wid
 import 'package:flutter_form_bricks/src/inputs/text/text_inputs_base/state_colored_icon_button.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_inputs_base/text_field_bordered_box.dart';
 
-import '../../../visual_params/brick_theme.dart';
-import '../../base/brick_field.dart';
+import '../../../visual_params/bricks_theme.dart';
+import '../../base/form_field_brick.dart';
 import '../../states_controller/error_message_notifier.dart';
 import 'icon_button_params.dart';
 
-class BrickTextField extends BrickField {
+class TextFieldBrick extends FormFieldBrick {
   // BrickTextField
   final double? width;
   final double? lineHeight;
@@ -94,7 +94,7 @@ class BrickTextField extends BrickField {
 
   final IconButtonParams? buttonParams;
 
-  BrickTextField({
+  TextFieldBrick({
     super.key,
     //
     // BrickFormField
@@ -186,7 +186,7 @@ class BrickTextField extends BrickField {
   State<StatefulWidget> createState() => _StateAwareTextFieldState();
 }
 
-class _StateAwareTextFieldState extends BrickFieldState<BrickTextField> with ErrorMessageNotifier {
+class _StateAwareTextFieldState extends FormFieldBrickState<TextFieldBrick> with ErrorMessageNotifier {
   dynamic initialValue;
   Set<WidgetState>? _states;
 
@@ -224,7 +224,7 @@ class _StateAwareTextFieldState extends BrickFieldState<BrickTextField> with Err
 
   @override
   Widget build(BuildContext context) {
-    var theme = BrickTheme.of(context);
+    var theme = BricksTheme.of(context);
 
     var statesObserver;
     var statesNotifier;
@@ -251,10 +251,10 @@ class _StateAwareTextFieldState extends BrickFieldState<BrickTextField> with Err
       statesObserver = statesController.lateWidgetStatesController;
       statesNotifier = statesController.receiverStatesController;
 
-      buttonWidth = widget.buttonParams!.width ?? theme.sizes.brickFieldButtonWidth;
+      buttonWidth = widget.buttonParams!.width ?? theme.sizes.textFieldButtonWidth;
       assert(buttonWidth <= width / 2, 'BrickTextField button must not be wider than half of the field width');
 
-      buttonHeight = widget.buttonParams!.height ?? theme.sizes.brickFieldButtonHeight;
+      buttonHeight = widget.buttonParams!.height ?? theme.sizes.textFieldButtonHeight;
       buttonHeight = min(buttonHeight, textHeight);
 
       button = _makeButton(statesObserver, statesNotifier, buttonWidth, buttonHeight);

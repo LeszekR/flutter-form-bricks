@@ -5,23 +5,23 @@ import 'app_size/default_app_size.dart';
 import 'app_style/app_style.dart';
 import 'app_style/default_app_style.dart';
 
-class BrickThemeData {
+class BricksThemeData {
   final AppColor colors;
   final AppSize sizes;
   final AppStyle styles;
 
-  BrickThemeData({
+  BricksThemeData({
     this.colors = const DefaultAppColor(),
     this.sizes = const DefaultAppSize(),
     AppStyle? appStyle,
   }) : styles = appStyle ?? DefaultAppStyle(appColor: colors, appSize: sizes);
 
-  BrickThemeData copyWith({
+  BricksThemeData copyWith({
     AppColor? appColor,
     AppSize? appSize,
     AppStyle? appStyle,
   }) {
-    return BrickThemeData(
+    return BricksThemeData(
       colors: appColor ?? this.colors,
       sizes: appSize ?? this.sizes,
       appStyle: appStyle ?? this.styles,

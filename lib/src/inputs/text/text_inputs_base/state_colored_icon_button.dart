@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_inputs_base/states_color_maker.dart';
-import 'package:flutter_form_bricks/src/visual_params/brick_theme.dart';
+import 'package:flutter_form_bricks/src/visual_params/bricks_theme.dart';
 
 import '../../states_controller/update_once_widget_states_controller.dart';
 
@@ -86,12 +86,12 @@ class _StateColoredIconButtonState extends State<StateColoredIconButton> {
             color: widget.colorMaker.makeColor(context, _states),
             child: IconButton(
               icon: Icon(widget.iconData),
-              iconSize: BrickTheme.of(context).sizes.iconSize,
-              style: ButtonStyle(shape: BrickTheme.of(context).styles.makeShapeRectangleProperty(false)),
+              iconSize: BricksTheme.of(context).sizes.iconSize,
+              style: ButtonStyle(shape: BricksTheme.of(context).styles.makeShapeRectangleProperty(false)),
               padding: EdgeInsets.zero,
               alignment: Alignment.center,
               autofocus: widget.autofocus,
-              color: BrickTheme.of(context).colors.iconColor,
+              color: BricksTheme.of(context).colors.iconColor,
               tooltip: widget.tooltip,
               focusNode: _focusNode,
               onPressed: widget.onPressed,

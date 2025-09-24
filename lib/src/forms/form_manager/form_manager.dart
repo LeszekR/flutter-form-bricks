@@ -3,13 +3,13 @@ import 'package:flutter_form_bricks/src/forms/base/form_schema.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validator_chain.dart';
 
 import '../../../../shelf.dart';
-import '../../inputs/base/brick_field.dart';
-import '../base/brick_form.dart';
+import '../../inputs/base/form_field_brick.dart';
+import '../base/form_brick.dart';
 import 'e_form_status.dart';
 
 abstract class FormManager extends ChangeNotifier {
-  final _formKey = GlobalKey<BrickFormState>();
-  final BrickFormStateData _stateData;
+  final _formKey = GlobalKey<FormBrickState>();
+  final FormStateData _stateData;
   final Map<String, dynamic> _inputInitialValuesMap = {};
   final Map<String, String?> _errorsMap = {};
 
@@ -35,13 +35,13 @@ abstract class FormManager extends ChangeNotifier {
 
   void fillInitialInputValuesMap();
 
-  BrickFieldState<BrickField>? findField(String keyString);
+  FormFieldBrickState<FormFieldBrick>? findField(String keyString);
 
   void resetForm();
 
   Map<String, dynamic> collectInputs();
 
-  GlobalKey<BrickFormState> get formKey => _formKey;
+  GlobalKey<FormBrickState> get formKey => _formKey;
 
   TextEditingController getTextEditingController(String keyString, {String? defaultValue}) {
     setEditingController(keyString, defaultValue);
@@ -87,7 +87,7 @@ abstract class FormManager extends ChangeNotifier {
 //   errorMessageNotifier.value = newMessages;
 // }
 
-  void setInitialValues(GlobalKey<BrickFormState> contentGlobalKey) {
+  void setInitialValues(GlobalKey<FormBrickState> contentGlobalKey) {
     // TODO uncomment and refactor
     // var currentState = contentGlobalKey.currentState;
     // assert(currentState != null);
@@ -102,7 +102,7 @@ abstract class FormManager extends ChangeNotifier {
     // }
   }
 
-  EFormStatus getFormPartState(GlobalKey<BrickFormState> formPartKey) {
+  EFormStatus getFormPartState(GlobalKey<FormBrickState> formPartKey) {
     // TODO uncomment and refactor
     // final currentState = formPartKey.currentState;
     // if (currentState == null) {

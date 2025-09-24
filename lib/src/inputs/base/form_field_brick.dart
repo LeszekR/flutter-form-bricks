@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 
 import '../../../../shelf.dart';
 
-abstract class BrickField extends StatefulWidget {
+abstract class FormFieldBrick extends StatefulWidget {
   final String keyString;
   final FormManager formManager;
   final StatesColorMaker colorMaker;
@@ -12,7 +12,7 @@ abstract class BrickField extends StatefulWidget {
   // TODO implement identical functionality as in flutter_form_builder using onChange, onEditingComplete, onSave
   final AutovalidateMode autoValidateMode;
 
-  BrickField({
+  FormFieldBrick({
     // TODO refactor to obligatory use of KeyString class guaranteeing key uniqueness
     super.key,
     required this.keyString,
@@ -24,6 +24,6 @@ abstract class BrickField extends StatefulWidget {
   });
 }
 
-abstract class BrickFieldState<T extends BrickField> extends State<T> {
+abstract class FormFieldBrickState<T extends FormFieldBrick> extends State<T> {
   // TODO implement onChange common to all inputs
 }

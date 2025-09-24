@@ -68,10 +68,10 @@ class DefaultAppSize extends AppSize {
   double get inputTextLineHeight => zoom * 25;
 
   @override
-  double get brickFieldButtonWidth => inputTextLineHeight;
+  double get textFieldButtonWidth => inputTextLineHeight;
 
   @override
-  double get brickFieldButtonHeight => inputTextLineHeight;
+  double get textFieldButtonHeight => inputTextLineHeight;
 
   @override
   double get iconSize => inputTextLineHeight * 0.7;

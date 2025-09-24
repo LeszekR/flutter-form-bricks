@@ -1,4 +1,4 @@
-class BrickFieldStateData<T> {
+class FormFieldStateData<T> {
   T? initialValue;
   T? value;
   bool dirty; // value changed vs initial
@@ -6,7 +6,7 @@ class BrickFieldStateData<T> {
   bool validating; // if async validator running
   String? errorMessage;
 
-  BrickFieldStateData({this.initialValue})
+  FormFieldStateData({this.initialValue})
       : dirty = false,
         valid = true,
         validating = false;

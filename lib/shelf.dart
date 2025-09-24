@@ -1,10 +1,10 @@
-export 'src/inputs/text/text_inputs_base/brick_text_field.dart';
+export 'src/inputs/text/text_inputs_base/text_field_brick.dart';
 export 'src/forms/form_manager/form_manager.dart';
 export 'src/inputs/text/text_inputs_base/states_color_maker.dart';
 export 'src/forms/base/form_schema.dart';
-export 'src/state/brick_form_state_data.dart';
-export 'src/inputs/base/brick_field.dart';
-export 'src/state/brick_field_state_data.dart';
-export 'src/visual_params/brick_theme.dart';
-export 'src/visual_params/brick_theme_data.dart';
+export 'src/state/form_state_data.dart';
+export 'src/inputs/base/form_field_brick.dart';
+export 'src/state/form_field_state_data.dart';
+export 'src/visual_params/bricks_theme.dart';
+export 'src/visual_params/bricks_theme_data.dart';
 export 'src/inputs/text/text_inputs_base/icon_button_params.dart';

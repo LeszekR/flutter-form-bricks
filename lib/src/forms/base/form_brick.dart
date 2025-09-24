@@ -1,29 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_bricks/src/forms/base/form_schema.dart';
-import 'package:provider/provider.dart';
 
 import '../../../../shelf.dart';
-import '../../buttons/buttons.dart';
-import '../../inputs/base/brick_field.dart';
-import '../../visual_params/app_size/app_size.dart';
-import '../form_manager/e_form_status.dart';
-import '../form_manager/form_manager.dart';
 
 ///  Top layer of forms used by this software.
 ///  Can be used for forms that are not intended to save any data to db
-abstract class BrickForm extends StatefulWidget {
+abstract class FormBrick extends StatefulWidget {
   final String _errorTextKeyString = "error_text";
   final FormManager _formManager;
 
-  BrickForm({super.key, required FormManager formManager}) : _formManager = formManager;
+  FormBrick({super.key, required FormManager formManager}) : _formManager = formManager;
 
   get errorKeyString => _errorTextKeyString;
 
-  GlobalKey<BrickFormState> get formKey => _formManager.formKey;
+  GlobalKey<FormBrickState> get formKey => _formManager.formKey;
 
   @override
-  BrickFormState createState();
+  FormBrickState createState();
 
   static Future<dynamic> openForm({required final BuildContext context, required final Widget form}) {
     return showDialog(context: context, barrierDismissible: false, builder: (final BuildContext context) => form);
@@ -31,9 +24,9 @@ abstract class BrickForm extends StatefulWidget {
 }
 
 /// A type alias for a map of form fields.
-typedef BrickFields = Map<String, BrickFieldState<BrickField>>;
+typedef FormFieldBrickStateMap = Map<String, FormFieldBrickState<FormFieldBrick>>;
 
-abstract class BrickFormState<T extends BrickForm> extends State<T> {
+abstract class FormBrickState<T extends FormBrick> extends State<T> {
   /// Do NOT override this method in PROD! This is ONLY FOR UI TESTS!
   /// Flutter builds UI differently in prod and test. Due to that TestStandaloneForm crashes on control panel vertical
   /// overflow without this correction, This param introduces correction of control panel height
@@ -43,9 +36,9 @@ abstract class BrickFormState<T extends BrickForm> extends State<T> {
 
   FormManager get formManager => widget._formManager;
 
-  final _formKey = GlobalKey<BrickFormState>();
+  final _formKey = GlobalKey<FormBrickState>();
 
-  GlobalKey<BrickFormState> get formKey => formManager.formKey;
+  GlobalKey<FormBrickState> get formKey => formManager.formKey;
 
   String provideLabel();
 
