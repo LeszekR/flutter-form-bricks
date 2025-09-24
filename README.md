@@ -51,7 +51,15 @@ Modes:
   finished multi-character input, e.g. shortened date/time input.
 
 There is no `always` mode: it is redundant in Brick, since every field already validates once before
-the first build.
+the first build.  
+All fields are also validated on form save, ensuring that external state changes are always taken
+into account at that time.
+
+⚠️ Brick does **not** validate fields on every focus gain. While this could catch rare cases where
+external state changes affect a field’s validity, it would waste energy by running unnecessary
+validations.  
+This design deliberately favors slightly worse UX in rare edge cases over continuous revalidation on
+focus.
 
 ## TODO
 

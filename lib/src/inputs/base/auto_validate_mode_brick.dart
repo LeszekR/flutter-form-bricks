@@ -5,11 +5,11 @@
 /// This replaces Flutter’s built-in [AutovalidateMode]. The main difference:
 /// - Flutter’s `always` mode is redundant here because [FormFieldBrick]
 ///   *always performs an initial validation before the first build*.
-///   This allows `TabbedFormBrick`, where fields are initialized with
-///   `initialValue`s, to validate them without creating states for invisible
-///   tabs. As a result, errors in initial values (or their absence) can
-///   immediately mark the tab header with an error state, even if the tab’s
-///   content hasn’t been built yet.
+///   This replaces Flutter’s post-build validation. It also allows
+///   `TabbedFormBrick`, where fields are initialized with `initialValue`s,
+///   to validate them without creating states for invisible tabs. As a result,
+///   errors in initial values (or their absence) can immediately mark the tab
+///   header with an error state, even if the tab’s content hasn’t been built yet.
 /// - As a result, only three modes are needed to fully cover all use cases.
 ///
 /// ### Modes
@@ -43,9 +43,13 @@
 /// - There is no `always` mode: because validation is always performed once
 ///   before the first build, [onChange] and [onEditingComplete] already cover
 ///   all remaining use cases.
-/// - This ensures that forms are always in a valid/invalid state immediately,
-///   even before user interaction, while giving developers control over how
-///   often validation occurs afterwards.
+/// - All fields are validated again when the form is saved, so validation
+///   results always include the influence of any external state at save time.
+/// - This library **does not validate fields automatically on every focus gain**.
+///   While such a mechanism could catch rare cases where external state changes
+///   affect validity, it would waste energy by revalidating fields unnecessarily.
+///   This design intentionally favors slightly worse UX in rare cases over
+///   continuous unnecessary validation.
 enum AutoValidateModeBrick {
   /// Validate once before the first build and again only when the form is saved.
   onCreateOrSave,
