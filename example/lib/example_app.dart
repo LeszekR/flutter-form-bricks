@@ -8,10 +8,10 @@ class ExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BricksTheme(
-      data: BricksThemeData(),
+    return UiParams(
+      data: UiParamsData(),
       child: MaterialApp(
-        theme: BricksTheme.of(context).styles.mainTheme(),
+        theme: UiParams.of(context).style.mainTheme(),
         home: Scaffold(
           body: Center(
             child: SizedBox(
@@ -22,14 +22,14 @@ class ExampleApp extends StatelessWidget {
                 // mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextFieldBrick(
-                    keyString: 'test_text_input_1',
+                    keyString: 'text_1',
                     formManager: EmptyFormManager(),
                     colorMaker: StatesColorMaker(),
                     width: 150,
                   ),
-                  BricksTheme.of(context).sizes.spacerBoxVerticalMedium,
+                  UiParams.of(context).size.spacerBoxVerticalMedium,
                   TextFieldBrick(
-                    keyString: 'test_text_input_2',
+                    keyString: 'text_2',
                     formManager: EmptyFormManager(),
                     colorMaker: StatesColorMaker(),
                     width: 150,

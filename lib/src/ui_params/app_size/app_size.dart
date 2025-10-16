@@ -1,12 +1,28 @@
 import 'package:flutter/material.dart';
 
 abstract class AppSize {
-  const AppSize();
+  AppSize({required this.zoom});
 
   // TODO go through all, remove redundant, correct names
 
   /// Base scaling factor (from AppScale, or const 1.0 if no scaling)
-  double get zoom;
+  double zoom;
+
+  // fonts
+  double calculateFontSize(double size) => zoom * (fontSmallest + fontIncrement * size);
+
+  double get fontSmallest;
+  double get fontIncrement;
+
+  double get fontSize1;
+  double get fontSize2;
+  double get fontSize3;
+  double get fontSize4;
+  double get fontSize5;
+  double get fontSize6;
+  double get fontSize7;
+  double get fontSize8;
+  double get fontSize9;
 
   // dimensions
   double get cornerRadius;
@@ -25,10 +41,10 @@ abstract class AppSize {
   double get labelHeight;
   double get inputLabelHeight;
 
-  double get inputTextWidth;
-  double get inputDateWidth;
-  double get inputTimeWidth;
-  double get inputNumberWidth;
+  double get textFieldWidth;
+  double get dateFieldWidth;
+  double get timeFieldWidth;
+  double get numberFieldWidth;
   double get inputLabelWidth;
 
   double get inputTextLineHeight;
@@ -77,17 +93,6 @@ abstract class AppSize {
 
   double get spinnerInsets;
 
-  // fonts
-  double get fontSize1;
-  double get fontSize2;
-  double get fontSize3;
-  double get fontSize4;
-  double get fontSize5;
-  double get fontSize6;
-  double get fontSize7;
-  double get fontSize8;
-  double get fontSize9;
-
   // spacers
   SizedBox get spacerBoxVerticalSmallest;
   SizedBox get spacerBoxVerticalSmall;
@@ -95,4 +100,29 @@ abstract class AppSize {
   SizedBox get spacerBoxHorizontalSmallest;
   SizedBox get spacerBoxHorizontalSmall;
   SizedBox get spacerBoxHorizontalMedium;
+
+
+  double? _textLineHeight; // kept for compatibility
+
+  double get textLineHeight => _textLineHeight ?? _calculateLineHeight();
+
+  double _calculateLineHeight() {
+    // TODO tu przerwałem - solve circular dependency DefaultThemeData <=> AppSize
+    _textLineHeight = calculateLineHeight(textStyle());
+    return _textLineHeight!;
+  }
+
+  final Map<TextStyle, double> textLineHeightMap = {};
+
+  double calculateLineHeight(TextStyle style) {
+    if (!textLineHeightMap.containsKey(style)) {
+      final textPainter = TextPainter(
+        text: TextSpan(text: 'a', style: style),
+        textDirection: TextDirection.ltr,
+      )..layout();
+      textLineHeightMap[style] = textPainter.height;
+    }
+    return textLineHeightMap[style]!;
+  }
+
 }

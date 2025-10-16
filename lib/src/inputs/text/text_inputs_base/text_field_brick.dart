@@ -8,8 +8,9 @@ import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_s
 import 'package:flutter_form_bricks/src/inputs/states_controller/update_once_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_inputs_base/state_colored_icon_button.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_inputs_base/text_field_bordered_box.dart';
+import 'package:flutter_form_bricks/src/ui_params/app_style/app_style.dart';
 
-import '../../../visual_params/bricks_theme.dart';
+import '../../../ui_params/ui_params.dart';
 import '../../base/form_field_brick.dart';
 import '../../states_controller/error_message_notifier.dart';
 import 'icon_button_params.dart';
@@ -17,7 +18,6 @@ import 'icon_button_params.dart';
 class TextFieldBrick extends FormFieldBrick {
   // BrickTextField
   final double? width;
-  final double? lineHeight;
   final bool? withTextEditingController;
 
   // Flutter TextField
@@ -107,7 +107,6 @@ class TextFieldBrick extends FormFieldBrick {
     //
     // BrickTextField
     this.width,
-    this.lineHeight,
     this.withTextEditingController,
     //
     // TextField
@@ -224,22 +223,27 @@ class _StateAwareTextFieldState extends FormFieldBrickState<TextFieldBrick> with
 
   @override
   Widget build(BuildContext context) {
-    var theme = BricksTheme.of(context);
+    var uiParams = UiParams.of(context);
 
     var statesObserver;
     var statesNotifier;
     TextField textField;
     TextStyle style;
-    double textHeight, buttonWidth, buttonHeight;
+    double lineHeight, textHeight, buttonWidth, buttonHeight;
     StateColoredIconButton? button;
 
-    style = widget.style ?? theme.styles.textFieldStyle();
+    if (widget.style == null) {
+      style = uiParams.style.textStyle();
+      lineHeight = uiParams.style.textLineHeight;
+    } else {
+      style = widget.style!;
+      lineHeight = uiParams.style.calculateLineHeight(widget.style!);
+    }
 
     int maxLines = widget.maxLines ?? 1;
-    double width = widget.width ?? theme.sizes.inputTextWidth;
+    double width = widget.width ?? uiParams.size.textFieldWidth;
 
     // TODO SizedBox still not tall correctly
-    var lineHeight = _calculateLineHeight(style);
     textHeight = lineHeight * maxLines;
 
     if (widget.buttonParams == null) {
@@ -251,10 +255,10 @@ class _StateAwareTextFieldState extends FormFieldBrickState<TextFieldBrick> with
       statesObserver = statesController.lateWidgetStatesController;
       statesNotifier = statesController.receiverStatesController;
 
-      buttonWidth = widget.buttonParams!.width ?? theme.sizes.textFieldButtonWidth;
+      buttonWidth = widget.buttonParams!.width ?? uiParams.size.textFieldButtonWidth;
       assert(buttonWidth <= width / 2, 'BrickTextField button must not be wider than half of the field width');
 
-      buttonHeight = widget.buttonParams!.height ?? theme.sizes.textFieldButtonHeight;
+      buttonHeight = widget.buttonParams!.height ?? uiParams.size.textFieldButtonHeight;
       buttonHeight = min(buttonHeight, textHeight);
 
       button = _makeButton(statesObserver, statesNotifier, buttonWidth, buttonHeight);
@@ -266,7 +270,7 @@ class _StateAwareTextFieldState extends FormFieldBrickState<TextFieldBrick> with
       valueListenable: statesNotifier,
       builder: (context, states, _) {
         return TextFieldBorderedBox.build(
-          theme: theme,
+          uiParamsData: uiParams,
           width: width,
           lineHeight: lineHeight,
           nLines: maxLines,
@@ -388,7 +392,8 @@ class _StateAwareTextFieldState extends FormFieldBrickState<TextFieldBrick> with
   InputDecoration _makeInputDecoration(InputDecoration? decoration) {
     if (decoration == null) {
       return InputDecoration(
-        isDense: true,
+        // isDense: true,
+        // isCollapsed: true,
         contentPadding: EdgeInsets.zero,
         border: InputBorder.none,
         fillColor: _makeColor(),
@@ -397,22 +402,6 @@ class _StateAwareTextFieldState extends FormFieldBrickState<TextFieldBrick> with
     return decoration.copyWith(
       fillColor: _makeColor(),
     );
-  }
-
-  // TODO move helper methods to a singleton
-  double _calculateLineHeight(TextStyle style) {
-    // final fontSize = style.fontSize!;
-    // // TODO SizedBox still not tall correctly
-    // final heightFactor = style.height ?? 1.2;
-    // return fontSize * heightFactor;
-    return (TextPainter(
-      text: TextSpan(
-        text: 'Óy',
-        style: style,
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout())
-        .height;
   }
 
   // TODO move helper methods to a singleton

@@ -9,9 +9,9 @@
 // import '../dialogs/dialogs.dart';
 // import '../inputs/base/double_widget_states_controller.dart';
 // import '../inputs/states_controller/double_widget_states_controller.dart';
-// import '../visual_params/app_color.dart';
-// import '../visual_params/app_size.dart';
-// import '../visual_params/app_style.dart';
+// import '../ui_params/app_color.dart';
+// import '../ui_params/app_size.dart';
+// import '../ui_params/app_style.dart';
 // import 'elevated_button_with_disabling.dart';
 // import '../inputs/text/text_inputs_base/state_colored_icon_button.dart';
 //

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_inputs_base/state_colored_icon_button.dart';
 
-import '../../../visual_params/bricks_theme_data.dart';
+import '../../../ui_params/ui_params_data.dart';
 
 class TextFieldBorderedBox {
   static Widget build({
-    required BricksThemeData theme,
+    required UiParamsData uiParamsData,
     required double width,
     required double lineHeight,
     required int nLines,
@@ -13,16 +13,16 @@ class TextFieldBorderedBox {
     StateColoredIconButton? button,
   }) {
     if (button == null) {
-      return _wrapTextField(theme, width, lineHeight, nLines, textField);
+      return _wrapTextField(uiParamsData, width, lineHeight, nLines, textField);
     }
     if (nLines == 1) {
-      return _wrapSingleLineTextFieldWithButton(theme, width, lineHeight, textField, button);
+      return _wrapSingleLineTextFieldWithButton(uiParamsData, width, lineHeight, textField, button);
     }
-    return _wrapMultiLineTextFieldWithButton(theme, width, lineHeight, nLines, textField, button);
+    return _wrapMultiLineTextFieldWithButton(uiParamsData, width, lineHeight, nLines, textField, button);
   }
 
   static Widget _wrapTextField(
-    BricksThemeData theme,
+    UiParamsData uiParamsData,
     double width,
     double lineHeight,
     int nLines,
@@ -30,9 +30,9 @@ class TextFieldBorderedBox {
   ) {
     return SizedBox(
       width: width,
-      height: lineHeight * nLines,
+      height: lineHeight * nLines + uiParamsData.size.borderWidth * 2,
       child: _wrapInBorder(
-        theme,
+        uiParamsData,
         _BorderSet(true, true, true, true),
         textField,
       ),
@@ -40,7 +40,7 @@ class TextFieldBorderedBox {
   }
 
   static Widget _wrapSingleLineTextFieldWithButton(
-    BricksThemeData theme,
+    UiParamsData uiParamsData,
     double width,
     double lineHeight,
     TextField textField,
@@ -48,9 +48,9 @@ class TextFieldBorderedBox {
   ) {
     return SizedBox(
       width: width,
-      height: lineHeight,
+      height: lineHeight + uiParamsData.size.borderWidth * 2,
       child: _wrapInBorder(
-        theme,
+        uiParamsData,
         _BorderSet(true, true, true, true),
         Row(children: [textField, button!]),
       ),
@@ -58,7 +58,7 @@ class TextFieldBorderedBox {
   }
 
   static Widget _wrapMultiLineTextFieldWithButton(
-    BricksThemeData theme,
+    UiParamsData uiParamsData,
     double width,
     double lineHeight,
     int nLines,
@@ -67,24 +67,24 @@ class TextFieldBorderedBox {
   ) {
     return SizedBox(
       width: width,
-      height: lineHeight * nLines,
+      height: lineHeight * nLines + uiParamsData.size.borderWidth * 2,
       child: Row(
         children: [
           _wrapInBorder(
-            theme,
+            uiParamsData,
             _BorderSet(true, true, true, false),
             textField,
           ),
           Column(
             children: [
               _wrapInBorder(
-                theme,
+                uiParamsData,
                 _BorderSet(true, false, true, true),
                 button,
               ),
               Expanded(
                 child: _wrapInBorder(
-                  theme,
+                  uiParamsData,
                   _BorderSet(false, true, false, false),
                 ),
               ),
@@ -95,24 +95,24 @@ class TextFieldBorderedBox {
     );
   }
 
-  static Widget _wrapInBorder(BricksThemeData theme, _BorderSet borderSet, [Widget? child]) {
-    var borderWidth = theme.sizes.borderWidth;
-    var borderFieldSide = theme.styles.borderFieldSide;
+  static Widget _wrapInBorder(UiParamsData uiParamsData, _BorderSet borderSet, [Widget? child]) {
+    var borderWidth = uiParamsData.size.borderWidth;
+    var borderFieldSide = uiParamsData.style.borderFieldSide;
     return DecoratedBox(
       decoration: BoxDecoration(
         border: Border(
           top: borderSet.top ? borderFieldSide : BorderSide.none,
-          left: borderSet.left ? borderFieldSide : BorderSide.none,
+          left: borderSet.start ? borderFieldSide : BorderSide.none,
           bottom: borderSet.bottom ? borderFieldSide : BorderSide.none,
-          right: borderSet.right ? borderFieldSide : BorderSide.none,
+          right: borderSet.end ? borderFieldSide : BorderSide.none,
         ),
       ),
       child: Padding(
         padding: EdgeInsets.only(
           top: borderSet.top ? borderWidth : 0,
-          left: borderSet.left ? borderWidth : 0,
+          left: borderSet.start ? borderWidth : 0,
           bottom: borderSet.bottom ? borderWidth : 0,
-          right: borderSet.right ? borderWidth : 0,
+          right: borderSet.end ? borderWidth : 0,
         ),
         child: child,
       ),
@@ -122,9 +122,9 @@ class TextFieldBorderedBox {
 
 class _BorderSet {
   final bool top;
-  final bool left;
+  final bool start;
   final bool bottom;
-  final bool right;
+  final bool end;
 
-  const _BorderSet(this.top, this.left, this.bottom, this.right);
+  const _BorderSet(this.top, this.start, this.bottom, this.end);
 }

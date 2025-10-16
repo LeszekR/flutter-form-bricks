@@ -7,16 +7,15 @@ abstract class AppStyle {
   final AppColor appColor;
   final AppSize appSize;
 
-  const AppStyle({
+  AppStyle({
     required this.appColor,
     required this.appSize,
   });
 
-  // TODO go through all, remove redundant, correct names
+   // TODO go through all, remove redundant, correct names
   BorderSide get borderTabSide;
   BorderSide get borderTabSideDouble;
   BorderSide get borderFormGroupSide;
-
   Border get borderFieldAll;
   BorderSide get borderFieldSide;
   BorderSide get borderFieldSideError;
@@ -24,16 +23,11 @@ abstract class AppStyle {
   BorderRadius get borderRadius;
   BeveledRectangleBorder get beveledRectangleBorderHardCorners;
   BeveledRectangleBorder get beveledRectangleBorderHardCornersNoBorder;
-
   TextStyle get labelTextStyle;
-
   FontStyle get tabFontEnabled;
   FontStyle get tabFontDisabled;
   FontStyle get tabFontError;
 
-  ThemeData mainTheme();
-
-  TextStyle textFieldStyle();
   TextStyle inputLabelStyle();
 
   WidgetStateProperty<OutlinedBorder> makeShapeRectangleProperty(bool hasBorder);

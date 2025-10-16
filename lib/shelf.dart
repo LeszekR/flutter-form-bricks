@@ -5,6 +5,6 @@ export 'src/forms/base/form_schema.dart';
 export 'src/state/form_state_data.dart';
 export 'src/inputs/base/form_field_brick.dart';
 export 'src/state/form_field_state_data.dart';
-export 'src/visual_params/bricks_theme.dart';
-export 'src/visual_params/bricks_theme_data.dart';
+export 'src/ui_params/ui_params.dart';
+export 'src/ui_params/ui_params_data.dart';
 export 'src/inputs/text/text_inputs_base/icon_button_params.dart';

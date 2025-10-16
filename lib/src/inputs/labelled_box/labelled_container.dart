@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/src/inputs/labelled_box/e_label_position.dart';
 
-import '../../visual_params/app_size/app_size.dart';
-import '../../visual_params/app_style/app_style.dart';
+import '../../ui_params/app_size/app_size.dart';
+import '../../ui_params/app_style/app_style.dart';
 
 
 // LabelledBox
@@ -89,7 +89,7 @@ class LabelledContainer extends StatelessWidget {
           mLabelWidth = labelWidth ?? AppSize.inputLabelWidth;
           mLabelHeight = AppSize.inputTextLineHeight;
 
-          mTextWidth = (inputWidth ?? AppSize.inputTextWidth) - mButtonWidth;
+          mTextWidth = (inputWidth ?? AppSize.textFieldWidth) - mButtonWidth;
           mTextHeight = (AppSize.inputTextLineHeight * (inputHeightMultiplier ?? 1));
 
           mInputWidth = mLabelWidth + mTextWidth + mButtonWidth + (2 * AppSize.paddingInputLabel);
@@ -104,7 +104,7 @@ class LabelledContainer extends StatelessWidget {
           mButtonWidth = AppSize.inputTextLineHeight;
           mButtonHeight = AppSize.inputTextLineHeight;
 
-          mTextWidth = inputWidth ?? AppSize.inputTextWidth;
+          mTextWidth = inputWidth ?? AppSize.textFieldWidth;
           mTextHeight = AppSize.inputTextLineHeight * (inputHeightMultiplier ?? 1);
 
           mLabelWidth = mTextWidth;
