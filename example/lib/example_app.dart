@@ -11,7 +11,7 @@ class ExampleApp extends StatelessWidget {
     return UiParams(
       data: UiParamsData(),
       child: MaterialApp(
-        theme: UiParams.of(context).style.mainTheme(),
+        theme: UiParams.of(context).theme,
         home: Scaffold(
           body: Center(
             child: SizedBox(

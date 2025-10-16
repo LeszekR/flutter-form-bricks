@@ -7,12 +7,11 @@ abstract class AppStyle {
   final AppColor appColor;
   final AppSize appSize;
 
-  AppStyle({
-    required this.appColor,
-    required this.appSize,
-  });
+  AppStyle(
+    this.appColor,
+    this.appSize,
+  );
 
-   // TODO go through all, remove redundant, correct names
   BorderSide get borderTabSide;
   BorderSide get borderTabSideDouble;
   BorderSide get borderFormGroupSide;

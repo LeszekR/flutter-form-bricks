@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/ui_params/app_style/default_theme_data.dart';
+import 'package:flutter_form_bricks/src/ui_params/theme_data/bricks_theme_data.dart';
+import 'package:flutter_form_bricks/src/ui_params/theme_data/default_theme_data.dart';
 
 import 'app_color/app_color.dart';
 import 'app_color/default_app_color.dart';
@@ -12,17 +13,19 @@ class UiParamsData {
   final AppColor color;
   final AppSize size;
   final AppStyle style;
-  final ThemeData theme;
+  final BricksThemeData theme;
 
   UiParamsData({
-    AppColor? colors,
-    AppSize? sizes,
-    AppStyle? style,
+    AppColor? appColor,
+    AppSize? appSize,
+    AppStyle? appStyle,
     ThemeData? themeData,
-  })  : this.color = colors ?? DefaultAppColor(const Color.fromARGB(255, 101, 224, 190)),
-        this.size = sizes ?? DefaultAppSize(),
-        this.style = style ?? DefaultAppStyle(appColor: colors!, appSize: sizes!),
-        this.theme = themeData ?? DefaultThemeData.instance().get(colors!, sizes!, style!);
+  })  : this.color = appColor ?? DefaultAppColor(const Color.fromARGB(255, 101, 224, 190)),
+        this.size = appSize ?? DefaultAppSize(),
+        this.style = appStyle ?? DefaultAppStyle(appColor!, appSize!),
+        this.theme = themeData != null
+            ?  DefaultThemeData.from(appColor!, appSize!, appStyle!, themeData).themeData
+            : DefaultThemeData(appColor!, appSize!, appStyle!).themeData;
 
   UiParamsData copyWith({
     AppColor? appColor,
@@ -31,9 +34,9 @@ class UiParamsData {
     ThemeData? theme,
   }) {
     return UiParamsData(
-      colors: appColor ?? this.color,
-      sizes: appSize ?? this.size,
-      style: appStyle ?? this.style,
+      appColor: appColor ?? this.color,
+      appSize: appSize ?? this.size,
+      appStyle: appStyle ?? this.style,
       themeData: theme ?? this.theme,
     );
   }

@@ -3,17 +3,13 @@ import 'package:flutter/material.dart';
 abstract class AppSize {
   AppSize({required this.zoom});
 
-  // TODO go through all, remove redundant, correct names
-
   /// Base scaling factor (from AppScale, or const 1.0 if no scaling)
   double zoom;
 
   // fonts
   double calculateFontSize(double size) => zoom * (fontSmallest + fontIncrement * size);
-
   double get fontSmallest;
   double get fontIncrement;
-
   double get fontSize1;
   double get fontSize2;
   double get fontSize3;
@@ -26,50 +22,38 @@ abstract class AppSize {
 
   // dimensions
   double get cornerRadius;
-
   double get appBarHeight;
   double get formBarHeight;
   double get menuBarHeight;
   double get menuButtonWidth;
   double get tabHeight;
   double get tabWidth;
-
   double get borderWidth;
   double get tabBorderWidth;
   double get bottomPanelHeight;
-
   double get labelHeight;
   double get inputLabelHeight;
-
   double get textFieldWidth;
   double get dateFieldWidth;
   double get timeFieldWidth;
   double get numberFieldWidth;
   double get inputLabelWidth;
-
   double get inputTextLineHeight;
-
   double get textFieldButtonWidth;
   double get textFieldButtonHeight;
-
   double get iconSize;
   double get checkboxScaleSquare;
   double get checkboxScaleRound;
   double get radioScale;
-
   double get popupFormSpacing;
-
   double get tabMinWidth;
-
   double get buttonWidth;
   double get buttonHeight;
   double get buttonFontSize;
   double get buttonScaleWidth;
   double get buttonSpacingHorizontal;
   double get buttonScaleHeight;
-
   double get tableRowHeight;
-
   double get scrollBarWidth;
 
   // insets, padding
@@ -80,17 +64,13 @@ abstract class AppSize {
   double get paddingForm;
   double get paddingInputText;
   double get paddingInputLabel;
-
   double get dialogContentInsetTop;
   double get dialogContentInsetBottom;
   double get dialogContentInsetSide;
-
   double get scaffoldInsetsHorizontal;
   double get scaffoldInsetsVertical;
-
   double get dashboardTileInsets;
   double get dashboardTileShadowOffset;
-
   double get spinnerInsets;
 
   // spacers
@@ -100,29 +80,4 @@ abstract class AppSize {
   SizedBox get spacerBoxHorizontalSmallest;
   SizedBox get spacerBoxHorizontalSmall;
   SizedBox get spacerBoxHorizontalMedium;
-
-
-  double? _textLineHeight; // kept for compatibility
-
-  double get textLineHeight => _textLineHeight ?? _calculateLineHeight();
-
-  double _calculateLineHeight() {
-    // TODO tu przerwałem - solve circular dependency DefaultThemeData <=> AppSize
-    _textLineHeight = calculateLineHeight(textStyle());
-    return _textLineHeight!;
-  }
-
-  final Map<TextStyle, double> textLineHeightMap = {};
-
-  double calculateLineHeight(TextStyle style) {
-    if (!textLineHeightMap.containsKey(style)) {
-      final textPainter = TextPainter(
-        text: TextSpan(text: 'a', style: style),
-        textDirection: TextDirection.ltr,
-      )..layout();
-      textLineHeightMap[style] = textPainter.height;
-    }
-    return textLineHeightMap[style]!;
-  }
-
 }

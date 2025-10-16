@@ -233,11 +233,11 @@ class _StateAwareTextFieldState extends FormFieldBrickState<TextFieldBrick> with
     StateColoredIconButton? button;
 
     if (widget.style == null) {
-      style = uiParams.style.textStyle();
-      lineHeight = uiParams.style.textLineHeight;
+      style = uiParams.theme.textStyle();
+      lineHeight = uiParams.theme.textLineHeight;
     } else {
       style = widget.style!;
-      lineHeight = uiParams.style.calculateLineHeight(widget.style!);
+      lineHeight = uiParams.theme.calculateLineHeight(widget.style!);
     }
 
     int maxLines = widget.maxLines ?? 1;
