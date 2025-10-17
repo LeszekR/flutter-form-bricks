@@ -8,10 +8,11 @@ class ExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var uiParamsData = UiParamsData();
     return UiParams(
-      data: UiParamsData(),
+      data: uiParamsData,
       child: MaterialApp(
-        theme: UiParams.of(context).theme,
+        theme: uiParamsData.appTheme.themeData,
         home: Scaffold(
           body: Center(
             child: SizedBox(
@@ -27,7 +28,7 @@ class ExampleApp extends StatelessWidget {
                     colorMaker: StatesColorMaker(),
                     width: 150,
                   ),
-                  UiParams.of(context).size.spacerBoxVerticalMedium,
+                  uiParamsData.appSize.spacerBoxVerticalMedium,
                   TextFieldBrick(
                     keyString: 'text_2',
                     formManager: EmptyFormManager(),

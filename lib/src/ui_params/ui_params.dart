@@ -16,8 +16,7 @@ class UiParams extends InheritedWidget {
     if (uiParams == null) {
       throw FlutterError(
         'UiParams.of() called with a context that does not contain a UiParams.\n'
-            'No UiParams ancestor could be found starting from the context given.\n'
-            'Make sure your app is wrapped in a UiParams widget.',
+        'Wrap your app with UiParams.',
       );
     }
     return uiParams.data;
@@ -26,4 +25,3 @@ class UiParams extends InheritedWidget {
   @override
   bool updateShouldNotify(UiParams oldWidget) => data != oldWidget.data;
 }
-

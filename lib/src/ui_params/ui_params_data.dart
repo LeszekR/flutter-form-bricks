@@ -10,34 +10,40 @@ import 'app_style/app_style.dart';
 import 'app_style/default_app_style.dart';
 
 class UiParamsData {
-  final AppColor color;
-  final AppSize size;
-  final AppStyle style;
-  final BricksThemeData theme;
+  final AppColor appColor;
+  final AppSize appSize;
+  final AppStyle appStyle;
+  final BricksThemeData appTheme;
 
-  UiParamsData({
+  const UiParamsData._(
+    this.appColor,
+    this.appSize,
+    this.appStyle,
+    this.appTheme,
+  );
+
+  factory UiParamsData({
     AppColor? appColor,
     AppSize? appSize,
     AppStyle? appStyle,
-    ThemeData? themeData,
-  })  : this.color = appColor ?? DefaultAppColor(const Color.fromARGB(255, 101, 224, 190)),
-        this.size = appSize ?? DefaultAppSize(),
-        this.style = appStyle ?? DefaultAppStyle(appColor!, appSize!),
-        this.theme = themeData != null
-            ?  DefaultThemeData.from(appColor!, appSize!, appStyle!, themeData).themeData
-            : DefaultThemeData(appColor!, appSize!, appStyle!).themeData;
-
-  UiParamsData copyWith({
-    AppColor? appColor,
-    AppSize? appSize,
-    AppStyle? appStyle,
-    ThemeData? theme,
+    ThemeData? appTheme,
   }) {
-    return UiParamsData(
-      appColor: appColor ?? this.color,
-      appSize: appSize ?? this.size,
-      appStyle: appStyle ?? this.style,
-      themeData: theme ?? this.theme,
-    );
+    final color = appColor ?? DefaultAppColor(const Color.fromARGB(255, 101, 224, 190));
+    final size = appSize ?? DefaultAppSize();
+    final style = appStyle ?? DefaultAppStyle(color, size);
+
+    // Assert style consistency when caller injects a DefaultAppStyle.
+    assert(() {
+      if (style is DefaultAppStyle) {
+        return identical(style.appColor, color) && identical(style.appSize, size);
+      }
+      return true;
+    }(), 'DefaultAppStyle must be constructed with the same AppColor/AppSize instances.');
+
+    final theme = (appTheme == null)
+        ? DefaultThemeData(color, size, style)
+        : DefaultThemeData.from(color, size, style, appTheme);
+
+    return UiParamsData._(color, size, style, theme);
   }
 }

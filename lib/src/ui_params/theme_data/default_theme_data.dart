@@ -66,14 +66,14 @@ class DefaultThemeData extends BricksThemeData {
 
   // TODO tu przerwałem - solve this
   @override
-  get appBarTheme {
+  get appBarThemeData {
     return sourceTheme?.appBarTheme ??
         AppBarTheme(
           backgroundColor: appColor.colorSchemeMain.secondary,
           foregroundColor: appColor.colorSchemeMain.onSecondary,
           toolbarHeight: appSize.formBarHeight,
           titleTextStyle: TextStyle(fontSize: appSize.fontSize5),
-        );
+        ).data;
   }
 
   @override
@@ -143,7 +143,7 @@ class DefaultThemeData extends BricksThemeData {
 
   // TODO tu przerwałem - solve this
   @override
-  get inputDecorationTheme =>
+  get inputDecorationThemeData =>
       sourceTheme?.inputDecorationTheme ??
       InputDecorationTheme(
         constraints: BoxConstraints(
@@ -159,7 +159,7 @@ class DefaultThemeData extends BricksThemeData {
           fontSize: appSize.fontSize4,
         ),
         errorStyle: const TextStyle(fontSize: 0),
-      );
+      ).data;
 
   @override
   get checkboxThemeData =>

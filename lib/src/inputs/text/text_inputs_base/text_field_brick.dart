@@ -8,7 +8,6 @@ import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_s
 import 'package:flutter_form_bricks/src/inputs/states_controller/update_once_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_inputs_base/state_colored_icon_button.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_inputs_base/text_field_bordered_box.dart';
-import 'package:flutter_form_bricks/src/ui_params/app_style/app_style.dart';
 
 import '../../../ui_params/ui_params.dart';
 import '../../base/form_field_brick.dart';
@@ -233,15 +232,15 @@ class _StateAwareTextFieldState extends FormFieldBrickState<TextFieldBrick> with
     StateColoredIconButton? button;
 
     if (widget.style == null) {
-      style = uiParams.theme.textStyle();
-      lineHeight = uiParams.theme.textLineHeight;
+      style = uiParams.appTheme.textStyle();
+      lineHeight = uiParams.appTheme.textLineHeight;
     } else {
       style = widget.style!;
-      lineHeight = uiParams.theme.calculateLineHeight(widget.style!);
+      lineHeight = uiParams.appTheme.calculateLineHeight(widget.style!);
     }
 
     int maxLines = widget.maxLines ?? 1;
-    double width = widget.width ?? uiParams.size.textFieldWidth;
+    double width = widget.width ?? uiParams.appSize.textFieldWidth;
 
     // TODO SizedBox still not tall correctly
     textHeight = lineHeight * maxLines;
@@ -255,10 +254,10 @@ class _StateAwareTextFieldState extends FormFieldBrickState<TextFieldBrick> with
       statesObserver = statesController.lateWidgetStatesController;
       statesNotifier = statesController.receiverStatesController;
 
-      buttonWidth = widget.buttonParams!.width ?? uiParams.size.textFieldButtonWidth;
+      buttonWidth = widget.buttonParams!.width ?? uiParams.appSize.textFieldButtonWidth;
       assert(buttonWidth <= width / 2, 'BrickTextField button must not be wider than half of the field width');
 
-      buttonHeight = widget.buttonParams!.height ?? uiParams.size.textFieldButtonHeight;
+      buttonHeight = widget.buttonParams!.height ?? uiParams.appSize.textFieldButtonHeight;
       buttonHeight = min(buttonHeight, textHeight);
 
       button = _makeButton(statesObserver, statesNotifier, buttonWidth, buttonHeight);

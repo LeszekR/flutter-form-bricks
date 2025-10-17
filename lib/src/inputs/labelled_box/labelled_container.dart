@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/src/inputs/labelled_box/e_label_position.dart';
 
-import '../../ui_params/app_size/app_size.dart';
-import '../../ui_params/app_style/app_style.dart';
 
 
 // LabelledBox
@@ -43,16 +41,16 @@ class LabelledContainer extends StatelessWidget {
   final ELabelPosition labelPosition;
   final ValueWidgetBuilder<Set<WidgetState>> widgetBuilder;
   final WidgetStatesController widgetStatesController;
-  int? inputHeightMultiplier;
-  double? labelWidth;
+  final double labelWidth;
+  final int inputHeightMultiplier;
 
   LabelledContainer({
     required this.label,
     required this.labelPosition,
     required this.widgetBuilder,
     required this.widgetStatesController,
-    final int? inputHeightMultiplier,
-    final double? labelWidth,
+    required this.labelWidth,
+    this.inputHeightMultiplier = 1,
   });
 
   @override
@@ -68,54 +66,59 @@ class LabelledContainer extends StatelessWidget {
       });
   }
 
-  Widget buildLabelledContainer() {
-    double mTextWidth, mTextHeight;
-    double mButtonWidth, mButtonHeight;
-    double mLabelWidth, mLabelHeight;
-    double mInputWidth, mInputHeight;
-
-    final inputLabel = Text(
-      label,
-      textAlign: TextAlign.left,
-      style: AppStyle.inputLabelStyle(),
-    );
-
-    switch (labelPosition) {
-      case ELabelPosition.left:
-        {
-          mButtonWidth = AppSize.inputTextLineHeight;
-          mButtonHeight = AppSize.inputTextLineHeight;
-
-          mLabelWidth = labelWidth ?? AppSize.inputLabelWidth;
-          mLabelHeight = AppSize.inputTextLineHeight;
-
-          mTextWidth = (inputWidth ?? AppSize.textFieldWidth) - mButtonWidth;
-          mTextHeight = (AppSize.inputTextLineHeight * (inputHeightMultiplier ?? 1));
-
-          mInputWidth = mLabelWidth + mTextWidth + mButtonWidth + (2 * AppSize.paddingInputLabel);
-          mInputHeight = mTextHeight;
-
-          return makeLeftLabelInputStateAware(mInputWidth, mInputHeight, mLabelWidth, mLabelHeight, inputLabel,
-              mTextWidth, inputText, mButtonWidth, mButtonHeight, button);
-        }
-
-      default: // EInputNamePosition = topLeft
-        {
-          mButtonWidth = AppSize.inputTextLineHeight;
-          mButtonHeight = AppSize.inputTextLineHeight;
-
-          mTextWidth = inputWidth ?? AppSize.textFieldWidth;
-          mTextHeight = AppSize.inputTextLineHeight * (inputHeightMultiplier ?? 1);
-
-          mLabelWidth = mTextWidth;
-          mLabelHeight = AppSize.inputLabelHeight;
-
-          mInputWidth = mTextWidth + mButtonWidth;
-          mInputHeight = mLabelHeight + mTextHeight;
-
-          return makeTopLabelInputStateAware(mInputWidth, mInputHeight, mLabelHeight, inputLabel, mTextWidth,
-              mTextHeight, inputText, mButtonWidth, mButtonHeight, button);
-        }
-    }
-  }
+// TODO refactor to final version - use InputDecoration where possible
+  // Widget buildLabelledContainer(BuildContext context) {
+  //   final uiParams = UiParams.of(context);
+  //   final appStyle = uiParams.appStyle;
+  //   final appSize = uiParams.appSize;
+  //
+  //   double mTextWidth, mTextHeight;
+  //   double mButtonWidth, mButtonHeight;
+  //   double mLabelWidth, mLabelHeight;
+  //   double mInputWidth, mInputHeight;
+  //
+  //   final inputLabel = Text(
+  //     label,
+  //     textAlign: TextAlign.left,
+  //     style: appStyle.inputLabelStyle(),
+  //   );
+  //
+    // switch (labelPosition) {
+    //   case ELabelPosition.left:
+    //     {
+    //       mButtonWidth = appSize.inputTextLineHeight;
+    //       mButtonHeight = appSize.inputTextLineHeight;
+    //
+    //       mLabelWidth = labelWidth ?? appSize.inputLabelWidth;
+    //       mLabelHeight = appSize.inputTextLineHeight;
+    //
+    //       mTextWidth = (inputWidth ?? appSize.textFieldWidth) - mButtonWidth;
+    //       mTextHeight = (appSize.inputTextLineHeight * (inputHeightMultiplier ?? 1));
+    //
+    //       mInputWidth = mLabelWidth + mTextWidth + mButtonWidth + (2 * appSize.paddingInputLabel);
+    //       mInputHeight = mTextHeight;
+    //
+    //       return makeLeftLabelInputStateAware(mInputWidth, mInputHeight, mLabelWidth, mLabelHeight, inputLabel,
+    //           mTextWidth, inputText, mButtonWidth, mButtonHeight, button);
+    //     }
+    //
+    //   default: // EInputNamePosition = topLeft
+    //     {
+    //       mButtonWidth = appSize.inputTextLineHeight;
+    //       mButtonHeight = appSize.inputTextLineHeight;
+    //
+    //       mTextWidth = inputWidth ?? appSize.textFieldWidth;
+    //       mTextHeight = appSize.inputTextLineHeight * (inputHeightMultiplier ?? 1);
+    //
+    //       mLabelWidth = mTextWidth;
+    //       mLabelHeight = appSize.inputLabelHeight;
+    //
+    //       mInputWidth = mTextWidth + mButtonWidth;
+    //       mInputHeight = mLabelHeight + mTextHeight;
+    //
+    //       return makeTopLabelInputStateAware(mInputWidth, mInputHeight, mLabelHeight, inputLabel, mTextWidth,
+    //           mTextHeight, inputText, mButtonWidth, mButtonHeight, button);
+    //     }
+    // }
+  // }
 }

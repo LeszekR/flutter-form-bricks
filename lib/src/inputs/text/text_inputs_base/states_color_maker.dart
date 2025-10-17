@@ -7,13 +7,13 @@ class StatesColorMaker {
     if (states == null) return null;
 
     return switch (states) {
-      _ when states.contains(WidgetState.disabled) => UiParams.of(context).color.formFieldFillDisabled,
-      _ when states.contains(WidgetState.error) => UiParams.of(context).color.formFieldFillError,
-      _ when states.contains(WidgetState.focused) => UiParams.of(context).color.formFieldFillFocused,
-      _ when states.contains(WidgetState.hovered) => UiParams.of(context).color.formFieldFillHovered,
-      _ when states.contains(WidgetState.pressed) => UiParams.of(context).color.formFieldFillPressed,
-      _ when states.contains(WidgetState.selected) => UiParams.of(context).color.formFieldFillSelected,
-      _ => UiParams.of(context).color.formFieldFillOk,
+      _ when states.contains(WidgetState.disabled) => UiParams.of(context).appColor.formFieldFillDisabled,
+      _ when states.contains(WidgetState.error) => UiParams.of(context).appColor.formFieldFillError,
+      _ when states.contains(WidgetState.focused) => UiParams.of(context).appColor.formFieldFillFocused,
+      _ when states.contains(WidgetState.hovered) => UiParams.of(context).appColor.formFieldFillHovered,
+      _ when states.contains(WidgetState.pressed) => UiParams.of(context).appColor.formFieldFillPressed,
+      _ when states.contains(WidgetState.selected) => UiParams.of(context).appColor.formFieldFillSelected,
+      _ => UiParams.of(context).appColor.formFieldFillOk,
     };
   }
 }

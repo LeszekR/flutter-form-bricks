@@ -30,7 +30,7 @@ class TextFieldBorderedBox {
   ) {
     return SizedBox(
       width: width,
-      height: lineHeight * nLines + uiParamsData.size.borderWidth * 2,
+      height: lineHeight * nLines + uiParamsData.appSize.borderWidth * 2,
       child: _wrapInBorder(
         uiParamsData,
         _BorderSet(true, true, true, true),
@@ -48,7 +48,7 @@ class TextFieldBorderedBox {
   ) {
     return SizedBox(
       width: width,
-      height: lineHeight + uiParamsData.size.borderWidth * 2,
+      height: lineHeight + uiParamsData.appSize.borderWidth * 2,
       child: _wrapInBorder(
         uiParamsData,
         _BorderSet(true, true, true, true),
@@ -67,7 +67,7 @@ class TextFieldBorderedBox {
   ) {
     return SizedBox(
       width: width,
-      height: lineHeight * nLines + uiParamsData.size.borderWidth * 2,
+      height: lineHeight * nLines + uiParamsData.appSize.borderWidth * 2,
       child: Row(
         children: [
           _wrapInBorder(
@@ -96,8 +96,8 @@ class TextFieldBorderedBox {
   }
 
   static Widget _wrapInBorder(UiParamsData uiParamsData, _BorderSet borderSet, [Widget? child]) {
-    var borderWidth = uiParamsData.size.borderWidth;
-    var borderFieldSide = uiParamsData.style.borderFieldSide;
+    var borderWidth = uiParamsData.appSize.borderWidth;
+    var borderFieldSide = uiParamsData.appStyle.borderFieldSide;
     return DecoratedBox(
       decoration: BoxDecoration(
         border: Border(
