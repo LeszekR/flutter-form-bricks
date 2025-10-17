@@ -2,6 +2,7 @@ import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/e_form_status.dart';
 
 class EmptyFormStateData extends FormStateData {}
+
 class EmptyFormSchema extends FormSchema {
   EmptyFormSchema() : super([]);
 }
@@ -10,8 +11,7 @@ class EmptyFormManager extends FormManager {
   EmptyFormManager() : super(EmptyFormStateData(), EmptyFormSchema());
 
   @override
-  void afterFieldChanged() {
-  }
+  void afterFieldChanged() {}
 
   @override
   EFormStatus checkState() {
@@ -24,8 +24,7 @@ class EmptyFormManager extends FormManager {
   }
 
   @override
-  void fillInitialInputValuesMap() {
-  }
+  void fillInitialInputValuesMap() {}
 
   @override
   FormFieldBrickState<FormFieldBrick>? findField(String keyString) {
@@ -33,7 +32,5 @@ class EmptyFormManager extends FormManager {
   }
 
   @override
-  void resetForm() {
-  }
-
+  void resetForm() {}
 }

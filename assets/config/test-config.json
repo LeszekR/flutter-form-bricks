@@ -1,0 +1,6 @@
+{
+  "baseUrl": "localhost:8888",
+  "appVersion": 0,
+  "entityLockTimeoutSec": 10,
+  "static const int pageSize": 50
+}

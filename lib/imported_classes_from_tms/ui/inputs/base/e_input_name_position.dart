@@ -1,3 +1,0 @@
-enum EInputLabelPosition {
-  topLeft, left
-}

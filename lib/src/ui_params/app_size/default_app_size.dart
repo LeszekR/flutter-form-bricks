@@ -27,6 +27,7 @@ class DefaultAppSize extends AppSize {
   @override late final double tabHeight = zoom * 28;
   @override late final double tabWidth = zoom * 70;
   @override late final double borderWidth = zoom * 0.5;
+  @override late final BorderRadiusGeometry borderRadius = BorderRadius.zero;
   @override late final double tabBorderWidth = zoom * 1.5;
   @override late final double bottomPanelHeight = zoom * 120;
   @override late final double labelHeight = zoom * 20;

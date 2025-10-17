@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-import '../../../../shelf.dart';
+import '../../forms/form_manager/form_manager.dart';
+import 'package:flutter_form_bricks/src/inputs/text/text_inputs_base/states_color_maker.dart';
 
 abstract class FormFieldBrick extends StatefulWidget {
   final String keyString;

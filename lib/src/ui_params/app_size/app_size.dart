@@ -29,6 +29,7 @@ abstract class AppSize {
   double get tabHeight;
   double get tabWidth;
   double get borderWidth;
+  BorderRadiusGeometry get borderRadius;
   double get tabBorderWidth;
   double get bottomPanelHeight;
   double get labelHeight;
