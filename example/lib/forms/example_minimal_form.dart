@@ -5,10 +5,10 @@ class ExampleMinimalForm extends SingleForm {
   ExampleMinimalForm({super.key});
 
   @override
-  SingleFormState<SingleForm> createState() => _ExampleMinimalFormState();
+  SingleFormStateData<SingleForm> createState() => _ExampleMinimalFormState();
 }
 
-class _ExampleMinimalFormState extends SingleFormState<ExampleMinimalForm> {
+class _ExampleMinimalFormState extends SingleFormStateData<ExampleMinimalForm> {
   @override
   List<Widget> createBody(BuildContext context) {
     return [

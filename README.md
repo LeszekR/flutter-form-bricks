@@ -1,5 +1,9 @@
 # Flutter Form Bricks
 
+## Localizations
+
+Since the lib contains a collection of standard UI messages and names it is localized. Follow flutter_localizations usage rules to add lnaguages by adding
+
 ## Gap analysis
 
 As part of building this form library, I performed a **systematic gap analysis between Flutter’s

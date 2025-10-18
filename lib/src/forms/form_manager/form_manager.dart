@@ -5,7 +5,7 @@ import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatte
 import '../../../../shelf.dart';
 import '../../inputs/base/form_field_brick.dart';
 import '../base/form_brick.dart';
-import 'e_form_status.dart';
+import 'form_status.dart';
 
 abstract class FormManager extends ChangeNotifier {
   final _formKey = GlobalKey<FormBrickState>();
@@ -31,7 +31,7 @@ abstract class FormManager extends ChangeNotifier {
 
   void afterFieldChanged();
 
-  EFormStatus checkState();
+  FormStatus checkState();
 
   void fillInitialInputValuesMap();
 
@@ -102,7 +102,7 @@ abstract class FormManager extends ChangeNotifier {
     // }
   }
 
-  EFormStatus getFormPartState(GlobalKey<FormBrickState> formPartKey) {
+  FormStatus getFormPartState(GlobalKey<FormBrickState> formPartKey) {
     // TODO uncomment and refactor
     // final currentState = formPartKey.currentState;
     // if (currentState == null) {
@@ -122,7 +122,7 @@ abstract class FormManager extends ChangeNotifier {
     // if (activeFields.every((input) => input.value == _inputInitialValuesMap[input.key])) {
     //   return EFormStatus.noChange;
     // }
-    return EFormStatus.valid;
+    return FormStatus.valid;
   }
 
   void onFieldChanged(final String keyString, dynamic value) {

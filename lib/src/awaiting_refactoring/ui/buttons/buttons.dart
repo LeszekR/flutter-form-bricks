@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_states_controller.dart';
-import 'package:flutter_form_bricks/src/ui_params/app_style/app_style.dart';
+import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 import '../../../ui_helpers/ui_helpers.dart';
-import '../../../ui_params/ui_params.dart';
-import '../dialogs/dialogs.dart';
 import 'elevated_button_with_disabling.dart';
 import 'icon_button_state_aware.dart';
 
@@ -17,8 +15,8 @@ class Buttons {
         : const BeveledRectangleBorder(side: BorderSide(width: 0, style: BorderStyle.none)));
   }
 
-  static ElevatedButtonWithDisabling elevatedButton(
-    {required BuildContext context, 
+  static ElevatedButtonWithDisabling elevatedButton({
+    required BuildContext context,
     required String text,
     required VoidCallback onPressed,
     final List<String>? requiredRoles,
@@ -29,6 +27,7 @@ class Buttons {
     final bool isEnabled = true,
     final bool hasBorder = true,
   }) {
+    final txt = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
     final appSize = getAppSize(context);
     final appStyle = getAppStyle(context);
     final appColor = getAppColor(context);
@@ -36,10 +35,11 @@ class Buttons {
     final isAllowed = true; // replace with permissions check
     // final isAllowed = requiredRoles?.contains(SecurityService().getRole()) ?? true;
 
-    final chosenAction = isAllowed
-        ? onPressed
-        : () => Dialogs.informationDialog(
-            context, Tr.get.dialogsWarning, Tr.get.pagesResetPasswordDialogsNotPermitted(requiredRoles));
+    // TODO refactor - set not-allowed-action as onPressed after prior permitions check
+    // final chosenAction = isAllowed
+    //     ? onPressed
+    //     : () => Dialogs.informationDialog(
+    //         context, txt.dialogsWarning, txt.pagesResetPasswordDialogsNotPermitted(requiredRoles));
 
     final style = ButtonStyle(
       shape: WidgetStateProperty.all(appStyle.beveledRectangleBorderHardCorners),
@@ -47,25 +47,27 @@ class Buttons {
       minimumSize: WidgetStateProperty.all(Size(width ?? appSize.buttonWidth, height ?? appSize.buttonHeight)),
       backgroundColor: WidgetStateProperty.all(appColor.formButtonBackground),
       foregroundColor: WidgetStateProperty.all(isAllowed ? appColor.buttonFontEnabled : appColor.buttonFontDisabled),
-      textStyle: WidgetStateProperty.all(
-        TextStyle(
-          fontStyle: isAllowed ? FontStyle.normal : FontStyle.italic,
-        ),
-      ),
+      textStyle: WidgetStateProperty.all(TextStyle(fontStyle: isAllowed ? FontStyle.normal : FontStyle.italic)),
     );
 
     return ElevatedButtonWithDisabling(
-        key: Key(text), onPressed: chosenAction, style: style, isActive: isAllowed, child: Text(text));
+      key: Key(text),
+      onPressed: onPressed,
+      style: style,
+      isActive: isAllowed,
+      child: Text(text),
+    );
   }
 
   /// STATE AWARE - color depends on state
-  static ValueListenableBuilder iconButtonStateAware(
-    {required BuildContext context, 
+  static ValueListenableBuilder iconButtonStateAware({
+    required BuildContext context,
     required IconData iconData,
     required String tooltip,
     required VoidCallback? onPressed,
     required DoubleWidgetStatesController statesController,
   }) {
+    final txt = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
     final appSize = getAppSize(context);
     final appColor = getAppColor(context);
 
@@ -90,8 +92,8 @@ class Buttons {
   }
 
   /// STATE IRRELEVANT - color is const from appStyle.theme
-  static Widget iconButtonStateless(
-    {required BuildContext context, 
+  static Widget iconButtonStateless({
+    required BuildContext context,
     required IconData iconData,
     required String tooltip,
     required VoidCallback? onPressed,

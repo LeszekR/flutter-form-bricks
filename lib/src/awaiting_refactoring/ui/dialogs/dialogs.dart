@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:flutter_form_bricks/src/ui_helpers/ui_helpers.dart';
 
 import '../buttons/buttons.dart';
@@ -10,32 +11,59 @@ import '../shortcuts/keyboard_shortcuts.dart';
 class Dialogs {
   Dialogs._();
 
-  static Future<void> informationDialog(BuildContext context, final String title, final String content) async {
-    await _messageDialog(context, content, Tr.get.buttonOk, title: title);
+  static Future<void> informationDialog(
+    BuildContext context,
+    final String title,
+    final String content,
+  ) async {
+    final txt = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
+    await _messageDialog(context, content, txt.buttonOk, title: title);
   }
 
-  static Future<bool> decisionDialogYesNo(BuildContext context, final String? title, final String content,
-      {final VoidCallback? action, final Duration? closeDuration}) async {
-    return await _messageDialog(context, content, Tr.get.buttonYes,
-        buttonCancelText: Tr.get.buttonNo, title: title, action: action, closeDuration: closeDuration);
+  static Future<bool> decisionDialogYesNo(
+    BuildContext context,
+    final String? title,
+    final String content, {
+    final VoidCallback? action,
+    final Duration? closeDuration,
+  }) async {
+    final txt = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
+    return await _messageDialog(
+      context,
+      content,
+      txt.buttonYes,
+      buttonNegativeText: txt.buttonNo,
+      title: title,
+      action: action,
+      closeDuration: closeDuration,
+    );
   }
 
-  static Future<bool> decisionDialogOkCancel(BuildContext context, final String? title, final String content,
-      {final VoidCallback? action, final Duration? closeDuration}) async {
-    return await _messageDialog(context, content, Tr.get.buttonOk,
-        buttonCancelText: Tr.get.buttonCancel, title: title, action: action, closeDuration: closeDuration);
+  static Future<bool> decisionDialogOkCancel(
+    BuildContext context,
+    final String? title,
+    final String content, {
+    final VoidCallback? action,
+    final Duration? closeDuration,
+  }) async {
+    final txt = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
+    return await _messageDialog(context, content, txt.buttonOk,
+        buttonNegativeText: txt.buttonCancel, title: title, action: action, closeDuration: closeDuration);
   }
 
-  static Future<bool> _messageDialog(BuildContext context, final String content, final String buttonOkText,
-      {final String? title,
-      final VoidCallback? action,
-      final String? buttonCancelText,
-      final Duration? closeDuration}) async {
-    
+  static Future<bool> _messageDialog(
+    BuildContext context,
+    final String content,
+    final String buttonOkText, {
+    final String? title,
+    final VoidCallback? action,
+    final String? buttonNegativeText,
+    final Duration? closeDuration,
+  }) async {
+    final txt = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
     final appSize = getAppSize(context);
     final appStyle = getAppSize(context);
-    // final appColor = getAppColor(context);
-    
+
     Timer? closeTimer = closeDuration != null
         ? Timer(closeDuration, () => Navigator.of(context, rootNavigator: true).pop(false))
         : null;
@@ -64,21 +92,21 @@ class Dialogs {
 
     final List<Widget> buttons = <Widget>[
       Buttons.elevatedButton(
-        context,
+        context: context,
         text: buttonOkText,
         onPressed: () => closeDialog(true),
       )
     ];
-    if (buttonCancelText != null) {
+    if (buttonNegativeText != null) {
       buttons.add(Buttons.elevatedButton(
-        context,
-        text: buttonCancelText,
+        context: context,
+        text: buttonNegativeText,
         onPressed: () => closeDialog(false),
       ));
     }
 
     final bool dialogUserChoice = await showDialog<dynamic>(
-      context,
+      context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(

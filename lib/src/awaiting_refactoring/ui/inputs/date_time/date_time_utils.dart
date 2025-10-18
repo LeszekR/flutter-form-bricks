@@ -1,7 +1,8 @@
-
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/string_parse_result.dart';
 
-enum EDateTime {
+enum DateTimeOrBoth {
   DATE,
   TIME,
   DATE_TIME,
@@ -18,8 +19,9 @@ class DateTimeUtils {
   }
 
   StringParseResult cleanDateTimeString({
+    required BricksLocalizations bricksLocalizations,
     required String text,
-    required EDateTime eDateTime,
+    required DateTimeOrBoth dateTimeOrBoth,
     required String stringDelimiterPattern,
     required String stringDelimiter,
     required int minNumberOfDigits,
@@ -29,7 +31,8 @@ class DateTimeUtils {
     // text must contain allowed chars only
     RegExp allowedRegex = RegExp('([0-9]|$stringDelimiterPattern)');
     var allowedCharsLength = allowedRegex.allMatches(text).length;
-    if (allowedCharsLength < text.length) return StringParseResult(text, false, errMsgForbiddenChars(eDateTime));
+    if (allowedCharsLength < text.length)
+      return StringParseResult(text, false, errMsgForbiddenChars(bricksLocalizations, dateTimeOrBoth));
 
     // remove forbidden chars
     // replace all delimiter-type elements and groups with single '-'
@@ -43,12 +46,15 @@ class DateTimeUtils {
 
     // too many groups of digits
     var nDelimiters = RegExp(stringDelimiter).allMatches(result).length;
-    if (nDelimiters > maxNumberDelimiters) return StringParseResult(text, false, getErMsgTooManyDelimiters(eDateTime));
+    if (nDelimiters > maxNumberDelimiters)
+      return StringParseResult(text, false, getErMsgTooManyDelimiters(bricksLocalizations, dateTimeOrBoth));
 
     // too few digits or too many digits
     var nDigits = RegExp('[0-9]').allMatches(text).length;
-    if (nDigits + nDelimiters < minNumberOfDigits) return StringParseResult(text, false, errMsgTooFewDigits(eDateTime));
-    if (nDigits > maxNDigits && nDelimiters == 0) return StringParseResult(text, false, errMsgTooManyDigits(eDateTime));
+    if (nDigits + nDelimiters < minNumberOfDigits)
+      return StringParseResult(text, false, errMsgTooFewDigits(bricksLocalizations, dateTimeOrBoth));
+    if (nDigits > maxNDigits && nDelimiters == 0)
+      return StringParseResult(text, false, errMsgTooManyDigits(bricksLocalizations, dateTimeOrBoth));
 
     return StringParseResult(result, true, '');
   }
@@ -63,32 +69,32 @@ class DateTimeUtils {
     return textClean;
   }
 
-  String errMsgForbiddenChars(EDateTime eDateTime) {
-    if (eDateTime == EDateTime.DATE) {
-      return Tr.get.dateStringErrorBadChars;
+  String errMsgForbiddenChars(BricksLocalizations txt, DateTimeOrBoth eDateTime) {
+    if (eDateTime == DateTimeOrBoth.DATE) {
+      return txt.dateStringErrorBadChars;
     }
-    return Tr.get.timeStringErrorBadChars;
+    return txt.timeStringErrorBadChars;
   }
 
-  String errMsgTooFewDigits(EDateTime eDateTime) {
-    if (eDateTime == EDateTime.DATE) {
-      return Tr.get.dateStringErrorTooFewDigits;
+  String errMsgTooFewDigits(BricksLocalizations txt, DateTimeOrBoth eDateTime) {
+    if (eDateTime == DateTimeOrBoth.DATE) {
+      return txt.dateStringErrorTooFewDigits;
     }
-    return Tr.get.timeStringErrorTooFewDigits;
+    return txt.timeStringErrorTooFewDigits;
   }
 
-  String errMsgTooManyDigits(EDateTime eDateTime) {
-    if (eDateTime == EDateTime.DATE) {
-      return Tr.get.dateStringErrorTooManyDigits;
+  String errMsgTooManyDigits(BricksLocalizations txt, DateTimeOrBoth eDateTime) {
+    if (eDateTime == DateTimeOrBoth.DATE) {
+      return txt.dateStringErrorTooManyDigits;
     }
-    return Tr.get.timeStringErrorTooManyDigits;
+    return txt.timeStringErrorTooManyDigits;
   }
 
-  String getErMsgTooManyDelimiters(EDateTime eDateTime) {
-    if (eDateTime == EDateTime.DATE) {
-      return Tr.get.dateStringErrorTooManyDelimiters;
+  String getErMsgTooManyDelimiters(BricksLocalizations txt, DateTimeOrBoth eDateTime) {
+    if (eDateTime == DateTimeOrBoth.DATE) {
+      return txt.dateStringErrorTooManyDelimiters;
     }
-    return Tr.get.timeStringErrorTooManyDelimiters;
+    return txt.timeStringErrorTooManyDelimiters;
   }
 
   String addErrMsg(final String errMsg, final String connector, final String nextErrorMessage) {

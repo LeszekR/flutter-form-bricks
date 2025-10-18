@@ -5,10 +5,10 @@ class ExampleSingleForm extends SingleForm {
   ExampleSingleForm({super.key});
 
   @override
-  SingleFormState<SingleForm> createState() => _ExampleSingleFormState();
+  SingleFormStateData<SingleForm> createState() => _ExampleSingleFormState();
 }
 
-class _ExampleSingleFormState extends SingleFormState<ExampleSingleForm> {
+class _ExampleSingleFormState extends SingleFormStateData<ExampleSingleForm> {
   void trimGroupOfFieldsWhenFocusLost(List<String> keyStrings) {
     for (var keyString in keyStrings) {
       FocusNode focusNode = formManager.getFocusNode(keyString);

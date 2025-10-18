@@ -7,9 +7,7 @@ export 'src/awaiting_refactoring/ui/forms/base/form_utils.dart';
 export 'src/awaiting_refactoring/ui/forms/tabbed_form/tabulated_form.dart';
 export 'src/awaiting_refactoring/ui/forms/tabbed_form/tab_data.dart';
 export 'src/awaiting_refactoring/ui/forms/tabbed_form/tab_status.dart';
-export 'src/inputs/states_controller/formatter_helper.dart';
 export 'src/awaiting_refactoring/ui/inputs/text/text_inputs.dart';
-export 'src/inputs/text/format_and_validate/input_validator_provider.dart';
 export 'src/awaiting_refactoring/ui/inputs/text/text_inputs_base/basic_text_input.dart';
 export 'src/awaiting_refactoring/ui/inputs/number/number_inputs.dart';
 export 'src/awaiting_refactoring/ui/inputs/choice/checkbox_custom.dart';
@@ -17,6 +15,9 @@ export 'src/awaiting_refactoring/ui/inputs/choice/choice_inputs.dart';
 export 'src/awaiting_refactoring/ui/dialogs/dialogs.dart';
 
 // API
+export 'src/forms/state/single_form_state_data.dart';
+export 'src/inputs/text/format_and_validate/input_validator_provider.dart';
+export 'src/inputs/states_controller/formatter_helper.dart';
 export 'src/inputs/text/text_inputs_base/text_field_brick.dart';
 export 'src/inputs/text/text_inputs_base/states_color_maker.dart';
 export 'src/forms/base/form_schema.dart';
@@ -31,3 +32,4 @@ export 'src/ui_params/app_color/app_color.dart';
 export 'src/ui_params/app_size/app_size.dart';
 export 'src/ui_params/app_style/app_style.dart';
 export 'src/forms/form_manager/form_manager.dart';
+export 'src/string_literals/gen/bricks_localizations.dart';

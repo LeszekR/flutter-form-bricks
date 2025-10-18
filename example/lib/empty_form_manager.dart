@@ -1,5 +1,5 @@
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/forms/form_manager/e_form_status.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_status.dart';
 
 class EmptyFormStateData extends FormStateData {}
 
@@ -14,8 +14,8 @@ class EmptyFormManager extends FormManager {
   void afterFieldChanged() {}
 
   @override
-  EFormStatus checkState() {
-    return EFormStatus.valid;
+  FormStatus checkState() {
+    return FormStatus.valid;
   }
 
   @override

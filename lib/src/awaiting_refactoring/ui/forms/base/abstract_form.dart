@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_bricks/src/ui_params/app_size/app_size.dart';
+import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:provider/provider.dart';
 
 import '../../../../ui_params/ui_params.dart';
 import '../../buttons/buttons.dart';
@@ -31,7 +30,7 @@ abstract class AbstractForm extends StatefulWidget {
   AbstractFormState createState();
 
   static Future<dynamic> openForm({required BuildContext context, required Widget form}) {
-    return showDialog(context, barrierDismissible: false, builder: (BuildContext context) => form);
+    return showDialog(context: context, barrierDismissible: false, builder: (BuildContext context) => form);
   }
 }
 
@@ -130,69 +129,92 @@ abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
               width: 50,
             ),
             // FormUtils.horizontalFormGroup(padding: false,
-            FormUtils.horizontalFormGroupBorderless(context, createFormControlsList(context)),
+            FormUtils.horizontalFormGroupBorderless(context, createFormControlsList()),
           ],
         ),
       ),
     ]);
   }
 
-  List<Widget> createFormControlsList(BuildContext context) {
+  List<Widget> createFormControlsList() {
     final uiParams = UiParams.of(context);
     final appSize = uiParams.appSize;
     return [
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        saveButton(context),
+        saveButton(),
         appSize.spacerBoxHorizontalSmall,
-        resetButton(context),
+        resetButton(),
         appSize.spacerBoxHorizontalSmall,
-        deleteButton(context),
+        deleteButton(),
         appSize.spacerBoxHorizontalSmall,
-        cancelButton(context),
+        cancelButton(),
       ])
     ];
   }
 
-  Widget deleteButton(BuildContext context) => Buttons.elevatedButton(
-      context, text: Tr.get.delete, onPressed: isEditMode() ? onDelete : () {}, isEnabled: isEditMode());
+  Widget deleteButton() {
+    return Buttons.elevatedButton(
+      context: context,
+      text: Localizations.of<BricksLocalizations>(context, BricksLocalizations)!.delete,
+      onPressed: isEditMode() ? onDelete : () {},
+      isEnabled: isEditMode(),
+    );
+  }
 
-  Widget cancelButton(BuildContext context) =>
-      Buttons.elevatedButton(context, text: Tr.get.buttonCancel, onPressed: onCancel);
+  Widget cancelButton() {
+    return Buttons.elevatedButton(
+      context: context,
+      text: Localizations.of<BricksLocalizations>(context, BricksLocalizations)!.buttonCancel,
+      onPressed: onCancel,
+    );
+  }
 
-  Widget resetButton(BuildContext context) =>
-      Buttons.elevatedButton(context, text: Tr.get.reset, onPressed: onReset);
+  Widget resetButton() {
+    return Buttons.elevatedButton(
+      context: context,
+      text: Localizations.of<BricksLocalizations>(context, BricksLocalizations)!.reset,
+      onPressed: onReset,
+    );
+  }
 
-  Widget saveButton(BuildContext context) =>
-      Buttons.elevatedButton(context, text: Tr.get.save, onPressed: onSubmit);
+  Widget saveButton() {
+    return Buttons.elevatedButton(
+      context: context,
+      text: Localizations.of<BricksLocalizations>(context, BricksLocalizations)!.save,
+      onPressed: onSubmit,
+    );
+  }
 
-  void onReset() =>
-      Dialogs.decisionDialogYesNo(context, Tr.get.formReset, Tr.get.formResetConfirm, action: formManager.resetForm);
+  void onReset() {
+    final txt = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
+    Dialogs.decisionDialogYesNo(context, txt.formReset, txt.formResetConfirm, action: formManager.resetForm);
+  }
 
-  void onCancel() =>
-      Dialogs.decisionDialogYesNo(context, Tr.get.buttonCancel, Tr.get.pagesAbstractFormDialogsConfirmCancel,
-          action: cancel);
+  void onCancel() {
+    final txt = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
+    Dialogs.decisionDialogYesNo(context, txt.buttonCancel, txt.dialogsConfirmCancel, action: cancel);
+  }
 
   void cancel() => Navigator.of(context).pop(false);
 
-  void onDelete() =>
-      Dialogs.decisionDialogOkCancel(context, Tr.get.dialogsWarning, Tr.get.deleteConfirm, action: deleteEntity);
+  void onDelete() {
+    final txt = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
+    Dialogs.decisionDialogOkCancel(context, txt.dialogsWarning, txt.deleteConfirm, action: deleteEntity);
+  }
 
   void onTab() => TextInputAction.next;
 
   onSubmit() {
+    final txt = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
     final formState = formManager.checkState();
 
     switch (formState) {
       case FormStatus.noChange:
         Dialogs.informationDialog(
-            context,
-            Tr.get.dialogsError,
-            isEditMode()
-                ? Tr.get.pagesAbstractFormDialogsErrorNoChanges
-                : Tr.get.pagesAbstractFormDialogsErrorCorrectContent);
+            context, txt.dialogsError, isEditMode() ? txt.dialogsNoChanges : txt.dialogsFinishOrCorrect);
         break;
       case FormStatus.invalid:
-        Dialogs.informationDialog(context, Tr.get.dialogsError, Tr.get.pagesAbstractFormDialogsErrorCorrectContent);
+        Dialogs.informationDialog(context, txt.dialogsError, txt.dialogsFinishOrCorrect);
         break;
       case FormStatus.valid:
         submitData();

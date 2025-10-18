@@ -22,7 +22,7 @@ class TimeFormatterValidator {
   StringParseResult makeTimeFromString(String text) {
     StringParseResult parseResult = _dateTimeUtils!.cleanDateTimeString(
       text: text,
-      eDateTime: EDateTime.TIME,
+      dateTimeOrBoth: DateTimeOrBoth.TIME,
       stringDelimiterPattern: timeDelimiterPattern,
       stringDelimiter: timeDelimiter,
       minNumberOfDigits: 2,
@@ -52,7 +52,7 @@ class TimeFormatterValidator {
   }
 
   StringParseResult makeTimeStringNoDelimiters(String text) {
-    if (text.length < 3) return StringParseResult(text, false, Tr.get.timeStringErrorTooFewDigits);
+    if (text.length < 3) return StringParseResult(text, false, txt.timeStringErrorTooFewDigits);
 
     String formattedResult = '';
     String element = '';
@@ -91,8 +91,8 @@ class TimeFormatterValidator {
       elementLength = element.length;
 
       if (elementLength > 2) {
-        if (nElements == 2) errHours = Tr.get.timeStringErrorTooManyDigitsHours;
-        if (nElements == 1) errMinutes = Tr.get.timeStringErrorTooManyDigitsMinutes;
+        if (nElements == 2) errHours = txt.timeStringErrorTooManyDigitsHours;
+        if (nElements == 1) errMinutes = txt.timeStringErrorTooManyDigitsMinutes;
       }
       if (elementLength == 1) element = '0$element';
       timeString = (i > 0 ? timeDelimiter : '') + element + timeString;
@@ -113,10 +113,10 @@ class TimeFormatterValidator {
     var errHours = '', errMinutes = '';
 
     var hour = int.parse(resultList[0]);
-    if (hour > 23) errHours = Tr.get.timeErrorTooBigHour;
+    if (hour > 23) errHours = txt.timeErrorTooBigHour;
 
     var minute = int.parse(resultList[1]);
-    if (minute > 60) errMinutes = Tr.get.timeErrorTooBigMinute;
+    if (minute > 60) errMinutes = txt.timeErrorTooBigMinute;
 
     if (errHours.isNotEmpty) errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, errHours);
     if (errMinutes.isNotEmpty) errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, errMinutes);

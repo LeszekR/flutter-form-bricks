@@ -28,7 +28,7 @@ class DateTimeValidators {
   }
 
   static FormFieldValidator<String> timeInputValidator() {
-    validator(text) => _timeFormatter.makeTimeFromString(text).errorMessage;
+    String? validator(text) => _timeFormatter.makeTimeFromString(text).errorMessage;
     return (text) => getErrorMessage(text, validator);
   }
 
@@ -49,7 +49,7 @@ class DateTimeValidators {
   static getFieldText(GlobalKey<FormBuilderState> formKey, String rangeStartDateKey) =>
       formKey.currentState?.fields[rangeStartDateKey]?.value ?? "";
 
-  static String? getErrorMessage(String? text, String Function(String text) validator) {
+  static String? getErrorMessage(String? text, String? Function(String text) validator) {
     if (text == null || text.isEmpty) return null;
     var errorMessage = validator.call(text);
     return errorMessage.isEmpty ? null : errorMessage;

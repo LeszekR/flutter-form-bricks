@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/string_parse_result.dart';
 
 import 'current_date.dart';
@@ -22,12 +24,19 @@ class DateFormatterValidator {
   static const dateDelimiterPattern = '( |/|-|,|;|\\.)';
   static const dateDelimiter = '-';
 
-  StringParseResult makeDateFromString(String text) {
+  StringParseResult makeDateFromString(
+    BuildContext context,
+    String text,
+    int maxYearsBackInDate,
+    int maxYearsForwardInDate,
+  ) {
+    final txt = BricksLocalizations.of(context);
     StringParseResult parseResult;
 
     parseResult = _dateTimeUtils!.cleanDateTimeString(
+      bricksLocalizations: txt,
       text: text,
-      eDateTime: EDateTime.DATE,
+      dateTimeOrBoth: DateTimeOrBoth.DATE,
       stringDelimiterPattern: dateDelimiterPattern,
       stringDelimiter: dateDelimiter,
       minNumberOfDigits: 3,
@@ -36,10 +45,10 @@ class DateFormatterValidator {
     );
     if (!parseResult.isStringValid) return StringParseResult(text, false, parseResult.errorMessage);
 
-    parseResult = parseDateFromString(parseResult);
+    parseResult = parseDateFromString(txt, parseResult);
     if (!parseResult.isStringValid) return StringParseResult(text, false, parseResult.errorMessage);
 
-    parseResult = validateDate(parseResult);
+    parseResult = validateDate(txt, parseResult, maxYearsBackInDate, maxYearsForwardInDate);
     if (!parseResult.isStringValid) return parseResult;
 
     // debugPrint("Formatter: raw text: $text");
@@ -47,7 +56,7 @@ class DateFormatterValidator {
     return parseResult;
   }
 
-  StringParseResult parseDateFromString(StringParseResult stringParseResult) {
+  StringParseResult parseDateFromString(BricksLocalizations txt, StringParseResult stringParseResult) {
     var text = stringParseResult.parsedString;
     var nDelimiters = RegExp(dateDelimiter).allMatches(text).length;
 
@@ -56,7 +65,7 @@ class DateFormatterValidator {
     if (nDelimiters == 0) {
       parseResult = makeDateStringNoDelimiters(text);
     } else {
-      parseResult = makeDateStringWithDelimiters(text, nDelimiters);
+      parseResult = makeDateStringWithDelimiters(txt, text, nDelimiters);
     }
 
     if (!parseResult.isStringValid) return parseResult;
@@ -89,7 +98,7 @@ class DateFormatterValidator {
     return StringParseResult(dateString, true, '');
   }
 
-  StringParseResult makeDateStringWithDelimiters(String text, int nDelimiters) {
+  StringParseResult makeDateStringWithDelimiters(BricksLocalizations txt, String text, int nDelimiters) {
     var dateString = '';
     var element = '';
     var resultList = text.split(dateDelimiter);
@@ -107,7 +116,7 @@ class DateFormatterValidator {
       // day
       if (i == dayIndex) {
         if (elementLength > 2) {
-          errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, Tr.get.dateStringErrorTooManyDigitsDay);
+          errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, txt.dateStringErrorTooManyDigitsDay);
         }
         if (elementLength == 1) element = '0$element';
       }
@@ -115,7 +124,7 @@ class DateFormatterValidator {
       // month
       else if (i == monthIndex) {
         if (elementLength > 2) {
-          errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, Tr.get.dateStringErrorTooManyDigitsMonth);
+          errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, txt.dateStringErrorTooManyDigitsMonth);
         }
         if (elementLength == 1) element = '0$element';
       }
@@ -123,7 +132,7 @@ class DateFormatterValidator {
       // year
       if (i == 0 && nDelimiters == 2) {
         if (elementLength > 4) {
-          errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, Tr.get.dateStringErrorTooManyDigitsYear);
+          errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, txt.dateStringErrorTooManyDigitsYear);
         }
         dateString = element + dateString;
       } else {
@@ -141,7 +150,7 @@ class DateFormatterValidator {
 
     if (nDelimiters < 2) return StringParseResult(dateWithoutYear, false, '');
 
-    var year = _currentDate!.getCurrentDate().year.toString();
+    var year = _currentDate!.getDateNow().year.toString();
     var yearElement = dateWithoutYear.split(dateDelimiter)[0];
     var yearElementLength = yearElement.length;
 
@@ -155,6 +164,7 @@ class DateFormatterValidator {
   }
 
   StringParseResult validateDate(
+    BricksLocalizations txt,
     StringParseResult stringParseResult,
     int maxYearsBackInDate,
     int maxYearsForwardInDate,
@@ -169,26 +179,26 @@ class DateFormatterValidator {
     // non-existing month
     var monthIndex = elementsListLength - 2;
     var month = int.parse(dateElementsList[monthIndex]);
-    if (month < 1) errMonth = Tr.get.dateErrorMonth0;
-    if (month > 12) errMonth = Tr.get.dateErrorMonthOver12;
+    if (month < 1) errMonth = txt.dateErrorMonth0;
+    if (month > 12) errMonth = txt.dateErrorMonthOver12;
 
     // non-existing day
     var dayIndex = elementsListLength - 1;
     var day = int.parse(dateElementsList[dayIndex]);
-    if (day < 1) errDays = Tr.get.dateErrorDay0;
+    if (day < 1) errDays = txt.dateErrorDay0;
 
     bool isTooManyDays = false;
     if (day > 31) {
-      errDays = Tr.get.dateErrorTooManyDaysInMonth;
+      errDays = txt.dateErrorTooManyDaysInMonth;
     } else if (month > 0) {
       isTooManyDays |= [4, 6, 9, 11].contains(month) && day > 30;
       isTooManyDays |= [1, 3, 5, 7, 8, 10, 12].contains(month) && day > 31;
-      if (isTooManyDays) errDays = Tr.get.dateErrorTooManyDaysInMonth;
+      if (isTooManyDays) errDays = txt.dateErrorTooManyDaysInMonth;
     }
 
     // only max years back and max years forward
     if (elementsListLength == 3) {
-      var currentYear = _currentDate!.getCurrentDate().year;
+      var currentYear = _currentDate!.getDateNow().year;
       var acceptedYearBack = currentYear - maxYearsBackInDate;
       var acceptedYearForward = currentYear + maxYearsForwardInDate;
       var year = int.parse(dateElementsList[0]);
@@ -196,9 +206,9 @@ class DateFormatterValidator {
       isTooManyDays = false;
       isTooManyDays |= month == 2 && year % 4 != 0 && day > 28;
       isTooManyDays |= month == 2 && year % 4 == 0 && day > 29;
-      if (isTooManyDays) errDays = Tr.get.dateErrorTooManyDaysInMonth;
-      if (year < acceptedYearBack) errYear = Tr.get.dateErrorYearTooFarBack(acceptedYearBack);
-      if (year > acceptedYearForward) errYear = Tr.get.dateErrorYearTooFarForward(acceptedYearForward);
+      if (isTooManyDays) errDays = txt.dateErrorTooManyDaysInMonth;
+      if (year < acceptedYearBack) errYear = txt.dateErrorYearTooFarBack(acceptedYearBack);
+      if (year > acceptedYearForward) errYear = txt.dateErrorYearTooFarForward(acceptedYearForward);
     }
 
     if (errYear.isNotEmpty) errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, errYear);
@@ -210,7 +220,18 @@ class DateFormatterValidator {
     return StringParseResult(dateString, true, '');
   }
 
-  String makeDateString(String text) {
-    return makeDateFromString(text).parsedString;
+  // TODO refactor to exact minimum and maximum DATE not only years
+  String makeDateString(
+    BuildContext context,
+    String text,
+    int maxYearsBackInDate,
+    int maxYearsForwardInDate,
+  ) {
+    return makeDateFromString(
+      context,
+      text,
+      maxYearsBackInDate,
+      maxYearsForwardInDate,
+    ).parsedString;
   }
 }

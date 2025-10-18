@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'empty_form_manager.dart';
 
@@ -13,6 +14,15 @@ class ExampleApp extends StatelessWidget {
       data: uiParamsData,
       child: MaterialApp(
         theme: uiParamsData.appTheme.themeData,
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: [
+          Locale('en'), // English
+          Locale('es'), // Spanish
+        ],
         home: Scaffold(
           body: Center(
             child: SizedBox(
@@ -36,7 +46,7 @@ class ExampleApp extends StatelessWidget {
                     width: 150,
                     maxLines: 3,
                   ),
-                    // BrickTheme.of(context).sizes.spacerBoxVerticalMedium,
+                  // BrickTheme.of(context).sizes.spacerBoxVerticalMedium,
                   // BrickTextField(
                   //   keyString: 'test_text_input_3',
                   //   formManager: EmptyFormManager(),

@@ -87,7 +87,7 @@ class DateTimeRangeValidator {
     // start-date absent
     // -----------------------------------------------------------------
     if (empty(dateStartText)) {
-      errorText = Tr.get.rangeDateStartRequired;
+      errorText = txt.rangeDateStartRequired;
       formManager.saveErrorMessage(_dateStartKeyString!, errorText);
       return;
     }
@@ -95,7 +95,7 @@ class DateTimeRangeValidator {
     // start-time absent & end-date absent & end-time present
     // -----------------------------------------------------------------
     if (empty(timeStartText) && empty(dateEndText) && notEmpty(timeEndText)) {
-      errorText = Tr.get.rangeDateEndRequiredOrRemoveTimeEnd;
+      errorText = txt.rangeDateEndRequiredOrRemoveTimeEnd;
       formManager.saveErrorMessage(_timeStartKeyString!, errorText);
       formManager.saveErrorMessage(_dateEndKeyString!, errorText);
       formManager.saveErrorMessage(_timeEndKeyString!, errorText);
@@ -110,7 +110,7 @@ class DateTimeRangeValidator {
       // start-date present & end-date present & start-date after end-date
       // -----------------------------------------------------------------
       if (difference < 0) {
-        errorText = Tr.get.rangeDateStartAfterEnd;
+        errorText = txt.rangeDateStartAfterEnd;
         formManager.saveErrorMessage(_dateStartKeyString!, errorText);
         formManager.saveErrorMessage(_dateEndKeyString!, errorText);
         return;
@@ -119,7 +119,7 @@ class DateTimeRangeValidator {
       // start-date present & end-date present & end-date too far from start-date
       // -----------------------------------------------------------------
       if (difference > maxRangeSpanDays) {
-        errorText = Tr.get.rangeDatesTooFarApart(maxRangeSpanDays);
+        errorText = txt.rangeDatesTooFarApart(maxRangeSpanDays);
         formManager.saveErrorMessage(_dateStartKeyString!, errorText);
         formManager.saveErrorMessage(_dateEndKeyString!, errorText);
         return;
@@ -129,7 +129,7 @@ class DateTimeRangeValidator {
     if (notEmpty(timeStartText) && notEmpty(timeEndText)) {
       // identical start and end
       if (dateStartText == dateEndText && timeStartText == timeEndText) {
-        errorText = Tr.get.rangeStartSameAsEnd;
+        errorText = txt.rangeStartSameAsEnd;
         formManager.saveErrorMessage(_dateStartKeyString!, errorText);
         formManager.saveErrorMessage(_timeStartKeyString!, errorText);
         formManager.saveErrorMessage(_dateEndKeyString!, errorText);
@@ -147,7 +147,7 @@ class DateTimeRangeValidator {
         // start-time after end-time
         // -----------------------------------------------------------------
         if (difference < 0) {
-          errorText = Tr.get.rangeTimeStartAfterEndOrAddDateEnd;
+          errorText = txt.rangeTimeStartAfterEndOrAddDateEnd;
           // formManager.saveErrorMessage(_dateStartKeyString!, errorText);
           formManager.saveErrorMessage(_timeStartKeyString!, errorText);
           formManager.saveErrorMessage(_dateEndKeyString!, errorText);
@@ -157,7 +157,7 @@ class DateTimeRangeValidator {
         // start-time less than minimum before end-time
         // -----------------------------------------------------------------
         else if (difference < minRangeSpanMinutes) {
-          errorText = Tr.get.rangeTimeStartEndTooCloseOrAddDateEnd(minRangeSpanMinutes);
+          errorText = txt.rangeTimeStartEndTooCloseOrAddDateEnd(minRangeSpanMinutes);
           // formManager.saveErrorMessage(_dateStartKeyString!, errorText);
           formManager.saveErrorMessage(_timeStartKeyString!, errorText);
           formManager.saveErrorMessage(_dateEndKeyString!, errorText);
@@ -175,7 +175,7 @@ class DateTimeRangeValidator {
         // start-time after end-time
         // -----------------------------------------------------------------
         if (difference < 0) {
-          errorText = Tr.get.rangeTimeStartAfterEnd;
+          errorText = txt.rangeTimeStartAfterEnd;
           // formManager.saveErrorMessage(_dateStartKeyString!, errorText);
           formManager.saveErrorMessage(_timeStartKeyString!, errorText);
           // formManager.saveErrorMessage(_dateEndKeyString!, errorText);
@@ -185,7 +185,7 @@ class DateTimeRangeValidator {
         // start-time less than minimum before end-time
         // -----------------------------------------------------------------
         else if (difference < minRangeSpanMinutes) {
-          errorText = Tr.get.rangeTimeStartEndTooCloseSameDate(minRangeSpanMinutes);
+          errorText = txt.rangeTimeStartEndTooCloseSameDate(minRangeSpanMinutes);
           // formManager.saveErrorMessage(_dateStartKeyString!, errorText);
           formManager.saveErrorMessage(_timeStartKeyString!, errorText);
           // formManager.saveErrorMessage(_dateEndKeyString!, errorText);

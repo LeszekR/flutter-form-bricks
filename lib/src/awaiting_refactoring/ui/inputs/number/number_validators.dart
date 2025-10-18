@@ -10,7 +10,7 @@ class NumberValidators {
       final regExp = RegExp(r'^\d[\d\s]*$');
 
       if (!regExp.hasMatch(input)) {
-        return Tr.get.validationInteger;
+        return txt.validationInteger;
       }
 
       return null;
@@ -24,7 +24,7 @@ class NumberValidators {
       final regExp = RegExp(r'^\d{1,3}(\s\d{3})*(,\d{0,' + decimalPoints.toString() + r'})?$');
 
       if (!regExp.hasMatch(input)) {
-        return Tr.get.validationDecimal(decimalPoints);
+        return txt.validationDecimal(decimalPoints);
       }
 
       return null;

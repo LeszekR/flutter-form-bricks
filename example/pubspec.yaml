@@ -8,3 +8,5 @@ dependencies:
     sdk: flutter
   flutter_form_bricks:
     path: ../../flutter-form-bricks
+  flutter_localizations:
+    sdk: flutter

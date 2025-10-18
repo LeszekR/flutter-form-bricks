@@ -8,7 +8,7 @@ class CurrentDate {
     return _instance!;
   }
 
-  DateTime getCurrentDate() {
+  DateTime getDateNow() {
     return DateTime.now();
   }
 }

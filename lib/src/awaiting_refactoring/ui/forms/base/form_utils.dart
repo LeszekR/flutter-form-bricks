@@ -5,10 +5,9 @@ import '../../../../ui_params/ui_params.dart';
 class FormUtils {
   FormUtils._();
 
-  static Container horizontalFormGroup(
-      {
+  static Container horizontalFormGroup({
     required BuildContext context,
-        required List<Widget> children,
+    required List<Widget> children,
     String? label,
     Alignment alignment = Alignment.center,
     double? height,
@@ -52,7 +51,9 @@ class FormUtils {
   }) {
     final uiParams = UiParams.of(context);
     final appColor = uiParams.appColor;
-    return horizontalFormGroup(context, children,
+    return horizontalFormGroup(
+        context: context,
+        children: children,
         label: label,
         alignment: alignment,
         height: height,
@@ -158,7 +159,7 @@ class FormUtils {
     );
 
     return showDialog(
-      context,
+      context: context,
       builder: (context) => Dialog(
         child: Container(
           height: 400,
@@ -170,8 +171,8 @@ class FormUtils {
     );
   }
 
-  static Scaffold defaultScaffold(
-    {required BuildContext context, 
+  static Scaffold defaultScaffold({
+    required BuildContext context,
     required String label,
     required Widget child,
   }) {

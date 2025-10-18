@@ -28,8 +28,8 @@ class DateTimeFormatterValidator {
     textTrimmed = textTrimmed.replaceAll(RegExp(' +'), ' ');
 
     var nSpaces = RegExp(' ').allMatches(textTrimmed).length;
-    if (nSpaces == 0) return StringParseResult(textTrimmed, false, Tr.get.datetimeStringErrorNoSpace);
-    if (nSpaces > 1) return StringParseResult(textTrimmed, false, Tr.get.datetimeStringErrorTooManySpaces);
+    if (nSpaces == 0) return StringParseResult(textTrimmed, false, txt.datetimeStringErrorNoSpace);
+    if (nSpaces > 1) return StringParseResult(textTrimmed, false, txt.datetimeStringErrorTooManySpaces);
 
     var elementsList = textTrimmed.split(RegExp(' '));
     String dateString = elementsList[0];

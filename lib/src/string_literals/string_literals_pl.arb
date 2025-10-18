@@ -1,0 +1,150 @@
+{
+  "buttonYes": "Tak",
+  "buttonNo": "Nie",
+  "buttonOk": "OK",
+  "buttonCancel": "Anuluj",
+  "buttonSave": "Zapisz",
+  "buttonDelete": "Skasuj",
+  "buttonReset": "Resetuj",
+
+  "dialogsWarning": "UWAGA",
+  "dialogsSuccess": "Sukces",
+  "dialogsError": "Błąd",
+  "dialogsDecision": "Reset formularza",
+  "dialogsSaveSuccess": "Dane zostały zapisane",
+  "dialogsDeleteSuccess": "Dane zostały usunięte",
+  "dialogsNoChanges": "Nie ma zmian do zapisania",
+  "dialogsFinishOrCorrect": "Popraw lub uzupełnij dane",
+  "dialogsConfirmCancel": "Jeśli potwierdzisz, to wszystkie zmiany zostaną utracone.\nKontynuować?",
+
+  "progressPleaseWait": "Proszę czekać",
+
+
+  "validationMessageRequired": "{field} {gender, select, male { jest wymagany} female { jest wymagana} other { jest wymagane}}",
+  "validationPasswordOldNew": "Nowe i stare hasło muszą się różnić",
+  "validationPasswordPassRepeatPass": "Hasło i hasło powtórz musza się zgadzać",
+  "validationDecimal" : "Tylko dodatnie liczby zmienno-przecinkowe {field, plural, one {z 1 znakiem} other {z {field} znakami}}",
+  "validationInteger" : "Tylko dodatnie liczby całkowite",
+
+  "openDatePicker": "Otwórz kalendarz",
+  "openTimePicker": "Otwórz zegar",
+  "and": "oraz",
+  "date": "data",
+  "time": "godzina",
+  "start": "początek",
+  "end": "koniec",
+  "delete": "Skasuj",
+  "reset": "Resetuj",
+  "save": "Zapisz",
+  "formReset" :"Reset formularza",
+  "formResetConfirm": "Jeśli wciśniesz OK to wszystkie zmiany zostaną utracone.\nKontynuować?",
+  "deleteConfirm": "Na pewno chcesz usunąć?",
+
+  "requiredField": "Pole wymagane",
+  "minNChars": "W polu muszą być min. {charsMinimumN} znaki",
+    "@charsMinimumN": {
+        "placeholders": {
+            "minNumberOfChars": {
+            "type": "int"
+            }
+        }
+    },
+  "maxNChars": "W polu muszą być max. {charsMinimumN} znaki",
+    "@charsMaximumN": {
+        "placeholders": {
+            "maxNumberOfChars": {
+            "type": "int"
+            }
+        }
+    },
+  "minIntValue": "Minimalna liczba to {IntValueMinimum}",
+      "@IntValueMinimum": {
+          "placeholders": {
+              "minimumIntValue": {
+              "type": "int"
+              }
+          }
+      },
+  "maxIntValue": "Maksymalna liczba to {IntValueMaximum}",
+      "@IntValueMaximum": {
+          "placeholders": {
+              "maximumIntValue": {
+              "type": "int"
+              }
+          }
+      },
+  "invalidEmail": "Niepoprawny format email",
+  "invalidVAT": "Niepoprawny nr VAT",
+
+  "rangeDateStartRequired": "Brak daty początku",
+  "rangeDateEndRequiredOrRemoveTimeEnd": "Podaj datę końca lub usuń czas końca",
+  "rangeDateStartAfterEnd": "Data końca jest przed datą początku",
+  "rangeTimeStartAfterEndOrAddDateEnd": "Dodaj datę końca lub poporaw czasy, aby czas końca był po czasie początku",
+  "rangeTimeStartAfterEnd": "Czas końca jest przed czasem początku",
+
+  "rangeTimeStartEndTooCloseOrAddDateEnd": "Dodaj datę końca lub popraw czasy: czas końca musi być co najmniej {timesMinDifference} minut po czasie początku",
+  "rangeTimeStartEndTooCloseSameDate": "Czas końca musi być co najmniej {timesMinDifference} minut po czasie początku",
+  "@timeStartEndTooClose": {
+      "placeholders": {
+          "timesMinDifference": {
+          "type": "int"
+          }
+      }
+  },
+  "rangeDatesTooFarApart": "Maksymalna liczba dni między datą początku a datą końca, to {maxDatesDifference}",
+  "@rangeDatesTooFarApart": {
+      "placeholders": {
+          "maxDatesDifference": {
+              "type": "int"
+          }
+      }
+  },
+  "rangeStartSameAsEnd": "Początek i koniec to ten sam termin - mień lub usuń koniec",
+
+  "dateStringErrorBadChars": "Znaki niedozwolone dla daty",
+  "dateStringErrorTooFewDigits": "Za mało cyfr dla daty",
+  "dateStringErrorTooManyDigits": "Za dużo cyfr dla daty",
+  "dateStringErrorTooManyDelimiters": "Za dużo znaków rozdzielających dla daty",
+
+  "dateStringErrorTooManyDigitsDay": "Za dużo cyfr dla dnia",
+  "dateStringErrorTooManyDigitsMonth": "Za dużo cyfr dla miesiąca",
+  "dateStringErrorTooManyDigitsYear": "Za dużo cyfr dla roku",
+
+  "dateErrorDay0": "Nie ma dnia 0",
+  "dateErrorMonth0": "Nie ma miesiaca 0",
+  "dateErrorTooManyDaysInMonth": "Za dużo dni w miesiącu",
+  "dateErrorMonthOver12": "Nie ma miesiąca większego niż 12",
+
+  "dateErrorYearTooFarBack": "Rok nie może być wcześniejszy niż {dateMaxYearsBack}",
+    "@dateErrorYearTooFarBack": {
+      "placeholders": {
+        "dateMaxYearsBack": {
+          "type": "int"
+        }
+      }
+    },
+  "dateErrorYearTooFarForward": "Rok nie może być późniejszy niż {dateMaxYearsForward}",
+    "@dateErrorYearTooFarForward": {
+      "placeholders": {
+        "dateMaxYearsForward": {
+          "type": "int"
+        }
+      }
+    },
+
+  "mustNotPrecede": "nie może być przed",
+
+  "timeStringErrorBadChars": "Znaki niedozwolone dla czasu",
+  "timeStringErrorTooFewDigits": "Za mało cyfr dla czasu",
+  "timeStringErrorTooManyDigits": "Za dużo cyfr dla czasu",
+  "timeStringErrorTooManyDelimiters": "Za dużo znaków rozdzielających dla czasu",
+
+  "timeStringErrorTooManyDigitsMinutes": "Za dużo cyfr dla minut",
+  "timeStringErrorTooManyDigitsHours": "Za dużo cyfr dla godzin",
+
+  "timeErrorTooBigMinute": "Za dużo minut - nie ma takiej godziny",
+  "timeErrorTooBigHour": "Za dużo godzin - nie ma takiej godziny (północ to 00:00)",
+
+  "datetimeStringErrorNoSpace": "Data musi być oddzielona spacją od godziny",
+  "datetimeStringErrorTooManySpaces": "Za dużo spacji"
+}

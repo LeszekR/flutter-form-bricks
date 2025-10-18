@@ -1,3 +1,3 @@
-enum EFormStatus {
+enum FormStatus {
   noChange, invalid, valid
 }

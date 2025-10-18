@@ -1,0 +1,149 @@
+{
+  "buttonYes": "Yes",
+  "buttonNo": "No",
+  "buttonOk": "OK",
+  "buttonCancel": "Cancel",
+  "buttonSave": "Save",
+  "buttonDelete" : "Delete",
+  "buttonChange" : "Change",
+  "buttonReset": "Reset",
+
+  "dialogsWarning": "Warning",
+  "dialogsSuccess" :  "Success",
+  "dialogsError": "Error",
+  "dialogsDecision": "Reset form",
+  "progressPleaseWait": "Please wait",
+  "dialogsSaveSuccess": "Your data has been saved",
+  "dialogsDeleteSuccess": "Your data has been deleted",
+  "dialogsNoChanges": "There is nothing to save",
+  "dialogsFinishOrCorrect": "Correct or finish filling the data",
+  "dialogsConfirmCancel": "If you confirm all changes will be deleted.\nContinue?",
+
+  "validationMessageRequired": "{field} is {gender, select, male { required} female { required} other { required}}",
+  "validationDecimal" : "Only positive decimal numbers with {field, plural, one {1 decimal place} other {# decimal places}}",
+  "validationInteger" : "Only positive integers",
+  "validationPasswordOldNew": "The new password must be different from the old one",
+  "validationPasswordPassRepeatPass": "Password and confirm password must match",
+
+  "openDatePicker": "Open calendar",
+  "openTimePicker": "Open clock",
+  "and": "and",
+  "date": "date",
+  "time": "time",
+  "start": "start",
+  "end": "end",
+  "delete": "Delete",
+  "reset": "Reset",
+  "save": "Save",
+  "formReset" :"Form reset",
+  "formResetConfirm": "If you click OK all changes will be discarded\nContinue?",
+  "deleteConfirm": "Are you sure you want to delete it?",
+
+  "requiredField": "Required field",
+  "invalidEmail": "Invalid email address",
+  "invalidVAT": "Invalid VAT number",
+  "minNChars": "Required min. {charsMinimumN} characters",
+      "@charsMinimumN": {
+          "placeholders": {
+              "minNumberOfChars": {
+              "type": "int"
+              }
+          }
+      },
+  "maxNChars": "Required max. {charsMinimumN} characters",
+      "@charsMaximumN": {
+          "placeholders": {
+              "maxNumberOfChars": {
+              "type": "int"
+              }
+          }
+      },
+  "minIntValue": "Minimum value must not be lower than {IntValueMinimum}",
+      "@IntValueMinimum": {
+          "placeholders": {
+              "minimumIntValue": {
+              "type": "int"
+              }
+          }
+      },
+  "maxIntValue": "Maximum value must not exceed {IntValueMaximum}",
+      "@IntValueMaximum": {
+          "placeholders": {
+              "maximumIntValue": {
+              "type": "int"
+              }
+          }
+      },
+
+  "rangeDateStartRequired": "Missing start-date",
+  "rangeDateEndRequiredOrRemoveTimeEnd": "Add end-date or remove end-time",
+  "rangeDateStartAfterEnd": "End-date precedes start-date",
+  "rangeTimeStartAfterEndOrAddDateEnd": "Add end-date or make end-time later than start-time",
+  "rangeTimeStartAfterEnd": "Start-time is after end-time",
+
+  "rangeTimeStartEndTooCloseOrAddDateEnd": "Add end-date or make end-time at least {timesMinDifference} min after start-time",
+  "rangeTimeStartEndTooCloseSameDate": "End-time must be at least {timesMinDifference} min after start-time",
+  "@timeStartEndTooClose": {
+      "placeholders": {
+          "timesMinDifference": {
+              "type": "int"
+          }
+      }
+  },
+  "rangeDatesTooFarApart": "Dates must not be more than {maxDatesDifference} min after start-time",
+  "@rangeDatesTooFarApart": {
+      "placeholders": {
+          "maxDatesDifference": {
+              "type": "int"
+          }
+      }
+  },
+  "rangeStartSameAsEnd": "Start is identical to End - change or remove End date / time",
+
+  "dateStringErrorBadChars": "Characters not allowed for date",
+  "dateStringErrorTooFewDigits": "Too few digits for date",
+  "dateStringErrorTooManyDigits": "Too many digits for date",
+  "dateStringErrorTooManyDelimiters": "Too many delimiters for date",
+
+  "dateStringErrorTooManyDigitsDay": "Too many digits for day",
+  "dateStringErrorTooManyDigitsMonth": "Too many digits for month",
+  "dateStringErrorTooManyDigitsYear": "Too many digits for year",
+
+  "dateErrorDay0": "There is no day 0",
+  "dateErrorMonth0": "There is no month 0",
+  "dateErrorTooManyDaysInMonth": "Too many days in month",
+  "dateErrorMonthOver12": "There are only 12 months, not more",
+
+  "dateErrorYearTooFarBack": "You can not input year before {dateMaxYearsBack}",
+    "@dateErrorYearTooFarBack": {
+      "placeholders": {
+        "dateMaxYearsBack": {
+          "type": "int"
+        }
+      }
+    },
+  "dateErrorYearTooFarForward": "You can not input year after {dateMaxYearsForward}",
+    "@dateErrorYearTooFarForward": {
+      "placeholders": {
+        "dateMaxYearsForward": {
+          "type": "int"
+        }
+      }
+    },
+
+  "mustNotPrecede": "must not precede",
+
+  "timeStringErrorBadChars": "Characters not allowed for time",
+  "timeStringErrorTooFewDigits": "Too few digits for time",
+  "timeStringErrorTooManyDigits": "Too many digits for time",
+  "timeStringErrorTooManyDelimiters": "Too many delimiters for time",
+
+  "timeStringErrorTooManyDigitsMinutes": "Too many digits for minutes",
+  "timeStringErrorTooManyDigitsHours": "Too many digits for hours",
+
+  "timeErrorTooBigMinute": "Too high minutes number - no such time exists",
+  "timeErrorTooBigHour": "Too high hours number - no such time exists (midnight is 00:00)",
+
+  "datetimeStringErrorNoSpace": "Date must be separated from time with space",
+  "datetimeStringErrorTooManySpaces": "Too many spaces"
+}

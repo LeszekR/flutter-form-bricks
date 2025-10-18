@@ -1,0 +1,9 @@
+arb-dir: lib/src/string_literals/
+template-arb-file: string_literals_en.arb
+
+output-class: BricksLocalizations
+output-localization-file: bricks_localizations.dart
+synthetic-package: false
+output-dir: lib/src/string_literals/gen
+
+nullable-getter: false
