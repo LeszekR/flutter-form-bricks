@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/ui_params/app_style/app_style.dart';
 
 import '../../../ui_helpers/ui_helpers.dart';
 import '../../../ui_params/ui_params.dart';
 import '../dialogs/dialogs.dart';
-import '../inputs/base/double_widget_states_controller.dart';
 import 'elevated_button_with_disabling.dart';
 import 'icon_button_state_aware.dart';
-import 'package:flutter_form_bricks/src/ui_params/app_style/app_style.dart';
 
 class Buttons {
   Buttons._();
@@ -17,10 +17,10 @@ class Buttons {
         : const BeveledRectangleBorder(side: BorderSide(width: 0, style: BorderStyle.none)));
   }
 
-  static ElevatedButtonWithDisabling elevatedButton({
-    required final BuildContext context,
-    required final String text,
-    required final VoidCallback onPressed,
+  static ElevatedButtonWithDisabling elevatedButton(
+    {required BuildContext context, 
+    required String text,
+    required VoidCallback onPressed,
     final List<String>? requiredRoles,
     final double? width,
     final double? height,
@@ -39,7 +39,7 @@ class Buttons {
     final chosenAction = isAllowed
         ? onPressed
         : () => Dialogs.informationDialog(
-            context!, Tr.get.dialogsWarning, Tr.get.pagesResetPasswordDialogsNotPermitted(requiredRoles));
+            context, Tr.get.dialogsWarning, Tr.get.pagesResetPasswordDialogsNotPermitted(requiredRoles));
 
     final style = ButtonStyle(
       shape: WidgetStateProperty.all(appStyle.beveledRectangleBorderHardCorners),
@@ -55,20 +55,16 @@ class Buttons {
     );
 
     return ElevatedButtonWithDisabling(
-        key: Key(text),
-        onPressed: chosenAction,
-        style: style,
-        isActive: isAllowed,
-        child: Text(text));
+        key: Key(text), onPressed: chosenAction, style: style, isActive: isAllowed, child: Text(text));
   }
 
   /// STATE AWARE - color depends on state
-  static ValueListenableBuilder iconButtonStateAware({
-    required final BuildContext context,
-    required final IconData iconData,
-    required final String tooltip,
-    required final VoidCallback? onPressed,
-    required final DoubleWidgetStatesController statesController,
+  static ValueListenableBuilder iconButtonStateAware(
+    {required BuildContext context, 
+    required IconData iconData,
+    required String tooltip,
+    required VoidCallback? onPressed,
+    required DoubleWidgetStatesController statesController,
   }) {
     final appSize = getAppSize(context);
     final appColor = getAppColor(context);
@@ -94,11 +90,11 @@ class Buttons {
   }
 
   /// STATE IRRELEVANT - color is const from appStyle.theme
-  static Widget iconButtonStateless({
-    required final BuildContext context,
-    required final IconData iconData,
-    required final String tooltip,
-    required final VoidCallback? onPressed,
+  static Widget iconButtonStateless(
+    {required BuildContext context, 
+    required IconData iconData,
+    required String tooltip,
+    required VoidCallback? onPressed,
   }) {
     final appSize = getAppSize(context);
     final appColor = getAppColor(context);

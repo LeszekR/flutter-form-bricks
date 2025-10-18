@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/text/text_inputs_base/error_message_notifier_OLD.dart';
+import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
+import '../../../../../ui_params/ui_params.dart';
 import '../../../forms/form_manager/form_manager.dart';
-import '../../base/double_widget_states_controller.dart';
-import '../../base/error_message_notifier.dart';
 
 class TextFieldColored extends StatefulWidget {
   final String keyString;
@@ -56,7 +57,7 @@ class TextFieldColored extends StatefulWidget {
   State<StatefulWidget> createState() => _TextFieldColoredState();
 }
 
-class _TextFieldColoredState extends State<TextFieldColored> with ErrorMessageNotifier {
+class _TextFieldColoredState extends State<TextFieldColored> with ErrorMessageNotifierOLD {
   dynamic firstValue;
 
   @override
@@ -76,6 +77,11 @@ class _TextFieldColoredState extends State<TextFieldColored> with ErrorMessageNo
 
   @override
   Widget build(BuildContext context) {
+    final uiParams = UiParams.of(context);
+    final appSize = uiParams.appSize;
+    final appStyle = uiParams.appStyle;
+    final appColor = uiParams.appColor;
+
     // STATE AWARE - color depends on state
     // ======================================================
     if (widget.notifierDoubleStatesController != null) {
@@ -89,7 +95,7 @@ class _TextFieldColoredState extends State<TextFieldColored> with ErrorMessageNo
                   name: widget.keyString,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    fillColor: AppColor.makeColor(states),
+                    fillColor: appColor.makeColor(states),
                   ),
                   statesController: widget.notifierDoubleStatesController!.receiverStatesController,
                   autovalidateMode: widget.autovalidateMode,
@@ -112,7 +118,7 @@ class _TextFieldColoredState extends State<TextFieldColored> with ErrorMessageNo
           });
     }
 
-    // STATE IRRELEVANT - color controlled BY AppStyle.theme
+    // STATE IRRELEVANT - color controlled BY appStyle.theme
     // ======================================================
     return SizedBox(
         width: widget.textWidth,

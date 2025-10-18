@@ -8,7 +8,7 @@ import 'form_manager.dart';
 import 'form_state.dart';
 
 class TabulatedFormManagerOLD extends FormManagerOLD {
-  final ValueNotifier<Map<String, ETabStatus>> tabStatusNotifier = ValueNotifier<Map<String, ETabStatus>>({});
+  final ValueNotifier<Map<String, TabStatus>> tabStatusNotifier = ValueNotifier<Map<String, TabStatus>>({});
 
   GlobalKey<FormBuilderState>? _currentTabGlobalKey;
   final Map<GlobalKey<FormBuilderState>, TabData> tabsDataMap = {};
@@ -29,7 +29,7 @@ class TabulatedFormManagerOLD extends FormManagerOLD {
   @override
   FormStatus checkState() {
     final activeTabsData =
-        tabsDataMap.entries.where((entry) => tabsDataMap[entry.key]!.currentStatus != ETabStatus.tabDisabled);
+        tabsDataMap.entries.where((entry) => tabsDataMap[entry.key]!.currentStatus != TabStatus.tabDisabled);
 
     var hasInvalidTab =
         activeTabsData.any((tabData) => getFormPartState(tabData.value.globalKey) == FormStatus.invalid);
@@ -87,9 +87,9 @@ class TabulatedFormManagerOLD extends FormManagerOLD {
       return;
     }
     if (tabsDataMap[globalKey]?.globalKey.currentState?.isValid ?? false) {
-      tabsDataMap[globalKey]!.currentStatus = ETabStatus.tabOk;
+      tabsDataMap[globalKey]!.currentStatus = TabStatus.tabOk;
     } else {
-      tabsDataMap[globalKey]!.currentStatus = ETabStatus.tabError;
+      tabsDataMap[globalKey]!.currentStatus = TabStatus.tabError;
     }
   }
 
@@ -107,16 +107,16 @@ class TabulatedFormManagerOLD extends FormManagerOLD {
     var tabData = tabsDataMap[globalKey]!;
 
     if (isLockedNow) {
-      tabData.currentStatus = ETabStatus.tabDisabled;
+      tabData.currentStatus = TabStatus.tabDisabled;
     } else if (tabData.globalKey.currentState?.isValid ?? false) {
-      tabData.currentStatus = ETabStatus.tabOk;
+      tabData.currentStatus = TabStatus.tabOk;
     } else {
-      tabData.currentStatus = ETabStatus.tabError;
+      tabData.currentStatus = TabStatus.tabError;
     }
     _notifyTabStatusChange();
   }
 
   bool isTabDisabled(GlobalKey<FormBuilderState> globalKey) {
-    return tabsDataMap[globalKey]!.currentStatus == ETabStatus.tabDisabled;
+    return tabsDataMap[globalKey]!.currentStatus == TabStatus.tabDisabled;
   }
 }

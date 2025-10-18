@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
 
+import '../../../../ui_params/ui_params.dart';
 import '../../forms/form_manager/form_manager.dart';
-import '../base/e_input_name_position.dart';
-import '../base/input_validator_provider.dart';
+import '../../../../inputs/text/format_and_validate/input_validator_provider.dart';
 import '../text/text_inputs_base/basic_text_input.dart';
 import 'decimal_formatter.dart';
 import 'integer_formatter.dart';
 import 'number_validators.dart';
+import 'package:flutter_form_bricks/src/inputs/labelled_box/label_position.dart';
 
 class NumberInputs {
   NumberInputs._();
 
   static Widget id({
-    required final FormManagerOLD formManager,
-    required final int? initialValue,
-    required final ELabelPosition labelPosition,
+    required BuildContext context,
+    required FormManagerOLD formManager,
+    required int? initialValue,
+    required LabelPosition labelPosition,
     final String keyString = "id",
     final String label = "ID",
   }) {
+    final uiParams = UiParams.of(context);
+    final appSize = uiParams.appSize;
+
     final id = BasicTextInput.basicTextInput(
         keyString: keyString,
         label: label,
@@ -27,7 +32,7 @@ class NumberInputs {
         readonly: true,
         initialValue: initialValue,
         valueTransformer: (val) => intTransformer(val),
-        inputWidth: AppSize.inputNumberWidth);
+        inputWidth: appSize.textFieldWidth);
 
     return Opacity(
       opacity: 0,
@@ -36,10 +41,10 @@ class NumberInputs {
   }
 
   static Widget textInteger(
-      {required final String keyString,
-      required final String label,
-      required final ELabelPosition labelPosition,
-      required final FormManagerOLD formManager,
+      {required String keyString,
+      required String label,
+      required LabelPosition labelPosition,
+      required FormManagerOLD formManager,
       final int? initialValue,
       final bool readonly = false,
       final FormFieldValidator<String>? validator,
@@ -81,10 +86,10 @@ class NumberInputs {
   }
 
   static textDouble(
-      {required final String keyString,
-      required final String label,
-      required final ELabelPosition labelPosition,
-      required final FormManagerOLD formManager,
+      {required String keyString,
+      required String label,
+      required LabelPosition labelPosition,
+      required FormManagerOLD formManager,
       final double? initialValue,
       final int decimalPoints = 2,
       final bool readonly = false,

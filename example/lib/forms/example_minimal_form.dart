@@ -12,11 +12,12 @@ class _ExampleMinimalFormState extends SingleFormState<ExampleMinimalForm> {
   @override
   List<Widget> createBody(BuildContext context) {
     return [
-      FormUtils.horizontalFormGroup([
+      FormUtils.horizontalFormGroup(context: context,children: [
         DateTimeInputs.dateTimeRange(
+          context: context,
           rangeId: "rng",
           formManager: formManager,
-          labelPosition: ELabelPosition.topLeft,
+          labelPosition: LabelPosition.topLeft,
           label: "Załadunek",
           initialRangeStartDate: Date.fromString('2024-12-15'),
         ),

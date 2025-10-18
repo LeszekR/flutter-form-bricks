@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/awaiting_refactoring/ui/inputs/date_time/time_formatter_validator.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/time_formatter_validator.dart';
+import 'package:flutter_form_bricks/src/inputs/labelled_box/label_position.dart';
+import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_states_controller.dart';
 
+import '../../../../inputs/text/format_and_validate/input_validator_provider.dart';
+import '../../../../ui_params/ui_params.dart';
 import '../../../misc/time_stamp.dart';
 import '../../buttons/buttons.dart';
 import '../../forms/form_manager/form_manager.dart';
 import '../../shortcuts/keyboard_shortcuts.dart';
-import '../base/double_widget_states_controller.dart';
-import '../base/e_input_name_position.dart';
-import '../base/input_validator_provider.dart';
 import '../text/text_inputs_base/basic_text_input.dart';
 import 'current_date.dart';
 import 'dateTime_formatter_validator.dart';
@@ -27,10 +28,11 @@ class DateTimeInputs {
   DateTimeInputs._();
 
   static Widget date({
-    required final String keyString,
-    required final String label,
-    required final ELabelPosition labelPosition,
-    required final FormManagerOLD formManager,
+    required BuildContext context,
+    required String keyString,
+    required String label,
+    required LabelPosition labelPosition,
+    required FormManagerOLD formManager,
     final Date? initialValue,
     final bool readonly = false,
     final bool isRequired = false,
@@ -41,14 +43,23 @@ class DateTimeInputs {
     final RangeController? rangeController,
     final FormFieldValidator<String>? rangeValidator,
     final List<FormFieldValidator<String>>? additionalValidators,
-    final BuildContext? context,
   }) {
+    final uiParams = UiParams.of(context);
+    final appSize = uiParams.appSize;
+
     DoubleWidgetStatesController statesController = DoubleWidgetStatesController();
 
     ValueListenableBuilder iconButton = Buttons.iconButtonStateAware(
+      context: context,
       iconData: Icons.arrow_drop_down,
       tooltip: Tr.get.openDatePicker,
-      onPressed: readonly ? null : () => _showDatePicker(context!, formManager, keyString),
+      onPressed: readonly
+          ? null
+          : () => _showDatePicker(
+                context: context,
+                keyString: keyString,
+                formManager: formManager,
+              ),
       statesController: statesController,
     );
 
@@ -71,7 +82,7 @@ class DateTimeInputs {
           validatorsList: additionalValidators),
       withTextEditingController: true,
       linkedFields: linkedFields,
-      inputWidth: AppSize.inputDateWidth,
+      inputWidth: appSize.textFieldWidth,
       onChanged: onChanged,
       button: iconButton,
       statesController: statesController,
@@ -79,10 +90,11 @@ class DateTimeInputs {
   }
 
   static Widget time({
-    required final String keyString,
-    required final String label,
-    required final ELabelPosition labelPosition,
-    required final FormManagerOLD formManager,
+    required BuildContext context,
+    required String keyString,
+    required String label,
+    required LabelPosition labelPosition,
+    required FormManagerOLD formManager,
     final Time? initialValue,
     final bool readonly = false,
     final bool isRequired = false,
@@ -91,14 +103,21 @@ class DateTimeInputs {
     final RangeController? rangeController,
     final FormFieldValidator<String>? rangeValidator,
     final List<FormFieldValidator<String>>? additionalValidators,
-    final BuildContext? context,
   }) {
+    final uiParams = UiParams.of(context);
+    final appSize = uiParams.appSize;
+
     DoubleWidgetStatesController statesController = DoubleWidgetStatesController();
 
     ValueListenableBuilder iconButton = Buttons.iconButtonStateAware(
+      context: context,
       iconData: Icons.arrow_drop_down,
       tooltip: Tr.get.openTimePicker,
-      onPressed: () => _showTimePicker(context!, formManager, keyString),
+      onPressed: () => _showTimePicker(
+        context: context,
+        keyString: keyString,
+        formManager: formManager,
+      ),
       statesController: statesController,
     );
 
@@ -121,26 +140,31 @@ class DateTimeInputs {
       ),
       withTextEditingController: true,
       linkedFields: linkedFields,
-      inputWidth: AppSize.inputTimeWidth,
+      inputWidth: appSize.textFieldWidth,
       button: iconButton,
       statesController: statesController,
     );
   }
 
   static Widget dateTimeSeparateFields({
-    required final String keyString,
-    required final String label,
-    required final ELabelPosition labelPosition,
-    required final FormManagerOLD formManager,
+    required BuildContext context,
+    required String keyString,
+    required String label,
+    required LabelPosition labelPosition,
+    required FormManagerOLD formManager,
     final bool isDateRequired = false,
     final bool isTimeRequired = false,
     final RangeController? rangeController,
     final Date? initialDate,
     final Time? initialTime,
     final bool readonly = false,
-    final BuildContext? context,
     final List<FormFieldValidator<String>>? additionalValidators,
   }) {
+    final uiParams = UiParams.of(context);
+    final appSize = uiParams.appSize;
+    final appStyle = uiParams.appStyle;
+    final appColor = uiParams.appColor;
+
     var dateKeyString = makeDateKeyString(keyString);
     var timeKeyString = mameTimeKeyString(keyString);
 
@@ -171,28 +195,28 @@ class DateTimeInputs {
 
     final elements = [
       date(
+        context: context,
         keyString: dateKeyString,
         label: Tr.get.date,
-        labelPosition: ELabelPosition.topLeft,
+        labelPosition: LabelPosition.topLeft,
         initialValue: initialDate,
         readonly: readonly,
         formManager: formManager,
         isRequired: isDateRequired,
-        context: context,
         rangeController: rangeController,
         rangeValidator: rangeDateValidator,
         additionalValidators: additionalValidators,
       ),
-      AppSize.spacerBoxHorizontalSmallest,
+      appSize.spacerBoxHorizontalSmallest,
       time(
+        context: context,
         keyString: timeKeyString,
         label: Tr.get.time,
-        labelPosition: ELabelPosition.topLeft,
+        labelPosition: LabelPosition.topLeft,
         initialValue: initialTime,
         readonly: readonly,
         formManager: formManager,
         isRequired: isTimeRequired,
-        context: context,
         rangeController: rangeController,
         rangeValidator: rangeTimeValidator,
         additionalValidators: additionalValidators,
@@ -207,48 +231,52 @@ class DateTimeInputs {
   }
 
   static Widget dateTimeRange({
-    required final String rangeId,
-    required final String label,
-    required final ELabelPosition labelPosition,
-    required final FormManagerOLD formManager,
+    required BuildContext context,
+    required String rangeId,
+    required String label,
+    required LabelPosition labelPosition,
+    required FormManagerOLD formManager,
     final bool readonly = false,
     final Date? initialRangeStartDate,
     final Time? initialRangeStartTime,
     final Date? initialRangeEndDate,
     final Time? initialRangeEndTime,
-    final BuildContext? context,
   }) {
+    final uiParams = UiParams.of(context);
+    final appSize = uiParams.appSize;
+
     var rangeController = RangeController(rangeId);
 
     final rangeStart = dateTimeSeparateFields(
+      context: context,
       keyString: makeRangeKeyStringStart(rangeId),
       label: "$label ${Tr.get.start}",
       labelPosition: labelPosition,
       initialDate: initialRangeStartDate,
       initialTime: initialRangeStartTime,
       formManager: formManager,
-      context: context,
       rangeController: rangeController,
       isDateRequired: true,
     );
     final rangeEnd = dateTimeSeparateFields(
+      context: context,
       keyString: makeRangeKeyStringEnd(rangeId),
       label: "$label ${Tr.get.end}",
       labelPosition: labelPosition,
       initialDate: initialRangeEndDate,
       initialTime: initialRangeEndTime,
       formManager: formManager,
-      context: context,
       rangeController: rangeController,
     );
-    return Row(children: [rangeStart, AppSize.spacerBoxHorizontalMedium, rangeEnd]);
+    return Row(children: [rangeStart, appSize.spacerBoxHorizontalMedium, rangeEnd]);
   }
 
   static Widget dateTimeOneField({
-    required final String keyString,
-    required final String label,
-    required final ELabelPosition labelPosition,
-    required final FormManagerOLD formManager,
+    required BuildContext context,
+    required String keyString,
+    required String label,
+    required LabelPosition labelPosition,
+    required FormManagerOLD formManager,
     final DateTime? initialValue,
     final bool readonly = false,
     final bool isRequired = false,
@@ -256,14 +284,14 @@ class DateTimeInputs {
     final ValueChanged<String?>? onChanged,
     final VoidCallback? onDateHourChange,
     final List<FormFieldValidator<String>>? additionalValidators,
-    final BuildContext? context,
   }) {
     DoubleWidgetStatesController statesController = DoubleWidgetStatesController();
 
     ValueListenableBuilder iconButton = Buttons.iconButtonStateAware(
+      context: context,
       iconData: Icons.arrow_drop_down,
       tooltip: '${Tr.get.openTimePicker} ${Tr.get.and} ${Tr.get.openTimePicker}',
-      onPressed: () => _showDateTimePicker(context!, formManager, keyString),
+      onPressed: () => _showDateTimePicker(context: context, keyString: keyString, formManager: formManager),
       statesController: statesController,
     );
 
@@ -286,13 +314,19 @@ class DateTimeInputs {
     );
   }
 
-  static void _showDatePicker(final BuildContext context, final FormManagerOLD formManager, final String keyString) {
+  static void _showDatePicker({
+    required BuildContext context,
+    required String keyString,
+    required FormManagerOLD formManager,
+    Duration? maxDateSpan,
+  }) {
     final now = DateTime.now();
+    var dateSpan = maxDateSpan ?? Duration(days: 365);
     showDatePicker(
       context: context,
       initialDate: now,
-      firstDate: now.subtract(AppParams.maxDateSpan),
-      lastDate: now.add(AppParams.maxDateSpan),
+      firstDate: now.subtract(dateSpan),
+      lastDate: now.add(dateSpan),
     ).then((value) {
       if (value != null) {
         // TODO connect to rangeValidator
@@ -302,20 +336,30 @@ class DateTimeInputs {
     });
   }
 
-  static void _showTimePicker(final BuildContext context, final FormManagerOLD formManager, final String timeKey) {
-    showTimePicker(context: context, initialTime: TimeOfDay.now().replacing(minute: 0)).then((value) {
+  static void _showTimePicker({
+    required BuildContext context,
+    required String keyString,
+    required FormManagerOLD formManager,
+  }) {
+    showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now().replacing(minute: 0),
+    ).then((value) {
       if (value != null) {
         // TODO connect to rangeValidator
         final formattedText =
             Date.timeFormatMinutePrecision.format(DateTime.now().copyWith(minute: value.minute, hour: value.hour));
-        formManager.onFieldChanged(timeKey, formattedText);
+        formManager.onFieldChanged(keyString, formattedText);
       }
     });
   }
 
-  static void _showDateTimePicker(
-      final BuildContext context, final FormManagerOLD formManager, final String keyString) async {
-    final DateTime now = DateTime.now();
+  static void _showDateTimePicker({
+    required BuildContext context,
+    required FormManagerOLD formManager,
+    required String keyString,
+  }) async {
+    final now = DateTime.now();
     final DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: now,

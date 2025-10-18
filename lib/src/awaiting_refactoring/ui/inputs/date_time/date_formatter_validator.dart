@@ -1,4 +1,4 @@
-import 'package:flutter_form_bricks/awaiting_refactoring/ui/inputs/date_time/string_parse_result.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/string_parse_result.dart';
 
 import 'current_date.dart';
 import 'date_time_utils.dart';
@@ -154,7 +154,11 @@ class DateFormatterValidator {
     return StringParseResult(dateWithoutYear, true, '');
   }
 
-  StringParseResult validateDate(StringParseResult stringParseResult) {
+  StringParseResult validateDate(
+    StringParseResult stringParseResult,
+    int maxYearsBackInDate,
+    int maxYearsForwardInDate,
+  ) {
     var dateString = stringParseResult.parsedString;
     var dateElementsList = dateString.split(dateDelimiter);
     var elementsListLength = dateElementsList.length;
@@ -185,8 +189,8 @@ class DateFormatterValidator {
     // only max years back and max years forward
     if (elementsListLength == 3) {
       var currentYear = _currentDate!.getCurrentDate().year;
-      var acceptedYearBack = currentYear - AppParams.maxYearsBackInDate;
-      var acceptedYearForward = currentYear + AppParams.maxYearsForwardInDate;
+      var acceptedYearBack = currentYear - maxYearsBackInDate;
+      var acceptedYearForward = currentYear + maxYearsForwardInDate;
       var year = int.parse(dateElementsList[0]);
 
       isTooManyDays = false;

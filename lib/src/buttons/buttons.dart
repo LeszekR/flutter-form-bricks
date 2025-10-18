@@ -26,8 +26,8 @@
 //
 //   static ElevatedButtonWithDisabling elevatedButton({
 //     final BuildContext? context,
-//     required final String text,
-//     required final VoidCallback onPressed,
+//     required String text,
+//     required VoidCallback onPressed,
 //     final List<String>? requiredRoles,
 //     final double? width,
 //     final double? height,
@@ -69,10 +69,10 @@
 //
 //   /// STATE AWARE - color depends on state
 //   static ValueListenableBuilder iconButtonStateAware({
-//     required final IconData iconData,
-//     required final String tooltip,
-//     required final VoidCallback? onPressed,
-//     required final DoubleWidgetStatesController statesController,
+//     required IconData iconData,
+//     required String tooltip,
+//     required VoidCallback? onPressed,
+//     required DoubleWidgetStatesController statesController,
 //   }) {
 //
 //     return ValueListenableBuilder(
@@ -97,9 +97,9 @@
 //
 //   /// STATE IRRELEVANT - color is const from AppStyle.theme
 //   static Widget iconButtonStateless({
-//     required final IconData iconData,
-//     required final String tooltip,
-//     required final VoidCallback? onPressed,
+//     required IconData iconData,
+//     required String tooltip,
+//     required VoidCallback? onPressed,
 //   }) {
 //     double iconSize = AppSize.iconSize;
 //     Alignment alignment = Alignment.center;

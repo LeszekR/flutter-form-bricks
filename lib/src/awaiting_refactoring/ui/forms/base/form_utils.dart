@@ -1,35 +1,39 @@
 import 'package:flutter/material.dart';
 
-import '../../style/app_color.dart';
-import '../../style/app_size.dart';
-import '../../style/app_style.dart';
+import '../../../../ui_params/ui_params.dart';
 
 class FormUtils {
   FormUtils._();
 
   static Container horizontalFormGroup(
-    final List<Widget> children, {
-    final String? label,
-    final Alignment alignment = Alignment.center,
-    final double? height,
-    final Color? color,
-    final bool padding = true,
+      {
+    required BuildContext context,
+        required List<Widget> children,
+    String? label,
+    Alignment alignment = Alignment.center,
+    double? height,
+    Color? color,
+    bool padding = true,
     borderTop = true,
     borderLeft = true,
     borderBottom = true,
     borderRight = true,
   }) {
+    final uiParams = UiParams.of(context);
+    final appColor = uiParams.appColor;
     final row = Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: children,);
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: children,
+    );
     return formGroup(
+      context,
       row,
       label: label,
       alignment: alignment,
       height: height,
-      color: color ?? AppColor.formWorkAreaBackground,
+      color: color ?? appColor.formWorkAreaBackground,
       padding: padding,
       borderTop: borderTop,
       borderLeft: borderLeft,
@@ -39,17 +43,20 @@ class FormUtils {
   }
 
   static Container horizontalFormGroupBorderless(
+    BuildContext context,
     final List<Widget> children, {
     final String? label,
     final Alignment alignment = Alignment.center,
     final double? height,
     final bool padding = false,
   }) {
-    return horizontalFormGroup(children,
+    final uiParams = UiParams.of(context);
+    final appColor = uiParams.appColor;
+    return horizontalFormGroup(context, children,
         label: label,
         alignment: alignment,
         height: height,
-        color: AppColor.formWindowBackground,
+        color: appColor.formWindowBackground,
         padding: padding,
         borderLeft: false,
         borderBottom: false,
@@ -58,6 +65,7 @@ class FormUtils {
   }
 
   static Container verticalFormGroup(
+    BuildContext context,
     final List<Widget> widgets, {
     final String? label,
     final Alignment alignment = Alignment.center,
@@ -69,17 +77,20 @@ class FormUtils {
     borderBottom = true,
     borderRight = true,
   }) {
+    final uiParams = UiParams.of(context);
+    final appColor = uiParams.appColor;
     final column = Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: widgets);
     return formGroup(
+      context,
       column,
       label: label,
       alignment: alignment,
       height: height,
-      color: color ?? AppColor.formWorkAreaBackground,
+      color: color ?? appColor.formWorkAreaBackground,
       padding: padding,
       borderTop: borderTop,
       borderLeft: borderLeft,
@@ -89,6 +100,7 @@ class FormUtils {
   }
 
   static Container formGroup(
+    BuildContext context,
     final Widget widget, {
     final String? label,
     final Alignment alignment = Alignment.center,
@@ -100,26 +112,30 @@ class FormUtils {
     final bool borderBottom = false,
     final bool borderRight = false,
   }) {
+    final uiParams = UiParams.of(context);
+    final appSize = uiParams.appSize;
+    final appStyle = uiParams.appStyle;
+    final appColor = uiParams.appColor;
     final childWidget = Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (label != null) Text(label, style: TextStyle(fontSize: AppSize.fontSize_6, fontWeight: FontWeight.bold)),
+        if (label != null) Text(label, style: TextStyle(fontSize: appSize.fontSize6, fontWeight: FontWeight.bold)),
         widget,
       ],
     );
     return Container(
       height: height,
       alignment: alignment,
-      padding: EdgeInsets.all(padding ? AppSize.paddingForm : 0),
+      padding: EdgeInsets.all(padding ? appSize.paddingForm : 0),
       decoration: BoxDecoration(
-        color: color ?? AppColor.formWindowBackground,
+        color: color ?? appColor.formWindowBackground,
         border: Border(
-          top: borderTop ? AppStyle.borderFieldSideEnabled : BorderSide.none,
-          left: borderLeft ? AppStyle.borderFieldSideEnabled : BorderSide.none,
-          bottom: borderBottom ? AppStyle.borderFieldSideEnabled : BorderSide.none,
-          right: borderRight ? AppStyle.borderFieldSideEnabled : BorderSide.none,
+          top: borderTop ? appStyle.borderFieldSide : BorderSide.none,
+          left: borderLeft ? appStyle.borderFieldSide : BorderSide.none,
+          bottom: borderBottom ? appStyle.borderFieldSide : BorderSide.none,
+          right: borderRight ? appStyle.borderFieldSide : BorderSide.none,
         ),
       ),
       child: childWidget,
@@ -127,7 +143,7 @@ class FormUtils {
   }
 
   //todo think about passing ontap function
-  static Future<dynamic> searchDialog<E>(final BuildContext context, final Map<String, E> items) {
+  static Future<dynamic> searchDialog<E>(BuildContext context, final Map<String, E> items) {
     final list = ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) {
@@ -142,7 +158,7 @@ class FormUtils {
     );
 
     return showDialog(
-      context: context,
+      context,
       builder: (context) => Dialog(
         child: Container(
           height: 400,
@@ -154,14 +170,20 @@ class FormUtils {
     );
   }
 
-  static Scaffold defaultScaffold({required final String label, required final Widget child}) {
+  static Scaffold defaultScaffold(
+    {required BuildContext context, 
+    required String label,
+    required Widget child,
+  }) {
+    final uiParams = UiParams.of(context);
+    final appSize = uiParams.appSize;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(label),
       ),
       body: Padding(
-        padding: EdgeInsets.all(AppSize.scaffoldInsetsVertical),
+        padding: EdgeInsets.all(appSize.scaffoldInsetsVertical),
         child: child,
       ),
     );

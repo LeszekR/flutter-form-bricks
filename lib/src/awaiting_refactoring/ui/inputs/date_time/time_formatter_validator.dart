@@ -1,14 +1,14 @@
-import 'package:flutter_form_bricks/awaiting_refactoring/ui/inputs/date_time/string_parse_result.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/string_parse_result.dart';
 
 import 'date_time_utils.dart';
 
 class TimeFormatterValidator {
-
   static TimeFormatterValidator? _instance;
 
   TimeFormatterValidator._(DateTimeUtils dateTimeInputUtils) {
     _dateTimeUtils = dateTimeInputUtils;
   }
+
   factory TimeFormatterValidator(DateTimeUtils dateTimeInputUtils) {
     _instance ??= TimeFormatterValidator._(dateTimeInputUtils);
     return _instance!;
@@ -125,7 +125,7 @@ class TimeFormatterValidator {
     return StringParseResult(timeString, true, '');
   }
 
-  String makeTimeString (String text) {
+  String makeTimeString(String text) {
     return makeTimeFromString(text).parsedString;
   }
 }

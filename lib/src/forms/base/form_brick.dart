@@ -20,8 +20,8 @@ abstract class FormBrick extends StatefulWidget {
   @override
   FormBrickState createState();
 
-  static Future<dynamic> openForm({required final BuildContext context, required final Widget form}) {
-    return showDialog(context: context, barrierDismissible: false, builder: (final BuildContext context) => form);
+  static Future<dynamic> openForm({required BuildContext context, required Widget form}) {
+    return showDialog(context, barrierDismissible: false, builder: (BuildContext context) => form);
   }
 }
 
@@ -99,7 +99,7 @@ abstract class FormBrickState<T extends FormBrick> extends State<T> {
   }
 
   Widget createFormControlPanel(
-    final BuildContext context,
+    BuildContext context,
   ) {
     // TODO uncomment and refactor
     return SizedBox(width: 100, height: 100,);

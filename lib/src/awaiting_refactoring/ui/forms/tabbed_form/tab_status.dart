@@ -1,40 +1,41 @@
 import 'dart:ui';
-import '../../style/app_color.dart';
-import '../../style/app_style.dart';
 
-enum ETabStatus { tabDisabled, tabError, tabOk }
+import 'package:flutter_form_bricks/src/ui_params/app_color/app_color.dart';
+import 'package:flutter_form_bricks/src/ui_params/app_style/app_style.dart';
 
-extension TabStatusExtension on ETabStatus {
-  Color get backgroundColor {
+enum TabStatus { tabDisabled, tabError, tabOk }
+
+extension TabStatusExtension on TabStatus {
+  Color backgroundColor(AppColor appColor) {
     switch (this) {
-      case ETabStatus.tabDisabled:
-        return AppColor.tabDisabled;
-      case ETabStatus.tabError:
-        return AppColor.tabError;
+      case TabStatus.tabDisabled:
+        return appColor.tabDisabled;
+      case TabStatus.tabError:
+        return appColor.tabError;
       default:
-        return AppColor.tabEnabled;
+        return appColor.tabEnabled;
     }
   }
 
-  Color get fontColor {
+  Color fontColor(AppColor appColor) {
     switch (this) {
-      case ETabStatus.tabDisabled:
-        return AppColor.tabFontDisabled;
-      case ETabStatus.tabError:
-        return AppColor.tabFontError;
+      case TabStatus.tabDisabled:
+        return appColor.tabFontDisabled;
+      case TabStatus.tabError:
+        return appColor.tabFontError;
       default:
-        return AppColor.tabFontEnabled;
+        return appColor.tabFontEnabled;
     }
   }
 
-  FontStyle get fontStyle {
+  FontStyle fontStyle(AppStyle appStyle) {
     switch (this) {
-      case ETabStatus.tabDisabled:
-        return AppStyle.tabFontDisabled;
-      case ETabStatus.tabError:
-        return AppStyle.tabFontError;
+      case TabStatus.tabDisabled:
+        return appStyle.tabFontDisabled;
+      case TabStatus.tabError:
+        return appStyle.tabFontError;
       default:
-        return AppStyle.tabFontEnabled;
+        return appStyle.tabFontEnabled;
     }
   }
 }

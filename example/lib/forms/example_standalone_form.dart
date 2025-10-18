@@ -118,7 +118,7 @@ class _ExampleSingleFormState extends SingleFormState<ExampleSingleForm> {
         TextInputs.textSimple(
           keyString: testSimpleKeyString,
           label: 'Prosty text input',
-          labelPosition: ELabelPosition.topLeft,
+          labelPosition: LabelPosition.topLeft,
           formManager: formManager,
           validator: ValidatorProvider.compose(isRequired: true),
           withTextEditingController: true,
@@ -130,7 +130,7 @@ class _ExampleSingleFormState extends SingleFormState<ExampleSingleForm> {
         TextInputs.textLowercase(
           keyString: lowerCaseTextKeyString,
           label: 'tylko low-case',
-          labelPosition: ELabelPosition.topLeft,
+          labelPosition: LabelPosition.topLeft,
           formManager: formManager,
           initialValue: 'gucio',
         ),
@@ -139,7 +139,7 @@ class _ExampleSingleFormState extends SingleFormState<ExampleSingleForm> {
         TextInputs.textSimple(
           keyString: withDefaultKeyString,
           label: 'input posiadający defaultową wartość (sprawdz reset)',
-          labelPosition: ELabelPosition.topLeft,
+          labelPosition: LabelPosition.topLeft,
           formManager: formManager,
         ),
         appSize.spacerBoxVerticalSmall,
@@ -147,7 +147,7 @@ class _ExampleSingleFormState extends SingleFormState<ExampleSingleForm> {
         TextInputs.textMultiline(
           keyString: multilineKeyString,
           label: 'Bulk Text',
-          labelPosition: ELabelPosition.topLeft,
+          labelPosition: LabelPosition.topLeft,
           formManager: formManager,
           inputWidth: appSize.textFieldWidth * 2,
           inputHeightMultiplier: 2,
@@ -160,7 +160,7 @@ class _ExampleSingleFormState extends SingleFormState<ExampleSingleForm> {
         TextInputs.textUppercase(
           keyString: upperCaseKeyString,
           label: 'tylko upper-case',
-          labelPosition: ELabelPosition.topLeft,
+          labelPosition: LabelPosition.topLeft,
           formManager: formManager,
         ),
         appSize.spacerBoxVerticalSmall,
@@ -168,7 +168,7 @@ class _ExampleSingleFormState extends SingleFormState<ExampleSingleForm> {
         TextInputs.textSimple(
           keyString: firstUpperCaseKeyString,
           label: 'pierwszy upper, potem lower',
-          labelPosition: ELabelPosition.topLeft,
+          labelPosition: LabelPosition.topLeft,
           formManager: formManager,
         ),
         appSize.spacerBoxVerticalSmall,
@@ -176,7 +176,7 @@ class _ExampleSingleFormState extends SingleFormState<ExampleSingleForm> {
         TextInputs.textVat(
           keyString: vatKeyString,
           label: 'Text input z regexem VAT',
-          labelPosition: ELabelPosition.topLeft,
+          labelPosition: LabelPosition.topLeft,
           formManager: formManager,
         ),
       ],
@@ -190,7 +190,7 @@ class _ExampleSingleFormState extends SingleFormState<ExampleSingleForm> {
         TextInputs.textUppercase(
           keyString: upperCaseKeyString2,
           label: 'tylko upper-case',
-          labelPosition: ELabelPosition.left,
+          labelPosition: LabelPosition.left,
           formManager: formManager,
         ),
         appSize.spacerBoxVerticalSmall,
@@ -198,7 +198,7 @@ class _ExampleSingleFormState extends SingleFormState<ExampleSingleForm> {
         TextInputs.textFirstUppercaseThenLowercase(
           keyString: firsUpperCaseKeyString2,
           label: 'pierwszy upper, potem lower',
-          labelPosition: ELabelPosition.left,
+          labelPosition: LabelPosition.left,
           formManager: formManager,
           inputWidth: inputWidth,
         ),
@@ -207,7 +207,7 @@ class _ExampleSingleFormState extends SingleFormState<ExampleSingleForm> {
         TextInputs.textVat(
           keyString: "vat_standalone 2",
           label: 'Text input z regexem VAT',
-          labelPosition: ELabelPosition.left,
+          labelPosition: LabelPosition.left,
           formManager: formManager,
           inputWidth: inputWidth,
           // focusNode: formManager.getFocusNode('Text input z regexem VAT'),
@@ -218,7 +218,7 @@ class _ExampleSingleFormState extends SingleFormState<ExampleSingleForm> {
         TextInputs.textMultilineWithButton(
           keyString: multilineWithButtonKeyString,
           label: 'Multiline text',
-          labelPosition: ELabelPosition.left,
+          labelPosition: LabelPosition.left,
           formManager: formManager,
           iconData: Icons.arrow_drop_down,
           onPressed: (() => Dialogs.informationDialog(context, 'GUZIK', 'Naciśnięto')),
@@ -231,7 +231,7 @@ class _ExampleSingleFormState extends SingleFormState<ExampleSingleForm> {
         TextInputs.textMultiline(
           keyString: multilineWithButtonKeyString,
           label: 'Multiline text',
-          labelPosition: ELabelPosition.left,
+          labelPosition: LabelPosition.left,
           formManager: formManager,
           inputWidth: inputWidth,
           inputHeightMultiplier: 2,
@@ -252,7 +252,7 @@ class _ExampleSingleFormState extends SingleFormState<ExampleSingleForm> {
       NumberInputs.textInteger(
         keyString: "text_integer",
         label: "Pole integer",
-        labelPosition: ELabelPosition.topLeft,
+        labelPosition: LabelPosition.topLeft,
         formManager: formManager,
       ),
       appSize.spacerBoxHorizontalMedium,
@@ -261,7 +261,7 @@ class _ExampleSingleFormState extends SingleFormState<ExampleSingleForm> {
         formManager: formManager,
         keyString: "double",
         label: "Pole double z dwoma miejscami po przecinku",
-        labelPosition: ELabelPosition.topLeft,
+        labelPosition: LabelPosition.topLeft,
       ),
     ], label: "Liczby");
     return numbers;
@@ -298,7 +298,7 @@ class _ExampleSingleFormState extends SingleFormState<ExampleSingleForm> {
       TextInputs.textSimple(
           keyString: "fieldDenpendentOnCheckbox_standalone",
           label: 'Text input zależny od checkbox',
-          labelPosition: ELabelPosition.topLeft,
+          labelPosition: LabelPosition.topLeft,
           formManager: formManager,
           readonly: _dependentTextInputReadonly),
       appSize.spacerBoxHorizontalMedium,
@@ -320,9 +320,9 @@ class _ExampleSingleFormState extends SingleFormState<ExampleSingleForm> {
       DateTimeInputs.dateTimeSeparateFields(
           keyString: "date_time_1",
           label: "Data i godzina",
-          labelPosition: ELabelPosition.topLeft,
+          labelPosition: LabelPosition.topLeft,
           formManager: formManager,
-          context: context),
+          context),
     ], label: 'Date hour');
 
     return dates;
@@ -334,33 +334,33 @@ class _ExampleSingleFormState extends SingleFormState<ExampleSingleForm> {
       DateTimeInputs.date(
           keyString: "dateonly",
           label: "Sama Data",
-          labelPosition: ELabelPosition.topLeft,
+          labelPosition: LabelPosition.topLeft,
           formManager: formManager,
-          context: context),
+          context),
       appSize.spacerBoxVerticalSmall,
       //
       DateTimeInputs.time(
           keyString: "timeonly",
           label: "Sam Czas",
-          labelPosition: ELabelPosition.topLeft,
+          labelPosition: LabelPosition.topLeft,
           formManager: formManager,
-          context: context),
+          context),
       appSize.spacerBoxVerticalSmall,
       //
       DateTimeInputs.dateTimeSeparateFields(
           keyString: "date_time_2",
           label: "Data odbioru",
-          labelPosition: ELabelPosition.topLeft,
+          labelPosition: LabelPosition.topLeft,
           formManager: formManager,
-          context: context),
+          context),
       appSize.spacerBoxVerticalSmall,
       //
       DateTimeInputs.dateTimeRange(
           rangeId: "date_time_range_1",
           label: "Załadunek dla klienta",
-          labelPosition: ELabelPosition.topLeft,
+          labelPosition: LabelPosition.topLeft,
           formManager: formManager,
-          context: context)
+          context)
     ], label: "Daty");
     return dates;
   }
@@ -370,9 +370,9 @@ class _ExampleSingleFormState extends SingleFormState<ExampleSingleForm> {
       DateTimeInputs.dateTimeOneField(
           keyString: "DateHourKey",
           label: "Data i godzina",
-          labelPosition: ELabelPosition.topLeft,
+          labelPosition: LabelPosition.topLeft,
           formManager: formManager,
-          context: context)
+          context)
     ], label: "Date and hour with one field");
 
     return dates;

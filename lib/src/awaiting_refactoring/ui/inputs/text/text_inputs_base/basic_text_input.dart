@@ -1,44 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_bricks/awaiting_refactoring/ui/inputs/text/text_inputs_base/text_field_colored.dart';
+import 'package:flutter_form_bricks/src/inputs/labelled_box/label_position.dart';
+import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
+import '../../../../../ui_params/ui_params.dart';
 import '../../../forms/form_manager/form_manager.dart';
-import '../../base/e_input_name_position.dart';
-import '../../base/double_widget_states_controller.dart';
+import 'text_field_colored.dart';
 
 class BasicTextInput {
-
   BasicTextInput._();
 
-  static Widget basicTextInput({
-    required final String keyString,
-    required final String label,
-    required final ELabelPosition labelPosition,
-    required final AutovalidateMode autovalidateMode,
-    final dynamic initialValue,
-    final bool readonly = false,
-    final List<TextInputFormatter>? inputFormatters,
-    required final FormManagerOLD formManager,
-    final FormFieldValidator<String>? validator,
-    final bool? withTextEditingController,
-    final ValueChanged<String?>? onChanged,
-    final List<String>? linkedFields,
-    final bool obscureText = false,
-    final TextInputType? keyboardType = TextInputType.text,
-    final int? maxLines,
-    final bool expands = true,
-    final ValueTransformer? valueTransformer,
-    final double? inputWidth,
-    final int? inputHeightMultiplier,
-    final double? labelWidth,
-    final Widget? button,
-    final DoubleWidgetStatesController? statesController,
-    final VoidCallback? onEditingComplete,
-    final TextInputAction? textInputAction,
-    final ValueChanged<String?>? onSubmitted
-  }) {assert(button != null ? statesController != null : true,
+  static Widget basicTextInput(
+      {required BuildContext context,
+      required String keyString,
+      required String label,
+      required LabelPosition labelPosition,
+      required AutovalidateMode autovalidateMode,
+      final dynamic initialValue,
+      final bool readonly = false,
+      final List<TextInputFormatter>? inputFormatters,
+      required FormManagerOLD formManager,
+      final FormFieldValidator<String>? validator,
+      final bool? withTextEditingController,
+      final ValueChanged<String?>? onChanged,
+      final List<String>? linkedFields,
+      final bool obscureText = false,
+      final TextInputType? keyboardType = TextInputType.text,
+      final int? maxLines,
+      final bool expands = true,
+      final ValueTransformer? valueTransformer,
+      final double? inputWidth,
+      final int? inputHeightMultiplier,
+      final double? labelWidth,
+      final Widget? button,
+      final DoubleWidgetStatesController? statesController,
+      final VoidCallback? onEditingComplete,
+      final TextInputAction? textInputAction,
+      final ValueChanged<String?>? onSubmitted}) {
+    assert(button != null ? statesController != null : true,
         'With button present statesController must be present too in: $keyString');
+
+    final uiParams = UiParams.of(context);
+    final appSize = uiParams.appSize;
+    final appStyle = uiParams.appStyle;
 
     double mTextWidth, mTextHeight;
     double mButtonWidth, mButtonHeight;
@@ -48,7 +53,7 @@ class BasicTextInput {
     final inputLabel = Text(
       label,
       textAlign: TextAlign.left,
-      style: AppStyle.inputLabelStyle(),
+      style: appStyle.inputLabelStyle(),
     );
 
     //
@@ -82,46 +87,68 @@ class BasicTextInput {
 
       switch (labelPosition) {
         // EInputNamePosition = left
-        case ELabelPosition.left:
+        case LabelPosition.left:
           {
-            mButtonWidth = AppSize.inputTextLineHeight;
-            mButtonHeight = AppSize.inputTextLineHeight;
+            mButtonWidth = appSize.inputTextLineHeight;
+            mButtonHeight = appSize.inputTextLineHeight;
 
-            mLabelWidth = labelWidth ?? AppSize.inputLabelWidth;
-            mLabelHeight = AppSize.inputTextLineHeight;
+            mLabelWidth = labelWidth ?? appSize.inputLabelWidth;
+            mLabelHeight = appSize.inputTextLineHeight;
 
-            mTextWidth = (inputWidth ?? AppSize.inputTextWidth) - mButtonWidth;
-            mTextHeight = (AppSize.inputTextLineHeight * (inputHeightMultiplier ?? 1));
+            mTextWidth = (inputWidth ?? appSize.textFieldWidth) - mButtonWidth;
+            mTextHeight = (appSize.inputTextLineHeight * (inputHeightMultiplier ?? 1));
 
-            mInputWidth = mLabelWidth + mTextWidth + mButtonWidth + (2 * AppSize.paddingInputLabel);
+            mInputWidth = mLabelWidth + mTextWidth + mButtonWidth + (2 * appSize.paddingInputLabel);
             mInputHeight = mTextHeight;
 
-            return makeLeftLabelInputStateAware(mInputWidth, mInputHeight, mLabelWidth, mLabelHeight, inputLabel,
-                mTextWidth, inputText, mButtonWidth, mButtonHeight, button);
+            return makeLeftLabelInputStateAware(
+              context: context,
+              mInputWidth: mInputWidth,
+              mInputHeight: mInputWidth,
+              mLabelWidth: inputWidth,
+              mLabelHeight: mInputWidth,
+              inputLabel: inputLabel,
+              mTextWidth: mInputWidth,
+              inputText: inputText,
+              mButtonWidth: mInputWidth,
+              mButtonHeight: mInputWidth,
+              button: inputText,
+            );
           }
 
         // EInputNamePosition = topLeft
         default:
           {
-            mButtonWidth = AppSize.inputTextLineHeight;
-            mButtonHeight = AppSize.inputTextLineHeight;
+            mButtonWidth = appSize.inputTextLineHeight;
+            mButtonHeight = appSize.inputTextLineHeight;
 
-            mTextWidth = inputWidth ?? AppSize.inputTextWidth;
-            mTextHeight = AppSize.inputTextLineHeight * (inputHeightMultiplier ?? 1);
+            mTextWidth = inputWidth ?? appSize.textFieldWidth;
+            mTextHeight = appSize.inputTextLineHeight * (inputHeightMultiplier ?? 1);
 
             mLabelWidth = mTextWidth;
-            mLabelHeight = AppSize.inputLabelHeight;
+            mLabelHeight = appSize.inputLabelHeight;
 
             mInputWidth = mTextWidth + mButtonWidth;
             mInputHeight = mLabelHeight + mTextHeight;
 
-            return makeTopLabelInputStateAware(mInputWidth, mInputHeight, mLabelHeight, inputLabel, mTextWidth,
-                mTextHeight, inputText, mButtonWidth, mButtonHeight, button);
+            return makeTopLabelInputStateAware(
+              context: context,
+              mInputWidth: mInputWidth,
+              mInputHeight: mInputWidth,
+              mLabelHeight: mInputWidth,
+              inputLabel: inputLabel,
+              mTextWidth: mInputWidth,
+              mTextHeight: mInputWidth,
+              inputText: inputText,
+              mButtonWidth: mInputWidth,
+              mButtonHeight: mInputWidth,
+              button: inputText,
+            );
           }
       }
     }
     //
-    //  NO STATES CONTROLLER - color controlled by AppStyle.theme
+    //  NO STATES CONTROLLER - color controlled by appStyle.theme
     //  ========================================================================
     final inputText = TextFieldColored(
       keyString,
@@ -147,42 +174,69 @@ class BasicTextInput {
     );
 
     switch (labelPosition) {
-      case ELabelPosition.left:
+      case LabelPosition.left:
         {
-          mTextWidth = inputWidth ?? AppSize.inputTextWidth;
-          mTextHeight = AppSize.inputTextLineHeight * (inputHeightMultiplier ?? 1);
+          mTextWidth = inputWidth ?? appSize.textFieldWidth;
+          mTextHeight = appSize.inputTextLineHeight * (inputHeightMultiplier ?? 1);
 
-          mLabelWidth = (labelWidth ?? AppSize.inputLabelWidth);
-          mLabelHeight = AppSize.inputTextLineHeight;
+          mLabelWidth = (labelWidth ?? appSize.inputLabelWidth);
+          mLabelHeight = appSize.inputTextLineHeight;
 
-          mInputWidth = mLabelWidth + mTextWidth + (2 * AppSize.paddingInputLabel);
+          mInputWidth = mLabelWidth + mTextWidth + (2 * appSize.paddingInputLabel);
           mInputHeight = mTextHeight;
 
           return makeLeftLabelInputStateless(
-              mInputWidth, mInputHeight, mLabelWidth, mLabelHeight, inputLabel, mTextWidth, inputText);
+            context: context,
+            mInputWidth: mInputWidth,
+            mInputHeight: mInputWidth,
+            mLabelWidth: mInputWidth,
+            mLabelHeight: mInputWidth,
+            inputLabel: inputText,
+            mTextWidth: mInputWidth,
+            inputText: inputLabel,
+          );
         }
 
       // EInputNamePosition = topLeft
       default:
         {
-          mTextWidth = (inputWidth ?? AppSize.inputTextWidth);
-          mTextHeight = AppSize.inputTextLineHeight * (inputHeightMultiplier ?? 1);
+          mTextWidth = (inputWidth ?? appSize.textFieldWidth);
+          mTextHeight = appSize.inputTextLineHeight * (inputHeightMultiplier ?? 1);
 
           mLabelWidth = mTextWidth;
-          mLabelHeight = AppSize.inputLabelHeight;
+          mLabelHeight = appSize.inputLabelHeight;
 
           mInputWidth = mLabelWidth;
           mInputHeight = mLabelHeight + mTextHeight;
 
           return makeTopLabelInputStateless(
-              mInputWidth, mInputHeight, mLabelHeight, inputLabel, mTextWidth, mTextHeight, inputText);
+            context: context,
+            mInputWidth: mInputWidth,
+            mInputHeight: mInputWidth,
+            mLabelHeight: mInputWidth,
+            inputLabel: inputLabel,
+            mTextWidth: mInputWidth,
+            mTextHeight: mInputWidth,
+            inputText: inputText,
+          );
         }
     }
   }
 
-  static Widget makeLeftLabelInputStateless(
-      mInputWidth, mInputHeight, mLabelWidth, mLabelHeight, inputLabel, mTextWidth, inputText) {
-    //
+  static Widget makeLeftLabelInputStateless({
+    required BuildContext context,
+    required double mInputWidth,
+    required double mInputHeight,
+    required double mLabelWidth,
+    required double mLabelHeight,
+    required double mTextWidth,
+    required Widget inputLabel,
+    required Text inputText,
+  }) {
+    final uiParams = UiParams.of(context);
+    final appSize = uiParams.appSize;
+    final appStyle = uiParams.appStyle;
+
     return SizedBox(
       width: mInputWidth,
       height: mInputHeight,
@@ -192,7 +246,7 @@ class BasicTextInput {
         // --------------------------
         Column(mainAxisSize: MainAxisSize.min, children: [
           Padding(
-            padding: EdgeInsets.only(right: AppSize.paddingInputLabel, left: AppSize.paddingInputLabel),
+            padding: EdgeInsets.only(right: appSize.paddingInputLabel, left: appSize.paddingInputLabel),
             child: SizedBox(
               width: mLabelWidth,
               height: mLabelHeight,
@@ -216,10 +270,10 @@ class BasicTextInput {
           height: mInputHeight,
           decoration: BoxDecoration(
             border: Border(
-              top: AppStyle.borderFieldSideEnabled,
-              left: AppStyle.borderFieldSideEnabled,
-              bottom: AppStyle.borderFieldSideEnabled,
-              right: AppStyle.borderFieldSideEnabled,
+              top: appStyle.borderFieldSide,
+              left: appStyle.borderFieldSide,
+              bottom: appStyle.borderFieldSide,
+              right: appStyle.borderFieldSide,
             ),
           ),
           child: inputText,
@@ -228,18 +282,24 @@ class BasicTextInput {
     );
   }
 
-  static SizedBox makeLeftLabelInputStateAware(
-      double mInputWidth,
-      double mInputHeight,
-      double? mLabelWidth,
-      double mLabelHeight,
-      Text inputLabel,
-      double mTextWidth,
-      TextFieldColored inputText,
-      double mButtonWidth,
-      double mButtonHeight,
-      Widget button) {
-    //
+  static SizedBox makeLeftLabelInputStateAware({
+    required BuildContext context,
+    required double mInputWidth,
+    required double mInputHeight,
+    required double mLabelHeight,
+    required Text inputLabel,
+    required double mTextWidth,
+    required TextFieldColored inputText,
+    required double mButtonWidth,
+    required double mButtonHeight,
+    required Widget button,
+    double? mLabelWidth,
+  }) {
+    final uiParams = UiParams.of(context);
+    final appSize = uiParams.appSize;
+    final appStyle = uiParams.appStyle;
+    final appColor = uiParams.appColor;
+
     return SizedBox(
       width: mInputWidth,
       height: mInputHeight,
@@ -249,7 +309,7 @@ class BasicTextInput {
         // --------------------------
         Column(mainAxisSize: MainAxisSize.min, children: [
           Padding(
-            padding: EdgeInsets.only(right: AppSize.paddingInputLabel, left: AppSize.paddingInputLabel),
+            padding: EdgeInsets.only(right: appSize.paddingInputLabel, left: appSize.paddingInputLabel),
             child: SizedBox(
               width: mLabelWidth,
               height: mLabelHeight,
@@ -273,9 +333,9 @@ class BasicTextInput {
           height: mInputHeight,
           decoration: BoxDecoration(
             border: Border(
-              top: AppStyle.borderFieldSideEnabled,
-              left: AppStyle.borderFieldSideEnabled,
-              bottom: AppStyle.borderFieldSideEnabled,
+              top: appStyle.borderFieldSide,
+              left: appStyle.borderFieldSide,
+              bottom: appStyle.borderFieldSide,
             ),
           ),
           child: inputText,
@@ -292,9 +352,9 @@ class BasicTextInput {
               height: mButtonHeight,
               decoration: BoxDecoration(
                 border: Border(
-                  top: AppStyle.borderFieldSideEnabled,
-                  bottom: AppStyle.borderFieldSideEnabled,
-                  right: AppStyle.borderFieldSideEnabled,
+                  top: appStyle.borderFieldSide,
+                  bottom: appStyle.borderFieldSide,
+                  right: appStyle.borderFieldSide,
                 ),
               ),
               child: button,
@@ -304,9 +364,9 @@ class BasicTextInput {
                 width: mButtonWidth,
                 decoration: BoxDecoration(
                   border: Border(
-                    left: AppStyle.borderFieldSideEnabled,
+                    left: appStyle.borderFieldSide,
                   ),
-                  color: AppColor.formWorkAreaBackground,
+                  color: appColor.formWorkAreaBackground,
                 ),
               ),
             )
@@ -316,8 +376,20 @@ class BasicTextInput {
     );
   }
 
-  static SizedBox makeTopLabelInputStateless(double mInputWidth, double mInputHeight, double mLabelHeight,
-      Text inputLabel, double mTextWidth, double mTextHeight, TextFieldColored inputText) {
+  static SizedBox makeTopLabelInputStateless({
+    required BuildContext context,
+    required double mInputWidth,
+    required double mInputHeight,
+    required double mLabelHeight,
+    required Text inputLabel,
+    required double mTextWidth,
+    required double mTextHeight,
+    required TextFieldColored inputText,
+  }) {
+    final uiParams = UiParams.of(context);
+    final appSize = uiParams.appSize;
+    final appColor = uiParams.appColor;
+
     return SizedBox(
       width: mInputWidth,
       height: mInputHeight,
@@ -338,7 +410,7 @@ class BasicTextInput {
               Container(
                 padding: EdgeInsets.zero,
                 decoration: BoxDecoration(
-                  border: Border.all(width: AppSize.borderWidth, color: AppColor.borderEnabled),
+                  border: Border.all(width: appSize.borderWidth, color: appColor.borderEnabled),
                 ),
                 width: mTextWidth,
                 height: mTextHeight,
@@ -350,17 +422,20 @@ class BasicTextInput {
   }
 
   static SizedBox makeTopLabelInputStateAware(
-      double mInputWidth,
-      double mInputHeight,
-      double mLabelHeight,
-      Text inputLabel,
-      double mTextWidth,
-      double mTextHeight,
-      TextFieldColored inputText,
-      double mButtonWidth,
-      double mButtonHeight,
-      Widget button) {
-    //
+      {required BuildContext context,
+      required double mInputWidth,
+      required double mInputHeight,
+      required double mLabelHeight,
+      required Text inputLabel,
+      required double mTextWidth,
+      required double mTextHeight,
+      required TextFieldColored inputText,
+      required double mButtonWidth,
+      required double mButtonHeight,
+      required Widget button}) {
+    final uiParams = UiParams.of(context);
+    final appStyle = uiParams.appStyle;
+
     return SizedBox(
       width: mInputWidth,
       height: mInputHeight,
@@ -386,9 +461,9 @@ class BasicTextInput {
                 padding: EdgeInsets.zero,
                 decoration: BoxDecoration(
                   border: Border(
-                    top: AppStyle.borderFieldSideEnabled,
-                    left: AppStyle.borderFieldSideEnabled,
-                    bottom: AppStyle.borderFieldSideEnabled,
+                    top: appStyle.borderFieldSide,
+                    left: appStyle.borderFieldSide,
+                    bottom: appStyle.borderFieldSide,
                   ),
                 ),
                 child: inputText,
@@ -400,9 +475,9 @@ class BasicTextInput {
                 alignment: Alignment.center,
                 decoration: (BoxDecoration(
                     border: Border(
-                  top: AppStyle.borderFieldSideEnabled,
-                  right: AppStyle.borderFieldSideEnabled,
-                  bottom: AppStyle.borderFieldSideEnabled,
+                  top: appStyle.borderFieldSide,
+                  right: appStyle.borderFieldSide,
+                  bottom: appStyle.borderFieldSide,
                 ))),
                 child: Align(
                   alignment: Alignment.center,

@@ -1,4 +1,4 @@
-import '../../inputs/text/format_and_validate/formatter_validator_chain.dart';
+import '../../inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 
 class FormFieldDescriptor<T> {
   final String keyString;

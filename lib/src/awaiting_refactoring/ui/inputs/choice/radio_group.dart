@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../style/app_size.dart';
+import '../../../../ui_params/ui_params.dart';
+import '../../forms/form_manager/form_manager.dart';
 import 'checkbox_custom.dart';
 import 'choice_inputs.dart';
-import '../../forms/form_manager/form_manager.dart';
 
 class RadioGroup extends StatefulWidget {
   final String groupLabel;
@@ -44,7 +44,6 @@ class _RadioGroupState extends State<RadioGroup> {
     assertMinTwoOptions();
     assertNoDuplicates();
 
-    _width = widget.width ?? AppSize.inputTextWidth;
     widget.options.forEach((id, label) {
       _radioValues.addAll({id: false});
     });
@@ -91,11 +90,13 @@ class _RadioGroupState extends State<RadioGroup> {
 
   @override
   Widget build(BuildContext context) {
+    final appSize = UiParams.of(context).appSize;
+
     makeRadioButtons();
 
     return SizedBox(
-      width: _width,
-      height: widget.options.length * AppSize.inputTextLineHeight,
+      width: widget.width ?? appSize.textFieldWidth,
+      height: widget.options.length * appSize.inputTextLineHeight,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,

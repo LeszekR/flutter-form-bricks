@@ -64,7 +64,6 @@ class DefaultThemeData extends BricksThemeData {
         ),
       );
 
-  // TODO tu przerwałem - solve this
   @override
   get appBarThemeData {
     return sourceTheme?.appBarTheme ??
@@ -141,7 +140,6 @@ class DefaultThemeData extends BricksThemeData {
         displaySmall: TextStyle(fontSize: appSize.fontSize1, height: 1.2),
       );
 
-  // TODO tu przerwałem - solve this
   @override
   get inputDecorationThemeData =>
       sourceTheme?.inputDecorationTheme ??

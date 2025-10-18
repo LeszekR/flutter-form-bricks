@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../style/app_color.dart';
-import '../../style/app_size.dart';
-import '../../style/app_style.dart';
+import '../../../../ui_params/ui_params.dart';
 
 class RadioButtonDecorated extends StatelessWidget {
   final String label;
@@ -29,7 +27,6 @@ class RadioButtonDecorated extends StatelessWidget {
   }
 }
 
-
 class _RadioButtonCustom extends StatefulWidget {
   _RadioButtonCustom({
     required this.label,
@@ -41,43 +38,47 @@ class _RadioButtonCustom extends StatefulWidget {
   final String value;
   final bool labelOnTheLeft;
 
-  bool _isChecked = false;
-
   @override
   _RadioButtonCustomState createState() => _RadioButtonCustomState();
 }
 
 class _RadioButtonCustomState extends State<_RadioButtonCustom> {
+  bool _isChecked = false;
+
   @override
   Widget build(BuildContext context) {
+    final uiParams = UiParams.of(context);
+    final appSize = uiParams.appSize;
+    final appStyle = uiParams.appStyle;
+    final appColor = uiParams.appColor;
     var textContainer = Container(
-      // width: ((widget.width ?? AppSize.inputTextWidth) - AppSize.inputTextLineHeight),
-      height: AppSize.inputTextLineHeight,
-      decoration: BoxDecoration(color: AppColor.formWorkAreaBackground),
+      // width: ((widget.width ?? appSize.textFieldWidth) - appSize.inputTextLineHeight),
+      height: appSize.inputTextLineHeight,
+      decoration: BoxDecoration(color: appColor.formWorkAreaBackground),
       alignment: Alignment.centerLeft,
       child: Text(
         widget.label,
-        style: AppStyle.inputLabelStyle(),
+        style: appStyle.inputLabelStyle(),
       ),
     );
 
     var iconContainer = Container(
-      width: AppSize.inputTextLineHeight,
-      height: AppSize.inputTextLineHeight,
-      decoration: BoxDecoration(color: AppColor.formWorkAreaBackground),
+      width: appSize.inputTextLineHeight,
+      height: appSize.inputTextLineHeight,
+      decoration: BoxDecoration(color: appColor.formWorkAreaBackground),
       child: GestureDetector(
         onTap: () => setChecked,
-        child: widget._isChecked
+        child: _isChecked
             ? Icon(
-          Icons.check_circle,
-          size: AppSize.inputTextLineHeight * AppSize.radioScale,
-          color: Colors.black, //AppColor.radioSelected,
-        )
+                Icons.check_circle,
+                size: appSize.inputTextLineHeight * appSize.radioScale,
+                color: Colors.black, //AppColor.radioSelected,
+              )
             : Icon(
-          Icons.circle_outlined,
-          size: AppSize.inputTextLineHeight * AppSize.radioScale,
-          color: Colors.black, //AppColor.radioSelected,
-        ),
+                Icons.circle_outlined,
+                size: appSize.inputTextLineHeight * appSize.radioScale,
+                color: Colors.black, //AppColor.radioSelected,
+              ),
       ),
     );
 
@@ -92,7 +93,7 @@ class _RadioButtonCustomState extends State<_RadioButtonCustom> {
 
   void setChecked() {
     setState(() {
-      widget._isChecked = !widget._isChecked;
+      _isChecked = !_isChecked;
     });
   }
 }

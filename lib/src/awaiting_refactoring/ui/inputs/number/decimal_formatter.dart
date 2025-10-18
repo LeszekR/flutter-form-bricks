@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 
-import '../base/formatter_helper.dart';
+import '../../../../inputs/states_controller/formatter_helper.dart';
 
 
 class DoubleInputFormatter extends TextInputFormatter {

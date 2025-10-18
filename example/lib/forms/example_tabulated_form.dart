@@ -58,7 +58,7 @@ class _ExampleTabulatedFormState extends TabulatedFormState<ExampleTabulatedForm
         label: label,
         globalKey: _lockingTabGlobalKey,
         makeTabContent: () => _makeDisabled(_lockingTabGlobalKey, label),
-        initialStatus: ETabStatus.tabOk);
+        initialStatus: TabStatus.tabOk);
   }
 
   Widget _makeDisabled(GlobalKey formKey, String label) {
@@ -66,7 +66,7 @@ class _ExampleTabulatedFormState extends TabulatedFormState<ExampleTabulatedForm
       TextInputs.textSimple(
         keyString: "diabledTabSimpleExample",
         label: 'nieistotne',
-        labelPosition: ELabelPosition.topLeft,
+        labelPosition: LabelPosition.topLeft,
         formManager: formManager,
       ),
     ], label: label);
@@ -78,7 +78,7 @@ class _ExampleTabulatedFormState extends TabulatedFormState<ExampleTabulatedForm
     return TabData(
       label: label,
       globalKey: formKey,
-      initialStatus: ETabStatus.tabOk,
+      initialStatus: TabStatus.tabOk,
       makeTabContent: () => _makeTexts(appSize, formKey, label),
     );
   }
@@ -91,7 +91,7 @@ class _ExampleTabulatedFormState extends TabulatedFormState<ExampleTabulatedForm
         TextInputs.textSimple(
           keyString: "regular text input",
           label: 'Prosty text input',
-          labelPosition: ELabelPosition.topLeft,
+          labelPosition: LabelPosition.topLeft,
           validator: ValidatorProvider.compose(isRequired: true),
           formManager: formManager,
         ),
@@ -99,21 +99,21 @@ class _ExampleTabulatedFormState extends TabulatedFormState<ExampleTabulatedForm
         TextInputs.textLowercase(
           keyString: "lowercase text",
           label: 'tylko low-case',
-          labelPosition: ELabelPosition.topLeft,
+          labelPosition: LabelPosition.topLeft,
           formManager: formManager,
         ),
         appSize.spacerBoxVerticalSmall,
         TextInputs.textSimple(
             keyString: "withDefault",
             label: 'input posiadający defaultową wartość (sprawdz reset)',
-            labelPosition: ELabelPosition.topLeft,
+            labelPosition: LabelPosition.topLeft,
             formManager: formManager,
             initialValue: "tadam"),
         appSize.spacerBoxVerticalSmall,
         TextInputs.textMultiline(
             keyString: "bulkText",
             label: 'Bulk Text',
-            labelPosition: ELabelPosition.topLeft,
+            labelPosition: LabelPosition.topLeft,
             formManager: formManager,
             inputWidth: appSize.textFieldWidth,
             inputHeightMultiplier: 3)
@@ -124,19 +124,19 @@ class _ExampleTabulatedFormState extends TabulatedFormState<ExampleTabulatedForm
         TextInputs.textUppercase(
           keyString: "uppercase text",
           label: 'tylko upper-case',
-          labelPosition: ELabelPosition.topLeft,
+          labelPosition: LabelPosition.topLeft,
           formManager: formManager,
         ),
         TextInputs.textFirstUppercaseThenLowercase(
           keyString: "fisrtuppercase text",
           label: 'pierwszy upper, potem lower',
-          labelPosition: ELabelPosition.topLeft,
+          labelPosition: LabelPosition.topLeft,
           formManager: formManager,
         ),
         TextInputs.textVat(
           keyString: "vat",
           label: 'Text input z regexem VAT',
-          labelPosition: ELabelPosition.topLeft,
+          labelPosition: LabelPosition.topLeft,
           formManager: formManager,
         ),
       ],
@@ -152,7 +152,7 @@ class _ExampleTabulatedFormState extends TabulatedFormState<ExampleTabulatedForm
     return TabData(
       label: label,
       globalKey: formKey,
-      initialStatus: ETabStatus.tabOk,
+      initialStatus: TabStatus.tabOk,
       makeTabContent: () => _makeNumbers(formKey, label),
     );
   }
@@ -162,13 +162,13 @@ class _ExampleTabulatedFormState extends TabulatedFormState<ExampleTabulatedForm
       NumberInputs.textInteger(
         keyString: "int",
         label: "Pole integer",
-        labelPosition: ELabelPosition.topLeft,
+        labelPosition: LabelPosition.topLeft,
         formManager: formManager,
       ),
       NumberInputs.textDouble(
         keyString: "double",
         label: "Pole double z dwoma miejscami po przecinku",
-        labelPosition: ELabelPosition.topLeft,
+        labelPosition: LabelPosition.topLeft,
         formManager: formManager,
       ),
     ], label: label);
@@ -180,7 +180,7 @@ class _ExampleTabulatedFormState extends TabulatedFormState<ExampleTabulatedForm
     return TabData(
       label: label,
       globalKey: formKey,
-      initialStatus: ETabStatus.tabOk,
+      initialStatus: TabStatus.tabOk,
       makeTabContent: () => _makeChoices(appSize, formKey, label),
     );
   }
@@ -202,7 +202,7 @@ class _ExampleTabulatedFormState extends TabulatedFormState<ExampleTabulatedForm
         TextInputs.textSimple(
           keyString: "fieldDenpendentOnCheckbox",
           label: 'Text input zależny od checkbox',
-          labelPosition: ELabelPosition.topLeft,
+          labelPosition: LabelPosition.topLeft,
           formManager: formManager,
           readonly: _dependentTextInputReadonly,
         ),
@@ -238,7 +238,7 @@ class _ExampleTabulatedFormState extends TabulatedFormState<ExampleTabulatedForm
     return TabData(
       label: label,
       globalKey: _lockingTabGlobalKey,
-      initialStatus: ETabStatus.tabOk,
+      initialStatus: TabStatus.tabOk,
       makeTabContent: () => _makeForDisable(formKey, label),
     );
   }
@@ -248,7 +248,7 @@ class _ExampleTabulatedFormState extends TabulatedFormState<ExampleTabulatedForm
       TextInputs.textSimple(
         keyString: "dependentTab",
         label: 'Text input zależny od poprzedniego taba',
-        labelPosition: ELabelPosition.topLeft,
+        labelPosition: LabelPosition.topLeft,
         validator: ValidatorProvider.compose(isRequired: true),
         formManager: formManager,
       ),
@@ -260,7 +260,7 @@ class _ExampleTabulatedFormState extends TabulatedFormState<ExampleTabulatedForm
     return TabData(
       label: label,
       globalKey: formKey,
-      initialStatus: ETabStatus.tabOk,
+      initialStatus: TabStatus.tabOk,
       makeTabContent: () => _makeDates(appSize, label),
     );
   }
@@ -270,33 +270,33 @@ class _ExampleTabulatedFormState extends TabulatedFormState<ExampleTabulatedForm
       DateTimeInputs.date(
         keyString: "dateonly",
         label: "Sama Data",
-        labelPosition: ELabelPosition.topLeft,
+        labelPosition: LabelPosition.topLeft,
         formManager: formManager,
-        context: context,
+        context,
       ),
       appSize.spacerBoxVerticalSmall,
       DateTimeInputs.time(
         keyString: "timeonly",
         label: "Sam Czas",
-        labelPosition: ELabelPosition.topLeft,
+        labelPosition: LabelPosition.topLeft,
         formManager: formManager,
-        context: context,
+        context,
       ),
       appSize.spacerBoxVerticalSmall,
       DateTimeInputs.dateTimeSeparateFields(
         keyString: "date_time_1",
         label: "Data i Czas",
-        labelPosition: ELabelPosition.topLeft,
+        labelPosition: LabelPosition.topLeft,
         formManager: formManager,
-        context: context,
+        context,
       ),
       appSize.spacerBoxVerticalSmall,
       DateTimeInputs.dateTimeRange(
         rangeId: "date_time_range_1",
         label: "Zakres datogodzin",
-        labelPosition: ELabelPosition.topLeft,
+        labelPosition: LabelPosition.topLeft,
         formManager: formManager,
-        context: context,
+        context,
       )
     ], label: label);
   }

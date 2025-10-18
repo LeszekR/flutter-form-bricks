@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/src/inputs/states_controller/update_once_widget_states_controller.dart';
 
-import '../inputs/base/update_once_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/ui_helpers/ui_helpers.dart';
 
 class IconButtonStateAware extends StatefulWidget {

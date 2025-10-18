@@ -6,7 +6,7 @@ import 'package:flutter_form_bricks/src/ui_helpers/ui_helpers.dart';
 class ProgressInfo {
   ProgressInfo._();
 
-  static Widget spinner(BuildContext context, {final String message = "Proszę czekać"}) {
+  static Widget spinner({required BuildContext context, final String message = "Proszę czekać"}) {
     final appSize = getAppSize(context);
     return Dialog(
       child: Padding(
@@ -27,9 +27,9 @@ class ProgressInfo {
   static Future<T?> showLoadingDialog<T>(BuildContext context, Future<T> future,
       {final String message = "Proszę czekać"}) async {
     showDialog(
-      context: context,
+      context,
       barrierDismissible: false,
-      builder: (final BuildContext context) => spinner(context, message: message),
+      builder: (BuildContext context) => spinner(context, message: message),
     );
 
     try {

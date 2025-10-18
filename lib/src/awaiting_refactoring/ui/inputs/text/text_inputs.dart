@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/text/uppercase_formatter.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/text/vat_formatter.dart';
+import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatters/lowercase_formatter.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatters/uppercase_formatter.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatters/vat_formatter.dart';
 
 import '../../../../../shelf.dart';
+import '../../../../inputs/text/format_and_validate/formatters/first_upper_then_lower_case_formatter.dart';
+import '../../../../inputs/text/format_and_validate/formatters/forbidden_whitespaces_formatter.dart';
+import '../../../../inputs/text/format_and_validate/input_validator_provider.dart';
 import '../../buttons/buttons.dart';
 import '../../forms/form_manager/form_manager.dart';
-
 import 'text_inputs_base/basic_text_input.dart';
-import '../base/double_widget_states_controller.dart';
-import '../base/input_validator_provider.dart';
-import 'first_upper_then_lower_case_formatter.dart';
-import 'forbidden_whitespaces_formatter.dart';
-import 'lowercase_formatter.dart';
 
 class TextInputs {
   TextInputs._();
 
   static Widget textSimple({
-    required final String keyString,
-    required final String label,
-    required final ELabelPosition labelPosition,
-    required final FormManagerOLD formManager,
+    required BuildContext context,
+    required String keyString,
+    required String label,
+    required LabelPosition labelPosition,
+    required FormManagerOLD formManager,
     final String? initialValue,
     final bool readonly = false,
     final TextInputFormatter? inputFormatter,
@@ -34,6 +34,7 @@ class TextInputs {
     final double? inputWidth,
   }) {
     return BasicTextInput.basicTextInput(
+      context: context,
       keyString: keyString,
       label: label,
       labelPosition: labelPosition,
@@ -53,10 +54,11 @@ class TextInputs {
   }
 
   static Widget textLowercase({
-    required final String keyString,
-    required final String label,
-    required final ELabelPosition labelPosition,
-    required final FormManagerOLD formManager,
+    required BuildContext context,
+    required String keyString,
+    required String label,
+    required LabelPosition labelPosition,
+    required FormManagerOLD formManager,
     final String? initialValue,
     final bool readonly = false,
     final FormFieldValidator<String>? validator,
@@ -68,6 +70,7 @@ class TextInputs {
     final VoidCallback? onEditingComplete,
   }) {
     return BasicTextInput.basicTextInput(
+      context: context,
       keyString: keyString,
       label: label,
       labelPosition: labelPosition,
@@ -87,10 +90,11 @@ class TextInputs {
   }
 
   static Widget textUppercase({
-    required final String keyString,
-    required final String label,
-    required final ELabelPosition labelPosition,
-    required final FormManagerOLD formManager,
+    required BuildContext context,
+    required String keyString,
+    required String label,
+    required LabelPosition labelPosition,
+    required FormManagerOLD formManager,
     final String? initialValue,
     final bool readonly = false,
     final FormFieldValidator<String>? validator,
@@ -102,6 +106,7 @@ class TextInputs {
     final VoidCallback? onEditingComplete,
   }) {
     return BasicTextInput.basicTextInput(
+      context: context,
       keyString: keyString,
       label: label,
       labelPosition: labelPosition,
@@ -121,10 +126,11 @@ class TextInputs {
   }
 
   static Widget textFirstUppercaseThenLowercase({
-    required final String keyString,
-    required final String label,
-    required final ELabelPosition labelPosition,
-    required final FormManagerOLD formManager,
+    required BuildContext context,
+    required String keyString,
+    required String label,
+    required LabelPosition labelPosition,
+    required FormManagerOLD formManager,
     final String? initialValue,
     final bool readonly = false,
     final FormFieldValidator<String>? validator,
@@ -136,6 +142,7 @@ class TextInputs {
     final VoidCallback? onEditingComplete,
   }) {
     return BasicTextInput.basicTextInput(
+      context: context,
       keyString: keyString,
       label: label,
       labelPosition: labelPosition,
@@ -155,10 +162,11 @@ class TextInputs {
   }
 
   static Widget textVat({
-    required final String keyString,
-    required final String label,
-    required final ELabelPosition labelPosition,
-    required final FormManagerOLD formManager,
+    required BuildContext context,
+    required String keyString,
+    required String label,
+    required LabelPosition labelPosition,
+    required FormManagerOLD formManager,
     final String? initialValue,
     final bool readonly = false,
     final TextInputFormatter? inputFormatter,
@@ -169,6 +177,7 @@ class TextInputs {
     final VoidCallback? onEditingComplete,
   }) {
     return BasicTextInput.basicTextInput(
+      context: context,
       keyString: keyString,
       label: label,
       labelPosition: labelPosition,
@@ -188,10 +197,11 @@ class TextInputs {
   }
 
   static Widget textMultiline({
-    required final String keyString,
-    required final String label,
-    required final ELabelPosition labelPosition,
-    required final FormManagerOLD formManager,
+    required BuildContext context,
+    required String keyString,
+    required String label,
+    required LabelPosition labelPosition,
+    required FormManagerOLD formManager,
     final String? initialValue,
     final int? inputHeightMultiplier,
     final double? inputWidth,
@@ -201,6 +211,7 @@ class TextInputs {
     final VoidCallback? onEditingComplete,
   }) {
     return BasicTextInput.basicTextInput(
+      context:  context,
       keyString: keyString,
       label: label,
       labelPosition: labelPosition,
@@ -219,13 +230,14 @@ class TextInputs {
   }
 
   static Widget textMultilineWithButton({
-    required final String keyString,
-    required final String label,
-    required final ELabelPosition labelPosition,
-    required final FormManagerOLD formManager,
-    required final IconData iconData,
-    required final void Function() onPressed,
-    required final String tooltip,
+    required BuildContext context,
+    required String keyString,
+    required String label,
+    required LabelPosition labelPosition,
+    required FormManagerOLD formManager,
+    required IconData iconData,
+    required void Function() onPressed,
+    required String tooltip,
     final String? initialValue,
     final int? inputHeightMultiplier,
     final double? inputWidth,
@@ -237,6 +249,7 @@ class TextInputs {
     DoubleWidgetStatesController statesController = DoubleWidgetStatesController();
 
     final ValueListenableBuilder button = Buttons.iconButtonStateAware(
+      context: context,
       iconData: iconData,
       tooltip: tooltip,
       onPressed: onPressed,
@@ -244,6 +257,7 @@ class TextInputs {
     );
 
     return BasicTextInput.basicTextInput(
+      context: context,
       keyString: keyString,
       label: label,
       labelPosition: labelPosition,
@@ -264,9 +278,10 @@ class TextInputs {
   }
 
   static Widget textSecured({
+    required BuildContext context,
     required String keyString,
     required String label,
-    required ELabelPosition labelPosition,
+    required LabelPosition labelPosition,
     required FormManagerOLD formManager,
     required bool withTextEditingController,
     required FormFieldValidator<String> validator,
@@ -280,6 +295,7 @@ class TextInputs {
     VoidCallback? onEditingComplete,
   }) {
     return BasicTextInput.basicTextInput(
+      context: context,
       keyString: keyString,
       label: label,
       labelPosition: labelPosition,

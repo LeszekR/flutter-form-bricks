@@ -3,19 +3,19 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../../../../../shelf.dart';
+import '../base/abstract_form.dart';
 import '../form_manager/tabulated_form_manager.dart';
-import 'entity_form.dart';
 
-abstract class TabulatedForm extends EntityForm {
+abstract class TabulatedForm extends AbstractForm {
   TabulatedForm({super.key}) : super(formManager: TabulatedFormManagerOLD());
 }
 
-abstract class TabulatedFormState<T extends TabulatedForm> extends EntityFormState<T>
+abstract class TabulatedFormState<T extends TabulatedForm> extends AbstractFormState<T>
     with SingleTickerProviderStateMixin {
+  List<TabData> makeTabsData();
+
   @override
   TabulatedFormManagerOLD get formManager => super.formManager as TabulatedFormManagerOLD;
-
-  List<TabData> makeTabsData(BuildContext context);
 
   final _tabsDataList = [];
   final Map<GlobalKey<FormBuilderState>, Widget> _tabsContent = {};
@@ -33,9 +33,31 @@ abstract class TabulatedFormState<T extends TabulatedForm> extends EntityFormSta
     super.initState();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return FormUtils.defaultScaffold(
+      context,
+      label: provideLabel(),
+      child: Column(
+        children: [
+          _createFormBody(context),
+          UiParams.of(context).appSize.spacerBoxVerticalSmall,
+          createFormControlPanel(context),
+        ],
+      ),
+    );
+  }
+
+  //initial tab state has to be called here so the form is aware of all children inputs and able to tell us if any validation failed
+  @override
+  void postConstruct() {
+    super.postConstruct();
+    setState(() => formManager.calculateAllTabsStatuses());
+  }
+
   void _setInitialTabIndex() {
     for (int i = 0; i < _tabsDataList.length; i++) {
-      if (_tabsDataList[i].initialStatus != ETabStatus.tabDisabled) {
+      if (_tabsDataList[i].initialStatus != TabStatus.tabDisabled) {
         _currentTabIndex = i;
         break;
       }
@@ -55,41 +77,27 @@ abstract class TabulatedFormState<T extends TabulatedForm> extends EntityFormSta
     return _tabsContent.values.toList();
   }
 
-  //initial tab state has to be called here so the form is aware of all children inputs and able to tell us if any validation failed
-  @override
-  void postConstruct() {
-    super.postConstruct();
-    setState(() => formManager.calculateAllTabsStatuses());
-  }
-
-  @override
-  Widget build(final BuildContext context) {
-    return FormUtils.defaultScaffold(
-      label: provideLabel(),
-      child: Column(
-        children: [
-          _createFormBody(context),
-          UiParams.of(context).appSize.spacerBoxVerticalSmall,
-          createFormControlPanel(context),
-        ],
-      ),
-    );
-  }
-
-  TabBar _createTabBar(AppSize appSize) {
+  TabBar _createTabBar(BuildContext context) {
+    final uiParams = UiParams.of(context);
+    final appSize = uiParams.appSize;
+    final appStyle = uiParams.appStyle;
+    final appColor = uiParams.appColor;
     final List<Tab> tabs = [];
 
     for (TabData tabData in _tabsDataList) {
       var globalKeyString = tabData.globalKey.toString();
       tabs.add(Tab(
         height: appSize.tabHeight,
-        icon: ValueListenableBuilder<Map<String, ETabStatus>>(
+        icon: ValueListenableBuilder<Map<String, TabStatus>>(
             valueListenable: formManager.tabStatusNotifier,
-            builder: (BuildContext context, Map<String, ETabStatus> observableMap, Widget? child) {
-              final ETabStatus tabStatus = observableMap[globalKeyString] ?? ETabStatus.tabOk;
+            builder: (BuildContext context, Map<String, TabStatus> observableMap, Widget? child) {
+              final TabStatus tabStatus = observableMap[globalKeyString] ?? TabStatus.tabOk;
               return Container(
                 key: Key(globalKeyString),
-                decoration: BoxDecoration(color: tabStatus.backgroundColor, border: _getTabBorder(tabData.globalKey)),
+                decoration: BoxDecoration(
+                  color: tabStatus.backgroundColor(appColor),
+                  border: _getTabBorder(appStyle, tabData.globalKey),
+                ),
                 constraints: BoxConstraints(
                   minWidth: appSize.tabMinWidth,
                   minHeight: appSize.tabHeight,
@@ -99,7 +107,7 @@ abstract class TabulatedFormState<T extends TabulatedForm> extends EntityFormSta
                 child: Center(
                   child: Text(
                     tabData.label,
-                    style: TextStyle(color: tabStatus.fontColor, fontStyle: tabStatus.fontStyle),
+                    style: TextStyle(color: tabStatus.fontColor(appColor), fontStyle: tabStatus.fontStyle(appStyle)),
                   ),
                 ),
               );
@@ -117,13 +125,12 @@ abstract class TabulatedFormState<T extends TabulatedForm> extends EntityFormSta
     );
   }
 
-  Widget _createFormBody(final BuildContext context) {
-    final uiParmas = UiParams.of(context);
+  Widget _createFormBody(BuildContext context) {
     return DefaultTabController(
       length: _tabsDataList.length,
       child: Expanded(
         child: Column(children: [
-          _createTabBar(uiParmas.appSize),
+          _createTabBar(context),
           Expanded(
             child: TabBarView(
               key: const Key('tab_bar_view'),

@@ -23,7 +23,7 @@ class DateTimeValidators {
   DateTimeValidators._();
 
   static FormFieldValidator<String> dateInputValidator() {
-    validator(text) => _dateFormatter.makeDateFromString(text).errorMessage;
+    validator(text) => _dateFormatter.makeDateFromString(text).errorMessage!;
     return (text) => getErrorMessage(text, validator);
   }
 
@@ -33,7 +33,7 @@ class DateTimeValidators {
   }
 
   static FormFieldValidator<String> dateTimeInputValidator() {
-    validator(text) => _dateTimeFormatter.makeDateTimeFromString(text).errorMessage;
+    validator(text) => _dateTimeFormatter.makeDateTimeFromString(text).errorMessage!;
     return (text) => getErrorMessage(text, validator);
   }
 

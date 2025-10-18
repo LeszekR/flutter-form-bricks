@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/dateTimeRange_validator.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:shipping_ui/ui/inputs/date_time/dateTimeRange_validator.dart';
-
-import '../../../../config/string_assets/translation.dart';
 
 class ValidatorProvider {
   static final RegExp emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$');

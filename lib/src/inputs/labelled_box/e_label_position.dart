@@ -1,3 +1,0 @@
-enum ELabelPosition {
-  topLeft, left
-}

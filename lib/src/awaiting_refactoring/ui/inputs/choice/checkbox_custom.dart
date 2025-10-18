@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../ui_params/ui_params.dart';
 import 'choice_inputs.dart';
 
 class CheckboxCustom extends StatelessWidget {
@@ -27,27 +28,32 @@ class CheckboxCustom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final uiParams = UiParams.of(context);
+    final appSize = uiParams.appSize;
+    final appStyle = uiParams.appStyle;
+    final appColor = uiParams.appColor;
+
     double checkboxScale, checkboxSize, borderRadius;
 
-    var spacer = Expanded(child: SizedBox(height: AppSize.inputTextLineHeight));
+    var spacer = Expanded(child: SizedBox(height: appSize.inputTextLineHeight));
 
     switch (shapeType) {
       case (ECheckboxShape.square):
         {
-          checkboxScale = AppSize.checkboxScaleSquare;
-          checkboxSize = checkboxScale * AppSize.inputTextLineHeight;
+          checkboxScale = appSize.checkboxScaleSquare;
+          checkboxSize = checkboxScale * appSize.inputTextLineHeight;
           borderRadius = 0;
           break;
         }
       case (ECheckboxShape.round):
         {
-          checkboxScale = AppSize.checkboxScaleRound;
-          checkboxSize = checkboxScale * AppSize.inputTextLineHeight;
+          checkboxScale = appSize.checkboxScaleRound;
+          checkboxSize = checkboxScale * appSize.inputTextLineHeight;
           borderRadius = checkboxSize / 2;
           break;
         }
     }
-    var inputWidth = width ?? AppSize.inputTextWidth;
+    var inputWidth = width ?? appSize.textFieldWidth;
     var textWidth = inputWidth - checkboxSize;
 
     final checkbox = Checkbox(
@@ -55,7 +61,7 @@ class CheckboxCustom extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(borderRadius)),
       value: initialValue,
       onChanged: onChanged,
-      side: AppStyle.borderFieldSideEnabled,
+      side: appStyle.borderFieldSide,
     );
 
     final checkboxField = Container(
@@ -63,8 +69,8 @@ class CheckboxCustom extends StatelessWidget {
       height: checkboxSize * 0.7,
       alignment: labelLeftOfCheckbox ? Alignment.centerRight : Alignment.centerLeft,
       decoration: BoxDecoration(
-        color: AppColor.formFieldFillOk,
-        border: Border.all(color: Colors.black, width: AppSize.borderWidth),
+        color: appColor.formFieldFillOk,
+        border: Border.all(color: Colors.black, width: appSize.borderWidth),
         borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: Transform.scale(
@@ -75,7 +81,7 @@ class CheckboxCustom extends StatelessWidget {
 
     var labelBox = SizedBox(
       width: textWidth,
-      child: Text(label, style: AppStyle.labelTextStyle),
+      child: Text(label, style: appStyle.labelTextStyle),
     );
 
     List<Widget> widgets = [];
@@ -91,7 +97,7 @@ class CheckboxCustom extends StatelessWidget {
 
     return SizedBox(
       width: inputWidth,
-      height: AppSize.inputTextLineHeight,
+      height: appSize.inputTextLineHeight,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,

@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_form_bricks/src/inputs/labelled_box/e_label_position.dart';
+import 'package:flutter_form_bricks/src/inputs/labelled_box/label_position.dart';
 
 
 
@@ -38,7 +38,7 @@ import 'package:flutter_form_bricks/src/inputs/labelled_box/e_label_position.dar
 
 class LabelledContainer extends StatelessWidget {
   final String label;
-  final ELabelPosition labelPosition;
+  final LabelPosition labelPosition;
   final ValueWidgetBuilder<Set<WidgetState>> widgetBuilder;
   final WidgetStatesController widgetStatesController;
   final double labelWidth;
@@ -84,7 +84,7 @@ class LabelledContainer extends StatelessWidget {
   //   );
   //
     // switch (labelPosition) {
-    //   case ELabelPosition.left:
+    //   case LabelPosition.left:
     //     {
     //       mButtonWidth = appSize.inputTextLineHeight;
     //       mButtonHeight = appSize.inputTextLineHeight;

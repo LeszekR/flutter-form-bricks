@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/src/forms/base/form_schema.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validator_chain.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 
 import '../../../../shelf.dart';
 import '../../inputs/base/form_field_brick.dart';

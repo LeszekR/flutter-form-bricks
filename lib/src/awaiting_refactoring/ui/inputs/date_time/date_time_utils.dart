@@ -1,5 +1,5 @@
 
-import 'package:flutter_form_bricks/awaiting_refactoring/ui/inputs/date_time/string_parse_result.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/string_parse_result.dart';
 
 enum EDateTime {
   DATE,
@@ -18,13 +18,13 @@ class DateTimeUtils {
   }
 
   StringParseResult cleanDateTimeString({
-    required final String text,
-    required final EDateTime eDateTime,
-    required final String stringDelimiterPattern,
-    required final String stringDelimiter,
-    required final int minNumberOfDigits,
-    required final int maxNDigits,
-    required final int maxNumberDelimiters,
+    required String text,
+    required EDateTime eDateTime,
+    required String stringDelimiterPattern,
+    required String stringDelimiter,
+    required int minNumberOfDigits,
+    required int maxNDigits,
+    required int maxNumberDelimiters,
   }) {
     // text must contain allowed chars only
     RegExp allowedRegex = RegExp('([0-9]|$stringDelimiterPattern)');

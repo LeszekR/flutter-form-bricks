@@ -1,8 +1,8 @@
-import 'package:flutter_form_bricks/awaiting_refactoring/ui/inputs/date_time/string_parse_result.dart';
-import 'package:flutter_form_bricks/awaiting_refactoring/ui/inputs/date_time/time_formatter_validator.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/string_parse_result.dart';
 
 import 'date_formatter_validator.dart';
 import 'date_time_utils.dart';
+import 'time_formatter_validator.dart';
 
 class DateTimeFormatterValidator {
   static DateTimeFormatterValidator? _instance;

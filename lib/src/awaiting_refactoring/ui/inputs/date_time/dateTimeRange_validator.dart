@@ -80,7 +80,7 @@ class DateTimeRangeValidator {
     }
   }
 
-  void _loadRangeErrors() {
+  void _loadRangeErrors({required int maxRangeSpanDays, required int minRangeSpanMinutes}) {
     _setFieldTexts();
     String errorText;
 
@@ -105,7 +105,7 @@ class DateTimeRangeValidator {
     if (notEmpty(dateStartText) && notEmpty(dateEndText)) {
       var dateStart = DateTime.parse(dateStartText!);
       var dateEnd = DateTime.parse(dateEndText!);
-      var difference = dateEnd.difference(dateStart).inDays;
+      int difference = dateEnd.difference(dateStart).inDays;
 
       // start-date present & end-date present & start-date after end-date
       // -----------------------------------------------------------------
@@ -118,7 +118,6 @@ class DateTimeRangeValidator {
 
       // start-date present & end-date present & end-date too far from start-date
       // -----------------------------------------------------------------
-      var maxRangeSpanDays = AppParams.maxRangeSpanDays;
       if (difference > maxRangeSpanDays) {
         errorText = Tr.get.rangeDatesTooFarApart(maxRangeSpanDays);
         formManager.saveErrorMessage(_dateStartKeyString!, errorText);
@@ -144,7 +143,6 @@ class DateTimeRangeValidator {
       var difference = timeEnd.difference(timeStart).inMinutes;
 
       // end-date absent
-      var minRangeSpanMinutes = AppParams.minRangeSpanMinutes;
       if (notEmpty(dateStartText) && empty(dateEndText)) {
         // start-time after end-time
         // -----------------------------------------------------------------

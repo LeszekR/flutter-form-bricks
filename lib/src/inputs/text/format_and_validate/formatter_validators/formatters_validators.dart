@@ -1,14 +1,14 @@
 // TODO - check, test, correct, refactor
-// TODO - refactor all formatters and validators to this pattern
+// TODO - refactor all formatters and formatter_validators to this pattern
 
 // The goal:
 // - Keep your `StringParseResult` concept.
-// - Clearly separate --formatters-- (normalize text, add zeros, add year) from --validators--
+// - Clearly separate --formatters-- (normalize text, add zeros, add year) from --formatter_validators--
 //    (check ranges, leap year, too many digits, etc.).
 // - Enable chaining so new rules can be added without bloating methods.
 //
 // Benefits
-// - Clear separation: formatters modify, validators check.
+// - Clear separation: formatters modify, formatter_validators check.
 // - No duplication: leap year logic only in `DateExistenceValidator`.
 // - Extensible: just add another step to the pipeline.
 // - Familiar: mirrors how Angular, React Hook Form, and FormBuilder do it.
@@ -16,7 +16,6 @@
 // Common interface
 
 import 'formatter_validator.dart';
-import 'formatter_validator_chain.dart';
 import 'formatter_validator_full_run.dart';
 import 'string_parse_result.dart';
 

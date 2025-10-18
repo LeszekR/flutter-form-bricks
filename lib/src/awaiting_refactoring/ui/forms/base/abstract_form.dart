@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_form_bricks/src/ui_params/app_size/app_size.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../ui_params/ui_params.dart';
 import '../../buttons/buttons.dart';
 import '../../dialogs/dialogs.dart';
+import '../../shortcuts/keyboard_shortcuts.dart';
 import '../form_manager/form_manager.dart';
 import '../form_manager/form_state.dart';
 import 'form_utils.dart';
@@ -27,19 +30,17 @@ abstract class AbstractForm extends StatefulWidget {
   @override
   AbstractFormState createState();
 
-  static Future<dynamic> openForm({required final BuildContext context, required final Widget form}) {
-    return showDialog(context: context, barrierDismissible: false, builder: (final BuildContext context) => form);
+  static Future<dynamic> openForm({required BuildContext context, required Widget form}) {
+    return showDialog(context, barrierDismissible: false, builder: (BuildContext context) => form);
   }
 }
 
 abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
-  /// Do NOT override this method in PROD! This is ONLY FOR UI TESTS!
+  /// Do NOT override this method in release code! This field is necessary for ui tests.
   /// Flutter builds UI differently in prod and test. Due to that TestStandaloneForm crashes on control panel vertical
   /// overflow without this correction, This param introduces correction of control panel height
   int testControlsHeightCorrection() => 0;
 
-  // TU PRZERWAŁEM - dokończyć uruchomienie example - potem refactoring do lib
-  late final ApplicationState applicationState;
   late final Map<int, VoidCallback> _keyboardMapping;
 
   FormManagerOLD get formManager => widget._formManager;
@@ -60,7 +61,7 @@ abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
     super.initState();
     _keyboardMapping = provideKeyboardActions();
     KeyboardEvents().subscribe(keyBoardActions);
-    applicationState = Provider.of<ApplicationState>(context, listen: false);
+    // applicationState = Provider.of<ApplicationState>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       postConstruct();
       formManager.fillInitialInputValuesMap();
@@ -90,11 +91,11 @@ abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
     super.dispose();
   }
 
-  Widget createFormControlPanel(
-    final BuildContext context,
-  ) {
-    // return FormUtils.horizontalFormGroup(padding:false,height: AppSize.bottomPanelHeight + 1, [
-    return FormUtils.horizontalFormGroupBorderless(height: AppSize.bottomPanelHeight, [
+  Widget createFormControlPanel(BuildContext context) {
+    final uiParams = UiParams.of(context);
+    final appSize = uiParams.appSize;
+    // return FormUtils.horizontalFormGroup(padding:false,height: appSize.bottomPanelHeight + 1, [
+    return FormUtils.horizontalFormGroupBorderless(context, height: appSize.bottomPanelHeight, [
       Expanded(
         flex: 6,
         child: ValueListenableBuilder<String>(
@@ -102,8 +103,8 @@ abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
           builder: (context, errors, child) {
             return SingleChildScrollView(
               child: Container(
-                height: AppSize.bottomPanelHeight,
-                padding: EdgeInsets.all(AppSize.paddingForm),
+                height: appSize.bottomPanelHeight,
+                padding: EdgeInsets.all(appSize.paddingForm),
                 child: Text(
                   errors,
                   key: Key(widget._errorTextKeyString),
@@ -115,51 +116,54 @@ abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
         ),
       ),
       //
-      AppSize.spacerBoxHorizontalMedium,
+      appSize.spacerBoxHorizontalMedium,
       //
       Container(
-        height: AppSize.bottomPanelHeight,
+        height: appSize.bottomPanelHeight,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            /*decoration:  BoxDecoration(border: Border.all(width: AppSize.borderWidth, color: AppColor.borderEnabled)),*/
+            /*decoration:  BoxDecoration(border: Border.all(width: appSize.borderWidth, color: AppColor.borderEnabled)),*/
             /*child:*/
             SizedBox(
-              height: AppSize.bottomPanelHeight - AppSize.buttonHeight - testControlsHeightCorrection(),
+              height: appSize.bottomPanelHeight - appSize.buttonHeight - testControlsHeightCorrection(),
               width: 50,
             ),
             // FormUtils.horizontalFormGroup(padding: false,
-            FormUtils.horizontalFormGroupBorderless(
-              createFormControlsList(),
-            ),
+            FormUtils.horizontalFormGroupBorderless(context, createFormControlsList(context)),
           ],
         ),
       ),
     ]);
   }
 
-  List<Widget> createFormControlsList() {
+  List<Widget> createFormControlsList(BuildContext context) {
+    final uiParams = UiParams.of(context);
+    final appSize = uiParams.appSize;
     return [
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        saveButton(),
-        AppSize.spacerBoxHorizontalSmall,
-        resetButton(),
-        AppSize.spacerBoxHorizontalSmall,
-        deleteButton(),
-        AppSize.spacerBoxHorizontalSmall,
-        cancelButton(),
+        saveButton(context),
+        appSize.spacerBoxHorizontalSmall,
+        resetButton(context),
+        appSize.spacerBoxHorizontalSmall,
+        deleteButton(context),
+        appSize.spacerBoxHorizontalSmall,
+        cancelButton(context),
       ])
     ];
   }
 
-  Widget deleteButton() =>
-      Buttons.elevatedButton(text: Tr.get.delete, onPressed: isEditMode() ? onDelete : () {}, isEnabled: isEditMode());
+  Widget deleteButton(BuildContext context) => Buttons.elevatedButton(
+      context, text: Tr.get.delete, onPressed: isEditMode() ? onDelete : () {}, isEnabled: isEditMode());
 
-  Widget cancelButton() => Buttons.elevatedButton(text: Tr.get.buttonCancel, onPressed: onCancel);
+  Widget cancelButton(BuildContext context) =>
+      Buttons.elevatedButton(context, text: Tr.get.buttonCancel, onPressed: onCancel);
 
-  Widget resetButton() => Buttons.elevatedButton(text: Tr.get.reset, onPressed: onReset);
+  Widget resetButton(BuildContext context) =>
+      Buttons.elevatedButton(context, text: Tr.get.reset, onPressed: onReset);
 
-  Widget saveButton() => Buttons.elevatedButton(text: Tr.get.save, onPressed: onSubmit);
+  Widget saveButton(BuildContext context) =>
+      Buttons.elevatedButton(context, text: Tr.get.save, onPressed: onSubmit);
 
   void onReset() =>
       Dialogs.decisionDialogYesNo(context, Tr.get.formReset, Tr.get.formResetConfirm, action: formManager.resetForm);

@@ -10,23 +10,23 @@ import '../shortcuts/keyboard_shortcuts.dart';
 class Dialogs {
   Dialogs._();
 
-  static Future<void> informationDialog(final BuildContext context, final String title, final String content) async {
+  static Future<void> informationDialog(BuildContext context, final String title, final String content) async {
     await _messageDialog(context, content, Tr.get.buttonOk, title: title);
   }
 
-  static Future<bool> decisionDialogYesNo(final BuildContext context, final String? title, final String content,
+  static Future<bool> decisionDialogYesNo(BuildContext context, final String? title, final String content,
       {final VoidCallback? action, final Duration? closeDuration}) async {
     return await _messageDialog(context, content, Tr.get.buttonYes,
         buttonCancelText: Tr.get.buttonNo, title: title, action: action, closeDuration: closeDuration);
   }
 
-  static Future<bool> decisionDialogOkCancel(final BuildContext context, final String? title, final String content,
+  static Future<bool> decisionDialogOkCancel(BuildContext context, final String? title, final String content,
       {final VoidCallback? action, final Duration? closeDuration}) async {
     return await _messageDialog(context, content, Tr.get.buttonOk,
         buttonCancelText: Tr.get.buttonCancel, title: title, action: action, closeDuration: closeDuration);
   }
 
-  static Future<bool> _messageDialog(final BuildContext context, final String content, final String buttonOkText,
+  static Future<bool> _messageDialog(BuildContext context, final String content, final String buttonOkText,
       {final String? title,
       final VoidCallback? action,
       final String? buttonCancelText,
@@ -64,23 +64,23 @@ class Dialogs {
 
     final List<Widget> buttons = <Widget>[
       Buttons.elevatedButton(
-        context: context,
+        context,
         text: buttonOkText,
         onPressed: () => closeDialog(true),
       )
     ];
     if (buttonCancelText != null) {
       buttons.add(Buttons.elevatedButton(
-        context: context,
+        context,
         text: buttonCancelText,
         onPressed: () => closeDialog(false),
       ));
     }
 
     final bool dialogUserChoice = await showDialog<dynamic>(
-      context: context,
+      context,
       barrierDismissible: false,
-      builder: (final BuildContext context) {
+      builder: (BuildContext context) {
         return AlertDialog(
           shape: BeveledRectangleBorder(borderRadius: appStyle.borderRadius),
           title: title != null ? Text(title) : null,
