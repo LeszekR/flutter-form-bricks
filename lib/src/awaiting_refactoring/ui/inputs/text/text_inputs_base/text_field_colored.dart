@@ -90,6 +90,7 @@ class _TextFieldColoredState extends State<TextFieldColored> with ErrorMessageNo
           builder: (context, states, _) {
             return SizedBox(
                 width: widget.textWidth,
+                height: appSize.inputTextLineHeight * (widget.inputHeightMultiplier ?? 1),
                 child: FormBuilderTextField(
                   key: Key(widget.keyString),
                   name: widget.keyString,
@@ -122,6 +123,7 @@ class _TextFieldColoredState extends State<TextFieldColored> with ErrorMessageNo
     // ======================================================
     return SizedBox(
         width: widget.textWidth,
+        height: appSize.inputTextLineHeight * (widget.inputHeightMultiplier ?? 1),
         child: FormBuilderTextField(
           key: Key(widget.keyString),
           name: widget.keyString,

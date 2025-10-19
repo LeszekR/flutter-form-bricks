@@ -1,19 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/dateTimeRange_validator.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/dateTimeRange_validator.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
 class ValidatorProvider {
   static final validatorEmail = (BuildContext context) {
     final RegExp emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$');
-    final txt = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
-    FormBuilderValidators.match(emailRegex, errorText: txt.invalidEmail);
+    final localizations = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
+    FormBuilderValidators.match(emailRegex, errorText: localizations.invalidEmail);
   };
 
-  static final validatorVAT = (BuildContext context) {
+  static final validatorVAT = (BricksLocalizations localizations) {
     final RegExp vatRegex = RegExp(r'^[A-Z]{2}\d{10}|[A-Z]{2}[A-Z0-9]{10}$');
-    final txt = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
-    FormBuilderValidators.match(vatRegex, errorText: txt.invalidVAT);
+    FormBuilderValidators.match(vatRegex, errorText: localizations.invalidVAT);
   };
 
   static final validatorRequired = FormBuilderValidators.required();
@@ -29,7 +28,7 @@ class ValidatorProvider {
       int? maxLength,
       FormFieldValidator<String>? customValidator,
       List<FormFieldValidator<String>>? validatorsList}) {
-    final txt = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
+    final localizations = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
 
     final List<FormFieldValidator<String>> validatorsToCompose = [];
 
@@ -39,19 +38,19 @@ class ValidatorProvider {
       validatorsToCompose.add(customValidator);
     }
     if (isRequired ?? false) {
-      validatorsToCompose.add(FormBuilderValidators.required(errorText: txt.requiredField));
+      validatorsToCompose.add(FormBuilderValidators.required(errorText: localizations.requiredField));
     }
     if (minIntValue != null) {
-      validatorsToCompose.add(FormBuilderValidators.min(minIntValue, errorText: txt.minIntValue(minIntValue)));
+      validatorsToCompose.add(FormBuilderValidators.min(minIntValue, errorText: localizations.minIntValue(minIntValue)));
     }
     if (maxIntValue != null) {
-      validatorsToCompose.add(FormBuilderValidators.max(maxIntValue, errorText: txt.maxIntValue(maxIntValue)));
+      validatorsToCompose.add(FormBuilderValidators.max(maxIntValue, errorText: localizations.maxIntValue(maxIntValue)));
     }
     if (minLength != null) {
-      validatorsToCompose.add(FormBuilderValidators.minLength(minLength, errorText: txt.minNChars(minLength)));
+      validatorsToCompose.add(FormBuilderValidators.minLength(minLength, errorText: localizations.minNChars(minLength)));
     }
     if (maxLength != null) {
-      validatorsToCompose.add(FormBuilderValidators.maxLength(maxLength, errorText: txt.minNChars(maxLength)));
+      validatorsToCompose.add(FormBuilderValidators.maxLength(maxLength, errorText: localizations.minNChars(maxLength)));
     }
     if (customValidator != null && !isCustomRangeValidator) {
       validatorsToCompose.add(customValidator);

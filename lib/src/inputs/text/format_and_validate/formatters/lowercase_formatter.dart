@@ -12,7 +12,7 @@ class LowercaseFormatter extends TextInputFormatter {
   LowercaseFormatter._();
 
   @override
-  TextEditingValue formatEditUpdate(final TextEditingValue oldValue, final TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(final TextEditingValue oldValue,TextEditingValue newValue) {
     if (newValue.text.contains(_upperCase)) {
       return TextEditingValue(
         text: newValue.text.toLowerCase(),

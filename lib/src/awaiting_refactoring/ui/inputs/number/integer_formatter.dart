@@ -13,7 +13,7 @@ class IntegerInputFormatter extends TextInputFormatter {
   IntegerInputFormatter._();
 
   @override
-  TextEditingValue formatEditUpdate(final TextEditingValue oldValue, final TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(final TextEditingValue oldValue,TextEditingValue newValue) {
     final String formattedText = FormatterHelper.formatDigitsWithSpaces(newValue.text);
     return newValue.copyWith(
         text: formattedText,

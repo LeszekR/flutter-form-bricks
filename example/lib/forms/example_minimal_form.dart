@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 
-class ExampleMinimalForm extends SingleForm {
+class ExampleMinimalForm extends StandaloneForm {
   ExampleMinimalForm({super.key});
 
   @override
-  SingleFormStateData<SingleForm> createState() => _ExampleMinimalFormState();
+  _ExampleMinimalFormState createState() => _ExampleMinimalFormState();
 }
 
-class _ExampleMinimalFormState extends SingleFormStateData<ExampleMinimalForm> {
+class _ExampleMinimalFormState extends StandaloneFormState {
   @override
   List<Widget> createBody(BuildContext context) {
     return [
-      FormUtils.horizontalFormGroup(context: context,children: [
+      FormUtils.horizontalFormGroup(context: context, children: [
         DateTimeInputs.dateTimeRange(
           context: context,
           rangeId: "rng",
           formManager: formManager,
+          currentDate: CurrentDate(),
+          dateTimeLimits: DateTimeLimits(),
+          maxRangeSpanDays: 8,
+          minRangeSpanMinutes: 15,
           labelPosition: LabelPosition.topLeft,
           label: "Załadunek",
           initialRangeStartDate: Date.fromString('2024-12-15'),
@@ -28,15 +32,13 @@ class _ExampleMinimalFormState extends SingleFormStateData<ExampleMinimalForm> {
   @override
   String provideLabel() => "Minimal Form";
 
-  // @override
-  // Entity? getEntity() => null;
-  //
-  // @override
-  // EntityService<Entity> getService() => throw UnimplementedError();
+  @override
+  void deleteEntity() {
+    // TODO: implement deleteEntity
+  }
 
   @override
-  void removeEntityFromState() {}
-
-  @override
-  void upsertEntityInState(Map<String, dynamic> responseBody) {}
+  void submitData() {
+    // TODO: implement submitData
+  }
 }

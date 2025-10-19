@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/shelf.dart' show UiParams;
 import 'package:flutter_form_bricks/src/ui_params/theme_data/bricks_theme_data.dart';
 import 'package:flutter_form_bricks/src/ui_params/theme_data/default_theme_data.dart';
 
@@ -47,3 +48,9 @@ class UiParamsData {
     return UiParamsData._(color, size, style, theme);
   }
 }
+
+AppStyle getAppStyle(BuildContext context) => UiParams.of(context).appStyle;
+
+AppSize getAppSize(BuildContext context) => UiParams.of(context).appSize;
+
+AppColor getAppColor(BuildContext context) => UiParams.of(context).appColor;

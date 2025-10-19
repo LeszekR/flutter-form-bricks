@@ -1,15 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/form_manager/form_manager.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/current_date.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/date_time_limits.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/date_time_utils.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/dateTimeRange_validator.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/dateTime_formatter_validator.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/dateTime_range_error_controller.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/time_formatter_validator.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/date_formatter_validator.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
-import '../../forms/form_manager/form_manager.dart';
-import 'current_date.dart';
-import 'dateTimeRange_validator.dart';
-import 'dateTime_formatter_validator.dart';
-import 'dateTime_range_error_controller.dart';
-import 'date_formatter_validator.dart';
-import 'date_time_utils.dart';
-import 'time_formatter_validator.dart';
 
 class DateTimeValidators {
   // TODO - move to DI !
@@ -22,36 +24,53 @@ class DateTimeValidators {
 
   DateTimeValidators._();
 
-  static FormFieldValidator<String> dateInputValidator() {
-    validator(text) => _dateFormatter.makeDateFromString(text).errorMessage!;
-    return (text) => getErrorMessage(text, validator);
+  static FormFieldValidator<String> dateInputValidator(BricksLocalizations localizations, DateTimeLimits dateLimits) {
+    validator(inputString) => _dateFormatter.makeDateFromString(localizations, inputString, dateLimits).errorMessage!;
+    return (inputString) => getErrorMessage(inputString, validator);
   }
 
-  static FormFieldValidator<String> timeInputValidator() {
-    String? validator(text) => _timeFormatter.makeTimeFromString(text).errorMessage;
-    return (text) => getErrorMessage(text, validator);
+  static FormFieldValidator<String> timeInputValidator(BricksLocalizations localizations) {
+    String? validator(inputString) => _timeFormatter.makeTimeFromString(localizations, inputString).errorMessage;
+    return (inputString) => getErrorMessage(inputString, validator);
   }
 
-  static FormFieldValidator<String> dateTimeInputValidator() {
-    validator(text) => _dateTimeFormatter.makeDateTimeFromString(text).errorMessage!;
-    return (text) => getErrorMessage(text, validator);
+  static FormFieldValidator<String> dateTimeInputValidator(
+      BricksLocalizations localizations, DateTimeLimits dateLimits) {
+    validator(inputString) => _dateTimeFormatter
+        .makeDateTimeFromString(
+          localizations,
+          inputString,
+          dateLimits,
+        )
+        .errorMessage!;
+    return (inputString) => getErrorMessage(inputString, validator);
   }
 
   // TODO test
   static FormFieldValidator<String> dateTimeRangeValidator(
-    final String keyString,
-    final FormManagerOLD formManager,
-    final RangeController errorController,
+    BricksLocalizations localizations,
+    String keyString,
+    FormManagerOLD formManager,
+    RangeController errorController,
+    int maxRangeSpanDays,
+    int minRangeSpanMinutes,
   ) {
-    return DateTimeRangeValidator(keyString, formManager, errorController).validator;
+    return DateTimeRangeValidator(
+      localizations,
+      keyString,
+      formManager,
+      errorController,
+      maxRangeSpanDays,
+      minRangeSpanMinutes,
+    ).validator;
   }
 
-  static getFieldText(GlobalKey<FormBuilderState> formKey, String rangeStartDateKey) =>
+  static getFieldInputString(GlobalKey<FormBuilderState> formKey, String rangeStartDateKey) =>
       formKey.currentState?.fields[rangeStartDateKey]?.value ?? "";
 
-  static String? getErrorMessage(String? text, String? Function(String text) validator) {
-    if (text == null || text.isEmpty) return null;
-    var errorMessage = validator.call(text);
-    return errorMessage.isEmpty ? null : errorMessage;
+  static String? getErrorMessage(String? inputString, String? Function(String inputString) validator) {
+    if (inputString == null || inputString.isEmpty) return null;
+    var errorMessage = validator.call(inputString);
+    return errorMessage ?? errorMessage;
   }
 }

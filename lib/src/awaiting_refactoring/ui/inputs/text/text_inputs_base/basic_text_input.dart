@@ -104,15 +104,15 @@ class BasicTextInput {
             return makeLeftLabelInputStateAware(
               context: context,
               mInputWidth: mInputWidth,
-              mInputHeight: mInputWidth,
-              mLabelWidth: inputWidth,
-              mLabelHeight: mInputWidth,
+              mInputHeight: mInputHeight,
+              mLabelWidth: mLabelWidth,
+              mLabelHeight: mLabelHeight,
               inputLabel: inputLabel,
-              mTextWidth: mInputWidth,
+              mTextWidth: mTextWidth,
               inputText: inputText,
-              mButtonWidth: mInputWidth,
-              mButtonHeight: mInputWidth,
-              button: inputText,
+              mButtonWidth: mButtonWidth,
+              mButtonHeight: mButtonHeight,
+              button: button,
             );
           }
 
@@ -134,15 +134,15 @@ class BasicTextInput {
             return makeTopLabelInputStateAware(
               context: context,
               mInputWidth: mInputWidth,
-              mInputHeight: mInputWidth,
-              mLabelHeight: mInputWidth,
+              mInputHeight: mInputHeight,
+              mLabelHeight: mLabelHeight,
               inputLabel: inputLabel,
-              mTextWidth: mInputWidth,
-              mTextHeight: mInputWidth,
+              mTextWidth: mTextWidth,
+              mTextHeight: mTextHeight,
               inputText: inputText,
-              mButtonWidth: mInputWidth,
-              mButtonHeight: mInputWidth,
-              button: inputText,
+              mButtonWidth: mButtonWidth,
+              mButtonHeight: mButtonHeight,
+              button: button,
             );
           }
       }
@@ -188,12 +188,12 @@ class BasicTextInput {
           return makeLeftLabelInputStateless(
             context: context,
             mInputWidth: mInputWidth,
-            mInputHeight: mInputWidth,
-            mLabelWidth: mInputWidth,
-            mLabelHeight: mInputWidth,
-            inputLabel: inputText,
-            mTextWidth: mInputWidth,
-            inputText: inputLabel,
+            mInputHeight: mInputHeight,
+            mLabelWidth: mLabelWidth,
+            mLabelHeight: mLabelHeight,
+            inputLabel: inputLabel,
+            mTextWidth: mTextWidth,
+            inputText: inputText,
           );
         }
 
@@ -212,11 +212,11 @@ class BasicTextInput {
           return makeTopLabelInputStateless(
             context: context,
             mInputWidth: mInputWidth,
-            mInputHeight: mInputWidth,
-            mLabelHeight: mInputWidth,
+            mInputHeight: mInputHeight,
+            mLabelHeight: mLabelHeight,
             inputLabel: inputLabel,
-            mTextWidth: mInputWidth,
-            mTextHeight: mInputWidth,
+            mTextWidth: mTextWidth,
+            mTextHeight: mTextHeight,
             inputText: inputText,
           );
         }
@@ -231,7 +231,7 @@ class BasicTextInput {
     required double mLabelHeight,
     required double mTextWidth,
     required Widget inputLabel,
-    required Text inputText,
+    required TextFieldColored inputText,
   }) {
     final uiParams = UiParams.of(context);
     final appSize = uiParams.appSize;
@@ -267,7 +267,6 @@ class BasicTextInput {
         // --------------------------
         Container(
           width: mTextWidth,
-          height: mInputHeight,
           decoration: BoxDecoration(
             border: Border(
               top: appStyle.borderFieldSide,
@@ -491,8 +490,8 @@ class BasicTextInput {
     );
   }
 
-  static Widget label(final String text, final double? fontSize,
-      {final FontWeight? fontWeight = FontWeight.bold, final Color? color = Colors.black}) {
+  static Widget label(final String text,double? fontSize,
+      {final FontWeight? fontWeight = FontWeight.bold,Color? color = Colors.black}) {
     return SizedBox(
         height: fontSize,
         child: Text(text,

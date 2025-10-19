@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/time_formatter_validator.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/date_time_limits.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/date_time_utils.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/dateTime_formatter_validator.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/time_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_states_controller.dart';
 
 import '../../buttons/buttons.dart';
 import '../../forms/form_manager/form_manager.dart';
 import '../../shortcuts/keyboard_shortcuts.dart';
-import 'current_date.dart';
-import 'dateTime_formatter_validator.dart';
-import 'dateTime_range_error_controller.dart';
-import 'date_formatter_validator.dart';
-import 'date_time_utils.dart';
+import 'components/current_date.dart';
+import 'formatter_validators/dateTime_range_error_controller.dart';
+import 'formatter_validators/date_formatter_validator.dart';
 import 'date_time_validators.dart';
 
 class DateTimeInputs {
-  static final DateTimeUtils _dateTimeInputUtils = DateTimeUtils();
+  static final DateTimeUtils _dateTimeUtils = DateTimeUtils();
   static final CurrentDate _currentDate = CurrentDate();
-  static final DateFormatterValidator _dateFormatter = DateFormatterValidator(_dateTimeInputUtils, _currentDate);
-  static final TimeFormatterValidator _timeFormatter = TimeFormatterValidator(_dateTimeInputUtils);
+  static final DateFormatterValidator _dateFormatter = DateFormatterValidator(_dateTimeUtils, _currentDate);
+  static final TimeFormatterValidator _timeFormatter = TimeFormatterValidator(_dateTimeUtils);
   static final DateTimeFormatterValidator _dateTimeFormatter =
-      DateTimeFormatterValidator(_dateFormatter, _timeFormatter, _dateTimeInputUtils);
+      DateTimeFormatterValidator(_dateFormatter, _timeFormatter, _dateTimeUtils);
 
   DateTimeInputs._();
 
@@ -30,18 +31,17 @@ class DateTimeInputs {
     required LabelPosition labelPosition,
     required FormManagerOLD formManager,
     required CurrentDate currentDate,
-    final Date? initialValue,
-    final bool readonly = false,
-    final bool isRequired = false,
-    final DateTime? minDate,
-    final DateTime? maxDate,
-    final List<String>? linkedFields,
-    final ValueChanged<String?>? onChanged,
-    final RangeController? rangeController,
-    final FormFieldValidator<String>? rangeValidator,
-    final List<FormFieldValidator<String>>? additionalValidators,
+    required DateTimeLimits dateLimits,
+    Date? initialValue,
+    bool readonly = false,
+    bool isRequired = false,
+    List<String>? linkedFields,
+    ValueChanged<String?>? onChanged,
+    RangeController? rangeController,
+    FormFieldValidator<String>? rangeValidator,
+    List<FormFieldValidator<String>>? additionalValidators,
   }) {
-    final txt = BricksLocalizations.of(context);
+    final localizations = BricksLocalizations.of(context);
     final uiParams = UiParams.of(context);
     final appSize = uiParams.appSize;
 
@@ -50,7 +50,7 @@ class DateTimeInputs {
     ValueListenableBuilder iconButton = Buttons.iconButtonStateAware(
       context: context,
       iconData: Icons.arrow_drop_down,
-      tooltip: txt.openDatePicker,
+      tooltip: localizations.openDatePicker,
       onPressed: readonly
           ? null
           : () => _showDatePicker(
@@ -60,10 +60,6 @@ class DateTimeInputs {
               ),
       statesController: statesController,
     );
-
-    _DateLimits dateLimits = calculateDateLimits(minDate, maxDate, currentDate);
-    final int maxYearsBack = currentDate.getDateNow().year - dateLimits.dateBack.year;
-    final int maxYearsForward = currentDate.getDateNow().year + dateLimits.dateForward.year;
 
     return BasicTextInput.basicTextInput(
       context: context,
@@ -79,13 +75,13 @@ class DateTimeInputs {
       onEditingComplete: () => _onEditingComplete(
         formManager,
         keyString,
-        (text) => _dateFormatter.makeDateString(context, text, maxYearsBack, maxYearsForward),
+        (inputString) => _dateFormatter.makeDateString(localizations, currentDate, inputString, dateLimits),
         rangeController,
       ),
       validator: ValidatorProvider.compose(
         context: context,
         isRequired: isRequired,
-        customValidator: rangeValidator ?? DateTimeValidators.dateInputValidator(),
+        customValidator: rangeValidator ?? DateTimeValidators.dateInputValidator(localizations, dateLimits),
         // customValidator: /*rangeValidator ?? DateTimeValidators.dateInputValidator()*/ValidatorProvider.compose(minLength: 1),
         validatorsList: additionalValidators,
       ),
@@ -98,37 +94,22 @@ class DateTimeInputs {
     );
   }
 
-  static _DateLimits calculateDateLimits(DateTime? minDate, DateTime? maxDate, CurrentDate currentDate) {
-    assert(minDate == null || maxDate == null || minDate.isBefore(maxDate), 'Minimal date must be before maximal date');
-
-    if (minDate != null && maxDate != null) return _DateLimits(minDate, maxDate);
-
-    final DateTime dateNow = currentDate.getDateNow();
-    final defaultExtension = Duration(days: 365);
-    final DateTime defaultMinDate = dateNow.subtract(defaultExtension);
-    final DateTime defaultMaxDate = dateNow.add(defaultExtension);
-
-    if (maxDate != null) return _DateLimits(defaultMinDate, maxDate);
-    if (minDate != null) return _DateLimits(minDate, defaultMaxDate);
-    return _DateLimits(defaultMinDate, defaultMaxDate);
-  }
-
   static Widget time({
     required BuildContext context,
     required String keyString,
     required String label,
     required LabelPosition labelPosition,
     required FormManagerOLD formManager,
-    final Time? initialValue,
-    final bool readonly = false,
-    final bool isRequired = false,
-    final List<String>? linkedFields,
-    final ValueChanged<String?>? onChanged,
-    final RangeController? rangeController,
-    final FormFieldValidator<String>? rangeValidator,
-    final List<FormFieldValidator<String>>? additionalValidators,
+    Time? initialValue,
+    bool readonly = false,
+    bool isRequired = false,
+    List<String>? linkedFields,
+    ValueChanged<String?>? onChanged,
+    RangeController? rangeController,
+    FormFieldValidator<String>? rangeValidator,
+    List<FormFieldValidator<String>>? additionalValidators,
   }) {
-    final txt = BricksLocalizations.of(context);
+    final localizations = BricksLocalizations.of(context);
     final uiParams = UiParams.of(context);
     final appSize = uiParams.appSize;
 
@@ -137,7 +118,7 @@ class DateTimeInputs {
     ValueListenableBuilder iconButton = Buttons.iconButtonStateAware(
       context: context,
       iconData: Icons.arrow_drop_down,
-      tooltip: txt.openTimePicker,
+      tooltip: localizations.openTimePicker,
       onPressed: () => _showTimePicker(
         context: context,
         keyString: keyString,
@@ -157,12 +138,16 @@ class DateTimeInputs {
       autovalidateMode: AutovalidateMode.disabled,
       keyboardType: TextInputType.text,
       formManager: formManager,
-      onEditingComplete: () =>
-          _onEditingComplete(formManager, keyString, _timeFormatter.makeTimeString, rangeController),
+      onEditingComplete: () => _onEditingComplete(
+        formManager,
+        keyString,
+        (inputString) => _timeFormatter.makeTimeString(localizations, inputString),
+        rangeController,
+      ),
       validator: ValidatorProvider.compose(
         context: context,
         isRequired: isRequired,
-        customValidator: rangeValidator ?? DateTimeValidators.timeInputValidator(),
+        customValidator: rangeValidator ?? DateTimeValidators.timeInputValidator(localizations),
         validatorsList: additionalValidators,
       ),
       withTextEditingController: true,
@@ -180,15 +165,18 @@ class DateTimeInputs {
     required LabelPosition labelPosition,
     required CurrentDate currentDate,
     required FormManagerOLD formManager,
-    final bool isDateRequired = false,
-    final bool isTimeRequired = false,
-    final RangeController? rangeController,
-    final Date? initialDate,
-    final Time? initialTime,
-    final bool readonly = false,
-    final List<FormFieldValidator<String>>? additionalValidators,
+    required DateTimeLimits dateTimeLimits,
+    required int maxRangeSpanDays,
+    required int minRangeSpanMinutes,
+    bool isDateRequired = false,
+    bool isTimeRequired = false,
+    RangeController? rangeController,
+    Date? initialDate,
+    Time? initialTime,
+    bool readonly = false,
+    List<FormFieldValidator<String>>? additionalValidators,
   }) {
-    final txt = BricksLocalizations.of(context);
+    final localizations = BricksLocalizations.of(context);
     final uiParams = UiParams.of(context);
     final appSize = uiParams.appSize;
     final appStyle = uiParams.appStyle;
@@ -199,12 +187,19 @@ class DateTimeInputs {
 
     FormFieldValidator<String>? rangeDateValidator;
     if (rangeController != null) {
-      rangeDateValidator = DateTimeValidators.dateTimeRangeValidator(dateKeyString, formManager, rangeController);
+      rangeDateValidator = DateTimeValidators.dateTimeRangeValidator(
+        localizations,
+        dateKeyString,
+        formManager,
+        rangeController,
+        maxRangeSpanDays,
+        minRangeSpanMinutes,
+      );
 // if (isDateRequired || additionalValidators != null) {
       var validatorsExceptRange = ValidatorProvider.compose(
         context: context,
         isRequired: isDateRequired,
-        customValidator: DateTimeValidators.dateInputValidator(),
+        customValidator: DateTimeValidators.dateInputValidator(localizations, dateTimeLimits),
         validatorsList: additionalValidators,
       );
       rangeController.validatorExceptRange[dateKeyString] = validatorsExceptRange;
@@ -212,14 +207,21 @@ class DateTimeInputs {
     }
     FormFieldValidator<String>? rangeTimeValidator;
     if (rangeController != null) {
-      rangeTimeValidator = DateTimeValidators.dateTimeRangeValidator(timeKeyString, formManager, rangeController);
-// if (isTimeRequired || additionalValidators != null) {
+      rangeTimeValidator = DateTimeValidators.dateTimeRangeValidator(
+        localizations,
+        timeKeyString,
+        formManager,
+        rangeController,
+        maxRangeSpanDays,
+        minRangeSpanMinutes,
+      );
       var validatorExceptRange = ValidatorProvider.compose(
         context: context,
         isRequired: isTimeRequired,
-        customValidator: DateTimeValidators.timeInputValidator(),
+        customValidator: DateTimeValidators.timeInputValidator(localizations),
         validatorsList: additionalValidators,
       );
+// if (isTimeRequired || additionalValidators != null) {
       rangeController.validatorExceptRange[timeKeyString] = validatorExceptRange;
 // }
     }
@@ -228,11 +230,12 @@ class DateTimeInputs {
       date(
         context: context,
         keyString: dateKeyString,
-        label: txt.date,
+        label: localizations.date,
         labelPosition: LabelPosition.topLeft,
         initialValue: initialDate,
         readonly: readonly,
         currentDate: currentDate,
+        dateLimits: dateTimeLimits,
         formManager: formManager,
         isRequired: isDateRequired,
         rangeController: rangeController,
@@ -243,7 +246,7 @@ class DateTimeInputs {
       time(
         context: context,
         keyString: timeKeyString,
-        label: txt.time,
+        label: localizations.time,
         labelPosition: LabelPosition.topLeft,
         initialValue: initialTime,
         readonly: readonly,
@@ -268,14 +271,17 @@ class DateTimeInputs {
     required String label,
     required LabelPosition labelPosition,
     required CurrentDate currentDate,
+    required DateTimeLimits dateTimeLimits,
     required FormManagerOLD formManager,
+    required int maxRangeSpanDays,
+    required int minRangeSpanMinutes,
     final bool readonly = false,
     final Date? initialRangeStartDate,
     final Time? initialRangeStartTime,
     final Date? initialRangeEndDate,
     final Time? initialRangeEndTime,
   }) {
-    final txt = BricksLocalizations.of(context);
+    final localizations = BricksLocalizations.of(context);
     final uiParams = UiParams.of(context);
     final appSize = uiParams.appSize;
 
@@ -284,11 +290,14 @@ class DateTimeInputs {
     final rangeStart = dateTimeSeparateFields(
       context: context,
       keyString: makeRangeKeyStringStart(rangeId),
-      label: "$label ${txt.start}",
+      label: "$label ${localizations.start}",
       labelPosition: labelPosition,
       initialDate: initialRangeStartDate,
       initialTime: initialRangeStartTime,
       formManager: formManager,
+      dateTimeLimits: dateTimeLimits,
+      maxRangeSpanDays: maxRangeSpanDays,
+      minRangeSpanMinutes: minRangeSpanMinutes,
       currentDate: currentDate,
       rangeController: rangeController,
       isDateRequired: true,
@@ -296,11 +305,14 @@ class DateTimeInputs {
     final rangeEnd = dateTimeSeparateFields(
       context: context,
       keyString: makeRangeKeyStringEnd(rangeId),
-      label: "$label ${txt.end}",
+      label: "$label ${localizations.end}",
       labelPosition: labelPosition,
       initialDate: initialRangeEndDate,
       initialTime: initialRangeEndTime,
       formManager: formManager,
+      dateTimeLimits: dateTimeLimits,
+      maxRangeSpanDays: maxRangeSpanDays,
+      minRangeSpanMinutes: minRangeSpanMinutes,
       currentDate: currentDate,
       rangeController: rangeController,
     );
@@ -313,21 +325,23 @@ class DateTimeInputs {
     required String label,
     required LabelPosition labelPosition,
     required FormManagerOLD formManager,
-    final DateTime? initialValue,
-    final bool readonly = false,
-    final bool isRequired = false,
-    final List<String>? linkedFields,
-    final ValueChanged<String?>? onChanged,
-    final VoidCallback? onDateHourChange,
-    final List<FormFieldValidator<String>>? additionalValidators,
+    required CurrentDate currentDate,
+    required DateTimeLimits dateTimeLimits,
+    DateTime? initialValue,
+    bool readonly = false,
+    bool isRequired = false,
+    List<String>? linkedFields,
+    ValueChanged<String?>? onChanged,
+    VoidCallback? onDateHourChange,
+    List<FormFieldValidator<String>>? additionalValidators,
   }) {
-    final txt = BricksLocalizations.of(context);
+    final localizations = BricksLocalizations.of(context);
     DoubleWidgetStatesController statesController = DoubleWidgetStatesController();
 
     ValueListenableBuilder iconButton = Buttons.iconButtonStateAware(
       context: context,
       iconData: Icons.arrow_drop_down,
-      tooltip: '${txt.openTimePicker} ${txt.and} ${txt.openTimePicker}',
+      tooltip: '${localizations.openTimePicker} ${localizations.and} ${localizations.openTimePicker}',
       onPressed: () => _showDateTimePicker(context: context, keyString: keyString, formManager: formManager),
       statesController: statesController,
     );
@@ -341,10 +355,15 @@ class DateTimeInputs {
       initialValue: initialValue,
       readonly: false,
       formManager: formManager,
-      onEditingComplete: () => _onEditingComplete(formManager, keyString, _dateTimeFormatter.makeDateTimeString, null),
+      onEditingComplete: () => _onEditingComplete(
+        formManager,
+        keyString,
+        (String inputString) => _dateTimeFormatter.makeDateTimeString(localizations, currentDate, inputString, dateTimeLimits),
+        null,
+      ),
       validator: ValidatorProvider.compose(
         context: context,
-        customValidator: DateTimeValidators.dateTimeInputValidator(),
+        customValidator: DateTimeValidators.dateTimeInputValidator(localizations, dateTimeLimits),
         validatorsList: additionalValidators,
       ),
       withTextEditingController: true,
@@ -472,11 +491,4 @@ class DateTimeInputs {
 
   static String rangeTimeEndKeyString(String rangeKeyString) =>
       mameTimeKeyString(makeRangeKeyStringEnd(rangeKeyString));
-}
-
-class _DateLimits {
-  final DateTime dateBack;
-  final DateTime dateForward;
-
-  const _DateLimits(this.dateBack, this.dateForward);
 }

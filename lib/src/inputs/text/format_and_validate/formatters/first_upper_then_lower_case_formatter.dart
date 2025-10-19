@@ -12,7 +12,7 @@ class FirstUpperThenLowerCaseFormatter extends TextInputFormatter {
   FirstUpperThenLowerCaseFormatter._();
 
   @override
-  TextEditingValue formatEditUpdate(final TextEditingValue oldValue, final TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(final TextEditingValue oldValue,TextEditingValue newValue) {
     final String formattedText = newValue.text.replaceAllMapped(_firstAlwaysUppercase, _capitalize);
 
     return TextEditingValue(

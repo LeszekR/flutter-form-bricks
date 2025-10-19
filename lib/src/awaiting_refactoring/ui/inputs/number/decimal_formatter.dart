@@ -15,7 +15,7 @@ class DoubleInputFormatter extends TextInputFormatter {
   DoubleInputFormatter._();
 
   @override
-  TextEditingValue formatEditUpdate(final TextEditingValue oldValue, final TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(final TextEditingValue oldValue,TextEditingValue newValue) {
     final String formattedText = _formatDecimal(oldValue, newValue);
     return newValue.copyWith(
         text: formattedText,
@@ -23,7 +23,7 @@ class DoubleInputFormatter extends TextInputFormatter {
     );
   }
 
-  String _formatDecimal(final TextEditingValue oldValue, final TextEditingValue newValue) {
+  String _formatDecimal(final TextEditingValue oldValue,TextEditingValue newValue) {
     if (!newValue.text.contains(_decimalPoint)) {
       return FormatterHelper.formatDigitsWithSpaces(newValue.text);
     }

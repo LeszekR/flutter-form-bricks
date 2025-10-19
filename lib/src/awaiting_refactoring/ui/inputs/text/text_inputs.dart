@@ -187,7 +187,11 @@ class TextInputs {
       initialValue: initialValue,
       readonly: readonly,
       inputFormatters: [UppercaseFormatter(), VatFormatter()],
-      validator: ValidatorProvider.compose(isRequired: true, customValidator: ValidatorProvider.validatorVAT),
+      validator: ValidatorProvider.compose(
+        context: context,
+        isRequired: true,
+        customValidator: ValidatorProvider.validatorVAT(BricksLocalizations.of(context)),
+      ),
       onChanged: onChanged,
       withTextEditingController: true,
       onEditingComplete: onEditingComplete,
@@ -211,7 +215,7 @@ class TextInputs {
     final VoidCallback? onEditingComplete,
   }) {
     return BasicTextInput.basicTextInput(
-      context:  context,
+      context: context,
       keyString: keyString,
       label: label,
       labelPosition: labelPosition,

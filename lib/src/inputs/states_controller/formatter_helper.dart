@@ -37,7 +37,7 @@ class FormatterHelper {
     return text.replaceAllMapped(_regexToPutSpaceBetweenChars, (Match m) => '${m[1]} ');
   }
 
-  static calculateCursorPosition(final String formattedText, final TextEditingValue newValue) {
+  static calculateCursorPosition(final String formattedText,TextEditingValue newValue) {
     int newCursorPosition =  newValue.selection.baseOffset;
 
     // Adjust cursor position based on formatting changes

@@ -17,7 +17,7 @@ class ForbiddenWhitespacesFormatter extends TextInputFormatter {
 
   @override
   TextEditingValue formatEditUpdate(
-      final TextEditingValue oldValue, final TextEditingValue newValue) {
+      final TextEditingValue oldValue,TextEditingValue newValue) {
     final String formattedText = newValue.text
         .replaceFirst(_noLeadingSpace, '')
         .replaceAll(_noDoubleSpace, ' ');

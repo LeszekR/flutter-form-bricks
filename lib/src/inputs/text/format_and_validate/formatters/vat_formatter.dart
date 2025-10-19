@@ -12,7 +12,7 @@ class VatFormatter extends TextInputFormatter {
 
   @override
   TextEditingValue formatEditUpdate(
-      final TextEditingValue oldValue, final TextEditingValue newValue) {
+      final TextEditingValue oldValue,TextEditingValue newValue) {
     final String input = newValue.text;
     final RegExp lettersRegex = RegExp(r'^[A-Z]{0,2}');
     final RegExp numbersRegex = RegExp(r'^\d{0,10}');

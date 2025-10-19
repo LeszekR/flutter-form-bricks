@@ -13,6 +13,7 @@ class ExampleApp extends StatelessWidget {
     return UiParams(
       data: uiParamsData,
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: uiParamsData.appTheme.themeData,
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,
@@ -20,8 +21,8 @@ class ExampleApp extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: [
-          Locale('en'), // English
-          Locale('es'), // Spanish
+          Locale('en'),
+          Locale('pl'),
         ],
         home: Scaffold(
           body: Center(

@@ -1,0 +1,278 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/standalone_form_manager.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/tabbed_form/tabulated_form_manager.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+class TestUtils {
+  TestUtils._();
+
+  static const String keyRequired = "key_required";
+  static const String labelRequired = "label_required";
+  static const String label3Chars = 'Input with min. 3 chars';
+  static const String key3Chars = 'input_3_chars';
+
+  static loadGlobalConfigurationForTests() async {
+    WidgetsFlutterBinding.ensureInitialized();
+  }
+
+  static prepareWidget(WidgetTester tester, Widget? widgetToTest, {final String language = "pl"}) async {
+    var uiParamsData = UiParamsData();
+    await tester.pumpWidget(
+      UiParams(
+        data: uiParamsData,
+        child: MaterialApp(
+          theme: uiParamsData.appTheme.themeData,
+          localizationsDelegates: BricksLocalizations.localizationsDelegates,
+          supportedLocales: BricksLocalizations.supportedLocales,
+          locale: Locale(language),
+          home: Builder(
+            builder: (BuildContext context) {
+              return Scaffold(body: widgetToTest);
+            },
+          ),
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+  }
+
+  static Future<BuildContext> pumpAppGetContext(WidgetTester tester) async {
+    await TestUtils.prepareWidget(tester, null);
+    final BuildContext context = tester.element(find.byType(Scaffold));
+    return context;
+  }
+
+  static prepareSimpleForm(
+    WidgetTester tester,
+    StandaloneFormManagerOLD formManager,
+    Widget input,
+  ) async {
+    Widget widgetToTest = Scaffold(body: FormBuilder(key: formManager.formKey, child: input));
+    await prepareWidget(tester, widgetToTest);
+    formManager.fillInitialInputValuesMap();
+  }
+
+  static prepareTabulatedForm(
+    final WidgetTester tester,
+    TabulatedFormManagerOLD formManager,
+    List<TabData> tabsData,
+  ) async {
+    final List<FormBuilder> tabs = tabsData
+        .map((tabData) => FormBuilder(
+              key: tabData.globalKey,
+              child: tabData.makeTabContent(),
+            ))
+        .toList();
+    await TestUtils.prepareWidget(tester, Row(children: tabs));
+    formManager.fillInitialInputValuesMap();
+  }
+
+  static Widget makeRequired(
+    BuildContext context,
+    String keyString,
+    String label,
+    StandaloneFormManagerOLD formManager, {
+    bool? withTextEditingController,
+    String? initialValue,
+  }) {
+    return TextInputs.textSimple(
+      context: context,
+      keyString: keyString,
+      label: label,
+      labelPosition: LabelPosition.topLeft,
+      validator: ValidatorProvider.compose(context: context,  isRequired: true),
+      formManager: formManager,
+      withTextEditingController: withTextEditingController,
+      initialValue: initialValue,
+    );
+  }
+
+  static Widget makeRequiredMin3Chars(
+    BuildContext context,
+    String keyString,
+    String label,
+    StandaloneFormManagerOLD formManager, {
+    bool? withTextEditingController,
+    String? initialValue,
+  }) {
+    return TextInputs.textSimple(
+      context: context,
+      keyString: keyString,
+      label: label,
+      labelPosition: LabelPosition.topLeft,
+      validator: ValidatorProvider.compose(context: context,  isRequired: true, minLength: 3),
+      formManager: formManager,
+      withTextEditingController: withTextEditingController,
+      initialValue: initialValue,
+    );
+  }
+
+// static prepareDataForTrimmingSpacesTests(
+//     WidgetTester tester, StandaloneFormManagerOLD formManager, String keyString) async {
+//   await TestUtils.prepareWidget(tester, null);
+//     final BuildContext context = tester.element(find.byType(Scaffold));
+//
+//   final controller = formManager.getTextEditingController(keyString, defaultValue: null);
+//   var focusNode = formManager.getFocusNode(keyString);
+//
+//   focusNode.addListener(() {
+//     if (!focusNode.hasFocus) {
+//       FormatterHelper.onSubmittedTrimming(controller.text, controller);
+//     }
+//   });
+//
+//   final input = TextInputs.textMultiline(
+//       keyString: keyString,
+//       labelPosition: LabelPosition.topLeft,
+//       validator: ValidatorProvider.compose(context: context, isRequired: true),
+//       withTextEditingController: true,
+//       formManager: formManager,
+//       label: 'Bulk text');
+//
+//   await TestUtils.prepareSimpleForm(tester, formManager, input);
+// }
+//
+//   static Future<void> enterTextAndUnfocusWidget(
+//       WidgetTester tester, FormManager formManager, String keyString, String enteredText) async {
+//     await tester.enterText(find.byKey(Key(keyString)), enteredText);
+//     formManager.getFocusNode(keyString).unfocus();
+//     await tester.pump();
+//   }
+//
+//   static prepareDataForFocusLosingTests(
+//       WidgetTester tester, StandaloneFormManagerOLD formManager, String keyString) async {
+//     await TestUtils.prepareWidget(tester, null);
+//     final BuildContext context = tester.element(find.byType(Scaffold));
+//     await TestUtils.prepareSimpleForm(
+//         tester,
+//         formManager,
+//         Column(
+//           children: [
+//             buildTextInputForTest(keyString, formManager),
+//             const SizedBox(key: Key("Sized box"), height: 30),
+//             Container(
+//               width: double.infinity,
+//               height: 50,
+//               color: Colors.transparent,
+//               key: const Key('outside_click_area'),
+//             ),
+//             ElevatedButton(key: const Key("Dummy button"), onPressed: () {}, child: const Text('Dummy button'))
+//           ],
+//         ));
+//   }
+//
+//   static Widget buildTextInputForTest(String keyString, StandaloneFormManagerOLD formManager) {
+//     switch (keyString) {
+//       case ConstantsText.TEXT_SIMPLE_FIELD_KEY:
+//         return TextInputs.textSimple(
+//             keyString: keyString,
+//             labelPosition: LabelPosition.topLeft,
+//             validator: ValidatorProvider.compose(context: context, isRequired: true),
+//             withTextEditingController: true,
+//             formManager: formManager,
+//             label: 'example text');
+//       case ConstantsText.TEXT_MULTILINE_FIELD_KEY:
+//         return TextInputs.textMultiline(
+//             keyString: keyString,
+//             labelPosition: LabelPosition.topLeft,
+//             validator: ValidatorProvider.compose(context: context, isRequired: true),
+//             withTextEditingController: true,
+//             formManager: formManager,
+//             label: 'Bulk text');
+//       case ConstantsText.TEXT_UPPERCASE_FIELD_KEY:
+//         return TextInputs.textUppercase(
+//             keyString: keyString,
+//             labelPosition: LabelPosition.topLeft,
+//             validator: ValidatorProvider.compose(context: context, isRequired: true),
+//             withTextEditingController: true,
+//             formManager: formManager,
+//             label: 'BULK TEXT');
+//       case ConstantsText.TEXT_LOWERCASE_FIELD_KEY:
+//         return TextInputs.textLowercase(
+//             keyString: keyString,
+//             labelPosition: LabelPosition.topLeft,
+//             validator: ValidatorProvider.compose(context: context, isRequired: true),
+//             withTextEditingController: true,
+//             formManager: formManager,
+//             label: 'example text');
+//       case ConstantsText.TEXT_UPPER_LOWER_FIELD_KEY:
+//         return TextInputs.textFirstUppercaseThenLowercase(
+//             keyString: keyString,
+//             labelPosition: LabelPosition.topLeft,
+//             validator: ValidatorProvider.compose(context: context, isRequired: true),
+//             withTextEditingController: true,
+//             formManager: formManager,
+//             label: 'Example text');
+//       default:
+//         return Container();
+//     }
+//   }
+//
+//   static Future<void> performAndCheckInputActions(
+//       WidgetTester tester, StandaloneFormManagerOLD formManager, String keyString, Map<String, Function> inputs) async {
+//     for (var method in inputs.entries) {
+//       formManager.getTextEditingController(keyString).clear();
+//       await tester.pump();
+//
+//       await tester.enterText(find.byKey(Key(keyString)), "text example");
+//       await tester.pump();
+//
+//       var focusNode = formManager.getFocusNode(keyString);
+//       expect(focusNode.hasFocus, true);
+//
+//       await method.value();
+//       await tester.pump();
+//
+//       if (method.key == "Mouse" || method.key == "Tab") {
+//         expect(focusNode.hasFocus, false, reason: "${method.key} failed to loose focus");
+//       } else {
+//         expect(focusNode.hasFocus, true, reason: "${method.key} failed to retain focus");
+//       }
+//     }
+//   }
+// }
+//
+// class TestTabulatedForm extends TabulatedForm {
+//   final List<TabData> _tabsData;
+//
+//   get tabsData => _tabsData;
+//
+//   TestTabulatedForm(List<TabData> tabsData, {super.key}) : _tabsData = tabsData;
+//
+//   @override
+//   TestTabulatedFormState createState() => TestTabulatedFormState();
+// }
+//
+// class TestTabulatedFormState extends TabulatedFormState<TestTabulatedForm> {
+//   @override
+//   List<TabData> makeTabsData() {
+//     return (widget as TestTabulatedForm).tabsData;
+//   }
+//
+//   @override
+//   Entity? getEntity() => null; //TODO implement
+//
+//   @override
+//   String provideLabel() => "Przykład Tabulated Form";
+//
+//   @override
+//   void deleteEntity() => debugPrint("delete triggered.");
+//
+//   @override
+//   EntityService<Entity> getService() => throw UnimplementedError();
+//
+//   @override
+//   void removeEntityFromState() {}
+//
+//   @override
+//   void upsertEntityInState(Map<String, dynamic> responseBody) {}
+//
+//   @override
+//   void submitData() {
+//     final Map<String, dynamic> formData = formManager.collectInputData();
+//     debugPrint("save triggered. Data: $formData");
+//   }
+}

@@ -142,7 +142,7 @@ abstract class FormManagerOLD {
     showErrorMessage(_errorsMap[keyString] ?? '');
   }
 
-  void addErrorMessageIfIsNew(final String key, final String errMsg) {
+  void addErrorMessageIfIsNew(final String key,String errMsg) {
     if (_isFieldIgnored(key)) {
       return;
     }
@@ -214,7 +214,7 @@ abstract class FormManagerOLD {
 //   return parentMap;
 // }
 //
-// void _updateNestedMap(final Map<String, dynamic> parentMap, final List<String> keys, final dynamic value) {
+// void _updateNestedMap(final Map<String, dynamic> parentMap,List<String> keys,dynamic value) {
 //   Map<String, dynamic> currentMap = parentMap;
 //   for (int i = 0; i < keys.length - 1; i++) {
 //     currentMap = currentMap.putIfAbsent(keys[i], () => <String, dynamic>{}) as Map<String, dynamic>;

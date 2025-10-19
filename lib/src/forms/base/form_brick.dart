@@ -165,25 +165,25 @@ abstract class FormBrickState<T extends FormBrick> extends State<T> {
 
   // TODO uncomment and refactor
   // Widget deleteButton() =>
-  //     Buttons.elevatedButton(text: txt.delete, onPressed: isEditMode() ? onDelete : () {}, isEnabled: isEditMode());
+  //     Buttons.elevatedButton(text: localizations.delete, onPressed: isEditMode() ? onDelete : () {}, isEnabled: isEditMode());
   //
-  // Widget cancelButton() => Buttons.elevatedButton(text: txt.buttonCancel, onPressed: onCancel);
+  // Widget cancelButton() => Buttons.elevatedButton(text: localizations.buttonCancel, onPressed: onCancel);
   //
-  // Widget resetButton() => Buttons.elevatedButton(text: txt.reset, onPressed: onReset);
+  // Widget resetButton() => Buttons.elevatedButton(text: localizations.reset, onPressed: onReset);
   //
-  // Widget saveButton() => Buttons.elevatedButton(text: txt.save, onPressed: onSubmit);
+  // Widget saveButton() => Buttons.elevatedButton(text: localizations.save, onPressed: onSubmit);
   //
   // void onReset() =>
-  //     Dialogs.decisionDialogYesNo(context, txt.formReset, txt.formResetConfirm, action: formManager.resetForm);
+  //     Dialogs.decisionDialogYesNo(context, localizations.formReset, localizations.formResetConfirm, action: formManager.resetForm);
   //
   // void onCancel() =>
-  //     Dialogs.decisionDialogYesNo(context, txt.buttonCancel, txt.pagesAbstractFormDialogsConfirmCancel,
+  //     Dialogs.decisionDialogYesNo(context, localizations.buttonCancel, localizations.pagesAbstractFormDialogsConfirmCancel,
   //         action: cancel);
   //
   // void cancel() => Navigator.of(context).pop(false);
   //
   // void onDelete() =>
-  //     Dialogs.decisionDialogOkCancel(context, txt.dialogsWarning, txt.deleteConfirm, action: deleteEntity);
+  //     Dialogs.decisionDialogOkCancel(context, localizations.dialogsWarning, localizations.deleteConfirm, action: deleteEntity);
   //
   // void onTab() => TextInputAction.next;
   //
@@ -194,13 +194,13 @@ abstract class FormBrickState<T extends FormBrick> extends State<T> {
   //     case EFormStatus.noChange:
   //       Dialogs.informationDialog(
   //           context,
-  //           txt.dialogsError,
+  //           localizations.dialogsError,
   //           isEditMode()
-  //               ? txt.pagesAbstractFormDialogsErrorNoChanges
-  //               : txt.pagesAbstractFormDialogsErrorCorrectContent);
+  //               ? localizations.pagesAbstractFormDialogsErrorNoChanges
+  //               : localizations.pagesAbstractFormDialogsErrorCorrectContent);
   //       break;
   //     case EFormStatus.invalid:
-  //       Dialogs.informationDialog(context, txt.dialogsError, txt.pagesAbstractFormDialogsErrorCorrectContent);
+  //       Dialogs.informationDialog(context, localizations.dialogsError, localizations.pagesAbstractFormDialogsErrorCorrectContent);
   //       break;
   //     case EFormStatus.valid:
   //       submitData();

@@ -7,9 +7,9 @@ description: Elements for creating responsive forms
 dependencies:
   flutter:
     sdk: flutter
+  flutter_form_builder: ^10.2.0
   flutter_localizations:
     sdk: flutter
-  flutter_form_builder: ^10.2.0
   form_builder_validators: ^11.2.0
   global_configuration: ^2.0.0
   logger: ^2.4.0
@@ -23,6 +23,7 @@ dev_dependencies:
     sdk: flutter
   intl_translation: ^0.20.0
   mockito: ^5.4.4
+  parameterized_test: ^2.0.1
   shelf: ^1.4.1
 flutter:
   generate: true

@@ -44,7 +44,7 @@
 //     final chosenAction = isAllowed
 //         ? onPressed
 //         : () => Dialogs.informationDialog(
-//             context!, txt.dialogsWarning, txt.pagesResetPasswordDialogsNotPermitted(requiredRoles));
+//             context!, localizations.dialogsWarning, localizations.pagesResetPasswordDialogsNotPermitted(requiredRoles));
 //
 //     final style = ButtonStyle(
 //       shape: WidgetStateProperty.all(AppStyle.beveledRectangleBorderHardCorners),

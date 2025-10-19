@@ -168,7 +168,7 @@ abstract class FormManager extends ChangeNotifier {
     showErrorMessage(_errorsMap[keyString] ?? '');
   }
 
-  void addErrorMessageIfIsNew(final String key, final String errMsg) {
+  void addErrorMessageIfIsNew(final String key,String errMsg) {
     final String? lastError = _errorsMap[key];
     if (lastError?.contains(errMsg) ?? false) {
       return;

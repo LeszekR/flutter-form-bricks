@@ -125,7 +125,7 @@ class TextFieldBrick extends FormFieldBrick {
     this.readOnly = false,
     this.showCursor,
     this.autofocus = false,
-    // this.statesController,
+    // this.statesController,  => replaced with statesObserver and statesNotifier
     this.obscuringCharacter = '•',
     this.obscureText = false,
     this.autocorrect = true,

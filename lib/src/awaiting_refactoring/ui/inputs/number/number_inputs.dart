@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/shelf.dart';
 
-import '../../../../ui_params/ui_params.dart';
 import '../../forms/form_manager/form_manager.dart';
-import '../../../../inputs/text/format_and_validate/input_validator_provider.dart';
-import '../text/text_inputs_base/basic_text_input.dart';
 import 'decimal_formatter.dart';
 import 'integer_formatter.dart';
 import 'number_validators.dart';
-import 'package:flutter_form_bricks/src/inputs/labelled_box/label_position.dart';
 
 class NumberInputs {
   NumberInputs._();
@@ -24,6 +21,7 @@ class NumberInputs {
     final appSize = uiParams.appSize;
 
     final id = BasicTextInput.basicTextInput(
+        context: context,
         keyString: keyString,
         label: label,
         labelPosition: labelPosition,
@@ -41,7 +39,8 @@ class NumberInputs {
   }
 
   static Widget textInteger(
-      {required String keyString,
+      {required BuildContext context,
+      required String keyString,
       required String label,
       required LabelPosition labelPosition,
       required FormManagerOLD formManager,
@@ -54,9 +53,10 @@ class NumberInputs {
       // final FocusNode? focusNode,
       final TextInputAction? textInputAction}) {
     //
-    var integerValidator = NumberValidators.integerValidator();
+    var integerValidator = NumberValidators.integerValidator(BricksLocalizations.of(context));
 
     return BasicTextInput.basicTextInput(
+      context: context,
       formManager: formManager,
       keyString: keyString,
       label: label,
@@ -67,7 +67,7 @@ class NumberInputs {
       readonly: readonly,
       keyboardType: TextInputType.number,
       validator: validator != null
-          ? ValidatorProvider.compose(validatorsList: [validator, integerValidator])
+          ? ValidatorProvider.compose(context: context, validatorsList: [validator, integerValidator])
           : integerValidator,
       inputFormatters: [IntegerInputFormatter()],
       valueTransformer: (val) => intTransformer(val),
@@ -86,7 +86,8 @@ class NumberInputs {
   }
 
   static textDouble(
-      {required String keyString,
+      {required BuildContext context,
+      required String keyString,
       required String label,
       required LabelPosition labelPosition,
       required FormManagerOLD formManager,
@@ -100,9 +101,10 @@ class NumberInputs {
       // final FocusNode? focusNode,
       final TextInputAction? textInputAction}) {
     //
-    final decimalValidator = NumberValidators.decimalValidator(decimalPoints);
+    final decimalValidator = NumberValidators.decimalValidator(BricksLocalizations.of(context), decimalPoints);
 
     return BasicTextInput.basicTextInput(
+      context: context,
       keyString: keyString,
       label: label,
       labelPosition: labelPosition,
@@ -113,7 +115,7 @@ class NumberInputs {
       readonly: readonly,
       keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: true),
       validator: validator != null
-          ? ValidatorProvider.compose(validatorsList: [validator, decimalValidator])
+          ? ValidatorProvider.compose(context: context, validatorsList: [validator, decimalValidator])
           : decimalValidator,
       inputFormatters: [DoubleInputFormatter()],
       valueTransformer: (val) => _decimalTransformer(val),

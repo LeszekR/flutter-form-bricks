@@ -3,9 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
+import '../../../../dialogs/dialogs.dart';
 import '../../../../ui_params/ui_params.dart';
 import '../../buttons/buttons.dart';
-import '../../dialogs/dialogs.dart';
 import '../../shortcuts/keyboard_shortcuts.dart';
 import '../form_manager/form_manager.dart';
 import '../form_manager/form_state.dart';
@@ -186,35 +186,35 @@ abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
   }
 
   void onReset() {
-    final txt = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
-    Dialogs.decisionDialogYesNo(context, txt.formReset, txt.formResetConfirm, action: formManager.resetForm);
+    final localizations = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
+    Dialogs.decisionDialogYesNo(context, localizations.formReset, localizations.formResetConfirm, action: formManager.resetForm);
   }
 
   void onCancel() {
-    final txt = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
-    Dialogs.decisionDialogYesNo(context, txt.buttonCancel, txt.dialogsConfirmCancel, action: cancel);
+    final localizations = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
+    Dialogs.decisionDialogYesNo(context, localizations.buttonCancel, localizations.dialogsConfirmCancel, action: cancel);
   }
 
   void cancel() => Navigator.of(context).pop(false);
 
   void onDelete() {
-    final txt = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
-    Dialogs.decisionDialogOkCancel(context, txt.dialogsWarning, txt.deleteConfirm, action: deleteEntity);
+    final localizations = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
+    Dialogs.decisionDialogOkCancel(context, localizations.dialogsWarning, localizations.deleteConfirm, action: deleteEntity);
   }
 
   void onTab() => TextInputAction.next;
 
   onSubmit() {
-    final txt = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
+    final localizations = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
     final formState = formManager.checkState();
 
     switch (formState) {
       case FormStatus.noChange:
         Dialogs.informationDialog(
-            context, txt.dialogsError, isEditMode() ? txt.dialogsNoChanges : txt.dialogsFinishOrCorrect);
+            context, localizations.dialogsError, isEditMode() ? localizations.dialogsNoChanges : localizations.dialogsFinishOrCorrect);
         break;
       case FormStatus.invalid:
-        Dialogs.informationDialog(context, txt.dialogsError, txt.dialogsFinishOrCorrect);
+        Dialogs.informationDialog(context, localizations.dialogsError, localizations.dialogsFinishOrCorrect);
         break;
       case FormStatus.valid:
         submitData();

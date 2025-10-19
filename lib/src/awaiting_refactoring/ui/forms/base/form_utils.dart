@@ -144,7 +144,7 @@ class FormUtils {
   }
 
   //todo think about passing ontap function
-  static Future<dynamic> searchDialog<E>(BuildContext context, final Map<String, E> items) {
+  static Future<dynamic> searchDialog<E>(BuildContext context,Map<String, E> items) {
     final list = ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) {

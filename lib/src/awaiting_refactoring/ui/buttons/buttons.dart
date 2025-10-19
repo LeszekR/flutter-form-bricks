@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
-import '../../../ui_helpers/ui_helpers.dart';
+import '../../../ui_params/ui_params_data.dart';
 import 'elevated_button_with_disabling.dart';
 import 'icon_button_state_aware.dart';
 
@@ -27,7 +27,7 @@ class Buttons {
     final bool isEnabled = true,
     final bool hasBorder = true,
   }) {
-    final txt = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
+    final localizations = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
     final appSize = getAppSize(context);
     final appStyle = getAppStyle(context);
     final appColor = getAppColor(context);
@@ -39,7 +39,7 @@ class Buttons {
     // final chosenAction = isAllowed
     //     ? onPressed
     //     : () => Dialogs.informationDialog(
-    //         context, txt.dialogsWarning, txt.pagesResetPasswordDialogsNotPermitted(requiredRoles));
+    //         context, localizations.dialogsWarning, localizations.pagesResetPasswordDialogsNotPermitted(requiredRoles));
 
     final style = ButtonStyle(
       shape: WidgetStateProperty.all(appStyle.beveledRectangleBorderHardCorners),
@@ -67,7 +67,7 @@ class Buttons {
     required VoidCallback? onPressed,
     required DoubleWidgetStatesController statesController,
   }) {
-    final txt = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
+    final localizations = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
     final appSize = getAppSize(context);
     final appColor = getAppColor(context);
 
