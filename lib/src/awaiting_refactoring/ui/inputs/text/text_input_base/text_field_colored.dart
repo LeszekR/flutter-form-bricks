@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/text/text_inputs_base/error_message_notifier_OLD.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/text/text_input_base/error_message_notifier_OLD.dart';
 import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 

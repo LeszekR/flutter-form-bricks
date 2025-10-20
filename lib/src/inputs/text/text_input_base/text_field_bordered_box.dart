@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/inputs/text/text_inputs_base/state_colored_icon_button.dart';
+import 'package:flutter_form_bricks/src/inputs/text/text_input_base/state_colored_icon_button.dart';
 
 import '../../../ui_params/ui_params_data.dart';
 

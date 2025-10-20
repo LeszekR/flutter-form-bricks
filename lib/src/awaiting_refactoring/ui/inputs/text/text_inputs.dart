@@ -8,10 +8,8 @@ import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatte
 import '../../../../../shelf.dart';
 import '../../../../inputs/text/format_and_validate/formatters/first_upper_then_lower_case_formatter.dart';
 import '../../../../inputs/text/format_and_validate/formatters/forbidden_whitespaces_formatter.dart';
-import '../../../../inputs/text/format_and_validate/input_validator_provider.dart';
 import '../../buttons/buttons.dart';
 import '../../forms/form_manager/form_manager.dart';
-import 'text_inputs_base/basic_text_input.dart';
 
 class TextInputs {
   TextInputs._();

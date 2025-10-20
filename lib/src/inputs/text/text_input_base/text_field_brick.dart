@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/inputs/states_controller/update_once_widget_states_controller.dart';
-import 'package:flutter_form_bricks/src/inputs/text/text_inputs_base/state_colored_icon_button.dart';
-import 'package:flutter_form_bricks/src/inputs/text/text_inputs_base/text_field_bordered_box.dart';
+import 'package:flutter_form_bricks/src/inputs/text/text_input_base/state_colored_icon_button.dart';
+import 'package:flutter_form_bricks/src/inputs/text/text_input_base/text_field_bordered_box.dart';
 
 import '../../../ui_params/ui_params.dart';
 import '../../base/form_field_brick.dart';

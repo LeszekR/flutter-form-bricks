@@ -3,7 +3,7 @@
 // import 'package:flutter_test/flutter_test.dart';
 // import 'package:shipping_ui/ui/inputs/base/e_input_name_position.dart';
 // import 'package:shipping_ui/ui/forms/form_manager/standalone_form_manager.dart';
-// import 'package:shipping_ui/ui/inputs/text/text_inputs_base/basic_text_input.dart';
+// import 'package:shipping_ui/ui/inputs/text/text_input_base/basic_text_input.dart';
 //
 // void main() {
 //   const userText = 'New input';

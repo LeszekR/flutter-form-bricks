@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/inputs/text/text_inputs_base/states_color_maker.dart';
+import 'package:flutter_form_bricks/src/inputs/text/text_input_base/states_color_maker.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
 import '../../states_controller/update_once_widget_states_controller.dart';
