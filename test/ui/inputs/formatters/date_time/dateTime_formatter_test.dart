@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/date_time_limits.dart';
+import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/dateTime_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/date_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/time_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../../mocks.mocks.dart';
 import '../../../date_time_test_data.dart';
 import '../../../test_utils.dart';
-import 'a_test_date_time_formatter.dart';
-import 'util_test_date_time.dart';
+import 'utils/a_test_dateTime_formatter.dart';
+import 'utils/dateTime_test_utils.dart';
 
 void main() {
   final dateTimeInputUtils = DateTimeUtils();
@@ -24,9 +23,9 @@ void main() {
   ATestDateTimeFormatter dateTimeFormatter =
       TestDateTimeFormatter(DateTimeFormatterValidator(dateFormatter, timeFormatter, dateTimeInputUtils));
 
-  var datTimLim = DateTimeLimits(minDateTimeRequired: DateTime(2014), maxDateTimeRequired: DateTime(2026));
-  var yearMaxBack = datTimLim.minDateTimeRequired!.year;
-  var yearMaxForward = datTimLim.maxDateTimeRequired!.year;
+  DateTimeLimits datTimLim = DateTimeLimits(minDateTimeRequired: DateTime(2014), maxDateTimeRequired: DateTime(2026));
+  int yearMaxBack = datTimLim.minDateTimeRequired!.year;
+  int yearMaxForward = datTimLim.maxDateTimeRequired!.year;
 
   testWidgets('refuses to format excel-style invalid input', (WidgetTester tester) async {
     final BuildContext context = await TestUtils.pumpAppGetContext(tester);
@@ -35,10 +34,9 @@ void main() {
       DateTimeTestData(datTimLim, "2405011630", "2405011630", false, local.datetimeStringErrorNoSpace),
       DateTimeTestData(datTimLim, "5121200", "5121200", false, local.datetimeStringErrorNoSpace),
       DateTimeTestData(datTimLim, '22-03-03-15-33', '22-03-03-15-33', false, local.datetimeStringErrorNoSpace),
-      DateTimeTestData(
-          datTimLim, '22 03 03 15/30', '22 03 03 15/30', false, local.datetimeStringErrorTooManySpaces),
+      DateTimeTestData(datTimLim, '22 03 03 15/30', '22 03 03 15/30', false, local.datetimeStringErrorTooManySpaces),
     ];
-    var passedOk = UtilTestDateTime.testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -52,19 +50,17 @@ void main() {
       DateTimeTestData(datTimLim, '2-5/66-8 1533', '2-5/66-8 15:33', false, local.dateStringErrorTooManyDelimiters),
       DateTimeTestData(datTimLim, '5/667 233', '5/667 02:33', false, local.dateStringErrorTooManyDigitsDay),
       DateTimeTestData(datTimLim, '333/66 12:12', '333/66 12:12', false, local.dateStringErrorTooManyDigitsMonth),
-      DateTimeTestData(
-          datTimLim, '56688-1-66 0-0', '56688-1-66 00:00', false, local.dateStringErrorTooManyDigitsYear),
+      DateTimeTestData(datTimLim, '56688-1-66 0-0', '56688-1-66 00:00', false, local.dateStringErrorTooManyDigitsYear),
       DateTimeTestData(datTimLim, '500  1-1', '2024-05-00 01:01', false, local.dateErrorDay0),
       DateTimeTestData(datTimLim, '050 2:::15', '2024-00-50 02:15', false,
           local.dateErrorMonth0 + '\n' + local.dateErrorTooManyDaysInMonth),
       DateTimeTestData(datTimLim, '4--31 1515', '2024-04-31 15:15', false, local.dateErrorTooManyDaysInMonth),
       DateTimeTestData(datTimLim, '5-15-2 8,8', '2025-15-02 08:08', false, local.dateErrorMonthOver12),
-      DateTimeTestData(
-          datTimLim, '00;2;5 8;8', '2000-02-05 08:08', false, local.dateErrorYearTooFarBack(yearMaxBack)),
+      DateTimeTestData(datTimLim, '00;2;5 8;8', '2000-02-05 08:08', false, local.dateErrorYearTooFarBack(yearMaxBack)),
       DateTimeTestData(
           datTimLim, '50-11-5 6;15', '2050-11-05 06:15', false, local.dateErrorYearTooFarForward(yearMaxForward)),
     ];
-    var passedOk = UtilTestDateTime.testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -76,16 +72,13 @@ void main() {
       DateTimeTestData(datTimLim, '50808 3-', '2025-08-08 3-', false, local.timeStringErrorTooFewDigits),
       DateTimeTestData(datTimLim, '50808 32', '2025-08-08 32', false, local.timeStringErrorTooFewDigits),
       DateTimeTestData(datTimLim, '50808 22551', '2025-08-08 22551', false, local.timeStringErrorTooManyDigits),
-      DateTimeTestData(
-          datTimLim, ' 1215 8:30-5', '2024-12-15 8:30-5', false, local.timeStringErrorTooManyDelimiters),
-      DateTimeTestData(
-          datTimLim, '1215  8:333', '2024-12-15 8:333', false, local.timeStringErrorTooManyDigitsMinutes),
-      DateTimeTestData(
-          datTimLim, '1215  182:4', '2024-12-15 182:4', false, local.timeStringErrorTooManyDigitsHours),
+      DateTimeTestData(datTimLim, ' 1215 8:30-5', '2024-12-15 8:30-5', false, local.timeStringErrorTooManyDelimiters),
+      DateTimeTestData(datTimLim, '1215  8:333', '2024-12-15 8:333', false, local.timeStringErrorTooManyDigitsMinutes),
+      DateTimeTestData(datTimLim, '1215  182:4', '2024-12-15 182:4', false, local.timeStringErrorTooManyDigitsHours),
       DateTimeTestData(datTimLim, '22-3-3 18:66', '2022-03-03 18:66', false, local.timeErrorTooBigMinute),
       DateTimeTestData(datTimLim, '22-3-3 25-15', '2022-03-03 25:15', false, local.timeErrorTooBigHour),
     ];
-    var passedOk = UtilTestDateTime.testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -110,7 +103,7 @@ void main() {
       DateTimeTestData(datTimLim, '5x-6 30/5', '5x-6 30:05', false,
           local.dateStringErrorBadChars + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = UtilTestDateTime.testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -135,7 +128,7 @@ void main() {
       DateTimeTestData(datTimLim, '18 25-13', '18 25:13', false,
           local.dateStringErrorTooFewDigits + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = UtilTestDateTime.testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -160,7 +153,7 @@ void main() {
       DateTimeTestData(datTimLim, '222233555 29:08', '222233555 29:08', false,
           local.dateStringErrorTooManyDigits + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = UtilTestDateTime.testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -185,7 +178,7 @@ void main() {
       DateTimeTestData(datTimLim, '24-12-3-05 29:08', '24-12-3-05 29:08', false,
           local.dateStringErrorTooManyDelimiters + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = UtilTestDateTime.testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -210,7 +203,7 @@ void main() {
       DateTimeTestData(datTimLim, '2/5;233 29:08', '2/5;233 29:08', false,
           local.dateStringErrorTooManyDigitsDay + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = UtilTestDateTime.testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -235,7 +228,7 @@ void main() {
       DateTimeTestData(datTimLim, '2025-120-9 29:08', '2025-120-9 29:08', false,
           local.dateStringErrorTooManyDigitsMonth + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = UtilTestDateTime.testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -260,7 +253,7 @@ void main() {
       DateTimeTestData(datTimLim, '21025-2-9 29:08', '21025-2-9 29:08', false,
           local.dateStringErrorTooManyDigitsYear + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = UtilTestDateTime.testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -268,10 +261,10 @@ void main() {
     final BuildContext context = await TestUtils.pumpAppGetContext(tester);
     var local = BricksLocalizations.of(context);
     var testCases = [
-      DateTimeTestData(datTimLim, '5/00 9x8', '2024-05-00 9x8', false,
-          local.dateErrorDay0 + '\n' + local.timeStringErrorBadChars),
-      DateTimeTestData(datTimLim, '5/00 8', '2024-05-00 8', false,
-          local.dateErrorDay0 + '\n' + local.timeStringErrorTooFewDigits),
+      DateTimeTestData(
+          datTimLim, '5/00 9x8', '2024-05-00 9x8', false, local.dateErrorDay0 + '\n' + local.timeStringErrorBadChars),
+      DateTimeTestData(
+          datTimLim, '5/00 8', '2024-05-00 8', false, local.dateErrorDay0 + '\n' + local.timeStringErrorTooFewDigits),
       DateTimeTestData(datTimLim, '5/00 55580', '2024-05-00 55580', false,
           local.dateErrorDay0 + '\n' + local.timeStringErrorTooManyDigits),
       DateTimeTestData(datTimLim, '5/00 5-5-5', '2024-05-00 5-5-5', false,
@@ -280,12 +273,12 @@ void main() {
           local.dateErrorDay0 + '\n' + local.timeStringErrorTooManyDigitsMinutes),
       DateTimeTestData(datTimLim, '5/00 1220;08', '2024-05-00 1220;08', false,
           local.dateErrorDay0 + '\n' + local.timeStringErrorTooManyDigitsHours),
-      DateTimeTestData(datTimLim, '5/00 22:81', '2024-05-00 22:81', false,
-          local.dateErrorDay0 + '\n' + local.timeErrorTooBigMinute),
-      DateTimeTestData(datTimLim, '5/00 29:08', '2024-05-00 29:08', false,
-          local.dateErrorDay0 + '\n' + local.timeErrorTooBigHour),
+      DateTimeTestData(
+          datTimLim, '5/00 22:81', '2024-05-00 22:81', false, local.dateErrorDay0 + '\n' + local.timeErrorTooBigMinute),
+      DateTimeTestData(
+          datTimLim, '5/00 29:08', '2024-05-00 29:08', false, local.dateErrorDay0 + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = UtilTestDateTime.testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -310,7 +303,7 @@ void main() {
       DateTimeTestData(datTimLim, '022/0/08 29:08', '2022-00-08 29:08', false,
           local.dateErrorMonth0 + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = UtilTestDateTime.testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -335,7 +328,7 @@ void main() {
       DateTimeTestData(datTimLim, '5-9-61 29:08', '2025-09-61 29:08', false,
           local.dateErrorTooManyDaysInMonth + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = UtilTestDateTime.testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -361,7 +354,7 @@ void main() {
       DateTimeTestData(datTimLim, '1519 29:08', '2024-15-19 29:08', false,
           local.dateErrorMonthOver12 + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = UtilTestDateTime.testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -386,7 +379,7 @@ void main() {
       DateTimeTestData(datTimLim, '006/10/13 29:08', '2006-10-13 29:08', false,
           local.dateErrorYearTooFarBack(yearMaxBack) + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = UtilTestDateTime.testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -412,7 +405,7 @@ void main() {
       DateTimeTestData(datTimLim, '36/10/13 29:08', '2036-10-13 29:08', false,
           local.dateErrorYearTooFarForward(yearMaxForward) + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = UtilTestDateTime.testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -496,7 +489,7 @@ void main() {
               local.timeStringErrorTooManyDigitsMinutes),
       DateTimeTestData(datTimLim, "5588 55  15615", "5588 55 15615", false, local.datetimeStringErrorTooManySpaces),
     ];
-    var passedOk = UtilTestDateTime.testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -515,7 +508,7 @@ void main() {
       // DateTimeTestData(datTimLim,'..', '..', true, ''),
       // DateTimeTestData(datTimLim,'..', '..', true, ''),
     ];
-    var passedOk = UtilTestDateTime.testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 }

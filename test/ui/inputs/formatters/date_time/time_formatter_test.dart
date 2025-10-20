@@ -7,7 +7,7 @@
 //
 // import '../../../../date_time_test_data.dart';
 // import '../../../../test_utils.dart';
-// import 'util_test_date_time.dart';
+// import 'dateTime_test_utils.dart';
 //
 // @GenerateMocks([CurrentDate])
 // void main() {
@@ -22,7 +22,7 @@
 //       DateTimeTestData(datTimLim,"15+2", "15+2", false, BricksLocalizations.of(context).timeStringErrorBadChars),
 //       DateTimeTestData(datTimLim,"00)12", "00)12", false, BricksLocalizations.of(context).timeStringErrorBadChars),
 //     ];
-//     var passedOk = UtilTestDateTime.testDateTimeFormatter(local, testCases, timeFormatter);
+//     var passedOk = testDateTimeFormatter(local, testCases, timeFormatter);
 //     expect(passedOk, true);
 //   });
 //
@@ -49,7 +49,7 @@
 //       // ---------------------------------------------
 //       DateTimeTestData(datTimLim,"1--;23:05", "1--;23:05", false, BricksLocalizations.of(context).timeStringErrorTooManyDelimiters),
 //     ];
-//     var passedOk = UtilTestDateTime.testDateTimeFormatter(local, testCases, timeFormatter);
+//     var passedOk = testDateTimeFormatter(local, testCases, timeFormatter);
 //     expect(passedOk, true);
 //   });
 //
@@ -77,7 +77,7 @@
 //       DateTimeTestData(datTimLim,"000 12 ", "000 12 ", false, BricksLocalizations.of(context).timeStringErrorTooManyDigitsHours),
 //       DateTimeTestData(datTimLim," 000  12", " 000  12", false, BricksLocalizations.of(context).timeStringErrorTooManyDigitsHours),
 //     ];
-//     var passedOk = UtilTestDateTime.testDateTimeFormatter(local, 
+//     var passedOk = testDateTimeFormatter(local, 
 //       testCases,
 //       timeFormatter,
 //       delimitersPattern: TimeFormatterValidator.timeDelimiterPattern,
@@ -94,7 +94,7 @@
 //       DateTimeTestData(datTimLim,"1,23${p}5", "1,23${p}5", false, BricksLocalizations.of(context).timeStringErrorTooManyDelimiters),
 //       DateTimeTestData(datTimLim,"0-8${p}8:8", "0-8${p}8:8", false, BricksLocalizations.of(context).timeStringErrorTooManyDelimiters),
 //     ];
-//     var passedOk = UtilTestDateTime.testDateTimeFormatter(local, 
+//     var passedOk = testDateTimeFormatter(local, 
 //       testCases,
 //       timeFormatter,
 //       delimitersPattern: TimeFormatterValidator.timeDelimiterPattern,
@@ -123,7 +123,7 @@
 //       DateTimeTestData(datTimLim,"0////1", "00:01", true, ''),
 //       DateTimeTestData(datTimLim,"0 12  ", "00:12", true, ''),
 //     ];
-//     UtilTestDateTime.testDateTimeFormatter(local, testCases, timeFormatter);
+//     testDateTimeFormatter(local, testCases, timeFormatter);
 //   });
 //
 //   testWidgets('creates formatted time string from digits only input', (WidgetTester tester) async {
@@ -136,7 +136,7 @@
 //       DateTimeTestData(datTimLim,"0201", "02:01", true, ''),
 //       DateTimeTestData(datTimLim,"0000", "00:00", true, ''),
 //     ];
-//     UtilTestDateTime.testDateTimeFormatter(local, testCases, timeFormatter);
+//     testDateTimeFormatter(local, testCases, timeFormatter);
 //   });
 //
 //   testWidgets('shows error on invalid time', (WidgetTester tester) async {
@@ -147,7 +147,7 @@
 //       DateTimeTestData(datTimLim,"1865", "18:65", false, BricksLocalizations.of(context).timeErrorTooBigMinute),
 //       DateTimeTestData(datTimLim,"2500", "25:00", false, BricksLocalizations.of(context).timeErrorTooBigHour),
 //     ];
-//     var passedOk = UtilTestDateTime.testDateTimeFormatter(local, testCases, timeFormatter);
+//     var passedOk = testDateTimeFormatter(local, testCases, timeFormatter);
 //     expect(passedOk, true);
 //   });
 // }
