@@ -1,19 +1,20 @@
 // import 'package:flutter/cupertino.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_form_bricks/src/awaiting_refactoring/misc/time_stamp.dart';
+// import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/date_time_validators.dart';
+// import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 // import 'package:flutter_test/flutter_test.dart';
-// import 'package:shipping_ui/config/objects/model/time_stamp.dart';
-// import 'package:shipping_ui/config/params/app_params.dart';
-// import 'package:shipping_ui/config/string_assets/translation.dart';
-// import 'package:shipping_ui/ui/inputs/date_time/date_time_validators.dart';
 //
-// import '../../../../test_utils.dart';
+// import '../../../test_utils.dart';
 //
 // void main() {
 //   group('Date Input Validator Tests', () {
-//     final FormFieldValidator<String> validator = DateTimeValidators.dateInputValidator();
 //
 //     testWidgets('should return null for valid input', (WidgetTester tester) async {
 //       await TestUtils.prepareWidget(tester, null);
-//    final BuildContext context = tester.element(find.byType(Scaffold));
+//       final BuildContext context = tester.element(find.byType(Scaffold));
+//     final FormFieldValidator<String> validator = DateTimeValidators.dateInputValidator();
+//
 //       //given
 //       final correctDate = DateTime.now().add(const Duration(days: AppParams.maxYearsForwardInDate * 350));
 //
@@ -26,7 +27,7 @@
 //
 //     // testWidgets('should return an error message for null input', (WidgetTester tester) async {
 //     //   await TestUtils.prepareWidget(tester, null);
-//    final BuildContext context = tester.element(find.byType(Scaffold));
+//     // final BuildContext context = tester.element(find.byType(Scaffold));
 //     //   //given, when
 //     //   final result = validator(null);
 //     //
@@ -37,7 +38,7 @@
 //     //
 //     // testWidgets('should return an error message for empty string', (WidgetTester tester) async {
 //     //   await TestUtils.prepareWidget(tester, null);
-//    final BuildContext context = tester.element(find.byType(Scaffold));
+//     // final BuildContext context = tester.element(find.byType(Scaffold));
 //     //   //given, when
 //     //   final result = validator('');
 //     //
@@ -48,7 +49,8 @@
 //
 //     testWidgets('should return an error message for invalid date format', (WidgetTester tester) async {
 //       await TestUtils.prepareWidget(tester, null);
-//    final BuildContext context = tester.element(find.byType(Scaffold));
+//       final BuildContext context = tester.element(find.byType(Scaffold));
+//
 //       //given, when
 //       final result = validator('invalid-date-format');
 //
@@ -59,7 +61,8 @@
 //
 //     testWidgets('should return an error message for date before minimum date', (WidgetTester tester) async {
 //       await TestUtils.prepareWidget(tester, null);
-//    final BuildContext context = tester.element(find.byType(Scaffold));
+//       final BuildContext context = tester.element(find.byType(Scaffold));
+//
 //       //given
 //       var dateTooFarBack = Date.dateFormat
 //           .format(DateTime.now().subtract(const Duration(days: (AppParams.maxYearsBackInDate + 1) * 370)));
@@ -69,14 +72,14 @@
 //
 //       //then
 //       expect(result, isNotNull);
-//       var yearMaxBack =  DateTime.now().year - AppParams.maxYearsBackInDate;
+//       var yearMaxBack = DateTime.now().year - AppParams.maxYearsBackInDate;
 //       expect(result, contains(BricksLocalizations.of(context).dateErrorYearTooFarBack(yearMaxBack)));
 //     });
 //
 //     testWidgets('should return an error message for date after maximum date', (WidgetTester tester) async {
 //       await TestUtils.prepareWidget(tester, null);
-//    final BuildContext context = tester.element(find.byType(Scaffold));
-
+//       final BuildContext context = tester.element(find.byType(Scaffold));
+//
 //       //given
 //       var dateTooFarForward =
 //           Date.dateFormat.format(DateTime.now().add(const Duration(days: (AppParams.maxYearsForwardInDate + 1) * 370)));

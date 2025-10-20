@@ -44,13 +44,13 @@ class DateFormatterValidator {
       maxNDigits: 8,
       maxNumberDelimiters: 2,
     );
-    if (parseResult.isStringValid) return StringParseResult(text, false, parseResult.errorMessage);
+    if (!parseResult.isStringValid) return StringParseResult(text, false, parseResult.errorMessage);
 
     parseResult = parseDateFromString(localizations, parseResult);
-    if (parseResult.isStringValid) return StringParseResult(text, false, parseResult.errorMessage);
+    if (!parseResult.isStringValid) return StringParseResult(text, false, parseResult.errorMessage);
 
     parseResult = validateDate(localizations, parseResult, dateLimits);
-    if (parseResult.isStringValid) return parseResult;
+    if (!parseResult.isStringValid) return parseResult;
 
     return parseResult;
   }
@@ -67,7 +67,7 @@ class DateFormatterValidator {
       parseResult = makeDateStringWithDelimiters(localizations, text, nDelimiters);
     }
 
-    if (parseResult.isStringValid) return parseResult;
+    if (!parseResult.isStringValid) return parseResult;
 
     return addYear(parseResult, nDelimiters);
   }
@@ -204,7 +204,7 @@ class DateFormatterValidator {
       int inputYear = int.parse(dateElementsList[0]);
 
       isTooManyDays = false;
-      isTooManyDays |= month == 2 && (inputYear % 4 == 0) && day > 28;
+      isTooManyDays |= month == 2 && (inputYear % 4 != 0) && day > 28;
       isTooManyDays |= month == 2 && (inputYear % 4 == 0) && day > 29;
       if (isTooManyDays) errDays = localizations.dateErrorTooManyDaysInMonth;
       if (inputYear < minYear) errYear = localizations.dateErrorYearTooFarBack(minYear);
