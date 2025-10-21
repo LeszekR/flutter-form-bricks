@@ -28,8 +28,7 @@ void main() {
   int yearMaxForward = datTimLim.maxDateTimeRequired!.year;
 
   testWidgets('refuses to format excel-style invalid input', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
     var testCases = [
       DateTimeTestData(datTimLim, "2405011630", "2405011630", false, local.datetimeStringErrorNoSpace),
       DateTimeTestData(datTimLim, "5121200", "5121200", false, local.datetimeStringErrorNoSpace),
@@ -41,8 +40,7 @@ void main() {
   });
 
   testWidgets('invalid date', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
     var testCases = [
       DateTimeTestData(datTimLim, '25-16x8 1530', '25-16x8 15:30', false, local.dateStringErrorBadChars),
       DateTimeTestData(datTimLim, '9  125', '9 01:25', false, local.dateStringErrorTooFewDigits),
@@ -65,8 +63,7 @@ void main() {
   });
 
   testWidgets('invalid time', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
     var testCases = [
       DateTimeTestData(datTimLim, '622 15x30', '2024-06-22 15x30', false, local.timeStringErrorBadChars),
       DateTimeTestData(datTimLim, '50808 3-', '2025-08-08 3-', false, local.timeStringErrorTooFewDigits),
@@ -83,8 +80,7 @@ void main() {
   });
 
   testWidgets('dateStringErrorBadChars', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
     var testCases = [
       DateTimeTestData(datTimLim, '5x-6 18)10', '5x-6 18)10', false,
           local.dateStringErrorBadChars + '\n' + local.timeStringErrorBadChars),
@@ -108,8 +104,7 @@ void main() {
   });
 
   testWidgets('dateStringErrorTooFewDigits', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
     var testCases = [
       DateTimeTestData(datTimLim, '18 9x8', '18 9x8', false,
           local.dateStringErrorTooFewDigits + '\n' + local.timeStringErrorBadChars),
@@ -133,8 +128,7 @@ void main() {
   });
 
   testWidgets('dateStringErrorTooManyDigits', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
     var testCases = [
       DateTimeTestData(datTimLim, '222233555 9x8', '222233555 9x8', false,
           local.dateStringErrorTooManyDigits + '\n' + local.timeStringErrorBadChars),
@@ -158,8 +152,7 @@ void main() {
   });
 
   testWidgets('dateStringErrorTooManyDelimiters', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
     var testCases = [
       DateTimeTestData(datTimLim, '24-12-3-05 9x8', '24-12-3-05 9x8', false,
           local.dateStringErrorTooManyDelimiters + '\n' + local.timeStringErrorBadChars),
@@ -183,8 +176,7 @@ void main() {
   });
 
   testWidgets('dateStringErrorTooManyDigitsDay', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
     var testCases = [
       DateTimeTestData(datTimLim, '2/5;233 9x8', '2/5;233 9x8', false,
           local.dateStringErrorTooManyDigitsDay + '\n' + local.timeStringErrorBadChars),
@@ -208,8 +200,7 @@ void main() {
   });
 
   testWidgets('dateStringErrorTooManyDigitsMonth', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
     var testCases = [
       DateTimeTestData(datTimLim, '2025-120-9 9x8', '2025-120-9 9x8', false,
           local.dateStringErrorTooManyDigitsMonth + '\n' + local.timeStringErrorBadChars),
@@ -233,8 +224,7 @@ void main() {
   });
 
   testWidgets('dateStringErrorTooManyDigitsYear', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
     var testCases = [
       DateTimeTestData(datTimLim, '21025-2-9 9x8', '21025-2-9 9x8', false,
           local.dateStringErrorTooManyDigitsYear + '\n' + local.timeStringErrorBadChars),
@@ -258,8 +248,7 @@ void main() {
   });
 
   testWidgets('dateErrorDay0', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
     var testCases = [
       DateTimeTestData(
           datTimLim, '5/00 9x8', '2024-05-00 9x8', false, local.dateErrorDay0 + '\n' + local.timeStringErrorBadChars),
@@ -283,8 +272,7 @@ void main() {
   });
 
   testWidgets('dateErrorMonth0', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
     var testCases = [
       DateTimeTestData(datTimLim, '022/0/08 9x8', '2022-00-08 9x8', false,
           local.dateErrorMonth0 + '\n' + local.timeStringErrorBadChars),
@@ -308,8 +296,7 @@ void main() {
   });
 
   testWidgets('dateErrorTooManyDaysInMonth', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
     var testCases = [
       DateTimeTestData(datTimLim, '5-9-61 9x8', '2025-09-61 9x8', false,
           local.dateErrorTooManyDaysInMonth + '\n' + local.timeStringErrorBadChars),
@@ -333,8 +320,7 @@ void main() {
   });
 
   testWidgets('dateErrorMonthOver12', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
 
     var testCases = [
       DateTimeTestData(datTimLim, '1519 9x8', '2024-15-19 9x8', false,
@@ -359,8 +345,7 @@ void main() {
   });
 
   testWidgets('dateErrorYearTooFarBack (dateErrorYearTooFarBack)', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
     var testCases = [
       DateTimeTestData(datTimLim, '006/10/13 9x8', '2006-10-13 9x8', false,
           local.dateErrorYearTooFarBack(yearMaxBack) + '\n' + local.timeStringErrorBadChars),
@@ -384,8 +369,7 @@ void main() {
   });
 
   testWidgets('dateErrorYearTooFarForward (dateErrorYearTooFarForward)', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
 
     var testCases = [
       DateTimeTestData(datTimLim, '36/10/13 9x8', '2036-10-13 9x8', false,
@@ -410,8 +394,7 @@ void main() {
   });
 
   testWidgets('multiple errors date and time', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
 
     var testCases = [
       DateTimeTestData(
@@ -494,8 +477,7 @@ void main() {
   });
 
   testWidgets('makes date-time from valid string', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
     var testCases = [
       DateTimeTestData(datTimLim, '615 000', '2024-06-15 00:00', true, ''),
       DateTimeTestData(datTimLim, '0615 0-0', '2024-06-15 00:00', true, ''),

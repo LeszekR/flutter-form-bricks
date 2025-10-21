@@ -5,114 +5,111 @@ import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/tabbed_for
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-class TestUtils {
-  TestUtils._();
+const String keyRequired = "key_required";
+const String labelRequired = "label_required";
+const String label3Chars = 'Input with min. 3 chars';
+const String key3Chars = 'input_3_chars';
 
-  static const String keyRequired = "key_required";
-  static const String labelRequired = "label_required";
-  static const String label3Chars = 'Input with min. 3 chars';
-  static const String key3Chars = 'input_3_chars';
+loadGlobalConfigurationForTests() async {
+  WidgetsFlutterBinding.ensureInitialized();
+}
 
-  static loadGlobalConfigurationForTests() async {
-    WidgetsFlutterBinding.ensureInitialized();
-  }
-
-  static prepareWidget(WidgetTester tester, Widget? widgetToTest, {final String language = "pl"}) async {
-    var uiParamsData = UiParamsData();
-    await tester.pumpWidget(
-      UiParams(
-        data: uiParamsData,
-        child: MaterialApp(
-          theme: uiParamsData.appTheme.themeData,
-          localizationsDelegates: BricksLocalizations.localizationsDelegates,
-          supportedLocales: BricksLocalizations.supportedLocales,
-          locale: Locale(language),
-          home: Builder(
-            builder: (BuildContext context) {
-              return Scaffold(body: widgetToTest);
-            },
-          ),
+prepareWidget(WidgetTester tester, Widget? widgetToTest, {final String language = "pl"}) async {
+  var uiParamsData = UiParamsData();
+  await tester.pumpWidget(
+    UiParams(
+      data: uiParamsData,
+      child: MaterialApp(
+        theme: uiParamsData.appTheme.themeData,
+        localizationsDelegates: BricksLocalizations.localizationsDelegates,
+        supportedLocales: BricksLocalizations.supportedLocales,
+        locale: Locale(language),
+        home: Builder(
+          builder: (BuildContext context) {
+            return Scaffold(body: widgetToTest);
+          },
         ),
       ),
-    );
+    ),
+  );
 
-    await tester.pumpAndSettle();
-  }
+  await tester.pumpAndSettle();
+}
 
-  static Future<BuildContext> pumpAppGetContext(WidgetTester tester) async {
-    await TestUtils.prepareWidget(tester, null);
-    final BuildContext context = tester.element(find.byType(Scaffold));
-    return context;
-  }
+Future<BuildContext> pumpAppGetContext(WidgetTester tester) async {
+  await prepareWidget(tester, null);
+  final BuildContext context = tester.element(find.byType(Scaffold));
+  return context;
+}
 
-  static prepareSimpleForm(
-    WidgetTester tester,
-    StandaloneFormManagerOLD formManager,
-    Widget input,
-  ) async {
-    Widget widgetToTest = Scaffold(body: FormBuilder(key: formManager.formKey, child: input));
-    await prepareWidget(tester, widgetToTest);
-    formManager.fillInitialInputValuesMap();
-  }
+prepareSimpleForm(
+  WidgetTester tester,
+  StandaloneFormManagerOLD formManager,
+  Widget input,
+) async {
+  Widget widgetToTest = Scaffold(body: FormBuilder(key: formManager.formKey, child: input));
+  await prepareWidget(tester, widgetToTest);
+  formManager.fillInitialInputValuesMap();
+}
 
-  static prepareTabulatedForm(
-    final WidgetTester tester,
-    TabulatedFormManagerOLD formManager,
-    List<TabData> tabsData,
-  ) async {
-    final List<FormBuilder> tabs = tabsData
-        .map((tabData) => FormBuilder(
-              key: tabData.globalKey,
-              child: tabData.makeTabContent(),
-            ))
-        .toList();
-    await TestUtils.prepareWidget(tester, Row(children: tabs));
-    formManager.fillInitialInputValuesMap();
-  }
+prepareTabulatedForm(
+  final WidgetTester tester,
+  TabulatedFormManagerOLD formManager,
+  List<TabData> tabsData,
+) async {
+  final List<FormBuilder> tabs = tabsData
+      .map((tabData) => FormBuilder(
+            key: tabData.globalKey,
+            child: tabData.makeTabContent(),
+          ))
+      .toList();
+  await prepareWidget(tester, Row(children: tabs));
+  formManager.fillInitialInputValuesMap();
+}
 
-  static Widget makeRequired(
-    BuildContext context,
-    String keyString,
-    String label,
-    StandaloneFormManagerOLD formManager, {
-    bool? withTextEditingController,
-    String? initialValue,
-  }) {
-    return TextInputs.textSimple(
-      context: context,
-      keyString: keyString,
-      label: label,
-      labelPosition: LabelPosition.topLeft,
-      validator: ValidatorProvider.compose(context: context,  isRequired: true),
-      formManager: formManager,
-      withTextEditingController: withTextEditingController,
-      initialValue: initialValue,
-    );
-  }
+Widget makeRequired(
+  BuildContext context,
+  String keyString,
+  String label,
+  StandaloneFormManagerOLD formManager, {
+  bool? withTextEditingController,
+  String? initialValue,
+}) {
+  return TextInputs.textSimple(
+    context: context,
+    keyString: keyString,
+    label: label,
+    labelPosition: LabelPosition.topLeft,
+    validator: ValidatorProvider.compose(context: context, isRequired: true),
+    formManager: formManager,
+    withTextEditingController: withTextEditingController,
+    initialValue: initialValue,
+  );
+}
 
-  static Widget makeRequiredMin3Chars(
-    BuildContext context,
-    String keyString,
-    String label,
-    StandaloneFormManagerOLD formManager, {
-    bool? withTextEditingController,
-    String? initialValue,
-  }) {
-    return TextInputs.textSimple(
-      context: context,
-      keyString: keyString,
-      label: label,
-      labelPosition: LabelPosition.topLeft,
-      validator: ValidatorProvider.compose(context: context,  isRequired: true, minLength: 3),
-      formManager: formManager,
-      withTextEditingController: withTextEditingController,
-      initialValue: initialValue,
-    );
-  }
+Widget makeRequiredMin3Chars(
+  BuildContext context,
+  String keyString,
+  String label,
+  StandaloneFormManagerOLD formManager, {
+  bool? withTextEditingController,
+  String? initialValue,
+}) {
+  return TextInputs.textSimple(
+    context: context,
+    keyString: keyString,
+    label: label,
+    labelPosition: LabelPosition.topLeft,
+    validator: ValidatorProvider.compose(context: context, isRequired: true, minLength: 3),
+    formManager: formManager,
+    withTextEditingController: withTextEditingController,
+    initialValue: initialValue,
+  );
+}
 
-// static prepareDataForTrimmingSpacesTests(
+// prepareDataForTrimmingSpacesTests(
 //     WidgetTester tester, StandaloneFormManagerOLD formManager, String keyString) async {
-//   await TestUtils.prepareWidget(tester, null);
+//   await prepareWidget(tester, null);
 //     final BuildContext context = tester.element(find.byType(Scaffold));
 //
 //   final controller = formManager.getTextEditingController(keyString, defaultValue: null);
@@ -132,21 +129,21 @@ class TestUtils {
 //       formManager: formManager,
 //       label: 'Bulk text');
 //
-//   await TestUtils.prepareSimpleForm(tester, formManager, input);
+//   await prepareSimpleForm(tester, formManager, input);
 // }
 //
-//   static Future<void> enterTextAndUnfocusWidget(
+//   Future<void> enterTextAndUnfocusWidget(
 //       WidgetTester tester, FormManager formManager, String keyString, String enteredText) async {
 //     await tester.enterText(find.byKey(Key(keyString)), enteredText);
 //     formManager.getFocusNode(keyString).unfocus();
 //     await tester.pump();
 //   }
 //
-//   static prepareDataForFocusLosingTests(
+//   prepareDataForFocusLosingTests(
 //       WidgetTester tester, StandaloneFormManagerOLD formManager, String keyString) async {
-//     await TestUtils.prepareWidget(tester, null);
+//     await prepareWidget(tester, null);
 //     final BuildContext context = tester.element(find.byType(Scaffold));
-//     await TestUtils.prepareSimpleForm(
+//     await prepareSimpleForm(
 //         tester,
 //         formManager,
 //         Column(
@@ -164,7 +161,7 @@ class TestUtils {
 //         ));
 //   }
 //
-//   static Widget buildTextInputForTest(String keyString, StandaloneFormManagerOLD formManager) {
+//   Widget buildTextInputForTest(String keyString, StandaloneFormManagerOLD formManager) {
 //     switch (keyString) {
 //       case ConstantsText.TEXT_SIMPLE_FIELD_KEY:
 //         return TextInputs.textSimple(
@@ -211,7 +208,7 @@ class TestUtils {
 //     }
 //   }
 //
-//   static Future<void> performAndCheckInputActions(
+//   Future<void> performAndCheckInputActions(
 //       WidgetTester tester, StandaloneFormManagerOLD formManager, String keyString, Map<String, Function> inputs) async {
 //     for (var method in inputs.entries) {
 //       formManager.getTextEditingController(keyString).clear();
@@ -275,4 +272,4 @@ class TestUtils {
 //     final Map<String, dynamic> formData = formManager.collectInputData();
 //     debugPrint("save triggered. Data: $formData");
 //   }
-}
+// }

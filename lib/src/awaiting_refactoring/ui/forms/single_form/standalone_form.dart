@@ -2,11 +2,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
-import '../form_manager/form_manager.dart';
-import 'standalone_form_manager.dart';
 import '../base/abstract_form.dart';
+import 'standalone_form_manager.dart';
 
 abstract class StandaloneForm extends AbstractForm {
   StandaloneForm({super.key}) : super(formManager: StandaloneFormManagerOLD());
@@ -15,7 +15,7 @@ abstract class StandaloneForm extends AbstractForm {
   StandaloneFormState createState();
 }
 
-abstract class StandaloneFormState extends AbstractFormState<StandaloneForm> {
+abstract class StandaloneFormState<T extends StandaloneForm> extends AbstractFormState<T> {
   List<Widget> createBody(BuildContext context);
 
   @override
@@ -58,7 +58,10 @@ abstract class StandaloneFormState extends AbstractFormState<StandaloneForm> {
             ),
             child: Scrollbar(
               controller: scrollController,
-              child: SingleChildScrollView(controller: scrollController, child: Column(children: createBody(context))),
+              child: SingleChildScrollView(
+                controller: scrollController,
+                child: Column(children: createBody(context),),
+              ),
             ),
           ),
         ),

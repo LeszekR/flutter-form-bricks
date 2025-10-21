@@ -119,15 +119,15 @@
     "@dateErrorYearTooFarBack": {
       "placeholders": {
         "dateMaxYearsBack": {
-          "type": "int"
+          "type": "DateTime"
         }
       }
     },
-  "dateErrorYearTooFarForward": "Rok nie może być późniejszy niż {dateMaxYearsForward}",
+  "dateErrorYearTooFarForward": "Data nie może być późniejsza niż {dateMaxYearsForward}",
     "@dateErrorYearTooFarForward": {
       "placeholders": {
         "dateMaxYearsForward": {
-          "type": "int"
+          "type": "DateTime"
         }
       }
     },

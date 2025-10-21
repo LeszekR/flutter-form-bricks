@@ -15,7 +15,7 @@
 //   TestTimeFormatter timeFormatter = TestTimeFormatter(TimeFormatterValidator(dateTimeInputUtils));
 //
 //   testWidgets('refuses to format excel-style time when input with delimiters incorrect', (WidgetTester tester) async {
-//     await TestUtils.prepareWidget(tester, null);
+//     await prepareWidget(tester, null);
 //    final BuildContext context = tester.element(find.byType(Scaffold));
 //     var testCases = [
 //       DateTimeTestData(datTimLim,"4=8", "4=8", false, BricksLocalizations.of(context).timeStringErrorBadChars),
@@ -27,7 +27,7 @@
 //   });
 //
 //   testWidgets('refuses to format excel-style time when input digits-only incorrect', (WidgetTester tester) async {
-//     await TestUtils.prepareWidget(tester, null);
+//     await prepareWidget(tester, null);
 //    final BuildContext context = tester.element(find.byType(Scaffold));
 //     var testCases = [
 //       DateTimeTestData(datTimLim,"0", "0", false, BricksLocalizations.of(context).timeStringErrorTooFewDigits),
@@ -55,7 +55,7 @@
 //
 //   testWidgets('refuses to format excel-style time when too many element digits', (WidgetTester tester) async {
 //     var p = '=';
-//     await TestUtils.prepareWidget(tester, null);
+//     await prepareWidget(tester, null);
 //    final BuildContext context = tester.element(find.byType(Scaffold));
 //     var testCases = [
 //       DateTimeTestData(datTimLim,"1${p}235", "1${p}235", false, BricksLocalizations.of(context).timeStringErrorTooManyDigitsMinutes),
@@ -88,7 +88,7 @@
 //
 //   testWidgets('refuses to format excel-style time when too many delimiters', (WidgetTester tester) async {
 //     var p = '=';
-//     await TestUtils.prepareWidget(tester, null);
+//     await prepareWidget(tester, null);
 //    final BuildContext context = tester.element(find.byType(Scaffold));
 //     var testCases = [
 //       DateTimeTestData(datTimLim,"1,23${p}5", "1,23${p}5", false, BricksLocalizations.of(context).timeStringErrorTooManyDelimiters),
@@ -104,7 +104,7 @@
 //   });
 //
 //   testWidgets('creates formatted time string from excel-style input', (WidgetTester tester) async {
-//     await TestUtils.prepareWidget(tester, null);
+//     await prepareWidget(tester, null);
 //    final BuildContext context = tester.element(find.byType(Scaffold));
 //     var testCases = [
 //       DateTimeTestData(datTimLim,"1-12", "01:12", true, ''),
@@ -127,7 +127,7 @@
 //   });
 //
 //   testWidgets('creates formatted time string from digits only input', (WidgetTester tester) async {
-//     await TestUtils.prepareWidget(tester, null);
+//     await prepareWidget(tester, null);
 //    final BuildContext context = tester.element(find.byType(Scaffold));
 //     var testCases = [
 //       DateTimeTestData(datTimLim,"001", "00:01", true, ''),
@@ -140,7 +140,7 @@
 //   });
 //
 //   testWidgets('shows error on invalid time', (WidgetTester tester) async {
-//     await TestUtils.prepareWidget(tester, null);
+//     await prepareWidget(tester, null);
 //    final BuildContext context = tester.element(find.byType(Scaffold));
 
 //     var testCases = [

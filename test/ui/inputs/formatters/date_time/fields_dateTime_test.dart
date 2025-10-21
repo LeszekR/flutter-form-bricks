@@ -1,11 +1,10 @@
 // import 'package:flutter/material.dart';
+// import 'package:flutter_form_bricks/src/awaiting_refactoring/misc/time_stamp.dart';
+// import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/form_manager/form_manager.dart';
+// import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/standalone_form_manager.dart';
+// import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/date_time_inputs.dart';
+// import 'package:flutter_form_bricks/src/inputs/labelled_box/label_position.dart';
 // import 'package:form_builder_validators/form_builder_validators.dart';
-// import 'package:shipping_ui/config/objects/model/time_stamp.dart';
-// import 'package:shipping_ui/ui/inputs/date_time/date_time_inputs.dart';
-// import 'package:shipping_ui/ui/inputs/base/e_input_name_position.dart';
-// import 'package:shipping_ui/ui/forms/form_manager/form_manager.dart';
-// import 'package:shipping_ui/ui/forms/form_manager/standalone_form_manager.dart';
-// import 'package:shipping_ui/ui/inputs/date_time/date_time_validators.dart';
 //
 // void main() {
 //   const dateName = 'date_input_test';
@@ -20,7 +19,7 @@
 //   final today = DateTime.now();
 //   final todayAsString = Date.dateFormat.format(today);
 //
-//   FormManager formManager = StandaloneFormManagerOLD();
+//   FormManagerOLD formManager = StandaloneFormManagerOLD();
 //
 //   var timeInput;
 //   var rangeInput;
@@ -64,7 +63,7 @@
 // //           'If start date is $todayAsString and start time $referenceStartTime, then for end time ${param.input} validation result should be: ${param.expected}',
 // //           (WidgetTester tester) async {
 // //         //given
-// //         await TestUtils.prepareSimpleForm(tester, formKey, rangeInput);
+// //         await prepareSimpleForm(tester, formKey, rangeInput);
 // //
 // //         //when
 // //         await tester.enterText(find.byKey(const Key(rangeStartDateKey)), todayAsString);
@@ -91,7 +90,7 @@
 // //       testWidgets('If start date is "${param.input}" validation result should be: ${param.expected}',
 // //           (WidgetTester tester) async {
 // //         //given
-// //         await TestUtils.prepareSimpleForm(tester, formKey, rangeInput);
+// //         await prepareSimpleForm(tester, formKey, rangeInput);
 // //
 // //         //when
 // //         await tester.enterText(find.byKey(const Key(rangeStartDateKey)), param.input);
@@ -107,7 +106,7 @@
 // //     }
 // //   });
 //
-//   Widget makeTextFieldDate(String dateName, FormManager formManager) {
+//   Widget makeTextFieldDate(String dateName, FormManagerOLD formManager) {
 //     return rangeInput = DateTimeInputs.dateTimeRange(
 //       rangeId: rangeId,
 //       label: "range",

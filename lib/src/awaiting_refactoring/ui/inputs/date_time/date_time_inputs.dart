@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/dateTime_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/time_formatter_validator.dart';
@@ -9,10 +8,9 @@ import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_s
 import '../../buttons/buttons.dart';
 import '../../forms/form_manager/form_manager.dart';
 import '../../shortcuts/keyboard_shortcuts.dart';
-import 'components/current_date.dart';
+import 'date_time_validators.dart';
 import 'formatter_validators/dateTime_range_error_controller.dart';
 import 'formatter_validators/date_formatter_validator.dart';
-import 'date_time_validators.dart';
 
 class DateTimeInputs {
   static final DateTimeUtils _dateTimeUtils = DateTimeUtils();
@@ -67,7 +65,6 @@ class DateTimeInputs {
       label: label,
       labelPosition: labelPosition,
       initialValue: initialValue,
-      //initialValue?.toString(),
       readonly: readonly,
       autovalidateMode: AutovalidateMode.disabled,
       keyboardType: TextInputType.text,
@@ -133,7 +130,6 @@ class DateTimeInputs {
       label: label,
       labelPosition: labelPosition,
       initialValue: initialValue,
-//initialValue?.toString(),
       readonly: readonly,
       autovalidateMode: AutovalidateMode.disabled,
       keyboardType: TextInputType.text,
@@ -358,7 +354,8 @@ class DateTimeInputs {
       onEditingComplete: () => _onEditingComplete(
         formManager,
         keyString,
-        (String inputString) => _dateTimeFormatter.makeDateTimeString(localizations, currentDate, inputString, dateTimeLimits),
+        (String inputString) =>
+            _dateTimeFormatter.makeDateTimeString(localizations, currentDate, inputString, dateTimeLimits),
         null,
       ),
       validator: ValidatorProvider.compose(

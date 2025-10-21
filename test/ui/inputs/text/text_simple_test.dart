@@ -15,10 +15,10 @@
 //     const String enteredText = "Space at the end ";
 //
 //     final formManager = StandaloneFormManagerOLD();
-//     await TestUtils.prepareDataForTrimmingSpacesTests(tester, formManager, keyString);
+//     await prepareDataForTrimmingSpacesTests(tester, formManager, keyString);
 //
 //     //when
-//     await TestUtils.enterTextAndUnfocusWidget(tester, formManager, keyString, enteredText);
+//     await enterTextAndUnfocusWidget(tester, formManager, keyString, enteredText);
 //
 //     // Then
 //     final resultOne = (find
@@ -38,12 +38,12 @@
 //     final formManager = StandaloneFormManagerOLD();
 //     const String regularInputKey = "regular_input_standalone";
 //
-//     await TestUtils.prepareDataForFocusLosingTests(tester, formManager, regularInputKey);
+//     await prepareDataForFocusLosingTests(tester, formManager, regularInputKey);
 //
 //     await tester.pump();
 //
 //     final inputs = ConstantsText.getInputs(tester);
 //
-//     await TestUtils.performAndCheckInputActions(tester, formManager, regularInputKey, inputs);
+//     await performAndCheckInputActions(tester, formManager, regularInputKey, inputs);
 //   });
 // }

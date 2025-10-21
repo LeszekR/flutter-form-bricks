@@ -117,34 +117,36 @@ class FormUtils {
     final appSize = uiParams.appSize;
     final appStyle = uiParams.appStyle;
     final appColor = uiParams.appColor;
-    final childWidget = Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (label != null) Text(label, style: TextStyle(fontSize: appSize.fontSize6, fontWeight: FontWeight.bold)),
-        widget,
-      ],
-    );
+
+    var border = Border(
+          top: borderTop ? appStyle.borderFieldSide : BorderSide.none,
+          left: borderLeft ? appStyle.borderFieldSide : BorderSide.none,
+          bottom: borderBottom ? appStyle.borderFieldSide : BorderSide.none,
+          right: borderRight ? appStyle.borderFieldSide : BorderSide.none,
+        );
+
     return Container(
       height: height,
       alignment: alignment,
       padding: EdgeInsets.all(padding ? appSize.paddingForm : 0),
       decoration: BoxDecoration(
         color: color ?? appColor.formWindowBackground,
-        border: Border(
-          top: borderTop ? appStyle.borderFieldSide : BorderSide.none,
-          left: borderLeft ? appStyle.borderFieldSide : BorderSide.none,
-          bottom: borderBottom ? appStyle.borderFieldSide : BorderSide.none,
-          right: borderRight ? appStyle.borderFieldSide : BorderSide.none,
-        ),
+        border: border,
       ),
-      child: childWidget,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (label != null) Text(label, style: TextStyle(fontSize: appSize.fontSize6, fontWeight: FontWeight.bold)),
+          widget,
+        ],
+      ),
     );
   }
 
   //todo think about passing ontap function
-  static Future<dynamic> searchDialog<E>(BuildContext context,Map<String, E> items) {
+  static Future<dynamic> searchDialog<E>(BuildContext context, Map<String, E> items) {
     final list = ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) {

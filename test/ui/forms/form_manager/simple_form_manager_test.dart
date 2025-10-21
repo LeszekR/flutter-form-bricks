@@ -15,13 +15,13 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../test_utils.dart';
 
 void main() {
-  const labelRequired = TestUtils.labelRequired;
-  const key3Chars = TestUtils.key3Chars;
-  const label3Chars = TestUtils.label3Chars;
+  const labelRequired = labelRequired;
+  const key3Chars = key3Chars;
+  const label3Chars = label3Chars;
 
   testWidgets("Should test trimming spaces in only lowercase text field", (WidgetTester tester) async {
     //given
-    await TestUtils.prepareWidget(tester, null);
+    await prepareWidget(tester, null);
     final BuildContext context = tester.element(find.byType(Scaffold));
 
     const String LOWERCASE_KEY = "2 lowercase text";
@@ -45,7 +45,7 @@ void main() {
         formManager: formManager,
         label: 'Bulk text');
 
-    await TestUtils.prepareSimpleForm(tester, formManager, regularInput);
+    await prepareSimpleForm(tester, formManager, regularInput);
 
     //when
     await tester.enterText(find.byKey(const Key(LOWERCASE_KEY)), "Lower case space test ");
@@ -60,7 +60,7 @@ void main() {
 
   testWidgets("Should test trimming spaces in multiline text field", (WidgetTester tester) async {
     //given
-    await TestUtils.prepareWidget(tester, null);
+    await prepareWidget(tester, null);
     final BuildContext context = tester.element(find.byType(Scaffold));
 
     const String MULTILINE_TEXT_KEY = "4 bulkText";
@@ -83,7 +83,7 @@ void main() {
         formManager: formManager,
         label: 'Bulk text');
 
-    await TestUtils.prepareSimpleForm(tester, formManager, regularInput);
+    await prepareSimpleForm(tester, formManager, regularInput);
 
     //when
     await tester.enterText(
@@ -99,7 +99,7 @@ void main() {
 
   testWidgets("Should test triming spaces in regular input standalone", (WidgetTester tester) async {
     //given
-    await TestUtils.prepareWidget(tester, null);
+    await prepareWidget(tester, null);
     final BuildContext context = tester.element(find.byType(Scaffold));
 
     const String REGULAR_INPUT_KEY = "regular_input_standalone";
@@ -122,7 +122,7 @@ void main() {
         formManager: formManager,
         label: 'Prosty text input');
 
-    await TestUtils.prepareSimpleForm(tester, formManager, regularInput);
+    await prepareSimpleForm(tester, formManager, regularInput);
 
     //when
     await tester.enterText(find.byKey(const Key(REGULAR_INPUT_KEY)), "Space at the end ");
@@ -137,15 +137,15 @@ void main() {
 
   testWidgets('should stay in focus when clicked Enter for regular input standalone', (WidgetTester tester) async {
     //given
-    await TestUtils.prepareWidget(tester, null);
+    await prepareWidget(tester, null);
     final BuildContext context = tester.element(find.byType(Scaffold));
 
     const String REGULAR_INPUT_KEY = "regular_input_standalone";
     StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
     final focusNode = formManager.getFocusNode(REGULAR_INPUT_KEY);
     final controller = formManager.getTextEditingController(REGULAR_INPUT_KEY);
-    final input = TestUtils.makeRequired(context, TestUtils.keyRequired, labelRequired, formManager);
-    await TestUtils.prepareSimpleForm(tester, formManager, input);
+    final input = makeRequired(context, keyRequired, labelRequired, formManager);
+    await prepareSimpleForm(tester, formManager, input);
 
     final regularInput = TextInputs.textSimple(
         context: context,
@@ -157,7 +157,7 @@ void main() {
         label: 'Prosty text input');
 
     // TODO LR: create reularInput here with its Column and pass to the method described in line 30
-    await TestUtils.prepareSimpleForm(
+    await prepareSimpleForm(
         tester,
         formManager,
         Column(
@@ -220,11 +220,11 @@ void main() {
   testWidgets('Should have UNTOUCHED status if no input was changed', (WidgetTester tester) async {
     //given
     StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
-    await TestUtils.prepareWidget(tester, null);
+    await prepareWidget(tester, null);
     final BuildContext context = tester.element(find.byType(Scaffold));
 
-    final input = TestUtils.makeRequired(context, TestUtils.keyRequired, labelRequired, formManager, initialValue: '5');
-    await TestUtils.prepareSimpleForm(tester, formManager, input);
+    final input = makeRequired(context, keyRequired, labelRequired, formManager, initialValue: '5');
+    await prepareSimpleForm(tester, formManager, input);
 
     //when
     final FormStatus result = formManager.checkState();
@@ -237,11 +237,11 @@ void main() {
   testWidgets('Should have INVALID status if input is invalid', (WidgetTester tester) async {
     //given
     StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
-    await TestUtils.prepareWidget(tester, null);
+    await prepareWidget(tester, null);
         final BuildContext context = tester.element(find.byType(Scaffold));
 
-    var inputThatRequires3Chars = TestUtils.makeRequiredMin3Chars(context, key3Chars, label3Chars, formManager);
-    await TestUtils.prepareSimpleForm(tester, formManager, inputThatRequires3Chars);
+    var inputThatRequires3Chars = makeRequiredMin3Chars(context, key3Chars, label3Chars, formManager);
+    await prepareSimpleForm(tester, formManager, inputThatRequires3Chars);
 
     final inputField = find.byKey(const Key(key3Chars));
     await tester.enterText(inputField, "1");
@@ -257,13 +257,13 @@ void main() {
   testWidgets('Should ignore inputs with "ignoreFieldKey" from check ', (WidgetTester tester) async {
     //given
     StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
-    const ignoreFieldKey = "${FormManagerOLD.ignoreFieldKey}.${TestUtils.keyRequired}";
+    const ignoreFieldKey = "${FormManagerOLD.ignoreFieldKey}.${keyRequired}";
 
-    await TestUtils.prepareWidget(tester, null);
+    await prepareWidget(tester, null);
         final BuildContext context = tester.element(find.byType(Scaffold));
 
-    final inputWithIgnorePrefix = TestUtils.makeRequired(context, ignoreFieldKey, labelRequired, formManager);
-    await TestUtils.prepareSimpleForm(tester, formManager, inputWithIgnorePrefix);
+    final inputWithIgnorePrefix = makeRequired(context, ignoreFieldKey, labelRequired, formManager);
+    await prepareSimpleForm(tester, formManager, inputWithIgnorePrefix);
 
     await tester.enterText(find.byKey(const Key(ignoreFieldKey)), "");
     await tester.pump();
@@ -278,11 +278,11 @@ void main() {
   testWidgets('Should have VALID status if input is valid', (WidgetTester tester) async {
     //given
     StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
-    await TestUtils.prepareWidget(tester, null);
+    await prepareWidget(tester, null);
         final BuildContext context = tester.element(find.byType(Scaffold));
 
-    var inputThatRequires3Chars = TestUtils.makeRequiredMin3Chars(context, key3Chars, label3Chars, formManager);
-    await TestUtils.prepareSimpleForm(tester, formManager, inputThatRequires3Chars);
+    var inputThatRequires3Chars = makeRequiredMin3Chars(context, key3Chars, label3Chars, formManager);
+    await prepareSimpleForm(tester, formManager, inputThatRequires3Chars);
 
     final inputField = find.byKey(const Key(key3Chars));
     await tester.enterText(inputField, "123");
@@ -300,18 +300,18 @@ void main() {
     StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
     const keyInputInvalid = "inputThatWillBeInvalid";
     const keyInputValid = "inputThatWillBeValid";
-    await TestUtils.prepareWidget(tester, null);
+    await prepareWidget(tester, null);
         final BuildContext context = tester.element(find.byType(Scaffold));
 
-    var inputThatWillBeInvalid = TestUtils.makeRequiredMin3Chars(context, keyInputInvalid, label3Chars, formManager,
+    var inputThatWillBeInvalid = makeRequiredMin3Chars(context, keyInputInvalid, label3Chars, formManager,
         withTextEditingController: true);
     var inputThatWillBeValid =
-        TestUtils.makeRequired(context, keyInputValid, labelRequired, formManager, withTextEditingController: true);
+        makeRequired(context, keyInputValid, labelRequired, formManager, withTextEditingController: true);
     final Row inputRow = Row(
       children: [inputThatWillBeInvalid, inputThatWillBeValid],
     );
 
-    await TestUtils.prepareSimpleForm(tester, formManager, inputRow);
+    await prepareSimpleForm(tester, formManager, inputRow);
     expect(formManager.errorMessageNotifier.value, "");
 
     await tester.enterText(find.byKey(const Key(keyInputValid)), "12345");
@@ -330,10 +330,10 @@ void main() {
   // testWidgets('Should clear all error messages once form is valid', (WidgetTester tester) async {
   //   //given
   //   StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
-  //   await TestUtils.prepareWidget(tester, null);
+  //   await prepareWidget(tester, null);
   //  final BuildContext context = tester.element(find.byType(Scaffold));
-  //   var inputThatRequires3Chars = TestUtils.makeRequiredMin3Chars(key3Chars, label3Chars, formManager);
-  //   await TestUtils.prepareSimpleForm(tester, formManager, inputThatRequires3Chars);
+  //   var inputThatRequires3Chars = makeRequiredMin3Chars(key3Chars, label3Chars, formManager);
+  //   await prepareSimpleForm(tester, formManager, inputThatRequires3Chars);
   //   final inputField = find.byKey(const Key(key3Chars));
   //
   //   await tester.enterText(inputField, "1");
@@ -354,12 +354,12 @@ void main() {
   testWidgets('Should reset form', (WidgetTester tester) async {
     //given
     StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
-    await TestUtils.prepareWidget(tester, null);
+    await prepareWidget(tester, null);
         final BuildContext context = tester.element(find.byType(Scaffold));
 
     var inputThatRequires3Chars =
-        TestUtils.makeRequiredMin3Chars(context, key3Chars, label3Chars, formManager, initialValue: '333');
-    await TestUtils.prepareSimpleForm(tester, formManager, inputThatRequires3Chars);
+        makeRequiredMin3Chars(context, key3Chars, label3Chars, formManager, initialValue: '333');
+    await prepareSimpleForm(tester, formManager, inputThatRequires3Chars);
 
     final inputField = find.byKey(const Key(key3Chars));
     await tester.enterText(inputField, "1");
@@ -383,20 +383,20 @@ void main() {
   testWidgets('Should collect data from form and trim string values if needed', (WidgetTester tester) async {
     //given
     StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
-    await TestUtils.prepareWidget(tester, null);
+    await prepareWidget(tester, null);
         final BuildContext context = tester.element(find.byType(Scaffold));
 
-    var inputThatRequires3Chars = TestUtils.makeRequiredMin3Chars(context, key3Chars, label3Chars, formManager);
-    var anotherInput = TestUtils.makeRequired(context, TestUtils.keyRequired, labelRequired, formManager);
+    var inputThatRequires3Chars = makeRequiredMin3Chars(context, key3Chars, label3Chars, formManager);
+    var anotherInput = makeRequired(context, keyRequired, labelRequired, formManager);
     final Row inputRow = Row(children: [inputThatRequires3Chars, anotherInput]);
 
-    await TestUtils.prepareSimpleForm(tester, formManager, inputRow);
+    await prepareSimpleForm(tester, formManager, inputRow);
     expect(formManager.errorMessageNotifier.value, "");
 
     await tester.enterText(find.byKey(const Key(key3Chars)), "valueForInputOneThat has trailing spaces  ");
-    await tester.enterText(find.byKey(const Key(TestUtils.keyRequired)), "valueForInputTwo");
+    await tester.enterText(find.byKey(const Key(keyRequired)), "valueForInputTwo");
     await tester.enterText(find.byKey(const Key(key3Chars)), "valueForInputOneThat has trailing spaces  ");
-    await tester.enterText(find.byKey(const Key(TestUtils.keyRequired)), "valueForInputTwo");
+    await tester.enterText(find.byKey(const Key(keyRequired)), "valueForInputTwo");
     await tester.pump();
 
     //when
@@ -408,13 +408,13 @@ void main() {
     final formData = formManager.collectInputData();
 
     expect(formData, containsPair(key3Chars, 'valueForInputOneThat has trailing spaces'));
-    expect(formData, containsPair(TestUtils.keyRequired, "valueForInputTwo"));
+    expect(formData, containsPair(keyRequired, "valueForInputTwo"));
   });
 
   // testWidgets('Should transform nested data from form', (WidgetTester tester) async {
   //   //given
   //   StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
-  //   await TestUtils.prepareWidget(tester, null);
+  //   await prepareWidget(tester, null);
   //   final BuildContext context = tester.element(find.byType(Scaffold));
   //   const label = 'label';
   //
@@ -451,7 +451,7 @@ void main() {
   //     mainAxisSize: MainAxisSize.max,
   //     children: <Widget>[regular, nestedOne, nestedTwoOne, nestedTwoTwo],
   //   );
-  //   await TestUtils.prepareSimpleForm(tester, formManager, inputRow);
+  //   await prepareSimpleForm(tester, formManager, inputRow);
   //   expect(formManager.errorMessageNotifier.value, "");
   //
   //   //when

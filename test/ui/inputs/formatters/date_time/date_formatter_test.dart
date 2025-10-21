@@ -18,8 +18,7 @@ void main() {
   ATestDateTimeFormatter dateFormatter = TestDateFormatter(DateFormatterValidator(dateTimeInputUtils, mockCurrentDate));
 
   testWidgets('refuses to format excel-style invalid input', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
     var datTimLim = DateTimeLimits();
 
     var testCases = [
@@ -72,23 +71,21 @@ void main() {
   });
 
   testWidgets('refuses to format date when forbidden chars', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
     var datTimLim = DateTimeLimits();
 
     var testCases = [
-      DateTimeTestData(datTimLim, "00=12", "00=12", false, BricksLocalizations.of(context).dateStringErrorBadChars),
-      DateTimeTestData(datTimLim, "01\\12", "01\\12", false, BricksLocalizations.of(context).dateStringErrorBadChars),
-      DateTimeTestData(datTimLim, "01*2", "01*2", false, BricksLocalizations.of(context).dateStringErrorBadChars),
-      DateTimeTestData(datTimLim, "01+23", "01+23", false, BricksLocalizations.of(context).dateStringErrorBadChars),
+      DateTimeTestData(datTimLim, "00=12", "00=12", false, local.dateStringErrorBadChars),
+      DateTimeTestData(datTimLim, "01\\12", "01\\12", false, local.dateStringErrorBadChars),
+      DateTimeTestData(datTimLim, "01*2", "01*2", false, local.dateStringErrorBadChars),
+      DateTimeTestData(datTimLim, "01+23", "01+23", false, local.dateStringErrorBadChars),
     ];
     var passedOk = testDateTimeFormatter(local, testCases, dateFormatter);
     expect(passedOk, true);
   });
 
   testWidgets('creates formatted date string from digits only', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
     var datTimLim = DateTimeLimits(minDateTimeRequired: DateTime(2015));
 
     var testCases = [
@@ -105,8 +102,7 @@ void main() {
   });
 
   testWidgets('creates formatted date string from excel-style input', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
     var datTimLim = DateTimeLimits();
 
     var testCases = [
@@ -119,8 +115,7 @@ void main() {
   });
 
   testWidgets('creates formatted date string with all possible delimiters', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
     var datTimLim = DateTimeLimits();
 
     var p = '=';
@@ -145,7 +140,7 @@ void main() {
   });
 
   // testWidgets('copes with bad chars', (WidgetTester tester) async {
-  //   await TestUtils.prepareWidget(tester, null);
+  //   await prepareWidget(tester, null);
   //  final BuildContext context = tester.element(find.byType(Scaffold));
   //   var p = '=';
   //   var testCases = [
@@ -166,8 +161,7 @@ void main() {
   // });
 
   testWidgets('date too early or too late', (WidgetTester tester) async {
-    final BuildContext context = await TestUtils.pumpAppGetContext(tester);
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
 
     var datTimLim = DateTimeLimits(
       minDateTimeRequired: DateTime(2023, 1, 1),
@@ -188,9 +182,7 @@ void main() {
   });
 
   testWidgets('date invalid', (WidgetTester tester) async {
-    await TestUtils.prepareWidget(tester, null);
-    final BuildContext context = tester.element(find.byType(Scaffold));
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
 
     var datTimLim = DateTimeLimits(
       minDateTimeRequired: DateTime(2023, 1, 1),
@@ -233,9 +225,7 @@ void main() {
   });
 
   testWidgets('multiple errors', (WidgetTester tester) async {
-    await TestUtils.prepareWidget(tester, null);
-    final BuildContext context = tester.element(find.byType(Scaffold));
-    var local = BricksLocalizations.of(context);
+    final local = await getLocalizations();
 
     var datTimLim = DateTimeLimits(
       minDateTimeRequired: DateTime(2013, 1, 1),
@@ -250,67 +240,67 @@ void main() {
           "39/18/00",
           "2039-18-00",
           false,
-          BricksLocalizations.of(context).dateErrorYearTooFarForward(yearMaxForward) +
+          local.dateErrorYearTooFarForward(yearMaxForward) +
               '\n' +
-              BricksLocalizations.of(context).dateErrorMonthOver12 +
+              local.dateErrorMonthOver12 +
               '\n' +
-              BricksLocalizations.of(context).dateErrorDay0),
+              local.dateErrorDay0),
       DateTimeTestData(
           datTimLim,
           "01-0-80",
           "2001-00-80",
           false,
-          BricksLocalizations.of(context).dateErrorYearTooFarBack(yearMaxBack) +
+          local.dateErrorYearTooFarBack(yearMaxBack) +
               '\n' +
-              BricksLocalizations.of(context).dateErrorMonth0 +
+              local.dateErrorMonth0 +
               '\n' +
-              BricksLocalizations.of(context).dateErrorTooManyDaysInMonth),
+              local.dateErrorTooManyDaysInMonth),
       DateTimeTestData(
           datTimLim,
           "01-0-00",
           "2001-00-00",
           false,
-          BricksLocalizations.of(context).dateErrorYearTooFarBack(yearMaxBack) +
+          local.dateErrorYearTooFarBack(yearMaxBack) +
               '\n' +
-              BricksLocalizations.of(context).dateErrorMonth0 +
+              local.dateErrorMonth0 +
               '\n' +
-              BricksLocalizations.of(context).dateErrorDay0),
+              local.dateErrorDay0),
       DateTimeTestData(
           datTimLim,
           "01-0-31",
           "2001-00-31",
           false,
-          BricksLocalizations.of(context).dateErrorYearTooFarBack(yearMaxBack) +
+          local.dateErrorYearTooFarBack(yearMaxBack) +
               '\n' +
-              BricksLocalizations.of(context).dateErrorMonth0),
+              local.dateErrorMonth0),
       DateTimeTestData(
           datTimLim,
           "268855",
           "2026-88-55",
           false,
-          BricksLocalizations.of(context).dateErrorMonthOver12 +
+          local.dateErrorMonthOver12 +
               '\n' +
-              BricksLocalizations.of(context).dateErrorTooManyDaysInMonth),
+              local.dateErrorTooManyDaysInMonth),
       DateTimeTestData(
           datTimLim,
           "0000 0 0",
           "0000-00-00",
           false,
-          BricksLocalizations.of(context).dateErrorYearTooFarBack(yearMaxBack) +
+          local.dateErrorYearTooFarBack(yearMaxBack) +
               '\n' +
-              BricksLocalizations.of(context).dateErrorMonth0 +
+              local.dateErrorMonth0 +
               '\n' +
-              BricksLocalizations.of(context).dateErrorDay0),
+              local.dateErrorDay0),
       DateTimeTestData(
           datTimLim,
           "558855",
           "2055-88-55",
           false,
-          BricksLocalizations.of(context).dateErrorYearTooFarForward(yearMaxForward) +
+          local.dateErrorYearTooFarForward(yearMaxForward) +
               '\n' +
-              BricksLocalizations.of(context).dateErrorMonthOver12 +
+              local.dateErrorMonthOver12 +
               '\n' +
-              BricksLocalizations.of(context).dateErrorTooManyDaysInMonth),
+              local.dateErrorTooManyDaysInMonth),
     ];
     var passedOk = testDateTimeFormatter(local, testCases, dateFormatter);
     expect(passedOk, true);

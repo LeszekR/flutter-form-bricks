@@ -21,7 +21,7 @@
 //     for (var param in testParams) {
 //       testWidgets("should test proper input",
 //           (WidgetTester tester) async {
-//         await TestUtils.prepareWidget(tester, null);
+//         await prepareWidget(tester, null);
     //    final BuildContext context = tester.element(find.byType(Scaffold));
 //         final formManager = StandaloneFormManagerOLD();
 //
@@ -33,7 +33,7 @@
 //             formManager: formManager,
 //             label: 'Vat input');
 //
-//         await TestUtils.prepareSimpleForm(tester, formManager, input);
+//         await prepareSimpleForm(tester, formManager, input);
 //
 //         await tester.enterText(
 //             find.byKey(const Key(textVatFieldKey)), param.input);

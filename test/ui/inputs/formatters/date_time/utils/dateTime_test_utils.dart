@@ -13,16 +13,7 @@ import '../../../../date_time_test_data.dart';
 import '../../../../test_utils.dart';
 import 'a_test_dateTime_formatter.dart';
 
-// late DateTimeLimits datTimLim;
-// late final int yearMaxBack;
-// late final int yearMaxForward;
-//
-// initDateTimeUtils(int minYear, int maxYear) {
-//   datTimLim = DateTimeLimits(minDateTimeRequired: DateTime(minYear), maxDateTimeRequired: DateTime(maxYear));
-//   // datTimLim = DateTimeLimits(minDateTimeRequired: DateTime(2014), maxDateTimeRequired: DateTime(2026));
-//   yearMaxBack = datTimLim.minDateTimeRequired!.year;
-//   yearMaxForward = datTimLim.maxDateTimeRequired!.year;
-// }
+Future<BricksLocalizations> getLocalizations() => BricksLocalizations.delegate.load(Locale('en'));
 
 Future<bool> testDateTimeExcelStyleInput(
   List<DateTimeTestData> testCases,
@@ -57,9 +48,9 @@ Future<void> testAllCasesInTextField(
     StandaloneFormManagerOLD formManager,
     List<DateTimeTestData> testCases,
     Function<String>(String text) testAction) async {
-  final BuildContext context = await TestUtils.pumpAppGetContext(tester);
+  final BuildContext context = await pumpAppGetContext(tester);
   Widget textField = makeTextField(context);
-  await TestUtils.prepareSimpleForm(tester, formManager, textField);
+  await prepareSimpleForm(tester, formManager, textField);
   await testDateTimeExcelStyleInput(testCases, tester, formManager.formKey, testAction)
       .then((value) => expect(value, true));
 }

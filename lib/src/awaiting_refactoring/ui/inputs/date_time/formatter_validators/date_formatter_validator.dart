@@ -27,7 +27,6 @@ class DateFormatterValidator {
     DateTimeLimits dateLimits,
   ) {
     DateTime dateNow = currentDate.getDateNow();
-    DateTimeLimitsNow dateLimitsRange = dateLimits.calculateDateLimits(dateNow);
     return makeDateFromString(localizations, inputString, dateLimits).parsedString;
   }
 

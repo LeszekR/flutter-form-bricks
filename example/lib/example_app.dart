@@ -27,7 +27,7 @@ class ExampleApp extends StatelessWidget {
         home: Scaffold(
           body: Center(
             child: SizedBox(
-              width: 200,
+              // width: 200,
               height: 300,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,

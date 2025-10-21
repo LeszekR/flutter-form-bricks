@@ -63,7 +63,6 @@ class NumberInputs {
       labelPosition: labelPosition,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       initialValue: initialValue,
-      //initialValue?.toString() ?? "",
       readonly: readonly,
       keyboardType: TextInputType.number,
       validator: validator != null
@@ -111,7 +110,6 @@ class NumberInputs {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       formManager: formManager,
       initialValue: initialValue,
-      //initialValue?.toString() ?? "",
       readonly: readonly,
       keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: true),
       validator: validator != null

@@ -12,7 +12,7 @@
 //   const key = "key";
 //
 //   setUp(() async {
-//     await TestUtils.loadGlobalConfigurationForTests();
+//     await loadGlobalConfigurationForTests();
 //   });
 //
 //   group('Decimal input field will allow to put incorrect chars but validator will complain about it', () {
@@ -24,7 +24,7 @@
 //     for (final params in testParameters) {
 //       testWidgets('should complain about ${params.input}', (WidgetTester tester) async {
 //         //given
-//         await TestUtils.prepareWidget(tester, null);
+//         await prepareWidget(tester, null);
 //    final BuildContext context = tester.element(find.byType(Scaffold));
 //
 //         var formManager = StandaloneFormManagerOLD();
@@ -34,7 +34,7 @@
 //           label: "label",
 //           labelPosition: LabelPosition.topLeft,
 //         );
-//         await TestUtils.prepareSimpleForm(tester, formManager, input);
+//         await prepareSimpleForm(tester, formManager, input);
 //
 //         //when
 //         await tester.enterText(find.byKey(const Key(key)), params.input);
@@ -65,7 +65,7 @@
 //       formManager: StandaloneFormManagerOLD(),
 //     );
 //
-//     await TestUtils.prepareSimpleForm(tester, formManager, input);
+//     await prepareSimpleForm(tester, formManager, input);
 //
 //     //when
 //     await tester.enterText(find.byKey(const Key(key)), '21');

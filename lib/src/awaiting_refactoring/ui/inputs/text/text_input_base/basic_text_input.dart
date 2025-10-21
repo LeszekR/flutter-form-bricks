@@ -17,33 +17,36 @@ class BasicTextInput {
       required String label,
       required LabelPosition labelPosition,
       required AutovalidateMode autovalidateMode,
-      final dynamic initialValue,
-      final bool readonly = false,
-      final List<TextInputFormatter>? inputFormatters,
+      dynamic initialValue,
+      bool readonly = false,
+      List<TextInputFormatter>? inputFormatters,
       required FormManagerOLD formManager,
-      final FormFieldValidator<String>? validator,
-      final bool? withTextEditingController,
-      final ValueChanged<String?>? onChanged,
-      final List<String>? linkedFields,
-      final bool obscureText = false,
-      final TextInputType? keyboardType = TextInputType.text,
-      final int? maxLines,
-      final bool expands = true,
-      final ValueTransformer? valueTransformer,
-      final double? inputWidth,
-      final int? inputHeightMultiplier,
-      final double? labelWidth,
-      final Widget? button,
-      final DoubleWidgetStatesController? statesController,
-      final VoidCallback? onEditingComplete,
-      final TextInputAction? textInputAction,
-      final ValueChanged<String?>? onSubmitted}) {
+      FormFieldValidator<String>? validator,
+      bool? withTextEditingController,
+      ValueChanged<String?>? onChanged,
+      List<String>? linkedFields,
+      bool obscureText = false,
+      TextInputType? keyboardType = TextInputType.text,
+      int? maxLines,
+      bool expands = true,
+      ValueTransformer? valueTransformer,
+      double? inputWidth,
+      int? inputHeightMultiplier,
+      double? labelWidth,
+      Widget? button,
+      DoubleWidgetStatesController? statesController,
+      VoidCallback? onEditingComplete,
+      TextInputAction? textInputAction,
+      ValueChanged<String?>? onSubmitted}) {
     assert(button != null ? statesController != null : true,
         'With button present statesController must be present too in: $keyString');
 
     final uiParams = UiParams.of(context);
     final appSize = uiParams.appSize;
     final appStyle = uiParams.appStyle;
+
+    labelWidth ??= appSize.inputLabelWidth;
+    inputWidth ??= appSize.textFieldWidth;
 
     double mTextWidth, mTextHeight;
     double mButtonWidth, mButtonHeight;
@@ -92,10 +95,10 @@ class BasicTextInput {
             mButtonWidth = appSize.inputTextLineHeight;
             mButtonHeight = appSize.inputTextLineHeight;
 
-            mLabelWidth = labelWidth ?? appSize.inputLabelWidth;
+            mLabelWidth = labelWidth;
             mLabelHeight = appSize.inputTextLineHeight;
 
-            mTextWidth = (inputWidth ?? appSize.textFieldWidth) - mButtonWidth;
+            mTextWidth = inputWidth - mButtonWidth;
             mTextHeight = (appSize.inputTextLineHeight * (inputHeightMultiplier ?? 1));
 
             mInputWidth = mLabelWidth + mTextWidth + mButtonWidth + (2 * appSize.paddingInputLabel);
@@ -122,7 +125,7 @@ class BasicTextInput {
             mButtonWidth = appSize.inputTextLineHeight;
             mButtonHeight = appSize.inputTextLineHeight;
 
-            mTextWidth = inputWidth ?? appSize.textFieldWidth;
+            mTextWidth = inputWidth;
             mTextHeight = appSize.inputTextLineHeight * (inputHeightMultiplier ?? 1);
 
             mLabelWidth = mTextWidth;
@@ -176,10 +179,10 @@ class BasicTextInput {
     switch (labelPosition) {
       case LabelPosition.left:
         {
-          mTextWidth = inputWidth ?? appSize.textFieldWidth;
+          mTextWidth = inputWidth;
           mTextHeight = appSize.inputTextLineHeight * (inputHeightMultiplier ?? 1);
 
-          mLabelWidth = (labelWidth ?? appSize.inputLabelWidth);
+          mLabelWidth = labelWidth;
           mLabelHeight = appSize.inputTextLineHeight;
 
           mInputWidth = mLabelWidth + mTextWidth + (2 * appSize.paddingInputLabel);
@@ -200,7 +203,7 @@ class BasicTextInput {
       // EInputNamePosition = topLeft
       default:
         {
-          mTextWidth = (inputWidth ?? appSize.textFieldWidth);
+          mTextWidth = inputWidth;
           mTextHeight = appSize.inputTextLineHeight * (inputHeightMultiplier ?? 1);
 
           mLabelWidth = mTextWidth;

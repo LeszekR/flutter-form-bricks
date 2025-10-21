@@ -16,7 +16,7 @@ import 'form_utils.dart';
 abstract class AbstractForm extends StatefulWidget {
   final String _errorTextKeyString = "error_text";
 
-  get errorkeyString => _errorTextKeyString;
+  get errorKeyString => _errorTextKeyString;
 
   final FormManagerOLD _formManager;
 

@@ -37,10 +37,10 @@ class DateTimeRangeValidator {
   ) {
     _rangeController.delayValidationAfterBuilt();
     _setkeyStrings(_rangeController.rangeId);
-    _validator = _validatorFunction as FormFieldValidator<String>;
+    _validator = _validatorFunction;
   }
 
-  String? _validatorFunction(String inputString) {
+  String? _validatorFunction(String? inputString) {
     if (!_rangeController.isBuildCompleted) return null;
     if (!_rangeController.isEditCompleted) return null;
     if (_rangeController.areFieldsValidated) return _getMyErrorText();

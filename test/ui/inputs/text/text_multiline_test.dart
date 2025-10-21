@@ -15,10 +15,10 @@
 //       (WidgetTester tester) async {
 //     //given
 //     final StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
-//     await TestUtils.prepareDataForTrimmingSpacesTests(tester, formManager, keyString);
+//     await prepareDataForTrimmingSpacesTests(tester, formManager, keyString);
 //
 //     //when
-//     await TestUtils.enterTextAndUnfocusWidget(tester, formManager, keyString,enteredText);
+//     await enterTextAndUnfocusWidget(tester, formManager, keyString,enteredText);
 //
 //     // Then
 //     final resultOne = (find
@@ -35,12 +35,12 @@
 //       (WidgetTester tester) async {
 //     //given
 //     final StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
-//     await TestUtils.prepareDataForFocusLosingTests(tester, formManager, keyString);
+//     await prepareDataForFocusLosingTests(tester, formManager, keyString);
 //
 //     await tester.pump();
 //
 //     final inputs = ConstantsText.getInputs(tester);
 //
-//     await TestUtils.performAndCheckInputActions(tester, formManager, keyString, inputs);
+//     await performAndCheckInputActions(tester, formManager, keyString, inputs);
 //   });
 // }
