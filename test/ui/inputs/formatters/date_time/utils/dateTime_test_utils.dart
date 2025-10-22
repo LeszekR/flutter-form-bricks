@@ -43,11 +43,12 @@ Future<bool> testDateTimeExcelStyleInput(
 typedef MakeWidgetFunction = Widget Function(BuildContext context);
 
 Future<void> testAllCasesInTextField(
-    WidgetTester tester,
-    MakeWidgetFunction makeTextField,
-    StandaloneFormManagerOLD formManager,
-    List<DateTimeTestData> testCases,
-    Function<String>(String text) testAction) async {
+  WidgetTester tester,
+  MakeWidgetFunction makeTextField,
+  StandaloneFormManagerOLD formManager,
+  List<DateTimeTestData> testCases,
+  Function<String>(String text) testAction,
+) async {
   final BuildContext context = await pumpAppGetContext(tester);
   Widget textField = makeTextField(context);
   await prepareSimpleForm(tester, formManager, textField);

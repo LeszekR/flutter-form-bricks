@@ -72,7 +72,7 @@ class DateTimeInputs {
       onEditingComplete: () => _onEditingComplete(
         formManager,
         keyString,
-        (inputString) => _dateFormatter.makeDateString(localizations, currentDate, inputString, dateLimits),
+        (inputString) => _dateFormatter.makeDateString(localizations, inputString, dateLimits),
         rangeController,
       ),
       validator: ValidatorProvider.compose(

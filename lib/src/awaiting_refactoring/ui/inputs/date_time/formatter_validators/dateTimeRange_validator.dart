@@ -11,22 +11,21 @@ class DateTimeRangeValidator {
   String? _timeEndKeyString;
   List<String> _keyStrings = [];
 
-  String? _dateStartText;
-  String? _timeStartText;
-  String? _dateEndText;
-  String? _timeEndText;
+  String? dateStartText;
+  String? timeStartText;
+  String? dateEndText;
+  String? timeEndText;
 
-  final BricksLocalizations _localizations;
   final String _keyString;
   final FormManagerOLD _formManager;
   final RangeController _rangeController;
+  FormFieldValidator<String>? _validator;
+  final BricksLocalizations _localizations;
   final int _maxRangeSpanDays;
   final int _minRangeSpanMinutes;
-  FormFieldValidator<String>? _validator;
 
   FormFieldValidator<String> get validator => _validator!;
 
-  // TODO full support for minDate, maxDate, minSpanMinutes, maxSpanMinutes
   DateTimeRangeValidator(
     this._localizations,
     this._keyString,
@@ -37,10 +36,10 @@ class DateTimeRangeValidator {
   ) {
     _rangeController.delayValidationAfterBuilt();
     _setkeyStrings(_rangeController.rangeId);
-    _validator = _validatorFunction;
+    _validator = _validatorFunction as FormFieldValidator<String>;
   }
 
-  String? _validatorFunction(String? inputString) {
+  String? _validatorFunction(text) {
     if (!_rangeController.isBuildCompleted) return null;
     if (!_rangeController.isEditCompleted) return null;
     if (_rangeController.areFieldsValidated) return _getMyErrorText();
@@ -62,27 +61,27 @@ class DateTimeRangeValidator {
   }
 
   bool noErrors() {
-    for (var keyString in _keyStrings) {
-      if (_formManager.getErrorMessage(keyString) != null) return false;
+    for (var _keyString in _keyStrings) {
+      if (_formManager.getErrorMessage(_keyString) != null) return false;
     }
     return true;
   }
 
   void _loadErrorsExceptRange() {
-    for (var keyString in _keyStrings) {
-      var individualValidator = _rangeController.validatorExceptRange[keyString];
+    for (var _keyString in _keyStrings) {
+      var individualValidator = _rangeController.validatorExceptRange[_keyString];
       if (individualValidator != null) {
-        var text = _getRangeFieldText(keyString);
+        var text = _getRangeFieldText(_keyString);
         var errorText = individualValidator.call(text);
-        _formManager.saveErrorMessage(keyString, errorText);
+        _formManager.saveErrorMessage(_keyString, errorText);
       }
     }
   }
 
   void _validateOthersQuietly() {
-    for (var keyString in _keyStrings) {
-      if (keyString == keyString) continue;
-      _formManager.validateFieldQuietly(keyString);
+    for (var _keyString in _keyStrings) {
+      if (_keyString == _keyString) continue;
+      _formManager.validateFieldQuietly(_keyString);
     }
   }
 
@@ -92,7 +91,7 @@ class DateTimeRangeValidator {
 
     // start-date absent
     // -----------------------------------------------------------------
-    if (empty(_dateStartText)) {
+    if (empty(dateStartText)) {
       errorText = _localizations.rangeDateStartRequired;
       _formManager.saveErrorMessage(_dateStartKeyString!, errorText);
       return;
@@ -100,7 +99,7 @@ class DateTimeRangeValidator {
 
     // start-time absent & end-date absent & end-time present
     // -----------------------------------------------------------------
-    if (empty(_timeStartText) && empty(_dateEndText) && notEmpty(_timeEndText)) {
+    if (empty(timeStartText) && empty(dateEndText) && notEmpty(timeEndText)) {
       errorText = _localizations.rangeDateEndRequiredOrRemoveTimeEnd;
       _formManager.saveErrorMessage(_timeStartKeyString!, errorText);
       _formManager.saveErrorMessage(_dateEndKeyString!, errorText);
@@ -108,10 +107,10 @@ class DateTimeRangeValidator {
       return;
     }
 
-    if (notEmpty(_dateStartText) && notEmpty(_dateEndText)) {
-      var dateStart = DateTime.parse(_dateStartText!);
-      var dateEnd = DateTime.parse(_dateEndText!);
-      int difference = dateEnd.difference(dateStart).inDays;
+    if (notEmpty(dateStartText) && notEmpty(dateEndText)) {
+      var dateStart = DateTime.parse(dateStartText!);
+      var dateEnd = DateTime.parse(dateEndText!);
+      var difference = dateEnd.difference(dateStart).inDays;
 
       // start-date present & end-date present & start-date after end-date
       // -----------------------------------------------------------------
@@ -132,9 +131,9 @@ class DateTimeRangeValidator {
       }
     }
 
-    if (notEmpty(_timeStartText) && notEmpty(_timeEndText)) {
+    if (notEmpty(timeStartText) && notEmpty(timeEndText)) {
       // identical start and end
-      if (_dateStartText == _dateEndText && _timeStartText == _timeEndText) {
+      if (dateStartText == dateEndText && timeStartText == timeEndText) {
         errorText = _localizations.rangeStartSameAsEnd;
         _formManager.saveErrorMessage(_dateStartKeyString!, errorText);
         _formManager.saveErrorMessage(_timeStartKeyString!, errorText);
@@ -144,17 +143,17 @@ class DateTimeRangeValidator {
       }
 
       var dummyDate = '2000-01-01';
-      var timeStart = makeDateTime(dummyDate, _timeStartText!);
-      var timeEnd = makeDateTime(dummyDate, _timeEndText!);
+      var timeStart = makeDateTime(dummyDate, timeStartText!);
+      var timeEnd = makeDateTime(dummyDate, timeEndText!);
       var difference = timeEnd.difference(timeStart).inMinutes;
 
       // end-date absent
-      if (notEmpty(_dateStartText) && empty(_dateEndText)) {
+      if (notEmpty(dateStartText) && empty(dateEndText)) {
         // start-time after end-time
         // -----------------------------------------------------------------
         if (difference < 0) {
           errorText = _localizations.rangeTimeStartAfterEndOrAddDateEnd;
-          // formManager.saveErrorMessage(_dateStartKeyString!, errorText);
+          // _formManager.saveErrorMessage(_dateStartKeyString!, errorText);
           _formManager.saveErrorMessage(_timeStartKeyString!, errorText);
           _formManager.saveErrorMessage(_dateEndKeyString!, errorText);
           _formManager.saveErrorMessage(_timeEndKeyString!, errorText);
@@ -164,7 +163,7 @@ class DateTimeRangeValidator {
         // -----------------------------------------------------------------
         else if (difference < _minRangeSpanMinutes) {
           errorText = _localizations.rangeTimeStartEndTooCloseOrAddDateEnd(_minRangeSpanMinutes);
-          // formManager.saveErrorMessage(_dateStartKeyString!, errorText);
+          // _formManager.saveErrorMessage(_dateStartKeyString!, errorText);
           _formManager.saveErrorMessage(_timeStartKeyString!, errorText);
           _formManager.saveErrorMessage(_dateEndKeyString!, errorText);
           _formManager.saveErrorMessage(_timeEndKeyString!, errorText);
@@ -173,18 +172,18 @@ class DateTimeRangeValidator {
       }
 
       // start-date = end-date
-      if (notEmpty(_dateEndText) && notEmpty(_dateStartText)) {
-        var dateTimeStart = makeDateTime(_dateStartText!, _timeStartText!);
-        var dateTimeEnd = makeDateTime(_dateEndText!, _timeEndText!);
+      if (notEmpty(dateEndText) && notEmpty(dateStartText)) {
+        var dateTimeStart = makeDateTime(dateStartText!, timeStartText!);
+        var dateTimeEnd = makeDateTime(dateEndText!, timeEndText!);
         var difference = dateTimeEnd.difference(dateTimeStart).inMinutes;
 
         // start-time after end-time
         // -----------------------------------------------------------------
         if (difference < 0) {
           errorText = _localizations.rangeTimeStartAfterEnd;
-          // formManager.saveErrorMessage(_dateStartKeyString!, errorText);
+          // _formManager.saveErrorMessage(_dateStartKeyString!, errorText);
           _formManager.saveErrorMessage(_timeStartKeyString!, errorText);
-          // formManager.saveErrorMessage(_dateEndKeyString!, errorText);
+          // _formManager.saveErrorMessage(_dateEndKeyString!, errorText);
           _formManager.saveErrorMessage(_timeEndKeyString!, errorText);
           return;
         }
@@ -192,9 +191,9 @@ class DateTimeRangeValidator {
         // -----------------------------------------------------------------
         else if (difference < _minRangeSpanMinutes) {
           errorText = _localizations.rangeTimeStartEndTooCloseSameDate(_minRangeSpanMinutes);
-          // formManager.saveErrorMessage(_dateStartKeyString!, errorText);
+          // _formManager.saveErrorMessage(_dateStartKeyString!, errorText);
           _formManager.saveErrorMessage(_timeStartKeyString!, errorText);
-          // formManager.saveErrorMessage(_dateEndKeyString!, errorText);
+          // _formManager.saveErrorMessage(_dateEndKeyString!, errorText);
           _formManager.saveErrorMessage(_timeEndKeyString!, errorText);
           return;
         }
@@ -211,7 +210,7 @@ class DateTimeRangeValidator {
     return text != null && text.isNotEmpty;
   }
 
-  DateTime makeDateTime(final String dateText,String timeText) {
+  DateTime makeDateTime(final String dateText, final String timeText) {
     var dateStart = DateTime.parse(dateText);
     var timeArr = timeText.split(':');
     var hour = int.parse(timeArr[0]);
@@ -220,10 +219,10 @@ class DateTimeRangeValidator {
   }
 
   void _setFieldTexts() {
-    _dateStartText = _getRangeFieldText(_dateStartKeyString!);
-    _timeStartText = _getRangeFieldText(_timeStartKeyString!);
-    _dateEndText = _getRangeFieldText(_dateEndKeyString!);
-    _timeEndText = _getRangeFieldText(_timeEndKeyString!);
+    dateStartText = _getRangeFieldText(_dateStartKeyString!);
+    timeStartText = _getRangeFieldText(_timeStartKeyString!);
+    dateEndText = _getRangeFieldText(_dateEndKeyString!);
+    timeEndText = _getRangeFieldText(_timeEndKeyString!);
   }
 
   void _setkeyStrings(String rangeId) {
@@ -234,7 +233,7 @@ class DateTimeRangeValidator {
     _keyStrings = [_dateStartKeyString!, _timeStartKeyString!, _dateEndKeyString!, _timeEndKeyString!];
   }
 
-  String? _getRangeFieldText(String keyString) {
-    return (_formManager.formKey.currentState?.fields[keyString])!.value;
+  String? _getRangeFieldText(String _keyString) {
+    return (_formManager.formKey.currentState?.fields[_keyString])!.value;
   }
 }

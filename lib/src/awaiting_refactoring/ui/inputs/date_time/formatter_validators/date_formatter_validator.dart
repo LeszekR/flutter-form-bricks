@@ -22,11 +22,9 @@ class DateFormatterValidator {
   // TODO refactor to exact minimum and maximum DATE not only years
   String makeDateString(
     BricksLocalizations localizations,
-    CurrentDate currentDate,
     String inputString,
     DateTimeLimits dateLimits,
   ) {
-    DateTime dateNow = currentDate.getDateNow();
     return makeDateFromString(localizations, inputString, dateLimits).parsedString;
   }
 

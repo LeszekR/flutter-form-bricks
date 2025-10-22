@@ -15,10 +15,6 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../test_utils.dart';
 
 void main() {
-  const labelRequired = labelRequired;
-  const key3Chars = key3Chars;
-  const label3Chars = label3Chars;
-
   testWidgets("Should test trimming spaces in only lowercase text field", (WidgetTester tester) async {
     //given
     await prepareWidget(tester, null);
