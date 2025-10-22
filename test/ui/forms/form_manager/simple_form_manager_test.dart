@@ -17,8 +17,7 @@ import '../../test_utils.dart';
 void main() {
   testWidgets("Should test trimming spaces in only lowercase text field", (WidgetTester tester) async {
     //given
-    await prepareWidget(tester, null);
-    final BuildContext context = tester.element(find.byType(Scaffold));
+    final BuildContext context = await pumpAppGetContext(tester); 
 
     const String LOWERCASE_KEY = "2 lowercase text";
 
@@ -56,8 +55,7 @@ void main() {
 
   testWidgets("Should test trimming spaces in multiline text field", (WidgetTester tester) async {
     //given
-    await prepareWidget(tester, null);
-    final BuildContext context = tester.element(find.byType(Scaffold));
+    final BuildContext context = await pumpAppGetContext(tester); 
 
     const String MULTILINE_TEXT_KEY = "4 bulkText";
     final formManager = StandaloneFormManagerOLD();
@@ -95,8 +93,7 @@ void main() {
 
   testWidgets("Should test triming spaces in regular input standalone", (WidgetTester tester) async {
     //given
-    await prepareWidget(tester, null);
-    final BuildContext context = tester.element(find.byType(Scaffold));
+    final BuildContext context = await pumpAppGetContext(tester); 
 
     const String REGULAR_INPUT_KEY = "regular_input_standalone";
     final formManager = StandaloneFormManagerOLD();
@@ -133,8 +130,7 @@ void main() {
 
   testWidgets('should stay in focus when clicked Enter for regular input standalone', (WidgetTester tester) async {
     //given
-    await prepareWidget(tester, null);
-    final BuildContext context = tester.element(find.byType(Scaffold));
+    final BuildContext context = await pumpAppGetContext(tester); 
 
     const String REGULAR_INPUT_KEY = "regular_input_standalone";
     StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
@@ -216,8 +212,7 @@ void main() {
   testWidgets('Should have UNTOUCHED status if no input was changed', (WidgetTester tester) async {
     //given
     StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
-    await prepareWidget(tester, null);
-    final BuildContext context = tester.element(find.byType(Scaffold));
+    final BuildContext context = await pumpAppGetContext(tester); 
 
     final input = makeRequired(context, keyRequired, labelRequired, formManager, initialValue: '5');
     await prepareSimpleForm(tester, formManager, input);
@@ -233,7 +228,7 @@ void main() {
   testWidgets('Should have INVALID status if input is invalid', (WidgetTester tester) async {
     //given
     StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
-    await prepareWidget(tester, null);
+    await prepareWidget(tester);
         final BuildContext context = tester.element(find.byType(Scaffold));
 
     var inputThatRequires3Chars = makeRequiredMin3Chars(context, key3Chars, label3Chars, formManager);
@@ -255,7 +250,7 @@ void main() {
     StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
     const ignoreFieldKey = "${FormManagerOLD.ignoreFieldKey}.${keyRequired}";
 
-    await prepareWidget(tester, null);
+    await prepareWidget(tester);
         final BuildContext context = tester.element(find.byType(Scaffold));
 
     final inputWithIgnorePrefix = makeRequired(context, ignoreFieldKey, labelRequired, formManager);
@@ -274,7 +269,7 @@ void main() {
   testWidgets('Should have VALID status if input is valid', (WidgetTester tester) async {
     //given
     StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
-    await prepareWidget(tester, null);
+    await prepareWidget(tester);
         final BuildContext context = tester.element(find.byType(Scaffold));
 
     var inputThatRequires3Chars = makeRequiredMin3Chars(context, key3Chars, label3Chars, formManager);
@@ -296,7 +291,7 @@ void main() {
     StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
     const keyInputInvalid = "inputThatWillBeInvalid";
     const keyInputValid = "inputThatWillBeValid";
-    await prepareWidget(tester, null);
+    await prepareWidget(tester);
         final BuildContext context = tester.element(find.byType(Scaffold));
 
     var inputThatWillBeInvalid = makeRequiredMin3Chars(context, keyInputInvalid, label3Chars, formManager,
@@ -326,7 +321,7 @@ void main() {
   // testWidgets('Should clear all error messages once form is valid', (WidgetTester tester) async {
   //   //given
   //   StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
-  //   await prepareWidget(tester, null);
+  //   await prepareWidget(tester);
   //  final BuildContext context = tester.element(find.byType(Scaffold));
   //   var inputThatRequires3Chars = makeRequiredMin3Chars(key3Chars, label3Chars, formManager);
   //   await prepareSimpleForm(tester, formManager, inputThatRequires3Chars);
@@ -350,7 +345,7 @@ void main() {
   testWidgets('Should reset form', (WidgetTester tester) async {
     //given
     StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
-    await prepareWidget(tester, null);
+    await prepareWidget(tester);
         final BuildContext context = tester.element(find.byType(Scaffold));
 
     var inputThatRequires3Chars =
@@ -379,7 +374,7 @@ void main() {
   testWidgets('Should collect data from form and trim string values if needed', (WidgetTester tester) async {
     //given
     StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
-    await prepareWidget(tester, null);
+    await prepareWidget(tester);
         final BuildContext context = tester.element(find.byType(Scaffold));
 
     var inputThatRequires3Chars = makeRequiredMin3Chars(context, key3Chars, label3Chars, formManager);
@@ -410,7 +405,7 @@ void main() {
   // testWidgets('Should transform nested data from form', (WidgetTester tester) async {
   //   //given
   //   StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
-  //   await prepareWidget(tester, null);
+  //   await prepareWidget(tester);
   //   final BuildContext context = tester.element(find.byType(Scaffold));
   //   const label = 'label';
   //

@@ -140,7 +140,7 @@ void main() {
   });
 
   // testWidgets('copes with bad chars', (WidgetTester tester) async {
-  //   await prepareWidget(tester, null);
+  //   await prepareWidget(tester);
   //  final BuildContext context = tester.element(find.byType(Scaffold));
   //   var p = '=';
   //   var testCases = [

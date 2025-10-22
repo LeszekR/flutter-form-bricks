@@ -4,15 +4,15 @@ import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time
 import 'package:form_builder_validators/form_builder_validators.dart';
 
 class ValidatorProvider {
-  static final validatorEmail = (BuildContext context) {
+
+  static final validatorEmail = (BricksLocalizations localizations) {
     final RegExp emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$');
-    final localizations = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
-    FormBuilderValidators.match(emailRegex, errorText: localizations.invalidEmail);
+    return FormBuilderValidators.match(emailRegex, errorText: localizations.invalidEmail);
   };
 
   static final validatorVAT = (BricksLocalizations localizations) {
     final RegExp vatRegex = RegExp(r'^[A-Z]{2}\d{10}|[A-Z]{2}[A-Z0-9]{10}$');
-    FormBuilderValidators.match(vatRegex, errorText: localizations.invalidVAT);
+    return FormBuilderValidators.match(vatRegex, errorText: localizations.invalidVAT);
   };
 
   static final validatorRequired = FormBuilderValidators.required();

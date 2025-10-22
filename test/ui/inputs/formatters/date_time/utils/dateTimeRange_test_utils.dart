@@ -33,19 +33,21 @@ Future<TestStandaloneForm> prepDateTimeRangeTest(
 
   await prepareWidget(
     tester,
-    TestStandaloneForm(
+    (context) => TestStandaloneForm(
       key: globalKey,
-      widgetMaker: (BuildContext context, FormManagerOLD formManager) => Expanded(child: DateTimeInputs.dateTimeRange(
-        context: context,
-        rangeId: rangeId,
-        label: "Deadline range",
-        labelPosition: LabelPosition.topLeft,
-        currentDate: CurrentDate(),
-        dateTimeLimits: dateTimeLimits,
-        formManager: formManager,
-        maxRangeSpanDays: maxRangeSpanDays,
-        minRangeSpanMinutes: minRangeSpanMinutes,
-      ),)
+      widgetMaker: (BuildContext context, FormManagerOLD formManager) => Expanded(
+        child: DateTimeInputs.dateTimeRange(
+          context: context,
+          rangeId: rangeId,
+          label: "Deadline range",
+          labelPosition: LabelPosition.topLeft,
+          currentDate: CurrentDate(),
+          dateTimeLimits: dateTimeLimits,
+          formManager: formManager,
+          maxRangeSpanDays: maxRangeSpanDays,
+          minRangeSpanMinutes: minRangeSpanMinutes,
+        ),
+      ),
     ),
   );
   return find.byKey(globalKey).evaluate().first.widget as TestStandaloneForm;

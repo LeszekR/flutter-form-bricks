@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/standalone_form_manager.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/tabbed_form/tabulated_form_manager.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'inputs/text/constants.dart';
 
 const String keyRequired = "key_required";
 const String labelRequired = "label_required";
@@ -14,7 +17,7 @@ loadGlobalConfigurationForTests() async {
   WidgetsFlutterBinding.ensureInitialized();
 }
 
-prepareWidget(WidgetTester tester, Widget? widgetToTest, {final String language = "pl"}) async {
+prepareWidget(WidgetTester tester, [Widget? Function(BuildContext)? widgetMaker, String language = "pl"]) async {
   var uiParamsData = UiParamsData();
   await tester.pumpWidget(
     UiParams(
@@ -26,7 +29,7 @@ prepareWidget(WidgetTester tester, Widget? widgetToTest, {final String language 
         locale: Locale(language),
         home: Builder(
           builder: (BuildContext context) {
-            return Scaffold(body: widgetToTest);
+            return Scaffold(body: widgetMaker == null ? null : widgetMaker(context));
           },
         ),
       ),
@@ -37,33 +40,25 @@ prepareWidget(WidgetTester tester, Widget? widgetToTest, {final String language 
 }
 
 Future<BuildContext> pumpAppGetContext(WidgetTester tester) async {
-  await prepareWidget(tester, null);
+  await prepareWidget(tester);
   final BuildContext context = tester.element(find.byType(Scaffold));
   return context;
 }
 
-prepareSimpleForm(
-  WidgetTester tester,
-  StandaloneFormManagerOLD formManager,
-  Widget input,
-) async {
+prepareSimpleForm(WidgetTester tester, StandaloneFormManagerOLD formManager, Widget input) async {
   Widget widgetToTest = Scaffold(body: FormBuilder(key: formManager.formKey, child: input));
-  await prepareWidget(tester, widgetToTest);
+  await prepareWidget(tester, (context) => widgetToTest);
   formManager.fillInitialInputValuesMap();
 }
 
-prepareTabulatedForm(
-  final WidgetTester tester,
-  TabulatedFormManagerOLD formManager,
-  List<TabData> tabsData,
-) async {
+prepareTabulatedForm(final WidgetTester tester, TabulatedFormManagerOLD formManager, List<TabData> tabsData) async {
   final List<FormBuilder> tabs = tabsData
       .map((tabData) => FormBuilder(
             key: tabData.globalKey,
             child: tabData.makeTabContent(),
           ))
       .toList();
-  await prepareWidget(tester, Row(children: tabs));
+  await prepareWidget(tester, (context) => Row(children: tabs));
   formManager.fillInitialInputValuesMap();
 }
 
@@ -107,131 +102,148 @@ Widget makeRequiredMin3Chars(
   );
 }
 
-// prepareDataForTrimmingSpacesTests(
-//     WidgetTester tester, StandaloneFormManagerOLD formManager, String keyString) async {
-//   await prepareWidget(tester, null);
-//     final BuildContext context = tester.element(find.byType(Scaffold));
-//
-//   final controller = formManager.getTextEditingController(keyString, defaultValue: null);
-//   var focusNode = formManager.getFocusNode(keyString);
-//
-//   focusNode.addListener(() {
-//     if (!focusNode.hasFocus) {
-//       FormatterHelper.onSubmittedTrimming(controller.text, controller);
-//     }
-//   });
-//
-//   final input = TextInputs.textMultiline(
-//       keyString: keyString,
-//       labelPosition: LabelPosition.topLeft,
-//       validator: ValidatorProvider.compose(context: context, isRequired: true),
-//       withTextEditingController: true,
-//       formManager: formManager,
-//       label: 'Bulk text');
-//
-//   await prepareSimpleForm(tester, formManager, input);
-// }
-//
-//   Future<void> enterTextAndUnfocusWidget(
-//       WidgetTester tester, FormManager formManager, String keyString, String enteredText) async {
-//     await tester.enterText(find.byKey(Key(keyString)), enteredText);
-//     formManager.getFocusNode(keyString).unfocus();
-//     await tester.pump();
-//   }
-//
-//   prepareDataForFocusLosingTests(
-//       WidgetTester tester, StandaloneFormManagerOLD formManager, String keyString) async {
-//     await prepareWidget(tester, null);
-//     final BuildContext context = tester.element(find.byType(Scaffold));
-//     await prepareSimpleForm(
-//         tester,
-//         formManager,
-//         Column(
-//           children: [
-//             buildTextInputForTest(keyString, formManager),
-//             const SizedBox(key: Key("Sized box"), height: 30),
-//             Container(
-//               width: double.infinity,
-//               height: 50,
-//               color: Colors.transparent,
-//               key: const Key('outside_click_area'),
-//             ),
-//             ElevatedButton(key: const Key("Dummy button"), onPressed: () {}, child: const Text('Dummy button'))
-//           ],
-//         ));
-//   }
-//
-//   Widget buildTextInputForTest(String keyString, StandaloneFormManagerOLD formManager) {
-//     switch (keyString) {
-//       case ConstantsText.TEXT_SIMPLE_FIELD_KEY:
-//         return TextInputs.textSimple(
-//             keyString: keyString,
-//             labelPosition: LabelPosition.topLeft,
-//             validator: ValidatorProvider.compose(context: context, isRequired: true),
-//             withTextEditingController: true,
-//             formManager: formManager,
-//             label: 'example text');
-//       case ConstantsText.TEXT_MULTILINE_FIELD_KEY:
-//         return TextInputs.textMultiline(
-//             keyString: keyString,
-//             labelPosition: LabelPosition.topLeft,
-//             validator: ValidatorProvider.compose(context: context, isRequired: true),
-//             withTextEditingController: true,
-//             formManager: formManager,
-//             label: 'Bulk text');
-//       case ConstantsText.TEXT_UPPERCASE_FIELD_KEY:
-//         return TextInputs.textUppercase(
-//             keyString: keyString,
-//             labelPosition: LabelPosition.topLeft,
-//             validator: ValidatorProvider.compose(context: context, isRequired: true),
-//             withTextEditingController: true,
-//             formManager: formManager,
-//             label: 'BULK TEXT');
-//       case ConstantsText.TEXT_LOWERCASE_FIELD_KEY:
-//         return TextInputs.textLowercase(
-//             keyString: keyString,
-//             labelPosition: LabelPosition.topLeft,
-//             validator: ValidatorProvider.compose(context: context, isRequired: true),
-//             withTextEditingController: true,
-//             formManager: formManager,
-//             label: 'example text');
-//       case ConstantsText.TEXT_UPPER_LOWER_FIELD_KEY:
-//         return TextInputs.textFirstUppercaseThenLowercase(
-//             keyString: keyString,
-//             labelPosition: LabelPosition.topLeft,
-//             validator: ValidatorProvider.compose(context: context, isRequired: true),
-//             withTextEditingController: true,
-//             formManager: formManager,
-//             label: 'Example text');
-//       default:
-//         return Container();
-//     }
-//   }
-//
-//   Future<void> performAndCheckInputActions(
-//       WidgetTester tester, StandaloneFormManagerOLD formManager, String keyString, Map<String, Function> inputs) async {
-//     for (var method in inputs.entries) {
-//       formManager.getTextEditingController(keyString).clear();
-//       await tester.pump();
-//
-//       await tester.enterText(find.byKey(Key(keyString)), "text example");
-//       await tester.pump();
-//
-//       var focusNode = formManager.getFocusNode(keyString);
-//       expect(focusNode.hasFocus, true);
-//
-//       await method.value();
-//       await tester.pump();
-//
-//       if (method.key == "Mouse" || method.key == "Tab") {
-//         expect(focusNode.hasFocus, false, reason: "${method.key} failed to loose focus");
-//       } else {
-//         expect(focusNode.hasFocus, true, reason: "${method.key} failed to retain focus");
-//       }
-//     }
-//   }
-// }
-//
+prepareDataForTrimmingSpacesTests(
+  BuildContext context,
+  WidgetTester tester,
+  StandaloneFormManagerOLD formManager,
+  String keyString,
+) async {
+  await prepareWidget(tester);
+  final BuildContext context = tester.element(find.byType(Scaffold));
+
+  final controller = formManager.getTextEditingController(keyString, defaultValue: null);
+  var focusNode = formManager.getFocusNode(keyString);
+
+  focusNode.addListener(() {
+    if (!focusNode.hasFocus) {
+      FormatterHelper.onSubmittedTrimming(controller.text, controller);
+    }
+  });
+
+  final input = TextInputs.textMultiline(
+      context: context,
+      keyString: keyString,
+      labelPosition: LabelPosition.topLeft,
+      validator: ValidatorProvider.compose(context: context, isRequired: true),
+      withTextEditingController: true,
+      formManager: formManager,
+      label: 'Bulk text');
+
+  await prepareSimpleForm(tester, formManager, input);
+}
+
+Future<void> enterTextAndUnfocusWidget(
+  WidgetTester tester,
+  FormManagerOLD formManager,
+  String keyString,
+  String enteredText,
+) async {
+  await tester.enterText(find.byKey(Key(keyString)), enteredText);
+  formManager.getFocusNode(keyString).unfocus();
+  await tester.pump();
+}
+
+prepareDataForFocusLosingTests(
+  BuildContext context,
+  WidgetTester tester,
+  StandaloneFormManagerOLD formManager,
+  String keyString,
+) async {
+  await prepareWidget(tester);
+  final BuildContext context = tester.element(find.byType(Scaffold));
+  await prepareSimpleForm(
+      tester,
+      formManager,
+      Column(
+        children: [
+          buildTextInputForTest(context, keyString, formManager),
+          const SizedBox(key: Key("Sized box"), height: 30),
+          Container(
+            width: double.infinity,
+            height: 50,
+            color: Colors.transparent,
+            key: const Key('outside_click_area'),
+          ),
+          ElevatedButton(key: const Key("Dummy button"), onPressed: () {}, child: const Text('Dummy button'))
+        ],
+      ));
+}
+
+Widget buildTextInputForTest(BuildContext context, String keyString, StandaloneFormManagerOLD formManager) {
+  switch (keyString) {
+    case ConstantsText.TEXT_SIMPLE_FIELD_KEY:
+      return TextInputs.textSimple(
+          context: context,
+          keyString: keyString,
+          labelPosition: LabelPosition.topLeft,
+          validator: ValidatorProvider.compose(context: context, isRequired: true),
+          withTextEditingController: true,
+          formManager: formManager,
+          label: 'example text');
+    case ConstantsText.TEXT_MULTILINE_FIELD_KEY:
+      return TextInputs.textMultiline(
+          context: context,
+          keyString: keyString,
+          labelPosition: LabelPosition.topLeft,
+          validator: ValidatorProvider.compose(context: context, isRequired: true),
+          withTextEditingController: true,
+          formManager: formManager,
+          label: 'Bulk text');
+    case ConstantsText.TEXT_UPPERCASE_FIELD_KEY:
+      return TextInputs.textUppercase(
+          context: context,
+          keyString: keyString,
+          labelPosition: LabelPosition.topLeft,
+          validator: ValidatorProvider.compose(context: context, isRequired: true),
+          withTextEditingController: true,
+          formManager: formManager,
+          label: 'BULK TEXT');
+    case ConstantsText.TEXT_LOWERCASE_FIELD_KEY:
+      return TextInputs.textLowercase(
+          context: context,
+          keyString: keyString,
+          labelPosition: LabelPosition.topLeft,
+          validator: ValidatorProvider.compose(context: context, isRequired: true),
+          withTextEditingController: true,
+          formManager: formManager,
+          label: 'example text');
+    case ConstantsText.TEXT_UPPER_LOWER_FIELD_KEY:
+      return TextInputs.textFirstUppercaseThenLowercase(
+          context: context,
+          keyString: keyString,
+          labelPosition: LabelPosition.topLeft,
+          validator: ValidatorProvider.compose(context: context, isRequired: true),
+          withTextEditingController: true,
+          formManager: formManager,
+          label: 'Example text');
+    default:
+      return Container();
+  }
+}
+
+Future<void> performAndCheckInputActions(
+    WidgetTester tester, StandaloneFormManagerOLD formManager, String keyString, Map<String, Function> inputs) async {
+  for (var method in inputs.entries) {
+    formManager.getTextEditingController(keyString).clear();
+    await tester.pump();
+
+    await tester.enterText(find.byKey(Key(keyString)), "text example");
+    await tester.pump();
+
+    var focusNode = formManager.getFocusNode(keyString);
+    expect(focusNode.hasFocus, true);
+
+    await method.value();
+    await tester.pump();
+
+    if (method.key == "Mouse" || method.key == "Tab") {
+      expect(focusNode.hasFocus, false, reason: "${method.key} failed to loose focus");
+    } else {
+      expect(focusNode.hasFocus, true, reason: "${method.key} failed to retain focus");
+    }
+  }
+}
+
 // class TestTabulatedForm extends TabulatedForm {
 //   final List<TabData> _tabsData;
 //
