@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 
-class ExampleMinimalForm extends StandaloneForm {
-  ExampleMinimalForm({super.key});
+class ExampleMinimalForm extends SingleForm {
+  ExampleMinimalForm(super.stateData, super.formSchema, {super.key});
 
   @override
   _ExampleMinimalFormState createState() => _ExampleMinimalFormState();
 }
 
-class _ExampleMinimalFormState extends StandaloneFormState {
+class _ExampleMinimalFormState extends SingleFormState {
   @override
   List<Widget> createBody(BuildContext context) {
     return [

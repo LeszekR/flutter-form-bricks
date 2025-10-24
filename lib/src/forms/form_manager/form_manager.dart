@@ -1,19 +1,19 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 
-import '../../../../shelf.dart';
 import '../base/form_brick.dart';
 import 'form_status.dart';
 
 abstract class FormManager extends ChangeNotifier {
-  final _formKey = GlobalKey<FormBrickState>();
-  final FormStateData _stateData;
+  final _formKey = GlobalKey<FormStateBrick>();
+  final FormStateData stateData;
   final Map<String, dynamic> _inputInitialValuesMap = {};
   final Map<String, String?> _errorsMap = {};
 
   final Map<String, FormatterValidatorChain?> _formatterValidatorChainMap = {};
 
-  final ValueNotifier<String> errorMessageNotifier = ValueNotifier<String>("");
+  final ValueNotifier<String> errorMessageNotifier = ValueNotifier<String>('');
   late final Map<String, TextEditingController> _controllers = {};
   late final Map<String, FocusNode> _focusNodes = {};
 
@@ -23,23 +23,28 @@ abstract class FormManager extends ChangeNotifier {
     }
   }
 
-  FormManager(this._stateData, FormSchema formSchema) {
+  dynamic getFieldValue(String keyString) => stateData.fieldStateDataMap[keyString]!.value;
+
+  void updateFieldValue(String keyString, dynamic value) => stateData.fieldStateDataMap[keyString]!.value = value;
+
+  FormManager(this.stateData, FormSchema formSchema) {
     _fillFormattersValidatorsMap(formSchema);
   }
 
   void afterFieldChanged();
 
-  FormStatus checkState();
+  FormStatus checkStatus();
 
   void fillInitialInputValuesMap();
 
-  FormFieldBrickState<FormFieldBrick>? findField(String keyString);
+  FormFieldStateBrick<FormFieldBrick>? findField(String keyString);
 
+  // TODO implement in implementations of this class mimcking FlutterFormBuilder
   void resetForm();
 
   Map<String, dynamic> collectInputs();
 
-  GlobalKey<FormBrickState> get formKey => _formKey;
+  GlobalKey<FormStateBrick> get formKey => _formKey;
 
   TextEditingController getTextEditingController(String keyString, {String? defaultValue}) {
     setEditingController(keyString, defaultValue);
@@ -85,7 +90,7 @@ abstract class FormManager extends ChangeNotifier {
 //   errorMessageNotifier.value = newMessages;
 // }
 
-  void setInitialValues(GlobalKey<FormBrickState> contentGlobalKey) {
+  void setInitialValues(GlobalKey<FormStateBrick> contentGlobalKey) {
     // TODO uncomment and refactor
     // var currentState = contentGlobalKey.currentState;
     // assert(currentState != null);
@@ -100,7 +105,7 @@ abstract class FormManager extends ChangeNotifier {
     // }
   }
 
-  FormStatus getFormPartState(GlobalKey<FormBrickState> formPartKey) {
+  FormStatus getFormPartState(GlobalKey<FormStateBrick> formPartKey) {
     // TODO uncomment and refactor
     // final currentState = formPartKey.currentState;
     // if (currentState == null) {
@@ -166,7 +171,7 @@ abstract class FormManager extends ChangeNotifier {
     showErrorMessage(_errorsMap[keyString] ?? '');
   }
 
-  void addErrorMessageIfIsNew(final String key,String errMsg) {
+  void addErrorMessageIfIsNew(final String key, String errMsg) {
     final String? lastError = _errorsMap[key];
     if (lastError?.contains(errMsg) ?? false) {
       return;
@@ -217,7 +222,7 @@ abstract class FormManager extends ChangeNotifier {
 
   dynamic _getInputValue(String inputIdString) {
     return null;
-  // TODO uncomment and refactor
+    // TODO uncomment and refactor
     // return findField(inputIdString)!.value;
   }
 }

@@ -1,14 +1,14 @@
 // import 'package:flutter/material.dart';
 // import 'package:flutter_form_bricks/shelf.dart';
 //
-// class ExampleStandaloneForm extends StandaloneForm {
-//   ExampleStandaloneForm({super.key});
+// class ExampleSingleForm extends SingleForm {
+//   ExampleSingleForm({super.key});
 //
 //   @override
-//   _ExampleStandaloneFormState createState() => _ExampleStandaloneFormState();
+//   _ExampleSingleFormState createState() => _ExampleSingleFormState();
 // }
 //
-// class _ExampleStandaloneFormState extends StandaloneFormState {
+// class _ExampleSingleFormState extends SingleFormState {
 //   void trimGroupOfFieldsWhenFocusLost(List<String> keyStrings) {
 //     for (var keyString in keyStrings) {
 //       FocusNode focusNode = formManager.getFocusNode(keyString);
@@ -69,15 +69,15 @@
 //   }
 //
 //   Container _createTextPart(AppSize appSize) {
-//     String testSimpleKeyString = "regular_input_standalone";
+//     String testSimpleKeyString = "regular_input_single";
 //     String lowerCaseTextKeyString = "2 lowercase text";
-//     String withDefaultKeyString = "withDefault_standalone";
+//     String withDefaultKeyString = "withDefault_single";
 //     String upperCaseKeyString = "5 uppercase text";
-//     String firstUpperCaseKeyString = "first_uppercase_text_standalone 1";
-//     String vatKeyString = "vat_standalone 1";
+//     String firstUpperCaseKeyString = "first_uppercase_text_single 1";
+//     String vatKeyString = "vat_single 1";
 //     String upperCaseKeyString2 = "6 uppercase text";
-//     String firsUpperCaseKeyString2 = "first_uppercase_text_standalone 2";
-//     String vatKeyString2 = "vat_standalone 2";
+//     String firsUpperCaseKeyString2 = "first_uppercase_text_single 2";
+//     String vatKeyString2 = "vat_single 2";
 //     String multilineKeyString = "4 bulkText";
 //     String multilineWithButtonKeyString = "6 bulkText";
 //
@@ -193,7 +193,7 @@
 //         appSize.spacerBoxVerticalSmall,
 //         //
 //         TextInputs.textVat(
-//           keyString: "vat_standalone 2",
+//           keyString: "vat_single 2",
 //           label: 'Text input z regexem VAT',
 //           labelPosition: LabelPosition.left,
 //           formManager: formManager,
@@ -262,14 +262,14 @@
 //         [
 //           appSize.spacerBoxVerticalSmall,
 //           CheckboxCustom(
-//               keyString: "checkbox_standalone_1",
+//               keyString: "checkbox_single_1",
 //               label: "checkbox blokujący pole",
 //               initialValue: _dependentTextInputReadonly,
 //               width: appSize.textFieldWidth * 0.8,
 //               labelLeftOfCheckbox: true,
 //               onChanged: (val) => setState(() => _dependentTextInputReadonly = val ?? false)),
 //           CheckboxCustom(
-//               keyString: "checkbox_standalone_2",
+//               keyString: "checkbox_single_2",
 //               label: "checkbox, co nic nie robi",
 //               initialValue: _doingNothing,
 //               width: appSize.textFieldWidth * 0.8,
@@ -284,7 +284,7 @@
 //       ),
 //       appSize.spacerBoxHorizontalMedium,
 //       TextInputs.textSimple(
-//           keyString: "fieldDenpendentOnCheckbox_standalone",
+//           keyString: "fieldDenpendentOnCheckbox_single",
 //           label: 'Text input zależny od checkbox',
 //           labelPosition: LabelPosition.topLeft,
 //           formManager: formManager,

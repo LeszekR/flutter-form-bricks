@@ -184,7 +184,7 @@ class TextFieldBrick extends FormFieldBrick {
   State<StatefulWidget> createState() => _StateAwareTextFieldState();
 }
 
-class _StateAwareTextFieldState extends FormFieldBrickState<TextFieldBrick> with ErrorMessageNotifier {
+class _StateAwareTextFieldState extends FormFieldStateBrick<TextFieldBrick> with ErrorMessageNotifier {
   dynamic initialValue;
   Set<WidgetState>? _states;
 

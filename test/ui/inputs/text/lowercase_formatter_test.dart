@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/standalone_form_manager.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatters/lowercase_formatter.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -38,7 +38,7 @@ void main() {
     BuildContext context = await pumpAppGetContext(tester);
 
     //given
-    final StandaloneFormManagerOLD formManager = StandaloneFormManagerOLD();
+    final SingleFormManager formManager = SingleFormManager();
     await prepareDataForTrimmingSpacesTests(context, tester, formManager, keyString);
 
     //when
@@ -53,7 +53,7 @@ void main() {
   testWidgets('should stay in focus when clicked Enter in lowercase text field', (WidgetTester tester) async {
     BuildContext context = await pumpAppGetContext(tester);
     //given
-    final formManager = StandaloneFormManagerOLD();
+    final formManager = SingleFormManager();
 
     await prepareDataForFocusLosingTests(context, tester, formManager, keyString);
 

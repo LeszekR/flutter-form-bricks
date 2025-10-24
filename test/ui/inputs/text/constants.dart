@@ -5,11 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class ConstantsText {
-  static const String TEXT_SIMPLE_FIELD_KEY = "regular_input_standalone";
+  static const String TEXT_SIMPLE_FIELD_KEY = "regular_input_single";
   static const String TEXT_MULTILINE_FIELD_KEY = "4 bulkText";
   static const String TEXT_UPPERCASE_FIELD_KEY = "5 uppercase text";
   static const String TEXT_LOWERCASE_FIELD_KEY = "2 lowercase text";
-  static const String TEXT_UPPER_LOWER_FIELD_KEY = "first_uppercase_text_standalone 2";
+  static const String TEXT_UPPER_LOWER_FIELD_KEY = "first_uppercase_text_single 2";
 
   static Map<String, Future<void> Function()> getInputs(WidgetTester tester) {
     return {

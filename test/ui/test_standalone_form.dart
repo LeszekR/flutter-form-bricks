@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/form_manager/form_manager.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/base/form_utils.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 
-class TestStandaloneForm extends StandaloneForm {
-  final Widget Function(BuildContext context, FormManagerOLD formManager) widgetMaker;
+class TestSingleForm extends SingleForm {
+  final Widget Function(BuildContext context, FormManager formManager) widgetMaker;
 
-  TestStandaloneForm({super.key, required this.widgetMaker});
+  TestSingleForm({super.key, required this.widgetMaker});
 
   @override
-  TestStandaloneFormState createState() => TestStandaloneFormState();
+  TestSingleFormState createState() => TestSingleFormState();
 }
 
-class TestStandaloneFormState extends StandaloneFormState<TestStandaloneForm> {
+class TestSingleFormState extends SingleFormState<TestSingleForm> {
   /// Do NOT override this method in PROD! This is ONLY FOR UI TESTS!
-  /// Flutter builds UI differently in prod and test. Due to that TestStandaloneForm crashes on control panel vertical
+  /// Flutter builds UI differently in prod and test. Due to that TestSingleForm crashes on control panel vertical
   /// overflow without this correction, This param introduces correction of control panel height
   @override
   int testControlsHeightCorrection() => 13;
@@ -30,7 +31,7 @@ class TestStandaloneFormState extends StandaloneFormState<TestStandaloneForm> {
   }
 
   @override
-  String provideLabel() => "Test Standalone Form";
+  String provideLabel() => "Test Single Form";
 
   @override
   void deleteEntity() {

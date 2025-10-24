@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/standalone_form_manager.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/dateTime_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/date_formatter_validator.dart';
@@ -45,7 +45,7 @@ typedef MakeWidgetFunction = Widget Function(BuildContext context);
 Future<void> testAllCasesInTextField(
   WidgetTester tester,
   MakeWidgetFunction makeTextField,
-  StandaloneFormManagerOLD formManager,
+  SingleFormManager formManager,
   List<DateTimeTestData> testCases,
   Function<String>(String text) testAction,
 ) async {

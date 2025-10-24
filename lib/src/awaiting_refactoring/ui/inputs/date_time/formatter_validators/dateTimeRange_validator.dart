@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/form_manager/form_manager.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/dateTime_range_error_controller.dart';
+import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
+
+import '../date_time_inputs.dart';
 
 class DateTimeRangeValidator {
   String? _dateStartKeyString;
@@ -17,7 +19,7 @@ class DateTimeRangeValidator {
   String? timeEndText;
 
   final String _keyString;
-  final FormManagerOLD _formManager;
+  final FormManager _formManager;
   final RangeController _rangeController;
   FormFieldValidator<String>? _validator;
   final BricksLocalizations _localizations;
@@ -233,7 +235,7 @@ class DateTimeRangeValidator {
     _keyStrings = [_dateStartKeyString!, _timeStartKeyString!, _dateEndKeyString!, _timeEndKeyString!];
   }
 
-  String? _getRangeFieldText(String _keyString) {
-    return (_formManager.formKey.currentState?.fields[_keyString])!.value;
+  String? _getRangeFieldText(String keyString) {
+    return _formManager.getFieldValue(keyString);
   }
 }

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/form_manager/form_manager.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/standalone_form_manager.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/date_time_inputs.dart';
 import 'package:flutter_form_bricks/src/inputs/labelled_box/label_position.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../../test_single_form.dart';
 import '../../../../test_standalone_form.dart';
 import '../../../../test_utils.dart';
 import 'dateTime_test_utils.dart';
@@ -19,7 +20,7 @@ class RangeTestData {
   const RangeTestData(this.texts, this.expectedValues, this.errorMessage);
 }
 
-Future<TestStandaloneForm> prepDateTimeRangeTest(
+Future<TestSingleForm> prepDateTimeRangeTest(
   WidgetTester tester,
   String rangeId,
   DateTimeLimits dateTimeLimits,
@@ -29,13 +30,13 @@ Future<TestStandaloneForm> prepDateTimeRangeTest(
   // do not remove this - default Flutter test screen can be to narrow for default width of dateTimeRange
   await tester.binding.setSurfaceSize(Size(1000, 1000));
 
-  var globalKey = GlobalKey<TestStandaloneFormState>();
+  var globalKey = GlobalKey<TestSingleFormState>();
 
   await prepareWidget(
     tester,
-    (context) => TestStandaloneForm(
+    (context) => TestSingleForm(
       key: globalKey,
-      widgetMaker: (BuildContext context, FormManagerOLD formManager) => Expanded(
+      widgetMaker: (BuildContext context, FormManager formManager) => Expanded(
         child: DateTimeInputs.dateTimeRange(
           context: context,
           rangeId: rangeId,
@@ -50,12 +51,12 @@ Future<TestStandaloneForm> prepDateTimeRangeTest(
       ),
     ),
   );
-  return find.byKey(globalKey).evaluate().first.widget as TestStandaloneForm;
+  return find.byKey(globalKey).evaluate().first.widget as TestSingleForm;
 }
 
 Future<bool> testDateTimeRangeValidator(
   tester,
-  TestStandaloneForm form,
+  TestSingleForm form,
   List<String> keyStrings,
   List<RangeTestData> testCases,
 ) async {
@@ -64,7 +65,7 @@ Future<bool> testDateTimeRangeValidator(
   String? actual, expected;
   bool passedOk = true;
   String dateStart, timeStart, dateEnd, timeEnd;
-  var formManager = form.formManager as StandaloneFormManagerOLD;
+  var formManager = form.formManager as SingleFormManager;
   var errorFieldFinder = find.byKey(Key(form.errorKeyString));
   Text errorField;
 

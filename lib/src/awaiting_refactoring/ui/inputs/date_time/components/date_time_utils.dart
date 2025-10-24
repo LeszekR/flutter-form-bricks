@@ -1,5 +1,5 @@
-import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/string_parse_result.dart';
+import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 enum DateTimeOrBoth {
   DATE,

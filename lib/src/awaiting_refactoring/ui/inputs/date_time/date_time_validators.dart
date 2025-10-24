@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/form_manager/form_manager.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/dateTimeRange_validator.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/dateTime_formatter_validator.dart';
@@ -9,6 +8,12 @@ import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/date_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/time_formatter_validator.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/current_date.dart';
+import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/date_time_limits.dart';
+import 'package:flutter_form_bricks/src/forms/base/form_brick.dart';
+
+
 
 typedef ValidatorFunction = String? Function(String);
 
@@ -53,7 +58,7 @@ class DateTimeValidators {
   static FormFieldValidator<String> dateTimeRangeValidator(
     BricksLocalizations localizations,
     String keyString,
-    FormManagerOLD formManager,
+    FormManager formManager,
     RangeController errorController,
     int maxRangeSpanDays,
     int minRangeSpanMinutes,
@@ -68,8 +73,8 @@ class DateTimeValidators {
     ).validator;
   }
 
-  static getFieldInputString(GlobalKey<FormBuilderState> formKey, String rangeStartDateKey) =>
-      formKey.currentState?.fields[rangeStartDateKey]?.value ?? "";
+  // static getFieldInputString(GlobalKey<FormStateBrick> formKey, String rangeStartDateKey) =>
+  //     formKey.currentState?.fields[rangeStartDateKey]?.value ?? "";
 
   static String? validate(String? inputString, String? Function(String inputString) validator) {
     if (inputString == null || inputString.isEmpty) return null;

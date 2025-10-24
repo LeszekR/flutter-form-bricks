@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart' hide RadioGroup;
+import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/choice/radio_group.dart';
@@ -44,7 +45,7 @@ class ChoiceInputs {
     double? width,
     final bool readonly = false,
     final FormFieldValidator<String>? validator,
-    final FormManagerOLD? formManager,
+    final FormManager? formManager,
     final ValueChanged<String?>? onChanged,
   }) {
     return RadioGroup(
@@ -65,7 +66,7 @@ class ChoiceInputs {
     final bool readonly = false,
     final bool required = false,
     final FormFieldValidator? validator,
-    final FormManagerOLD? formManager,
+    final FormManager? formManager,
     final TextEditingController? textEditingController,
     final FocusNode? focusNode,
     final ValueChanged<T?>? onChanged,
@@ -98,7 +99,7 @@ class ChoiceInputs {
   //   required String label,
   //   required List<T> choices,
   //   required BuildContext context,
-  //   required FormManagerOLD formManager,
+  //   required FormManager formManager,
   //   final T? initialValue,
   //   final bool readonly = false,
   //   final bool required = false,
@@ -114,7 +115,7 @@ class ChoiceInputs {
   //       width: 200,
   //       child: FormBuilderTextField(
   //         controller: controller,
-  //         name: "${FormManagerOLD.ignoreFieldKey}.$keyString",
+  //         name: "${FormManager.ignoreFieldKey}.$keyString",
   //         // decoration: AppStyle.inputDecoration(label),
   //         readOnly: true,
   //         validator: validator,

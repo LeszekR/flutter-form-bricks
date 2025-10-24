@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/base/abstract_form.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/standalone_form_manager.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
 import 'package:flutter_form_bricks/src/dialogs/dialogs.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -37,7 +37,7 @@ void main() {
 }
 
 class MockAbstractForm extends AbstractForm {
-    MockAbstractForm({super.key}) : super(formManager: StandaloneFormManagerOLD());
+    MockAbstractForm({super.key}) : super(formManager: SingleFormManager());
 
   @override
   AbstractFormState<AbstractForm> createState() => MockAbstractState();

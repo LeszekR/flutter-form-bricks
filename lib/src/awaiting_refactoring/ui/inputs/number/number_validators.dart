@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 class NumberValidators {
   NumberValidators._();

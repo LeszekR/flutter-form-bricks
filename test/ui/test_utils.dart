@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/form_manager/form_manager.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/standalone_form_manager.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/tabbed_form/tabulated_form_manager.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_form_bricks/src/forms/state/single_form_state_data.dart';
 
 import 'inputs/text/constants.dart';
 
@@ -45,13 +45,13 @@ Future<BuildContext> pumpAppGetContext(WidgetTester tester) async {
   return context;
 }
 
-prepareSimpleForm(WidgetTester tester, StandaloneFormManagerOLD formManager, Widget input) async {
+prepareSimpleForm(WidgetTester tester, SingleFormManager formManager, Widget input) async {
   Widget widgetToTest = Scaffold(body: FormBuilder(key: formManager.formKey, child: input));
   await prepareWidget(tester, (context) => widgetToTest);
   formManager.fillInitialInputValuesMap();
 }
 
-prepareTabulatedForm(final WidgetTester tester, TabulatedFormManagerOLD formManager, List<TabData> tabsData) async {
+prepareTabulatedForm(final WidgetTester tester, TabulatedFormManager formManager, List<TabData> tabsData) async {
   final List<FormBuilder> tabs = tabsData
       .map((tabData) => FormBuilder(
             key: tabData.globalKey,
@@ -66,7 +66,7 @@ Widget makeRequired(
   BuildContext context,
   String keyString,
   String label,
-  StandaloneFormManagerOLD formManager, {
+  SingleFormManager formManager, {
   bool? withTextEditingController,
   String? initialValue,
 }) {
@@ -86,7 +86,7 @@ Widget makeRequiredMin3Chars(
   BuildContext context,
   String keyString,
   String label,
-  StandaloneFormManagerOLD formManager, {
+  SingleFormManager formManager, {
   bool? withTextEditingController,
   String? initialValue,
 }) {
@@ -105,7 +105,7 @@ Widget makeRequiredMin3Chars(
 prepareDataForTrimmingSpacesTests(
   BuildContext context,
   WidgetTester tester,
-  StandaloneFormManagerOLD formManager,
+  SingleFormManager formManager,
   String keyString,
 ) async {
   await prepareWidget(tester);
@@ -134,7 +134,7 @@ prepareDataForTrimmingSpacesTests(
 
 Future<void> enterTextAndUnfocusWidget(
   WidgetTester tester,
-  FormManagerOLD formManager,
+  FormManager formManager,
   String keyString,
   String enteredText,
 ) async {
@@ -146,7 +146,7 @@ Future<void> enterTextAndUnfocusWidget(
 prepareDataForFocusLosingTests(
   BuildContext context,
   WidgetTester tester,
-  StandaloneFormManagerOLD formManager,
+  SingleFormManager formManager,
   String keyString,
 ) async {
   await prepareWidget(tester);
@@ -169,7 +169,7 @@ prepareDataForFocusLosingTests(
       ));
 }
 
-Widget buildTextInputForTest(BuildContext context, String keyString, StandaloneFormManagerOLD formManager) {
+Widget buildTextInputForTest(BuildContext context, String keyString, SingleFormManager formManager) {
   switch (keyString) {
     case ConstantsText.TEXT_SIMPLE_FIELD_KEY:
       return TextInputs.textSimple(
@@ -222,7 +222,7 @@ Widget buildTextInputForTest(BuildContext context, String keyString, StandaloneF
 }
 
 Future<void> performAndCheckInputActions(
-    WidgetTester tester, StandaloneFormManagerOLD formManager, String keyString, Map<String, Function> inputs) async {
+    WidgetTester tester, SingleFormManager formManager, String keyString, Map<String, Function> inputs) async {
   for (var method in inputs.entries) {
     formManager.getTextEditingController(keyString).clear();
     await tester.pump();
@@ -242,6 +242,11 @@ Future<void> performAndCheckInputActions(
       expect(focusNode.hasFocus, true, reason: "${method.key} failed to retain focus");
     }
   }
+}
+
+SingleFormManager makeSingleFormManager() {
+  var stateData = SingleFormStateData();
+
 }
 
 // class TestTabulatedForm extends TabulatedForm {

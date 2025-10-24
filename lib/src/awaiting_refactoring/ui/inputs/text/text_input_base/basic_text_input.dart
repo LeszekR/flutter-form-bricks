@@ -7,6 +7,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import '../../../../../ui_params/ui_params.dart';
 import '../../../forms/form_manager/form_manager.dart';
 import 'text_field_colored.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 
 class BasicTextInput {
   BasicTextInput._();
@@ -20,7 +21,7 @@ class BasicTextInput {
       dynamic initialValue,
       bool readonly = false,
       List<TextInputFormatter>? inputFormatters,
-      required FormManagerOLD formManager,
+      required FormManager formManager,
       FormFieldValidator<String>? validator,
       bool? withTextEditingController,
       ValueChanged<String?>? onChanged,

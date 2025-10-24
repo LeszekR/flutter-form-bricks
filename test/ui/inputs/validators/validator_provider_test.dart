@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/standalone_form_manager.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/date_time_validators.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -25,7 +25,7 @@ void main() {
         BuildContext context = await pumpAppGetContext(tester);
 
         //given
-        var formManager = StandaloneFormManagerOLD();
+        var formManager = SingleFormManager();
         FormFieldValidator<String> validatorMaker() => ValidatorProvider.compose(context: context, isRequired: true);
         await prepareTextSimpleInForm(tester, validatorMaker, formManager);
 
@@ -56,7 +56,7 @@ void main() {
         BuildContext context = await pumpAppGetContext(tester);
 
         //given
-        var formManager = StandaloneFormManagerOLD();
+        var formManager = SingleFormManager();
         validatorMaker() => ValidatorProvider.compose(context: context, maxLength: maxLength.input as int);
         await prepareTextSimpleInForm(tester, validatorMaker, formManager);
 
@@ -88,7 +88,7 @@ void main() {
         BuildContext context = await pumpAppGetContext(tester);
 
         //given
-        var formManager = StandaloneFormManagerOLD();
+        var formManager = SingleFormManager();
         validatorMaker() => ValidatorProvider.compose(context: context, minLength: minLength.input as int);
         await prepareTextSimpleInForm(tester, validatorMaker, formManager);
 
@@ -120,7 +120,7 @@ void main() {
         BuildContext context = await pumpAppGetContext(tester);
 
         //given
-        var formManager = StandaloneFormManagerOLD();
+        var formManager = SingleFormManager();
         validatorMaker() => ValidatorProvider.compose(context: context, maxIntValue: validationValue.input as int);
         await prepareIntegerFieldInForm(tester, validatorMaker, formManager);
 
@@ -152,7 +152,7 @@ void main() {
         BuildContext context = await pumpAppGetContext(tester);
 
         //given
-        var formManager = StandaloneFormManagerOLD();
+        var formManager = SingleFormManager();
         validatorMaker() => ValidatorProvider.compose(context: context, minIntValue: validationValue.input as int);
         await prepareIntegerFieldInForm(tester, validatorMaker, formManager);
 
@@ -187,7 +187,7 @@ void main() {
         BricksLocalizations localizations = await getLocalizations();
 
         //given
-        var formManager = StandaloneFormManagerOLD();
+        var formManager = SingleFormManager();
         var validatorMaker = () => ValidatorProvider.validatorEmail(localizations);
         await prepareTextSimpleInForm(tester, validatorMaker, formManager);
 
@@ -205,7 +205,7 @@ void main() {
 }
 
 Future<void> prepareIntegerFieldInForm(WidgetTester tester, FormFieldValidator<String> Function() validatorMaker,
-    StandaloneFormManagerOLD formManager) async {
+    SingleFormManager formManager) async {
   await prepareWidget(tester);
   final BuildContext context = tester.element(find.byType(Scaffold));
   final validator = validatorMaker();
@@ -220,7 +220,7 @@ Future<void> prepareIntegerFieldInForm(WidgetTester tester, FormFieldValidator<S
 }
 
 Future<void> prepareTextSimpleInForm(WidgetTester tester, FormFieldValidator<String> Function() validatorMaker,
-    StandaloneFormManagerOLD formManager) async {
+    SingleFormManager formManager) async {
   await prepareWidget(tester);
   final BuildContext context = tester.element(find.byType(Scaffold));
 

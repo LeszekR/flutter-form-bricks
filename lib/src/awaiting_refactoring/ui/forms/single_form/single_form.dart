@@ -1,25 +1,29 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_form_bricks/src/forms/base/form_schema.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
+import 'package:flutter_form_bricks/src/forms/state/form_state_data.dart';
+import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/base/form_utils.dart';
 
 import '../base/abstract_form.dart';
-import 'standalone_form_manager.dart';
+import 'single_form_manager.dart';
 
-abstract class StandaloneForm extends AbstractForm {
-  StandaloneForm({super.key}) : super(formManager: StandaloneFormManagerOLD());
+abstract class SingleForm extends AbstractForm {
+  SingleForm(FormStateData stateData, FormSchema formSchema, {super.key})
+      : super(formManager: SingleFormManager(stateData, formSchema));
 
   @override
-  StandaloneFormState createState();
+  SingleFormState createState();
 }
 
-abstract class StandaloneFormState<T extends StandaloneForm> extends AbstractFormState<T> {
+abstract class SingleFormState<T extends SingleForm> extends AbstractFormState<T> {
   List<Widget> createBody(BuildContext context);
 
   @override
-  FormManagerOLD get formManager => super.formManager as StandaloneFormManagerOLD;
+  FormManager get formManager => super.formManager as SingleFormManager;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +64,9 @@ abstract class StandaloneFormState<T extends StandaloneForm> extends AbstractFor
               controller: scrollController,
               child: SingleChildScrollView(
                 controller: scrollController,
-                child: Column(children: createBody(context),),
+                child: Column(
+                  children: createBody(context),
+                ),
               ),
             ),
           ),

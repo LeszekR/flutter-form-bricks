@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/standalone_form_manager.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatters/first_upper_then_lower_case_formatter.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,7 +9,7 @@ import '../../test_utils.dart';
 import 'constants.dart';
 
 void main() {
-  const String keyString = "first_uppercase_text_standalone 2";
+  const String keyString = "first_uppercase_text_single 2";
 
   group('Should always format first uppercase', () {
     final List<TestData> testParameters = [
@@ -39,7 +39,7 @@ void main() {
     //given
     const String enteredText = "Space at the end ";
 
-    final formManager = StandaloneFormManagerOLD();
+    final formManager = SingleFormManager();
     await prepareDataForTrimmingSpacesTests(context, tester, formManager, keyString);
 
     //when
@@ -55,7 +55,7 @@ void main() {
     BuildContext context = await pumpAppGetContext(tester);
 
     //given
-    final formManager = StandaloneFormManagerOLD();
+    final formManager = SingleFormManager();
 
     await prepareDataForFocusLosingTests(context, tester, formManager, keyString);
 

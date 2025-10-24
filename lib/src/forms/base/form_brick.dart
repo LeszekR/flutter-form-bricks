@@ -15,10 +15,10 @@ abstract class FormBrick extends StatefulWidget {
 
   get errorKeyString => _errorTextKeyString;
 
-  GlobalKey<FormBrickState> get formKey => _formManager.formKey;
+  GlobalKey<FormStateBrick> get formKey => _formManager.formKey;
 
   @override
-  FormBrickState createState();
+  FormStateBrick createState();
 
   static Future<dynamic> openForm({required BuildContext context, required Widget form}) {
     return showDialog(context: context, barrierDismissible: false, builder: (BuildContext context) => form);
@@ -26,24 +26,33 @@ abstract class FormBrick extends StatefulWidget {
 }
 
 /// A type alias for a map of form fields.
-typedef FormFieldBrickStateMap = Map<String, FormFieldBrickState<FormFieldBrick>>;
+typedef FormFieldBrickStateMap = Map<String, FormFieldStateBrick<FormFieldBrick>>;
 
-abstract class FormBrickState<T extends FormBrick> extends State<T> {
+abstract class FormStateBrick<T extends FormBrick> extends State<T> {
   /// Do NOT override this method in PROD! This is ONLY FOR UI TESTS!
-  /// Flutter builds UI differently in prod and test. Due to that TestStandaloneForm crashes on control panel vertical
+  /// Flutter builds UI differently in prod and test. Due to that TestSingleForm crashes on control panel vertical
   /// overflow without this correction, This param introduces correction of control panel height
   int testControlsHeightCorrection() => 0;
+
+  // TODO refactor? to FlutterFormBuilder pattern?
+  // TODO fill the map? or remove it?
+  final Map<String, FormFieldStateBrick> fields = {};
 
   late final Map<int, VoidCallback> _keyboardMapping;
 
   FormManager get formManager => widget._formManager;
 
-  final _formKey = GlobalKey<FormBrickState>();
+  final _formKey = GlobalKey<FormStateBrick>();
 
-  GlobalKey<FormBrickState> get formKey => formManager.formKey;
+  GlobalKey<FormStateBrick> get formKey => formManager.formKey;
+
+  // TODO implement in implementations of this class mimcking FlutterFormBuilder
+  // TODO move to FormManager?
+  bool get isValid;
 
   String provideLabel();
 
+  // TODO remove from this abstraction
   void deleteEntity();
 
   void submitData();

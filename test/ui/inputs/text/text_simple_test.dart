@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/standalone_form_manager.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -11,10 +11,10 @@ void main() {
     BuildContext context = await pumpAppGetContext(tester);
 
     //given
-    const String keyString = "regular_input_standalone";
+    const String keyString = "regular_input_single";
     const String enteredText = "Space at the end ";
 
-    final formManager = StandaloneFormManagerOLD();
+    final formManager = SingleFormManager();
     await prepareDataForTrimmingSpacesTests(context, tester, formManager, keyString);
 
     //when
@@ -30,8 +30,8 @@ void main() {
     BuildContext context = await pumpAppGetContext(tester);
 
     //given
-    final formManager = StandaloneFormManagerOLD();
-    const String regularInputKey = "regular_input_standalone";
+    final formManager = SingleFormManager();
+    const String regularInputKey = "regular_input_single";
 
     await prepareDataForFocusLosingTests(context, tester, formManager, regularInputKey);
 

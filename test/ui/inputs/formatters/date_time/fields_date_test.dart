@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/form_manager/form_manager.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/standalone_form_manager.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -40,7 +40,7 @@ void main() {
       DateTimeTestData(datTimLim, "20-a", "20-", false, ''),
       DateTimeTestData(datTimLim, "20-@", "20-", false, ''),
     ];
-    var formManager = StandaloneFormManagerOLD();
+    var formManager = SingleFormManager();
     testAction<String>(String text) => formManager.formKey.currentState!.fields[dateName]?.value;
     makeWidgetFunction(context) => makeTextFieldDate(context, dateName, formManager, mockCurrentDate, datTimLim);
     await testAllCasesInTextField(tester, makeWidgetFunction, formManager, testCases, testAction);
@@ -56,7 +56,7 @@ void main() {
       DateTimeTestData(datTimLim, "20-a", "20-a", false, ''),
       DateTimeTestData(datTimLim, "20-@", "20-@", false, ''),
     ];
-    var formManager = StandaloneFormManagerOLD();
+    var formManager = SingleFormManager();
     testAction<String>(text) => verifyDate(formManager.formKey.currentState!.fields[dateName]?.value);
     makeWidgetFunction(context) => makeTextFieldDate(context, dateName, formManager, mockCurrentDate, datTimLim);
     await testAllCasesInTextField(tester, makeWidgetFunction, formManager, testCases, testAction);
@@ -72,7 +72,7 @@ void main() {
       DateTimeTestData(datTimLim, "30/12-4", "2030-12-04", true, ''),
       DateTimeTestData(datTimLim, "0101", "${today.year}-01-01", true, ''),
     ];
-    var formManager = StandaloneFormManagerOLD();
+    var formManager = SingleFormManager();
     testAction<String>(String text) => formManager.formKey.currentState!.fields[dateName]?.value;
     makeWidgetFunction(context) => makeTextFieldDate(context, dateName, formManager, mockCurrentDate, datTimLim);
     // makeWidgetFunction() => makeTextFieldDate(dateName, formManager);
@@ -83,7 +83,7 @@ void main() {
 Widget makeTextFieldDate(
   BuildContext context,
   String dateName,
-  FormManagerOLD formManager,
+  FormManager formManager,
   CurrentDate currentDate,
   DateTimeLimits dateTimeLimits,
 ) {

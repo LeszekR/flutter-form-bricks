@@ -4,7 +4,7 @@ import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
-import '../../../test_standalone_form.dart';
+import '../../../test_single_form.dart';
 import '../../../test_utils.dart';
 import 'utils/dateTimeRange_test_utils.dart';
 
@@ -40,7 +40,7 @@ void main() {
       // date-start date-end time-end
       RangeTestData(['2024-05-11', '', '2024-05-12', '19:15'], expectedValues, errMsg),
     ];
-    TestStandaloneForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, maxDaysSpan, minMinutesSpan);
+    TestSingleForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, maxDaysSpan, minMinutesSpan);
     bool passedOk = await testDateTimeRangeValidator(tester, form, keyStrings, testCases);
     expect(passedOk, true);
   });
@@ -65,7 +65,7 @@ void main() {
       // no-date-start date-end time-end
       RangeTestData(['', '', '2024-05-12', '19:15'], expectedValues, errMsg),
     ];
-    TestStandaloneForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, maxDaysSpan, minMinutesSpan);
+    TestSingleForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, maxDaysSpan, minMinutesSpan);
     bool passedOk = await testDateTimeRangeValidator(tester, form, keyStrings, testCases);
     expect(passedOk, true);
   });
@@ -76,7 +76,7 @@ void main() {
     var testCases = [
       RangeTestData(['2024-05-11', '', '', '17:15'], [null, errMsg, errMsg, errMsg], errMsg),
     ];
-    TestStandaloneForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, maxDaysSpan, minMinutesSpan);
+    TestSingleForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, maxDaysSpan, minMinutesSpan);
     bool passedOk = await testDateTimeRangeValidator(tester, form, keyStrings, testCases);
     expect(passedOk, true);
   });
@@ -95,7 +95,7 @@ void main() {
       // date-start date-end time-end
       RangeTestData(['2024-05-11', '', '2024-03-12', '19:15'], expectedValues, errMsg),
     ];
-    TestStandaloneForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, maxDaysSpan, minMinutesSpan);
+    TestSingleForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, maxDaysSpan, minMinutesSpan);
     bool passedOk = await testDateTimeRangeValidator(tester, form, keyStrings, testCases);
     expect(passedOk, true);
   });
@@ -119,7 +119,7 @@ void main() {
       RangeTestData([startDateTx, '', endDateTx, '17:15'], expectedValues, errMsg),
       RangeTestData([startDateTx, '00:00', endDateTx, '00:10'], expectedValues, errMsg),
     ];
-    TestStandaloneForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, maxDaysSpan, minMinutesSpan);
+    TestSingleForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, maxDaysSpan, minMinutesSpan);
     bool passedOk = await testDateTimeRangeValidator(tester, form, keyStrings, testCases);
     expect(passedOk, true);
   });
@@ -136,7 +136,7 @@ void main() {
     var testCases = [
       RangeTestData([dateTx, timeTx, dateTx, timeTx], expectedValues, errMsg),
     ];
-    TestStandaloneForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, maxDaysSpan, minMinutesSpan);
+    TestSingleForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, maxDaysSpan, minMinutesSpan);
     bool passedOk = await testDateTimeRangeValidator(tester, form, keyStrings, testCases);
     expect(passedOk, true);
   });
@@ -148,7 +148,7 @@ void main() {
       // date-start time-start time-end
       RangeTestData(['2024-05-11', '18:03', '', '17:15'], [null, errMsg, errMsg, errMsg], errMsg),
     ];
-    TestStandaloneForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, maxDaysSpan, minMinutesSpan);
+    TestSingleForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, maxDaysSpan, minMinutesSpan);
     bool passedOk = await testDateTimeRangeValidator(tester, form, keyStrings, testCases);
     expect(passedOk, true);
   });
@@ -160,7 +160,7 @@ void main() {
       // date-start time-start date-end time-end (date-start = date-end)
       RangeTestData(['2024-05-11', '18:03', '2024-05-11', '17:15'], [null, errMsg, null, errMsg], errMsg),
     ];
-    TestStandaloneForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, maxDaysSpan, minMinutesSpan);
+    TestSingleForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, maxDaysSpan, minMinutesSpan);
     bool passedOk = await testDateTimeRangeValidator(tester, form, keyStrings, testCases);
     expect(passedOk, true);
   });
@@ -181,7 +181,7 @@ void main() {
     var testCases = [
       RangeTestData([dateTx, startTimeTx, '', endTimeTx], [null, errMsg, errMsg, errMsg], errMsg),
     ];
-    TestStandaloneForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, maxDaysSpan, minMinutesSpan);
+    TestSingleForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, maxDaysSpan, minMinutesSpan);
     bool passedOk = await testDateTimeRangeValidator(tester, form, keyStrings, testCases);
     expect(passedOk, true);
   });
@@ -201,7 +201,7 @@ void main() {
     var testCases = [
       RangeTestData([dateTx, startTimeTx, dateTx, endTimeTx], [null, errMsg, null, errMsg], errMsg),
     ];
-    TestStandaloneForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, maxDaysSpan, minMinutesSpan);
+    TestSingleForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, maxDaysSpan, minMinutesSpan);
     bool passedOk = await testDateTimeRangeValidator(tester, form, keyStrings, testCases);
     expect(passedOk, true);
   });

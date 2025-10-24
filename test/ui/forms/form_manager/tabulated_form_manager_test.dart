@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/form_manager/form_manager.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/form_manager/form_state.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/tabbed_form/tabulated_form_manager.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_status.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -20,12 +21,12 @@ void main() {
 
   GlobalKey<FormBuilderState> tabKey1 = GlobalKey<FormBuilderState>();
   GlobalKey<FormBuilderState> tabKey2 = GlobalKey<FormBuilderState>();
-  TabulatedFormManagerOLD formManager;
+  TabulatedFormManager formManager;
   FormFieldValidator<String> validator;
 
   Future<void> prepareTabulatedTest(
     WidgetTester tester,
-    TabulatedFormManagerOLD formManager,
+    TabulatedFormManager formManager,
     FormFieldValidator<String> validator,
   ) async {
     var context = await pumpAppGetContext(tester);
@@ -47,7 +48,7 @@ void main() {
     //given
     BuildContext context = await pumpAppGetContext(tester);
 
-    formManager = TabulatedFormManagerOLD();
+    formManager = TabulatedFormManager();
     validator = ValidatorProvider.compose(context: context, isRequired: true, minLength: 3);
     var allTabData = makeTabDataList(
       context,
@@ -80,7 +81,7 @@ void main() {
         //given
         BuildContext context = await pumpAppGetContext(tester);
 
-        formManager = TabulatedFormManagerOLD();
+        formManager = TabulatedFormManager();
         validator = ValidatorProvider.compose(context: context, isRequired: true, minLength: 3);
         await prepareTabulatedTest(tester, formManager, validator);
 
@@ -103,7 +104,7 @@ void main() {
   testWidgets('Should ignore inputs with "ignoreFieldKey" from check ', (WidgetTester tester) async {
     //given
     BuildContext context = await pumpAppGetContext(tester);
-    formManager = TabulatedFormManagerOLD();
+    formManager = TabulatedFormManager();
     validator = ValidatorProvider.compose(context: context, isRequired: true, minLength: 3);
     var allTabData = makeTabDataList(
       context,
@@ -121,7 +122,7 @@ void main() {
       input2Tab2InitValue: '1234',
     );
 
-    const ignoreFieldKey = "${FormManagerOLD.ignoreFieldKey}.tobeignored";
+    const ignoreFieldKey = "${FormManager.ignoreFieldKey}.tobeignored";
     final inputWithIgnorePrefix = TextInputs.textSimple(
         context: context,
         keyString: ignoreFieldKey,
@@ -161,7 +162,7 @@ void main() {
   testWidgets('Should have VALID status if all inputs are valid', (WidgetTester tester) async {
     //given
     BuildContext context = await pumpAppGetContext(tester);
-    formManager = TabulatedFormManagerOLD();
+    formManager = TabulatedFormManager();
     validator = ValidatorProvider.compose(context: context, isRequired: true, minLength: 3);
     await prepareTabulatedTest(tester, formManager, validator);
 
@@ -180,7 +181,7 @@ void main() {
   testWidgets('Should clear all error messages once form is valid', (WidgetTester tester) async {
     //given
     BuildContext context = await pumpAppGetContext(tester);
-    formManager = TabulatedFormManagerOLD();
+    formManager = TabulatedFormManager();
     validator = ValidatorProvider.compose(context: context, isRequired: true, minLength: 3);
     await prepareTabulatedTest(tester, formManager, validator);
 
@@ -206,7 +207,7 @@ void main() {
   testWidgets('Should reset form', (WidgetTester tester) async {
     //given
     BuildContext context = await pumpAppGetContext(tester);
-    formManager = TabulatedFormManagerOLD();
+    formManager = TabulatedFormManager();
     validator = ValidatorProvider.compose(context: context, isRequired: true, minLength: 3);
     // await prepareTabulatedTest(tester, formManager, validator);
     //
@@ -253,7 +254,7 @@ void main() {
   testWidgets('Should collect data from form and trim string values if needed', (WidgetTester tester) async {
     //given
     BuildContext context = await pumpAppGetContext(tester);
-    formManager = TabulatedFormManagerOLD();
+    formManager = TabulatedFormManager();
     validator = ValidatorProvider.compose(context: context, isRequired: true, minLength: 3);
     await prepareTabulatedTest(tester, formManager, validator);
 
@@ -277,7 +278,7 @@ void main() {
   testWidgets('Should lock tab and disable validation for it', (WidgetTester tester) async {
     //given
     BuildContext context = await pumpAppGetContext(tester);
-    formManager = TabulatedFormManagerOLD();
+    formManager = TabulatedFormManager();
     validator = ValidatorProvider.compose(context: context, isRequired: true, minLength: 3);
     await prepareTabulatedTest(tester, formManager, validator);
 
@@ -309,7 +310,7 @@ List<TabData> makeTabDataList(
   String input2Tab2Key,
   GlobalKey<FormBuilderState> tabKey1,
   GlobalKey<FormBuilderState> tabKey2,
-  TabulatedFormManagerOLD formManager,
+  TabulatedFormManager formManager,
   FormFieldValidator<String> validator, {
   String? input1Tab1InitValue,
   String? input2Tab1InitValue,

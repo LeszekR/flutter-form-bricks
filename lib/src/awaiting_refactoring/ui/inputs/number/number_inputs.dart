@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
+import 'package:flutter_form_bricks/src/inputs/labelled_box/label_position.dart';
+import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/text/text_input_base/basic_text_input.dart';
+import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/input_validator_provider.dart';
+
 
 import '../../forms/form_manager/form_manager.dart';
 import 'decimal_formatter.dart';
@@ -11,7 +17,7 @@ class NumberInputs {
 
   static Widget id({
     required BuildContext context,
-    required FormManagerOLD formManager,
+    required FormManager formManager,
     required int? initialValue,
     required LabelPosition labelPosition,
     final String keyString = "id",
@@ -43,7 +49,7 @@ class NumberInputs {
       required String keyString,
       required String label,
       required LabelPosition labelPosition,
-      required FormManagerOLD formManager,
+      required FormManager formManager,
       final int? initialValue,
       final bool readonly = false,
       final FormFieldValidator<String>? validator,
@@ -89,7 +95,7 @@ class NumberInputs {
       required String keyString,
       required String label,
       required LabelPosition labelPosition,
-      required FormManagerOLD formManager,
+      required FormManager formManager,
       final double? initialValue,
       final int decimalPoints = 2,
       final bool readonly = false,

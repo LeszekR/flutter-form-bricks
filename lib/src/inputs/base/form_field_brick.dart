@@ -25,6 +25,6 @@ abstract class FormFieldBrick extends StatefulWidget {
   });
 }
 
-abstract class FormFieldBrickState<T extends FormFieldBrick> extends State<T> {
+abstract class FormFieldStateBrick<T extends FormFieldBrick> extends State<T> {
   // TODO implement onChange common to all inputs
 }

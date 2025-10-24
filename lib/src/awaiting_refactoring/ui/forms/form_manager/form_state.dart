@@ -1,3 +1,3 @@
-enum FormStatus {
-  noChange, invalid, valid
-}
+// enum FormStatus {
+//   noChange, invalid, valid
+// }

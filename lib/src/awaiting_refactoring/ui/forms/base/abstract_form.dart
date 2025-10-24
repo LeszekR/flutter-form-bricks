@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_form_bricks/src/forms/base/form_brick.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_status.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../../../../dialogs/dialogs.dart';
@@ -18,13 +21,13 @@ abstract class AbstractForm extends StatefulWidget {
 
   get errorKeyString => _errorTextKeyString;
 
-  final FormManagerOLD _formManager;
+  final FormManager _formManager;
 
-  FormManagerOLD get formManager => _formManager;
+  FormManager get formManager => _formManager;
 
-  GlobalKey<FormBuilderState> get formKey => _formManager.formKey;
+  GlobalKey<FormStateBrick> get formKey => _formManager.formKey;
 
-  const AbstractForm({super.key, required FormManagerOLD formManager}) : _formManager = formManager;
+  const AbstractForm({super.key, required FormManager formManager}) : _formManager = formManager;
 
   @override
   AbstractFormState createState();
@@ -36,15 +39,15 @@ abstract class AbstractForm extends StatefulWidget {
 
 abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
   /// Do NOT override this method in release code! This field is necessary for ui tests.
-  /// Flutter builds UI differently in prod and test. Due to that TestStandaloneForm crashes on control panel vertical
+  /// Flutter builds UI differently in prod and test. Due to that TestSingleForm crashes on control panel vertical
   /// overflow without this correction, This param introduces correction of control panel height
   int testControlsHeightCorrection() => 0;
 
   late final Map<int, VoidCallback> _keyboardMapping;
 
-  FormManagerOLD get formManager => widget._formManager;
+  FormManager get formManager => widget._formManager;
 
-  GlobalKey<FormBuilderState> get formKey => formManager.formKey;
+  GlobalKey<FormStateBrick> get formKey => formManager.formKey;
 
   String provideLabel();
 
@@ -206,7 +209,7 @@ abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
 
   onSubmit() {
     final localizations = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
-    final formState = formManager.checkState();
+    final formState = formManager.checkStatus();
 
     switch (formState) {
       case FormStatus.noChange:

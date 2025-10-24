@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_form_bricks/src/forms/base/form_brick.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../../../../../shelf.dart';
@@ -7,7 +8,8 @@ import '../base/abstract_form.dart';
 import 'tabulated_form_manager.dart';
 
 abstract class TabulatedForm extends AbstractForm {
-  TabulatedForm({super.key}) : super(formManager: TabulatedFormManagerOLD());
+  TabulatedForm(FormStateData stateData, FormSchema formSchema, {super.key})
+      : super(formManager: TabulatedFormManager(stateData, formSchema));
 }
 
 abstract class TabulatedFormState<T extends TabulatedForm> extends AbstractFormState<T>
@@ -15,10 +17,10 @@ abstract class TabulatedFormState<T extends TabulatedForm> extends AbstractFormS
   List<TabData> makeTabsData();
 
   @override
-  TabulatedFormManagerOLD get formManager => super.formManager as TabulatedFormManagerOLD;
+  TabulatedFormManager get formManager => super.formManager as TabulatedFormManager;
 
   final _tabsDataList = [];
-  final Map<GlobalKey<FormBuilderState>, Widget> _tabsContent = {};
+  final Map<GlobalKey<FormStateBrick>, Widget> _tabsContent = {};
 
   int _currentTabIndex = 0;
   TabController? _tabController;
@@ -143,7 +145,7 @@ abstract class TabulatedFormState<T extends TabulatedForm> extends AbstractFormS
     );
   }
 
-  Border _getTabBorder(AppStyle appStyle, GlobalKey<FormBuilderState> tabLabel) {
+  Border _getTabBorder(AppStyle appStyle, GlobalKey<FormStateBrick> tabLabel) {
     if (tabLabel == _tabsDataList.first) {
       return Border(top: appStyle.borderTabSide, right: appStyle.borderTabSide, left: appStyle.borderTabSide);
     } else {
@@ -175,7 +177,7 @@ abstract class TabulatedFormState<T extends TabulatedForm> extends AbstractFormS
         index = index == 0 ? tabsLength - 1 : index - 1;
       }
 
-      GlobalKey<FormBuilderState> globalKey = _tabsDataList[index];
+      GlobalKey<FormStateBrick> globalKey = _tabsDataList[index];
       if (!formManager.isTabDisabled(globalKey)) {
         _tabController!.index = index;
         _switchTab();

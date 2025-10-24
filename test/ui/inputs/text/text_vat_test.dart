@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/standalone_form_manager.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -15,12 +15,12 @@ void main() {
       TestData("PL123456789123456", "PL1234567891"),
       TestData("PL1234 567891", "PL1234")
     ];
-    const String textVatFieldKey = "vat_standalone 1";
+    const String textVatFieldKey = "vat_single 1";
 
     for (var param in testParams) {
       testWidgets("should test proper input", (WidgetTester tester) async {
         BuildContext context = await pumpAppGetContext(tester);
-        final formManager = StandaloneFormManagerOLD();
+        final formManager = SingleFormManager();
 
         final input = TextInputs.textVat(
             context: context,

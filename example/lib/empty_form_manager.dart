@@ -14,7 +14,7 @@ class EmptyFormManager extends FormManager {
   void afterFieldChanged() {}
 
   @override
-  FormStatus checkState() {
+  FormStatus checkStatus() {
     return FormStatus.valid;
   }
 
@@ -27,7 +27,7 @@ class EmptyFormManager extends FormManager {
   void fillInitialInputValuesMap() {}
 
   @override
-  FormFieldBrickState<FormFieldBrick>? findField(String keyString) {
+  FormFieldStateBrick<FormFieldBrick>? findField(String keyString) {
     return null;
   }
 

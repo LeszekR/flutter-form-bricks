@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/form_manager/form_state.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/standalone_form_manager.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../test_data.dart';
@@ -25,7 +25,7 @@ void main() {
         final BuildContext context = await pumpAppGetContext(tester);
 
         //given
-        var formManager = StandaloneFormManagerOLD();
+        var formManager = SingleFormManager();
         final input = await NumberInputs.textDouble(
           context: context,
           formManager: formManager,
@@ -41,7 +41,7 @@ void main() {
 
         //then
         formManager.formKey.currentState!.saveAndValidate();
-        final formState = formManager.checkState();
+        final formState = formManager.checkStatus();
         final String? fieldValue = formManager.formKey.currentState!.fields[key]?.value;
 
         expect(params.expected, fieldValue);
@@ -57,14 +57,14 @@ void main() {
     //given
     const idValue = 12;
     // final formManager.formKey = GlobalKey<FormBuilderState>();
-    var formManager = StandaloneFormManagerOLD();
+    var formManager = SingleFormManager();
     final input = NumberInputs.id(
       context: context,
       keyString: key,
       label: "label",
       labelPosition: LabelPosition.topLeft,
       initialValue: idValue,
-      formManager: StandaloneFormManagerOLD(),
+      formManager: SingleFormManager(),
     );
 
     await prepareSimpleForm(tester, formManager, input);

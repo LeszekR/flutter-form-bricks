@@ -3,13 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/text/text_input_base/error_message_notifier_OLD.dart';
 import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 
 import '../../../../../ui_params/ui_params.dart';
 import '../../../forms/form_manager/form_manager.dart';
 
 class TextFieldColored extends StatefulWidget {
   final String keyString;
-  final FormManagerOLD formManager;
+  final FormManager formManager;
   final AutovalidateMode autovalidateMode;
   final double? textWidth;
   final int? maxLines;
