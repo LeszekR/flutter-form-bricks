@@ -38,7 +38,7 @@ void main() {
       TestData("Anuluj", false),
     ];
 
-    for (final param in testParameters) {
+    for (param in testParameters) {
       testWidgets('confirmation dialog should return "${param.expected}" when "${param.input}" is pressed',
           (WidgetTester tester) async {
         // given
@@ -75,7 +75,7 @@ void main() {
       TestData(111, false), // KeyCode for Escape
     ];
 
-    for (final param in testParameters) {
+    for (param in testParameters) {
       testWidgets(
           'confirmation dialog should return "${param.expected}" when key with KeyCode ${keyCodeMapping[param.input]} is pressed',
           (WidgetTester tester) async {
@@ -115,7 +115,7 @@ void main() {
       TestData("Anuluj", 0),
     ];
 
-    for (final param in testParameters) {
+    for (param in testParameters) {
       final message = param.expected == 1 ? "" : "NOT";
       testWidgets('action dialog should $message trigger action when "${param.input}" is pressed',
           (WidgetTester tester) async {
@@ -151,7 +151,7 @@ void main() {
       TestData(111, 0), // KeyCode for Escape
     ];
 
-    for (final param in testParameters) {
+    for (param in testParameters) {
       final message = param.expected == 1 ? "" : "NOT";
       testWidgets('action dialog should $message trigger action when "${keyCodeMapping[param.input]}" is pressed',
           (WidgetTester tester) async {
@@ -209,7 +209,7 @@ void main() {
       TestData(111, true), // KeyCode for Escape
     ];
 
-    for (final param in testParameters) {
+    for (param in testParameters) {
       testWidgets('information dialog should close when key with KeyCode ${keyCodeMapping[param.input]} is pressed',
           (WidgetTester tester) async {
         // given

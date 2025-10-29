@@ -21,15 +21,15 @@ class KeyboardEvents {
     _onEditCompleteCalled = true;
   }
 
-  void subscribeMenu(final Function(RawKeyEvent) listener) {
+  void subscribeMenu(Function(RawKeyEvent) listener) {
     _menuListener ??= listener;
   }
 
-  void subscribe(final Function(RawKeyEvent) listener) {
+  void subscribe(Function(RawKeyEvent) listener) {
     _listener.add(listener);
   }
 
-  void unSubscribe(final Function(RawKeyEvent) listener) {
+  void unSubscribe(Function(RawKeyEvent) listener) {
     _listener.remove(listener);
   }
 
@@ -37,7 +37,7 @@ class KeyboardEvents {
     _listener.clear();
   }
 
-  void handleKey(final RawKeyEvent event) {
+  void handleKey(RawKeyEvent event) {
     // not happy with the workaround but it works fine
     if (_onEditCompleteCalled) {
       _onEditCompleteCalled = false;

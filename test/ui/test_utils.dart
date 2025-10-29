@@ -51,7 +51,7 @@ prepareSimpleForm(WidgetTester tester, SingleFormManager formManager, Widget inp
   formManager.fillInitialInputValuesMap();
 }
 
-prepareTabulatedForm(final WidgetTester tester, TabulatedFormManager formManager, List<TabData> tabsData) async {
+prepareTabulatedForm(WidgetTester tester, TabulatedFormManager formManager, List<TabData> tabsData) async {
   final List<FormBuilder> tabs = tabsData
       .map((tabData) => FormBuilder(
             key: tabData.globalKey,

@@ -6,4 +6,6 @@ class FormFieldDescriptor<T> {
   final FormatterValidatorChain? formatterValidatorChain;
 
   const FormFieldDescriptor(this.keyString, this.initialValue, this.formatterValidatorChain);
+
+  Type get valueType => T.runtimeType;
 }

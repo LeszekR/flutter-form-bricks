@@ -78,7 +78,7 @@ class Dialogs {
       }
     }
 
-    void handleKeyEvent(final RawKeyEvent event) {
+    void handleKeyEvent(RawKeyEvent event) {
       if (event.logicalKey == LogicalKeyboardKey.enter) {
         closeDialog(true);
       } else if (event.logicalKey == LogicalKeyboardKey.escape) {

@@ -19,7 +19,7 @@ void main() {
       TestData("100ABCD,123 123", "10 0AB CD, 123 123"),
     ];
 
-    for (final param in testParameters) {
+    for (param in testParameters) {
       testWidgets('"${param.input}" -> "${param.expected}"', (WidgetTester tester) async {
         //given
         final TextEditingValue newInput = TextEditingValue(text: param.input);

@@ -70,7 +70,7 @@ abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
     });
   }
 
-  void keyBoardActions(final RawKeyEvent event) {
+  void keyBoardActions(RawKeyEvent event) {
     // TODO migrate to new flutter: https://docs.flutter.dev/release/breaking-changes/key-event-migration
     if (event.isShiftPressed) {
       return;

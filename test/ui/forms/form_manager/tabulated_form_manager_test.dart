@@ -76,7 +76,7 @@ void main() {
   });
 
   group('Should have INVALID status at least 1 input is invalid', () {
-    for (final keyThatWillBeInvalid in allKeys) {
+    for (keyThatWillBeInvalid in allKeys) {
       testWidgets('For this iteration $keyThatWillBeInvalid is invalid', (WidgetTester tester) async {
         //given
         BuildContext context = await pumpAppGetContext(tester);
@@ -285,7 +285,7 @@ void main() {
     expect(formManager.isTabDisabled(tabKey1), false);
     expect(formManager.isTabDisabled(tabKey2), false);
 
-    for (final key in [input1Tab2Key, input2Tab2Key]) {
+    for (key in [input1Tab2Key, input2Tab2Key]) {
       await tester.enterText(find.byKey(Key(key)), "12345");
     }
     await tester.pump();

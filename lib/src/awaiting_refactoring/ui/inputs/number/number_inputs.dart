@@ -83,7 +83,7 @@ class NumberInputs {
     );
   }
 
-  static int? intTransformer(final String? input) {
+  static int? intTransformer(String? input) {
     if (input == null || input.isEmpty) {
       return null;
     }
@@ -130,7 +130,7 @@ class NumberInputs {
     );
   }
 
-  static double? _decimalTransformer(final String? input) {
+  static double? _decimalTransformer(String? input) {
     if (input == null || input.isEmpty) {
       return null;
     }

@@ -16,7 +16,7 @@ void main() {
 
     await tester.pumpWidget(MaterialApp(
       home: Builder(
-        builder: (final BuildContext context) {
+        builder: (BuildContext context) {
           return Scaffold(
             body: ElevatedButton(
               onPressed: () => AbstractForm.openForm(context: context, form: const Text(widgetContent)),

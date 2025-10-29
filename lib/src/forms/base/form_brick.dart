@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '../form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/inputs/base/form_field_brick.dart';
 
+import '../form_manager/form_manager.dart';
 
 ///  Top layer of forms used by this software.
 ///  Can be used for forms that are not intended to save any data to db
@@ -67,8 +66,8 @@ abstract class FormStateBrick<T extends FormBrick> extends State<T> {
     // TODO uncomment and refactor
     // KeyboardEvents().subscribe(keyBoardActions);
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      // formManager.
       postConstruct();
-      formManager.fillInitialInputValuesMap();
     });
   }
 
@@ -83,7 +82,7 @@ abstract class FormStateBrick<T extends FormBrick> extends State<T> {
 
   Widget buildBody(BuildContext context);
 
-  void keyBoardActions(final RawKeyEvent event) {
+  void keyBoardActions(RawKeyEvent event) {
     // TODO migrate to new flutter: https://docs.flutter.dev/release/breaking-changes/key-event-migration
     if (event.isShiftPressed) {
       return;
@@ -111,7 +110,10 @@ abstract class FormStateBrick<T extends FormBrick> extends State<T> {
     BuildContext context,
   ) {
     // TODO uncomment and refactor
-    return SizedBox(width: 100, height: 100,);
+    return SizedBox(
+      width: 100,
+      height: 100,
+    );
     // // return FormUtils.horizontalFormGroup(padding:false,height: AppSize.bottomPanelHeight + 1, [
     // return FormUtils.horizontalFormGroupBorderless(height: AppSize.bottomPanelHeight, [
     //   Expanded(

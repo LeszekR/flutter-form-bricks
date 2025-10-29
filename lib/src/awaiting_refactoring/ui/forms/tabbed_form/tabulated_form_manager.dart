@@ -13,7 +13,7 @@ class TabulatedFormManager extends FormManager {
   GlobalKey<FormStateBrick>? _currentTabGlobalKey;
   final Map<GlobalKey<FormStateBrick>, TabData> tabsDataMap = {};
 
-  TabulatedFormManager(super.stateData, super.formSchema);
+  TabulatedFormManager(super.stateData, super.schema);
 
   @override
   void fillInitialInputValuesMap() {
@@ -65,7 +65,7 @@ class TabulatedFormManager extends FormManager {
     // return inputs;
   }
 
-  void addTabData(final TabData tabData) {
+  void addTabData(TabData tabData) {
     var globalKey = tabData.globalKey;
     if (tabsDataMap.containsKey(globalKey)) return;
     tabsDataMap[globalKey] = tabData;
@@ -78,7 +78,7 @@ class TabulatedFormManager extends FormManager {
     return _currentTabGlobalKey!.currentState?.fields[keyString];
   }
 
-  void _setCurrentTab(final String keyString) {
+  void _setCurrentTab(String keyString) {
     if (_currentTabGlobalKey?.currentState?.fields.containsKey(keyString) ?? false) {
       return;
     }
@@ -88,7 +88,7 @@ class TabulatedFormManager extends FormManager {
         .first;
   }
 
-  void calculateTabStatus(final GlobalKey<FormStateBrick> globalKey) {
+  void calculateTabStatus(GlobalKey<FormStateBrick> globalKey) {
     if (isTabDisabled(globalKey)) {
       return;
     }
@@ -109,7 +109,7 @@ class TabulatedFormManager extends FormManager {
         tabsDataMap.entries.map((entry) => MapEntry(entry.value.globalKey.toString(), entry.value.currentStatus)));
   }
 
-  void setDisabled(final GlobalKey<FormStateBrick> globalKey, bool isLockedNow) {
+  void setDisabled(GlobalKey<FormStateBrick> globalKey, bool isLockedNow) {
     var tabData = tabsDataMap[globalKey]!;
 
     if (isLockedNow) {

@@ -17,7 +17,7 @@ void main() {
       TestData("123 ABC", "123 abc"),
     ];
 
-    for (final param in testParameters) {
+    for (param in testParameters) {
       testWidgets('Formatter should turn "${param.input}" into: "${param.expected}"', (WidgetTester tester) async {
         //given
         const TextEditingValue initial = TextEditingValue(text: "");

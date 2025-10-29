@@ -19,7 +19,7 @@ void main() {
       TestData(false, false),
     ];
 
-    for (final param in testParameters) {
+    for (param in testParameters) {
       testWidgets('If required is "${param.input}" then validation result should be: "${param.expected}"',
           (WidgetTester tester) async {
         BuildContext context = await pumpAppGetContext(tester);
@@ -49,7 +49,7 @@ void main() {
       TestData(inputText.length - 1, false),
     ];
 
-    for (final maxLength in testParameters) {
+    for (maxLength in testParameters) {
       testWidgets(
           'If max length is "${maxLength.input}" and user input length is "${inputText.length}" then validation result should be: "${maxLength.expected}"',
           (WidgetTester tester) async {
@@ -81,7 +81,7 @@ void main() {
       TestData(inputText.length - 1, true),
     ];
 
-    for (final minLength in testParameters) {
+    for (minLength in testParameters) {
       testWidgets(
           'If min length is "${minLength.input}" and user input length is "${inputText.length}" then validation result should be: "${minLength.expected}"',
           (WidgetTester tester) async {
@@ -113,7 +113,7 @@ void main() {
       TestData(inputContent - 1, false),
     ];
 
-    for (final validationValue in testParameters) {
+    for (validationValue in testParameters) {
       testWidgets(
           'If max value is "${validationValue.input}" and user input is "$inputContent" then validation result should be: "${validationValue.expected}"',
           (WidgetTester tester) async {
@@ -145,7 +145,7 @@ void main() {
       TestData(inputContent - 1, true),
     ];
 
-    for (final validationValue in testParameters) {
+    for (validationValue in testParameters) {
       testWidgets(
           'If min value is "${validationValue.input}" and user input is "$inputContent" then validation result should be: "${validationValue.expected}"',
           (WidgetTester tester) async {
@@ -179,7 +179,7 @@ void main() {
       TestData("some.email.pl", false),
     ];
 
-    for (final testParam in testParameters) {
+    for (testParam in testParameters) {
       testWidgets(
           'If user input is "${testParam.input}" then email regex validation result should be: "${testParam.expected}"',
           (WidgetTester tester) async {

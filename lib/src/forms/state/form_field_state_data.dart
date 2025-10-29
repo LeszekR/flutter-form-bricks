@@ -1,13 +1,9 @@
 class FormFieldStateData<T> {
-  T? initialValue;
   T? value;
-  bool dirty; // value changed vs initial
-  bool valid; // result of last validation
-  bool validating; // if async validator running
+  bool dirty = false; // value changed vs initialValue
+  bool valid = true; // result of last validation
+  bool validating = false; // if async validator running
   String? errorMessage;
 
-  FormFieldStateData({this.initialValue})
-      : dirty = false,
-        valid = true,
-        validating = false;
+  FormFieldStateData([T? initialValue]) : value = initialValue;
 }

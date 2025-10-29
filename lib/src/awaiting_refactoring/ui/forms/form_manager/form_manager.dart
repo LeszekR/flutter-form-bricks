@@ -105,7 +105,7 @@
 //     return FormStatus.valid;
 //   }
 //
-//   void onFieldChanged(final String keyString, dynamic value) {
+//   void onFieldChanged(String keyString, dynamic value) {
 //     var field = findField(keyString);
 //     if (!(field?.isTouched ?? false)) {
 //       return;
@@ -142,7 +142,7 @@
 //     showErrorMessage(_errorsMap[keyString] ?? '');
 //   }
 //
-//   void addErrorMessageIfIsNew(final String key,String errMsg) {
+//   void addErrorMessageIfIsNew(String key,String errMsg) {
 //     if (_isFieldIgnored(key)) {
 //       return;
 //     }
@@ -156,7 +156,7 @@
 //
 //   bool _isFieldIgnored(String key) => key.startsWith(ignoreFieldKey);
 //
-//   void removeErrorMessageIfPresent(final String key) {
+//   void removeErrorMessageIfPresent(String key) {
 //     if (_errorsMap.containsKey(key)) {
 //       _errorsMap.remove(key);
 //     }
@@ -166,12 +166,12 @@
 //     showErrorMessage(errorMessage);
 //   }
 //
-//   String? getErrorMessage(String keyString) {
+//   String? getFieldError(String keyString) {
 //     if (_errorsMap.containsKey(keyString)) return _errorsMap[keyString];
 //     return null;
 //   }
 //
-//   void saveErrorMessage(String keyString, String? errorMessage) {
+//   void setFieldError(String keyString, String? errorMessage) {
 //     _errorsMap[keyString] = errorMessage;
 //   }
 //
@@ -187,7 +187,7 @@
 //
 //   _getInputValue(String inputIdString) => findField(inputIdString)!.value;
 //
-//   dynamic _parseDataFromInput(final value) {
+//   dynamic _parseDataFromInput(value) {
 //     if (value == null) {
 //       return value;
 //     }
@@ -201,7 +201,7 @@
 //     return trimmed.isEmpty ? null : trimmed;
 //   }
 //
-// // Map<String, dynamic> _collectInputData(final Map<String, dynamic> inputs) {
+// // Map<String, dynamic> _collectInputData(Map<String, dynamic> inputs) {
 // //   final Map<String, dynamic> parentMap = {};
 // //
 // //   inputs.forEach((inputKey, value) {
@@ -214,7 +214,7 @@
 // //   return parentMap;
 // // }
 // //
-// // void _updateNestedMap(final Map<String, dynamic> parentMap,List<String> keys,dynamic value) {
+// // void _updateNestedMap(Map<String, dynamic> parentMap,List<String> keys,dynamic value) {
 // //   Map<String, dynamic> currentMap = parentMap;
 // //   for (int i = 0; i < keys.length - 1; i++) {
 // //     currentMap = currentMap.putIfAbsent(keys[i], () => <String, dynamic>{}) as Map<String, dynamic>;

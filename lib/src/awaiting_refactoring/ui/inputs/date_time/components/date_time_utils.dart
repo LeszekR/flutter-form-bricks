@@ -58,7 +58,7 @@ class DateTimeUtils {
     return StringParseResult(result, true, '');
   }
 
-  String removeBadChars(final String text,String stringDelimiterPattern) {
+  String removeBadChars(String text,String stringDelimiterPattern) {
     var textClean = '', nextChar = '';
     var regExp = RegExp('[0-9]|$stringDelimiterPattern');
     for (int i = 0; i < text.length; i++) {
@@ -96,7 +96,7 @@ class DateTimeUtils {
     return localizations.timeStringErrorTooManyDelimiters;
   }
 
-  String addErrMsg(final String errMsg,String connector,String nextErrorMessage) {
+  String addErrMsg(String errMsg,String connector,String nextErrorMessage) {
     return (errMsg.isEmpty ? '' : (errMsg + connector)) + nextErrorMessage;
   }
 
@@ -207,7 +207,7 @@ class DateTimeUtils {
 //   return DateFormat('yyyy-MM-dd').format(parsedDate!);
 // }
 //
-// static String parseDateQuickInput(final String originalValue) {
+// static String parseDateQuickInput(String originalValue) {
 //   final List<String> elements = _readElementsFromRawInput(originalValue);
 //   if (elements.length < 2 || elements.length > 3) {
 //     return originalValue;
@@ -231,7 +231,7 @@ class DateTimeUtils {
 //   return "$year-$month-$day";
 // }
 //
-// static String? parseTimeQuickInput(final String originalValue) {
+// static String? parseTimeQuickInput(String originalValue) {
 //   final List<String> elements = _readElementsFromRawInput(originalValue);
 //   if (elements.isEmpty || elements.length > 2) {
 //     return originalValue;
@@ -253,7 +253,7 @@ class DateTimeUtils {
 //   return "$hour:$minute";
 // }
 //
-// static String? _parseTimeInputFromUnseparatedStringInputValue(final String rawInput) {
+// static String? _parseTimeInputFromUnseparatedStringInputValue(String rawInput) {
 //   switch (rawInput.length) {
 //     case 1:
 //       return "0$rawInput:00";
@@ -272,7 +272,7 @@ class DateTimeUtils {
 //   }
 // }
 //
-// static String? getYearFromInput(final List<String> elements) {
+// static String? getYearFromInput(List<String> elements) {
 //   final bool containsYear = elements.length == 3;
 //   if (!containsYear) {
 //     return DateTime.now().year.toString();
@@ -288,7 +288,7 @@ class DateTimeUtils {
 //   }
 // }
 //
-// static String? parseDatetimeValue(final String raw,int minInclusive,int maxInclusive) {
+// static String? parseDatetimeValue(String raw,int minInclusive,int maxInclusive) {
 //   final intValue = int.tryParse(raw);
 //   if (intValue == null || intValue < minInclusive || intValue > maxInclusive) {
 //     return null;

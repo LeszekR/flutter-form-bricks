@@ -3,7 +3,7 @@ import 'package:flutter_form_bricks/src/forms/form_manager/form_status.dart';
 import 'package:flutter_form_bricks/src/inputs/base/form_field_brick.dart';
 
 class SingleFormManager extends FormManager {
-  SingleFormManager(super.stateData, super.formSchema);
+  SingleFormManager(super.stateData, super.schema);
 
   @override
   void fillInitialInputValuesMap() {

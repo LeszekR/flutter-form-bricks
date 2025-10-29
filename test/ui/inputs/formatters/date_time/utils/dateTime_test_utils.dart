@@ -23,7 +23,7 @@ Future<bool> testDateTimeExcelStyleInput(
 ) async {
   bool passedOk = true;
 
-  for (final testCase in testCases) {
+  for (testCase in testCases) {
     //when
     var textInput = testCase.input;
     await tester.enterText(find.byType(FormBuilderTextField), textInput);
@@ -69,11 +69,11 @@ bool testDateTimeFormatter(
   bool passedOk = true;
 
   if (delimitersPattern == null) {
-    for (final testCase in testCases) {
+    for (testCase in testCases) {
       passedOk &= assertSingleCaseDateTimeFormatter(localizations, testCase, testDateTimeFormatter);
     }
   } else {
-    for (final testCase in testCases) {
+    for (testCase in testCases) {
       for (String delimiter in extractDelimitersList(delimitersPattern)) {
         passedOk &= assertSingleCaseDateTimeFormatter(localizations, testCase, testDateTimeFormatter,
             delimiter: delimiter, placeholder: placeholder);
@@ -107,7 +107,7 @@ bool assertSingleCaseDateTimeFormatter(
   return errors == null;
 }
 
-String? tryExpect(final String input, dynamic actual, dynamic expected, String? errors, String testCaseTitle) {
+String? tryExpect(String input, dynamic actual, dynamic expected, String? errors, String testCaseTitle) {
   try {
     expect(actual, expected);
   } catch (e) {

@@ -166,7 +166,7 @@ abstract class TabulatedFormState<T extends TabulatedForm> extends AbstractFormS
     return fromSuper;
   }
 
-  void _jumpToNextActiveTab(final bool forward) {
+  void _jumpToNextActiveTab(bool forward) {
     int index = _tabController!.index;
     int tabsLength = _tabController!.length;
 

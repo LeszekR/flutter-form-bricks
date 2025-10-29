@@ -99,7 +99,7 @@ Future<bool> testDateTimeRangeValidator(
     // then
     // .......................................................................................
     for (int i = 0; i < 4; i++) {
-      actual = formManager.getErrorMessage(keyStrings[i]);
+      actual = formManager.getFieldError(keyStrings[i]);
       expected = testCase.expectedValues[i];
       errors = tryExpect('', actual, expected, errors, 'field ${i + 1}');
     }

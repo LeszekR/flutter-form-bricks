@@ -21,25 +21,25 @@ class Date implements Comparable<Date> {
     return Date(DateTime.now());
   }
 
-  static Date fromString(final String stringVal) {
+  static Date fromString(String stringVal) {
     final parsed = dateFormat.parseStrict(stringVal);
     return Date(parsed);
   }
 
-  Date modify(final Duration duration) {
+  Date modify(Duration duration) {
     return Date(_dateTime.add(duration));
   }
 
-  Date subtract(final Duration duration) {
+  Date subtract(Duration duration) {
     return Date(_dateTime.subtract(duration));
   }
 
-  Date add(final Duration duration) {
+  Date add(Duration duration) {
     return Date(_dateTime.add(duration));
   }
 
   //duplicated method needed by JSON_SERIALIZER
-  factory Date.fromJson(final String value) => fromString(value);
+  factory Date.fromJson(String value) => fromString(value);
   String toJson() => dateFormat.format(_dateTime);
 
   DateTime get dateTime => _dateTime;
@@ -68,7 +68,7 @@ class Time  implements Comparable<Date> {
     return Time(DateTime.now());
   }
 
-  static Time fromString(final String stringVal) {
+  static Time fromString(String stringVal) {
     final parsed = _isSecondsPrecision(stringVal) //hotfix. Need to discuss the time handling in the project
         ? Date.timeFormatSecondsPrecision.parseStrict(stringVal)
         : Date.timeFormatMinutePrecision.parseStrict(stringVal);
@@ -76,7 +76,7 @@ class Time  implements Comparable<Date> {
     return Time(parsed);
   }
 
-  Time modify(final Duration duration) {
+  Time modify(Duration duration) {
     return Time(_dateTime.add(duration));
   }
 
@@ -84,7 +84,7 @@ class Time  implements Comparable<Date> {
   factory Time.fromJson(String value) => fromString(value);
   String toJson() => Date.timeFormatMinutePrecision.format(_dateTime);
 
-  static bool _isSecondsPrecision(final String input) {
+  static bool _isSecondsPrecision(String input) {
     return input.length > 5; //hh:mm  vs hh:mm:ss
   }
 

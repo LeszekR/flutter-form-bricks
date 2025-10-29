@@ -6,6 +6,7 @@ import 'package:flutter_form_bricks/shelf.dart' show FormatterHelper, BricksLoca
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/text/text_inputs.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_status.dart';
+import 'package:flutter_form_bricks/src/forms/state/field_and_validator.dart';
 import 'package:flutter_form_bricks/src/forms/state/single_form_state_data.dart';
 import 'package:flutter_form_bricks/src/inputs/labelled_box/label_position.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/input_validator_provider.dart';
@@ -15,7 +16,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../test_utils.dart';
 
 void main() {
-  var formStateData = SingleFormStateData();
+  var formStateData = SingleFormStateData(formKeyString,_schema );
 
   testWidgets("Should test trimming spaces in only lowercase text field", (WidgetTester tester) async {
     //given

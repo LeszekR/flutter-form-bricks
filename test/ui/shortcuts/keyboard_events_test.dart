@@ -15,7 +15,7 @@ void main() {
     final KeyboardEvents keyboardEvents = KeyboardEvents.instance();
 
     int timesCalled = 0;
-    testListener(final RawKeyEvent event) {
+    testListener(RawKeyEvent event) {
       timesCalled++;
     }
 
@@ -32,12 +32,12 @@ void main() {
     final KeyboardEvents keyboardEvents = KeyboardEvents.instance();
 
     int firstCalled = 0;
-    firstListener(final RawKeyEvent event) {
+    firstListener(RawKeyEvent event) {
       firstCalled++;
     }
 
     int secondCalled = 0;
-    secondListener(final RawKeyEvent event) {
+    secondListener(RawKeyEvent event) {
       secondCalled++;
     }
 
@@ -57,13 +57,13 @@ void main() {
     final KeyboardEvents keyboardEvents = KeyboardEvents.instance();
 
     int firstCalled = 0;
-    firstListener(final RawKeyEvent event) {
+    firstListener(RawKeyEvent event) {
       firstCalled++;
     }
 
 
     int secondCalled = 0;
-    secondListener(final RawKeyEvent event) {
+    secondListener(RawKeyEvent event) {
       secondCalled++;
     }
 
@@ -85,18 +85,18 @@ void main() {
     final KeyboardEvents keyboardEvents = KeyboardEvents.instance();
 
     int menuCalled = 0;
-    menuListener(final RawKeyEvent event) {
+    menuListener(RawKeyEvent event) {
       menuCalled++;
     }
     keyboardEvents.subscribeMenu(menuListener);
 
     int firstCalled = 0;
-    firstListener(final RawKeyEvent event) {
+    firstListener(RawKeyEvent event) {
       firstCalled++;
     }
 
     int secondCalled = 0;
-    secondListener(final RawKeyEvent event) {
+    secondListener(RawKeyEvent event) {
       secondCalled++;
     }
 

@@ -15,7 +15,7 @@ class AppScale with ChangeNotifier {
   double _currentScale = 1.0;
 
   // TODO create app scaling
-  void setScale(final double newVal) {
+  void setScale(double newVal) {
     // CacheService().cache.setDouble(_scaleKey, newVal);
     // _currentScale = newVal;
     //

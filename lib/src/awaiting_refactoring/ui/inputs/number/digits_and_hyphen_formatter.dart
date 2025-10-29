@@ -12,7 +12,7 @@ class DigitsAndHyphenFormatter extends TextInputFormatter {
   DigitsAndHyphenFormatter._();
 
   @override
-  TextEditingValue formatEditUpdate(final TextEditingValue oldValue,TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue,TextEditingValue newValue) {
     return _requiredRegex.hasMatch(newValue.text) ? newValue : oldValue;
   }
 }

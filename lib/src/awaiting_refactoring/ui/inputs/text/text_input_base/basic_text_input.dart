@@ -494,7 +494,7 @@ class BasicTextInput {
     );
   }
 
-  static Widget label(final String text,double? fontSize,
+  static Widget label(String text,double? fontSize,
       {final FontWeight? fontWeight = FontWeight.bold,Color? color = Colors.black}) {
     return SizedBox(
         height: fontSize,

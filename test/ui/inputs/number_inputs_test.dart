@@ -20,7 +20,7 @@ void main() {
       TestData("123,145", "123,145"),
     ];
 
-    for (final params in testParameters) {
+    for (params in testParameters) {
       testWidgets('should complain about ${params.input}', (WidgetTester tester) async {
         final BuildContext context = await pumpAppGetContext(tester);
 

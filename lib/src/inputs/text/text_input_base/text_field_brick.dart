@@ -192,7 +192,7 @@ class _StateAwareTextFieldState extends FormFieldStateBrick<TextFieldBrick> with
   void initState() {
     super.initState();
 
-    super.setErrorMessageListener(widget.formManager, widget.keyString);
+    super.setFieldErrorListener(widget.formManager, widget.keyString);
 
     // TODO uncomment and finish
     _states = widget.statesNotifier?.value;

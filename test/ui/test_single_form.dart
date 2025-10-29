@@ -10,13 +10,12 @@ class TestSingleForm extends SingleForm {
     // TODO: implement createState
     throw UnimplementedError();
   }
-
 }
 
 class TestSingleFormStateData extends SingleFormStateData {
-  TestSingleFormStateData(super.formKeyString, super.fieldList);
+  TestSingleFormStateData() : super('form_key_string', []);
 }
 
 class TestSingleFormSchema extends FormSchema {
-  TestSingleFormSchema(super.descriptors);
+  TestSingleFormSchema() : super([]);
 }

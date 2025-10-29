@@ -65,7 +65,7 @@ class _TextFieldColoredState extends State<TextFieldColored> with ErrorMessageNo
   void initState() {
     super.initState();
 
-    super.setErrorMessageListener(widget.formManager, widget.keyString);
+    super.setFieldErrorListener(widget.formManager, widget.keyString);
 
     if (widget.withTextEditingController ?? true) {
       var controllerValue = widget.initialValue;

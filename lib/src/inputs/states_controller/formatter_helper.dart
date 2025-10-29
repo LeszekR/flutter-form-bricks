@@ -13,7 +13,7 @@ class FormatterHelper {
     );
   }
 
-  static String formatDigitsWithSpaces(final String originalText) {
+  static String formatDigitsWithSpaces(String originalText) {
     final withoutSpaces = originalText.replaceAll(' ', '');
 
     if (withoutSpaces.length <= 3) {
@@ -28,16 +28,16 @@ class FormatterHelper {
     return "$leadingSegment $otherSegments";
   }
 
-  static int _determineFirstSegment(final String text) {
+  static int _determineFirstSegment(String text) {
     final modulo = text.length % 3;
     return modulo == 0 ? 3 : modulo;
   }
 
-  static String _putSpaceBetweenChars(final String text) {
+  static String _putSpaceBetweenChars(String text) {
     return text.replaceAllMapped(_regexToPutSpaceBetweenChars, (Match m) => '${m[1]} ');
   }
 
-  static calculateCursorPosition(final String formattedText,TextEditingValue newValue) {
+  static calculateCursorPosition(String formattedText,TextEditingValue newValue) {
     int newCursorPosition =  newValue.selection.baseOffset;
 
     // Adjust cursor position based on formatting changes
