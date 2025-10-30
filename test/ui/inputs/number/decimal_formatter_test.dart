@@ -20,9 +20,9 @@ void main() {
     ];
 
     for (param in testParameters) {
-      testWidgets('"${param.input}" -> "${param.expected}"', (WidgetTester tester) async {
+      testWidgets('"${param.inputString}" -> "${param.expected}"', (WidgetTester tester) async {
         //given
-        final TextEditingValue newInput = TextEditingValue(text: param.input);
+        final TextEditingValue newInput = TextEditingValue(text: param.inputString);
 
         //when
         final result = DoubleInputFormatter().formatEditUpdate(initial, newInput);

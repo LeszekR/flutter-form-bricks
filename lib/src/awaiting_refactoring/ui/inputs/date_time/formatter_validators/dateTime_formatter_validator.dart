@@ -44,8 +44,8 @@ class DateTimeFormatterValidator {
     textTrimmed = textTrimmed.replaceAll(RegExp(' +'), ' ');
 
     var nSpaces = RegExp(' ').allMatches(textTrimmed).length;
-    if (nSpaces == 0) return StringParseResult(textTrimmed, false, localizations.datetimeStringErrorNoSpace);
-    if (nSpaces > 1) return StringParseResult(textTrimmed, false, localizations.datetimeStringErrorTooManySpaces);
+    if (nSpaces == 0) return StringParseResult.err(textTrimmed, null, localizations.datetimeStringErrorNoSpace);
+    if (nSpaces > 1) return StringParseResult.err(textTrimmed, null, localizations.datetimeStringErrorTooManySpaces);
 
     var elementsList = textTrimmed.split(RegExp(' '));
     String dateString = elementsList[0];
@@ -61,11 +61,14 @@ class DateTimeFormatterValidator {
     var isStringValidTime = parseResultTime.isStringValid;
 
     // valid
-    if (isStringValidDate && isStringValidTime) return StringParseResult(parsedString, true, '');
+    if (isStringValidDate && isStringValidTime) {
+      DateTime dateTime = DateTime.parse(parsedString);
+      return StringParseResult.ok(parsedString, dateTime);
+    }
 
     // invalid
     var connector = (!isStringValidDate && !isStringValidTime) ? '\n' : '';
     var errorMessage = '$errorMessageDate$connector$errorMessageTime';
-    return StringParseResult(parsedString, false, errorMessage);
+    return StringParseResult.err(parsedString, null, errorMessage);
   }
 }

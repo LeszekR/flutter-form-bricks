@@ -10,7 +10,7 @@ import '../../../../dialogs/dialogs.dart';
 import '../../../../ui_params/ui_params.dart';
 import '../../buttons/buttons.dart';
 import '../../shortcuts/keyboard_shortcuts.dart';
-import '../form_manager/form_manager.dart';
+import '../form_manager/form_manager_OLD.dart';
 import '../form_manager/form_state.dart';
 import 'form_utils.dart';
 
@@ -21,13 +21,13 @@ abstract class AbstractForm extends StatefulWidget {
 
   get errorKeyString => _errorTextKeyString;
 
-  final FormManager _formManager;
+  final FormManagerOLD _formManager;
 
-  FormManager get formManager => _formManager;
+  FormManagerOLD get formManager => _formManager;
 
-  GlobalKey<FormStateBrick> get formKey => _formManager.formKey;
+  GlobalKey<FormBuilderState> get formKey => _formManager.formKey;
 
-  const AbstractForm({super.key, required FormManager formManager}) : _formManager = formManager;
+  const AbstractForm({super.key, required FormManagerOLD formManager}) : _formManager = formManager;
 
   @override
   AbstractFormState createState();
@@ -45,9 +45,9 @@ abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
 
   late final Map<int, VoidCallback> _keyboardMapping;
 
-  FormManager get formManager => widget._formManager;
+  FormManagerOLD get formManager => widget._formManager;
 
-  GlobalKey<FormStateBrick> get formKey => formManager.formKey;
+  GlobalKey<FormBuilderState> get formKey => formManager.formKey;
 
   String provideLabel();
 

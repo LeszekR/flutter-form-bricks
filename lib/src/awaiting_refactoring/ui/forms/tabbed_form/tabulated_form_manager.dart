@@ -1,19 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/forms/base/form_brick.dart';
-import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/form_manager/form_manager_OLD.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_status.dart';
-import 'package:flutter_form_bricks/src/inputs/base/form_field_brick.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import 'tab_data.dart';
 import 'tab_status.dart';
 
-class TabulatedFormManager extends FormManager {
+class TabulatedFormManager extends FormManagerOLD {
   final ValueNotifier<Map<String, TabStatus>> tabStatusNotifier = ValueNotifier<Map<String, TabStatus>>({});
-  GlobalKey<FormStateBrick>? _currentTabGlobalKey;
-  final Map<GlobalKey<FormStateBrick>, TabData> tabsDataMap = {};
+  GlobalKey<FormBuilderState>? _currentTabGlobalKey;
+  final Map<GlobalKey<FormBuilderState>, TabData> tabsDataMap = {};
 
-  TabulatedFormManager(super.stateData, super.schema);
+  TabulatedFormManager();
 
   @override
   void fillInitialInputValuesMap() {
@@ -72,7 +71,7 @@ class TabulatedFormManager extends FormManager {
   }
 
   @override
-  FormFieldStateBrick<FormFieldBrick>? findField(String keyString) {
+  FormBuilderFieldState<FormBuilderField<dynamic>, dynamic>? findField(String keyString) {
     // TODO refactor to FlutterFormBuilder pattern - ?
     _setCurrentTab(keyString);
     return _currentTabGlobalKey!.currentState?.fields[keyString];
@@ -88,7 +87,7 @@ class TabulatedFormManager extends FormManager {
         .first;
   }
 
-  void calculateTabStatus(GlobalKey<FormStateBrick> globalKey) {
+  void calculateTabStatus(GlobalKey<FormBuilderState> globalKey) {
     if (isTabDisabled(globalKey)) {
       return;
     }
@@ -109,7 +108,7 @@ class TabulatedFormManager extends FormManager {
         tabsDataMap.entries.map((entry) => MapEntry(entry.value.globalKey.toString(), entry.value.currentStatus)));
   }
 
-  void setDisabled(GlobalKey<FormStateBrick> globalKey, bool isLockedNow) {
+  void setDisabled(GlobalKey<FormBuilderState> globalKey, bool isLockedNow) {
     var tabData = tabsDataMap[globalKey]!;
 
     if (isLockedNow) {
@@ -122,7 +121,7 @@ class TabulatedFormManager extends FormManager {
     _notifyTabStatusChange();
   }
 
-  bool isTabDisabled(GlobalKey<FormStateBrick> globalKey) {
+  bool isTabDisabled(GlobalKey<FormBuilderState> globalKey) {
     return tabsDataMap[globalKey]!.currentStatus == TabStatus.tabDisabled;
   }
 }

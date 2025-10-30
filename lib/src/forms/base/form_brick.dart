@@ -66,7 +66,6 @@ abstract class FormStateBrick<T extends FormBrick> extends State<T> {
     // TODO uncomment and refactor
     // KeyboardEvents().subscribe(keyBoardActions);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // formManager.
       postConstruct();
     });
   }

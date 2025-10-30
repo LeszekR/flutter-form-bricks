@@ -6,11 +6,11 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 
 import '../../../../../ui_params/ui_params.dart';
-import '../../../forms/form_manager/form_manager.dart';
+import '../../../forms/form_manager/form_manager_OLD.dart';
 
 class TextFieldColored extends StatefulWidget {
   final String keyString;
-  final FormManager formManager;
+  final FormManagerOLD formManager;
   final AutovalidateMode autovalidateMode;
   final double? textWidth;
   final int? maxLines;

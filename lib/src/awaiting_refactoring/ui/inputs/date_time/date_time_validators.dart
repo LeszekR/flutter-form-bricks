@@ -13,6 +13,8 @@ import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/forms/base/form_brick.dart';
 
+import '../../forms/form_manager/form_manager_OLD.dart';
+
 
 
 typedef ValidatorFunction = String? Function(String);
@@ -58,7 +60,7 @@ class DateTimeValidators {
   static FormFieldValidator<String> dateTimeRangeValidator(
     BricksLocalizations localizations,
     String keyString,
-    FormManager formManager,
+    FormManagerOLD formManager,
     RangeController errorController,
     int maxRangeSpanDays,
     int minRangeSpanMinutes,
@@ -73,7 +75,7 @@ class DateTimeValidators {
     ).validator;
   }
 
-  // static getFieldInputString(GlobalKey<FormStateBrick> formKey, String rangeStartDateKey) =>
+  // static getFieldInputString(GlobalKey<FormBuilderState> formKey, String rangeStartDateKey) =>
   //     formKey.currentState?.fields[rangeStartDateKey]?.value ?? "";
 
   static String? validate(String? inputString, String? Function(String inputString) validator) {

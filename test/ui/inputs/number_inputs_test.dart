@@ -21,7 +21,7 @@ void main() {
     ];
 
     for (params in testParameters) {
-      testWidgets('should complain about ${params.input}', (WidgetTester tester) async {
+      testWidgets('should complain about ${params.inputString}', (WidgetTester tester) async {
         final BuildContext context = await pumpAppGetContext(tester);
 
         //given
@@ -36,13 +36,13 @@ void main() {
         await prepareSimpleForm(tester, formManager, input);
 
         //when
-        await tester.enterText(find.byKey(const Key(key)), params.input);
+        await tester.enterText(find.byKey(const Key(key)), params.inputString);
         await tester.pump();
 
         //then
         formManager.formKey.currentState!.saveAndValidate();
         final formState = formManager.checkStatus();
-        final String? fieldValue = formManager.formKey.currentState!.fields[key]?.value;
+        final String? fieldValue = formManager.formKey.currentState!.fields[key]?.parsedValue;
 
         expect(params.expected, fieldValue);
         expect(find.text(params.expected), findsOneWidget);
@@ -75,7 +75,7 @@ void main() {
 
     //then
     formManager.formKey.currentState!.save();
-    final String? fieldValue = formManager.formKey.currentState!.fields[key]?.value;
+    final String? fieldValue = formManager.formKey.currentState!.fields[key]?.parsedValue;
 
     expect("12", fieldValue);
     expect(find.text("12"), findsOneWidget);

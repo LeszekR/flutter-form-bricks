@@ -5,7 +5,7 @@ import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_s
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../../../../../ui_params/ui_params.dart';
-import '../../../forms/form_manager/form_manager.dart';
+import '../../../forms/form_manager/form_manager_OLD.dart';
 import 'text_field_colored.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 
@@ -21,7 +21,7 @@ class BasicTextInput {
       dynamic initialValue,
       bool readonly = false,
       List<TextInputFormatter>? inputFormatters,
-      required FormManager formManager,
+      required FormManagerOLD formManager,
       FormFieldValidator<String>? validator,
       bool? withTextEditingController,
       ValueChanged<String?>? onChanged,

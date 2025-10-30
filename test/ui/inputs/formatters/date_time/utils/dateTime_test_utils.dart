@@ -25,17 +25,17 @@ Future<bool> testDateTimeExcelStyleInput(
 
   for (testCase in testCases) {
     //when
-    var textInput = testCase.input;
+    var textInput = testCase.inputString;
     await tester.enterText(find.byType(FormBuilderTextField), textInput);
     await tester.testTextInput.receiveAction(TextInputAction.done);
     formKey.currentState!.save();
     await tester.pump();
 
     //then
-    final dynamic actual = testAction.call(textInput);
+    final dynamic actual = testAction.run(textInput);
 
     passedOk &= (actual == testCase.expected) == (testCase.isValid);
-    if (!passedOk) debugPrint(makerrorString(testCase.input, testCase.input, actual, testCase.expected));
+    if (!passedOk) debugPrint(makerrorString(testCase.inputString, testCase.inputString, actual, testCase.expected));
   }
   return Future.value(passedOk);
 }

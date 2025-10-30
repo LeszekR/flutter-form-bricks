@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/tabbed_form/tab_status.dart';
 import 'package:flutter_form_bricks/src/forms/base/form_brick.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 class TabData {
-  final GlobalKey<FormStateBrick> globalKey;
+  final GlobalKey<FormBuilderState> globalKey;
   final String label;
   final Widget Function() makeTabContent;
   final TabStatus initialStatus;

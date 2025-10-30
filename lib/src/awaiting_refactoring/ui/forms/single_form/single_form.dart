@@ -1,19 +1,16 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_form_bricks/src/forms/base/form_schema.dart';
-import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
-import 'package:flutter_form_bricks/src/forms/state/form_state_data.dart';
-import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/base/form_utils.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/form_manager/form_manager_OLD.dart';
+import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../base/abstract_form.dart';
 import 'single_form_manager.dart';
 
 abstract class SingleForm extends AbstractForm {
-  SingleForm(FormStateData stateData, FormSchema formSchema, {super.key})
-      : super(formManager: SingleFormManager(stateData, formSchema));
+  SingleForm({super.key}) : super(formManager: SingleFormManager());
 
   @override
   SingleFormState createState();
@@ -23,7 +20,7 @@ abstract class SingleFormState<T extends SingleForm> extends AbstractFormState<T
   List<Widget> createBody(BuildContext context);
 
   @override
-  FormManager get formManager => super.formManager as SingleFormManager;
+  FormManagerOLD get formManager => super.formManager as SingleFormManager;
 
   @override
   Widget build(BuildContext context) {

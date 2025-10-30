@@ -11,6 +11,7 @@ abstract class FormManager extends ChangeNotifier {
   final _formKey = GlobalKey<FormStateBrick>();
   final FormStateData _stateData;
   final FormSchema _schema;
+  final Map<String, FocusNode> _focusNodeMap = {};
 
   FormStatus checkStatus();
 
@@ -22,7 +23,7 @@ abstract class FormManager extends ChangeNotifier {
     if (!_stateData.isInitialised) {
       resetForm();
     }
-    String? error = getFieldError((_getFocusedKeyString()));
+    String? error = getFieldError(_getFocusedKeyString());
     _showErrorMessage(error);
   }
 
@@ -49,7 +50,7 @@ abstract class FormManager extends ChangeNotifier {
 
   void storeFieldValue(String keyString, dynamic value) => _getFieldStateData(keyString).value = value;
 
-  String? getFieldError(String keyString) => _getFieldStateData(keyString).errorMessage;
+  String? getFieldError(String? keyString) => keyString == null ? null : _getFieldStateData(keyString).errorMessage;
 
   void setFieldError(String keyString, String? error) => _getFieldStateData(keyString).errorMessage = error;
 
@@ -62,6 +63,10 @@ abstract class FormManager extends ChangeNotifier {
   Type getFieldValueType(String keyString) => _getValueRuntimeType(keyString);
 
   dynamic getInitialValue(String keyString) => _getFieldDescriptor(keyString).initialValue;
+
+  bool hasFocusOnStart(String keyString) => keyString == _stateData.focusedKeyString;
+
+  void registerFocusNode(String keyString, FocusNode focusNode) => _focusNodeMap[keyString] = focusNode;
 
   FormatterValidatorChain? getFormatterValidator(String keyString) =>
       _getFieldDescriptor(keyString).formatterValidatorChain;
@@ -76,6 +81,12 @@ abstract class FormManager extends ChangeNotifier {
     return _schema.descriptorsMap[keyString]!;
   }
 
+  void setErrorMessageListener(FocusNode focusNode, String keyString) {
+    focusNode.addListener(() {
+      if (focusNode.hasFocus) showFieldErrorMessage(keyString);
+    });
+  }
+
   void _validate() {
     FormatterValidatorChain? formatterValidator;
     String? error;
@@ -86,7 +97,7 @@ abstract class FormManager extends ChangeNotifier {
     }
   }
 
-  String _getFocusedKeyString() => _stateData.focusedKeyString;
+  String? _getFocusedKeyString() => _stateData.focusedKeyString;
 
   void onFieldChanged(String keyString, dynamic value) {
     storeFieldValue(keyString, value);

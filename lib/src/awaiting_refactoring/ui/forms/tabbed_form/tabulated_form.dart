@@ -8,8 +8,7 @@ import '../base/abstract_form.dart';
 import 'tabulated_form_manager.dart';
 
 abstract class TabulatedForm extends AbstractForm {
-  TabulatedForm(FormStateData stateData, FormSchema formSchema, {super.key})
-      : super(formManager: TabulatedFormManager(stateData, formSchema));
+  TabulatedForm({super.key}) : super(formManager: TabulatedFormManager());
 }
 
 abstract class TabulatedFormState<T extends TabulatedForm> extends AbstractFormState<T>
@@ -20,7 +19,7 @@ abstract class TabulatedFormState<T extends TabulatedForm> extends AbstractFormS
   TabulatedFormManager get formManager => super.formManager as TabulatedFormManager;
 
   final _tabsDataList = [];
-  final Map<GlobalKey<FormStateBrick>, Widget> _tabsContent = {};
+  final Map<GlobalKey<FormBuilderState>, Widget> _tabsContent = {};
 
   int _currentTabIndex = 0;
   TabController? _tabController;
@@ -145,7 +144,7 @@ abstract class TabulatedFormState<T extends TabulatedForm> extends AbstractFormS
     );
   }
 
-  Border _getTabBorder(AppStyle appStyle, GlobalKey<FormStateBrick> tabLabel) {
+  Border _getTabBorder(AppStyle appStyle, GlobalKey<FormBuilderState> tabLabel) {
     if (tabLabel == _tabsDataList.first) {
       return Border(top: appStyle.borderTabSide, right: appStyle.borderTabSide, left: appStyle.borderTabSide);
     } else {
@@ -177,7 +176,7 @@ abstract class TabulatedFormState<T extends TabulatedForm> extends AbstractFormS
         index = index == 0 ? tabsLength - 1 : index - 1;
       }
 
-      GlobalKey<FormStateBrick> globalKey = _tabsDataList[index];
+      GlobalKey<FormBuilderState> globalKey = _tabsDataList[index];
       if (!formManager.isTabDisabled(globalKey)) {
         _tabController!.index = index;
         _switchTab();

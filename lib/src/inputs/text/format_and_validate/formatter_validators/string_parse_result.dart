@@ -1,11 +1,15 @@
-class StringParseResult {
+class StringParseResult<T> {
   final String parsedString;
+  final T? parsedValue;
   final bool isStringValid;
   final String? errorMessage;
 
-  StringParseResult(this.parsedString, this.isStringValid, [this.errorMessage]);
+  StringParseResult(this.parsedString, this.parsedValue, this.isStringValid, [this.errorMessage]);
 
-  factory StringParseResult.ok(String parsed) => StringParseResult(parsed, true);
+  factory StringParseResult.ok(String parsed, T value) => StringParseResult(parsed, value, true);
 
-  factory StringParseResult.err(String parsed, String message) => StringParseResult(parsed, false, message);
+  factory StringParseResult.transient(String parsed) => StringParseResult(parsed, null, true);
+
+  factory StringParseResult.err(String parsed, T? value, String? message) =>
+      StringParseResult(parsed, value, false, message);
 }

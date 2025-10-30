@@ -118,7 +118,7 @@
     "@dateErrorYearTooFarBack": {
       "placeholders": {
         "dateMaxYearsBack": {
-          "type": "int"
+          "type": "DateTime"
         }
       }
     },
@@ -126,7 +126,7 @@
     "@dateErrorYearTooFarForward": {
       "placeholders": {
         "dateMaxYearsForward": {
-          "type": "int"
+          "type": "DateTime"
         }
       }
     },

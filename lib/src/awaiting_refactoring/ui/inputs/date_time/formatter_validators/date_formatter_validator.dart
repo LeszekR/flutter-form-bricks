@@ -41,13 +41,12 @@ class DateFormatterValidator {
       maxNDigits: 8,
       maxNumberDelimiters: 2,
     );
-    if (!parseResult.isStringValid) return StringParseResult(text, false, parseResult.errorMessage);
+    if (!parseResult.isStringValid) return StringParseResult.err(text, null, parseResult.errorMessage);
 
     parseResult = parseDateFromString(localizations, parseResult);
-    if (!parseResult.isStringValid) return StringParseResult(text, false, parseResult.errorMessage);
+    if (!parseResult.isStringValid) return StringParseResult.err(text, null, parseResult.errorMessage);
 
     parseResult = validateDate(localizations, parseResult, dateLimits);
-    if (!parseResult.isStringValid) return parseResult;
 
     return parseResult;
   }
@@ -91,7 +90,7 @@ class DateFormatterValidator {
       }
       dateString = element + dateString;
     }
-    return StringParseResult(dateString, true, '');
+    return StringParseResult.transient(dateString);
   }
 
   StringParseResult makeDateStringWithDelimiters(BricksLocalizations localizations, String text, int nDelimiters) {
@@ -136,15 +135,15 @@ class DateFormatterValidator {
       }
     }
 
-    if (errMsg.isNotEmpty) return StringParseResult(dateString, false, errMsg);
-    return StringParseResult(dateString, true, '');
+    if (errMsg.isNotEmpty) return StringParseResult.err(dateString, false, errMsg);
+    return StringParseResult.transient(dateString);
   }
 
   StringParseResult addYear(StringParseResult dateString, int nDelimiters) {
     String dateWithoutYear = dateString.parsedString;
     nDelimiters = RegExp(dateDelimiter).allMatches(dateWithoutYear).length;
 
-    if (nDelimiters < 2) return StringParseResult(dateWithoutYear, false, '');
+    if (nDelimiters < 2) return StringParseResult.transient(dateWithoutYear);
 
     String year = _currentDate.getDateNow().year.toString();
     String yearElement = dateWithoutYear.split(dateDelimiter)[0];
@@ -156,7 +155,7 @@ class DateFormatterValidator {
       yearElement = year.substring(0, 4 - yearElementLength);
       dateWithoutYear = '$yearElement$dateWithoutYear';
     }
-    return StringParseResult(dateWithoutYear, true, '');
+    return StringParseResult.transient(dateWithoutYear);
   }
 
   StringParseResult validateDate(
@@ -191,6 +190,7 @@ class DateFormatterValidator {
       if (isTooManyDays) errDays = localizations.dateErrorTooManyDaysInMonth;
     }
 
+    // TODO refactor to minDate - maxDate
     // only max years back and max years forward
     if (elementsListLength == 3) {
       DateTime dateNow = _currentDate.getDateNow();
@@ -212,8 +212,11 @@ class DateFormatterValidator {
     if (errMonth.isNotEmpty) errMsg = _dateTimeUtils.addErrMsg(errMsg, connector, errMonth);
     if (errDays.isNotEmpty) errMsg = _dateTimeUtils.addErrMsg(errMsg, connector, errDays);
 
-    if (errMsg.isNotEmpty) return StringParseResult(dateString, false, errMsg);
+    DateTime? parsedDate = null;
+    if (errDays.isEmpty && errMonth.isEmpty) parsedDate = DateTime.parse(dateString);
 
-    return StringParseResult(dateString, true, '');
+    if (errMsg.isNotEmpty) return StringParseResult.err(dateString, parsedDate, errMsg);
+
+    return StringParseResult.ok(dateString, parsedDate);
   }
 }

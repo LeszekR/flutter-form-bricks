@@ -1,6 +1,5 @@
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
+import 'package:flutter_form_bricks/shelf.dart';
 
-import '../../../../shelf.dart';
 import 'form_field_descriptor.dart';
 
 abstract class FormSchema {

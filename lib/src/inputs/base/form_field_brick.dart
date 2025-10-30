@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_input_base/states_color_maker.dart';
-
-import '../../forms/form_manager/form_manager.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 
 abstract class FormFieldBrick<T> extends StatefulWidget {
   final String keyString;
@@ -9,9 +8,12 @@ abstract class FormFieldBrick<T> extends StatefulWidget {
   final StatesColorMaker colorMaker;
   final WidgetStatesController? statesObserver;
   final WidgetStatesController? statesNotifier;
+  final T? initialValue;
 
   // TODO implement identical functionality as in flutter_form_builder using onChange, onEditingComplete, onSave
   final AutovalidateMode autoValidateMode;
+
+  T getValue();
 
   // TODO exclude initialValue, formatter, validator from all descendants' constructors to enforce taking them from FM
   FormFieldBrick({
@@ -23,6 +25,7 @@ abstract class FormFieldBrick<T> extends StatefulWidget {
     this.statesObserver,
     this.statesNotifier,
     this.autoValidateMode = AutovalidateMode.disabled,
+    this.initialValue,
   }) {
     formManager.registerField(keyString, T.runtimeType);
   }
@@ -30,4 +33,7 @@ abstract class FormFieldBrick<T> extends StatefulWidget {
 
 abstract class FormFieldStateBrick<T extends FormFieldBrick> extends State<T> {
   // TODO implement onChange common to all inputs
+  FormManager get formManager => widget.formManager;
+
+  String get keyString => widget.keyString;
 }

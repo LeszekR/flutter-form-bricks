@@ -9,7 +9,7 @@ import '../../../../../shelf.dart';
 import '../../../../inputs/text/format_and_validate/formatters/first_upper_then_lower_case_formatter.dart';
 import '../../../../inputs/text/format_and_validate/formatters/forbidden_whitespaces_formatter.dart';
 import '../../buttons/buttons.dart';
-import '../../forms/form_manager/form_manager.dart';
+import '../../forms/form_manager/form_manager_OLD.dart';
 
 class TextInputs {
   TextInputs._();
@@ -19,7 +19,7 @@ class TextInputs {
     required String keyString,
     required String label,
     required LabelPosition labelPosition,
-    required FormManager formManager,
+    required FormManagerOLD formManager,
     final String? initialValue,
     final bool readonly = false,
     final TextInputFormatter? inputFormatter,
@@ -56,7 +56,7 @@ class TextInputs {
     required String keyString,
     required String label,
     required LabelPosition labelPosition,
-    required FormManager formManager,
+    required FormManagerOLD formManager,
     final String? initialValue,
     final bool readonly = false,
     final FormFieldValidator<String>? validator,
@@ -92,7 +92,7 @@ class TextInputs {
     required String keyString,
     required String label,
     required LabelPosition labelPosition,
-    required FormManager formManager,
+    required FormManagerOLD formManager,
     final String? initialValue,
     final bool readonly = false,
     final FormFieldValidator<String>? validator,
@@ -128,7 +128,7 @@ class TextInputs {
     required String keyString,
     required String label,
     required LabelPosition labelPosition,
-    required FormManager formManager,
+    required FormManagerOLD formManager,
     final String? initialValue,
     final bool readonly = false,
     final FormFieldValidator<String>? validator,
@@ -164,7 +164,7 @@ class TextInputs {
     required String keyString,
     required String label,
     required LabelPosition labelPosition,
-    required FormManager formManager,
+    required FormManagerOLD formManager,
     final String? initialValue,
     final bool readonly = false,
     final TextInputFormatter? inputFormatter,
@@ -203,7 +203,7 @@ class TextInputs {
     required String keyString,
     required String label,
     required LabelPosition labelPosition,
-    required FormManager formManager,
+    required FormManagerOLD formManager,
     final String? initialValue,
     final int? inputHeightMultiplier,
     final double? inputWidth,
@@ -236,7 +236,7 @@ class TextInputs {
     required String keyString,
     required String label,
     required LabelPosition labelPosition,
-    required FormManager formManager,
+    required FormManagerOLD formManager,
     required IconData iconData,
     required void Function() onPressed,
     required String tooltip,
@@ -284,7 +284,7 @@ class TextInputs {
     required String keyString,
     required String label,
     required LabelPosition labelPosition,
-    required FormManager formManager,
+    required FormManagerOLD formManager,
     required bool withTextEditingController,
     required FormFieldValidator<String> validator,
     String? initialValue,

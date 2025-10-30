@@ -4,6 +4,7 @@ import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/dateTime_range_error_controller.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
+import '../../../forms/form_manager/form_manager_OLD.dart';
 import '../date_time_inputs.dart';
 
 class DateTimeRangeValidator {
@@ -19,7 +20,7 @@ class DateTimeRangeValidator {
   String? timeEndText;
 
   final String _keyString;
-  final FormManager _formManager;
+  final FormManagerOLD _formManager;
   final RangeController _rangeController;
   FormFieldValidator<String>? _validator;
   final BricksLocalizations _localizations;
@@ -71,10 +72,10 @@ class DateTimeRangeValidator {
 
   void _loadErrorsExceptRange() {
     for (var _keyString in _keyStrings) {
-      var individualValidator = _rangeController.validatorExceptRange[_keyString];
-      if (individualValidator != null) {
+      FormFieldValidator<String>? dateTimeValidator = _rangeController.validatorsExceptRange[_keyString];
+      if (dateTimeValidator != null) {
         var text = _getRangeFieldText(_keyString);
-        var errorText = individualValidator.call(text);
+        var errorText = dateTimeValidator.call(text);
         _formManager.setFieldError(_keyString, errorText);
       }
     }

@@ -1,9 +1,10 @@
 import 'dart:math';
-import 'dart:ui' as ui;
+import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_form_bricks/src/forms/state/text_input_value.dart';
 import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/inputs/states_controller/update_once_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_input_base/state_colored_icon_button.dart';
@@ -11,13 +12,11 @@ import 'package:flutter_form_bricks/src/inputs/text/text_input_base/text_field_b
 
 import '../../../ui_params/ui_params.dart';
 import '../../base/form_field_brick.dart';
-import '../../states_controller/error_message_notifier.dart';
 import 'icon_button_params.dart';
 
-class TextFieldBrick extends FormFieldBrick {
+abstract class TextFieldBrick<K> extends FormFieldBrick<TextInputValue<K>> {
   // BrickTextField
   final double? width;
-  final bool? withTextEditingController;
 
   // Flutter TextField
   final TextMagnifierConfiguration? magnifierConfiguration;
@@ -63,8 +62,8 @@ class TextFieldBrick extends FormFieldBrick {
   final bool? cursorOpacityAnimates;
   final Color? cursorColor;
   final Color? cursorErrorColor;
-  final ui.BoxHeightStyle selectionHeightStyle;
-  final ui.BoxWidthStyle selectionWidthStyle;
+  final BoxHeightStyle selectionHeightStyle;
+  final BoxWidthStyle selectionWidthStyle;
   final Brightness? keyboardAppearance;
   final EdgeInsets scrollPadding;
   final bool? enableInteractiveSelection;
@@ -95,6 +94,7 @@ class TextFieldBrick extends FormFieldBrick {
 
   TextFieldBrick({
     super.key,
+    super.initialValue,
     //
     // BrickFormField
     required super.keyString,
@@ -106,7 +106,6 @@ class TextFieldBrick extends FormFieldBrick {
     //
     // BrickTextField
     this.width,
-    this.withTextEditingController,
     //
     // TextField
     this.groupId = EditableText,
@@ -150,8 +149,8 @@ class TextFieldBrick extends FormFieldBrick {
     this.cursorOpacityAnimates,
     this.cursorColor,
     this.cursorErrorColor,
-    this.selectionHeightStyle = ui.BoxHeightStyle.tight,
-    this.selectionWidthStyle = ui.BoxWidthStyle.tight,
+    this.selectionHeightStyle = BoxHeightStyle.tight,
+    this.selectionWidthStyle = BoxWidthStyle.tight,
     this.keyboardAppearance,
     this.scrollPadding = const EdgeInsets.all(20.0),
     this.dragStartBehavior = DragStartBehavior.start,
@@ -181,36 +180,34 @@ class TextFieldBrick extends FormFieldBrick {
   });
 
   @override
-  State<StatefulWidget> createState() => _StateAwareTextFieldState();
+  State<StatefulWidget> createState() => _TextFieldStateBrick();
 }
 
-class _StateAwareTextFieldState extends FormFieldStateBrick<TextFieldBrick> with ErrorMessageNotifier {
-  dynamic initialValue;
+class _TextFieldStateBrick extends FormFieldStateBrick<TextFieldBrick> {
+  late final FocusNode _focusNode;
+  late final TextEditingController _controller;
   Set<WidgetState>? _states;
 
   @override
   void initState() {
     super.initState();
 
-    super.setFieldErrorListener(widget.formManager, widget.keyString);
+    _focusNode = widget.focusNode ?? FocusNode();
+    formManager.setErrorMessageListener(_focusNode, keyString);
+    if (formManager.hasFocusOnStart(keyString)) _focusNode.requestFocus();
+    formManager.registerFocusNode(keyString, _focusNode);
 
-    // TODO uncomment and finish
+    _controller = widget.controller ?? TextEditingController(text: formManager.getInitialValue(keyString));
+
     _states = widget.statesNotifier?.value;
     widget.statesNotifier?.addListener(_onStatesChanged);
-
-    // TODO uncomment and finish
-    // if (widget.withTextEditingController ?? true) {
-    //   var controllerValue = widget.initialValue;
-    //   if (controllerValue != null) controllerValue = controllerValue.toString();
-    //   widget.formManager.setEditingController(widget.keyString, controllerValue);
-    // } else {
-    //   initialValue = widget.initialValue;
-    // }
   }
 
   @override
   void dispose() {
     widget.statesNotifier?.removeListener(_onStatesChanged);
+    _focusNode.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -287,10 +284,10 @@ class _StateAwareTextFieldState extends FormFieldStateBrick<TextFieldBrick> with
     TextStyle style,
   ) {
     return TextField(
-      key: Key(widget.keyString),
+      key: Key(keyString),
       groupId: widget.groupId,
-      controller: widget.formManager.getTextEditingController(widget.keyString),
-      focusNode: widget.formManager.getFocusNode(widget.keyString),
+      controller: widget.controller,
+      focusNode: widget.focusNode,
       undoController: widget.undoController,
       decoration: _makeInputDecoration(widget.decoration),
       keyboardType: widget.keyboardType,
@@ -404,7 +401,7 @@ class _StateAwareTextFieldState extends FormFieldStateBrick<TextFieldBrick> with
   }
 
   // TODO move helper methods to a singleton
-  ui.Color? _makeColor() => widget.colorMaker.makeColor(context, _states);
+  Color? _makeColor() => widget.colorMaker.makeColor(context, _states);
 
   var _skipOnChanged = false;
 
@@ -418,7 +415,7 @@ class _StateAwareTextFieldState extends FormFieldStateBrick<TextFieldBrick> with
     // If onEditingComplete is called then formManager.onFieldChanged is called there so we skip it here
     if (widget.onEditingComplete == null || widget.onEditingComplete == () {}) {
       _skipOnChanged = true;
-      widget.formManager.onFieldChanged(widget.keyString, value);
+      widget.formManager.onFieldChanged(keyString, value);
       _skipOnChanged = false;
     }
   }

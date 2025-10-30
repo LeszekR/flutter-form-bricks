@@ -7,7 +7,7 @@ import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/input_validator_provider.dart';
 
 
-import '../../forms/form_manager/form_manager.dart';
+import '../../forms/form_manager/form_manager_OLD.dart';
 import 'decimal_formatter.dart';
 import 'integer_formatter.dart';
 import 'number_validators.dart';
@@ -17,7 +17,7 @@ class NumberInputs {
 
   static Widget id({
     required BuildContext context,
-    required FormManager formManager,
+    required FormManagerOLD formManager,
     required int? initialValue,
     required LabelPosition labelPosition,
     final String keyString = "id",
@@ -49,7 +49,7 @@ class NumberInputs {
       required String keyString,
       required String label,
       required LabelPosition labelPosition,
-      required FormManager formManager,
+      required FormManagerOLD formManager,
       final int? initialValue,
       final bool readonly = false,
       final FormFieldValidator<String>? validator,
@@ -95,7 +95,7 @@ class NumberInputs {
       required String keyString,
       required String label,
       required LabelPosition labelPosition,
-      required FormManager formManager,
+      required FormManagerOLD formManager,
       final double? initialValue,
       final int decimalPoints = 2,
       final bool readonly = false,

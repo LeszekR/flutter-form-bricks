@@ -30,7 +30,7 @@ void main() {
       DateTimeTestData(datTimLim, "20-@", "20-@", false, ''),
     ];
     var formManager = SingleFormManager();
-    testAction<String>(String text) => verifyTime(formManager.formKey.currentState!.fields[timeName]?.value);
+    testAction<String>(String text) => verifyTime(formManager.formKey.currentState!.fields[timeName]?.parsedValue);
     makeWidgetFunction(BuildContext context) => makeTextFieldTime(context, timeName, formManager);
     await testAllCasesInTextField(tester, makeWidgetFunction, formManager, testCases, testAction);
   });
@@ -45,7 +45,7 @@ void main() {
       DateTimeTestData(datTimLim, "2315 :539", "23:539", false, ''),
     ];
     var formManager = SingleFormManager();
-    testAction<String>(String text) => verifyTime(formManager.formKey.currentState!.fields[timeName]?.value);
+    testAction<String>(String text) => verifyTime(formManager.formKey.currentState!.fields[timeName]?.parsedValue);
     makeWidgetFunction(BuildContext context) => makeTextFieldTime(context, timeName, formManager);
     await testAllCasesInTextField(tester, makeWidgetFunction, formManager, testCases, testAction);
   });
@@ -62,7 +62,7 @@ void main() {
       DateTimeTestData(datTimLim, "2359", "23:59", true, ''),
     ];
     var formManager = SingleFormManager();
-    testAction<String>(String text) => verifyTime(formManager.formKey.currentState!.fields[timeName]?.value);
+    testAction<String>(String text) => verifyTime(formManager.formKey.currentState!.fields[timeName]?.parsedValue);
     makeWidgetFunction(BuildContext context) => makeTextFieldTime(context, timeName, formManager);
     await testAllCasesInTextField(tester, makeWidgetFunction, formManager, testCases, testAction);
   });

@@ -68,7 +68,7 @@ void main() {
 
     await prepareTabulatedForm(tester, formManager, allTabData);
     await tester.pump();
-    final FormStatus result = formManager.checkState();
+    final FormStatus result = formManager.checkStatus();
     await tester.pump();
 
     //then
@@ -92,7 +92,7 @@ void main() {
         await tester.pump();
 
         //when
-        final FormStatus result = formManager.checkState();
+        final FormStatus result = formManager.checkStatus();
 
         //then
         expect(result, FormStatus.invalid);
@@ -145,14 +145,14 @@ void main() {
     await tester.pump();
 
     //when invalid on form create
-    FormStatus result = formManager.checkState();
+    FormStatus result = formManager.checkStatus();
 
     //then
     expect(result, FormStatus.noChange);
 
     //when invalid after filled with incorrect input
     await tester.enterText(find.byKey(const Key(ignoreFieldKey)), "1");
-    result = formManager.checkState();
+    result = formManager.checkStatus();
     await tester.pump();
 
     //then
@@ -172,7 +172,7 @@ void main() {
     await tester.pump();
 
     //when
-    final FormStatus result = formManager.checkState();
+    final FormStatus result = formManager.checkStatus();
 
     //then
     expect(result, FormStatus.valid);
@@ -190,7 +190,7 @@ void main() {
     }
     await tester.pump();
 
-    expect(formManager.checkState(), FormStatus.invalid);
+    expect(formManager.checkStatus(), FormStatus.invalid);
     allKeys.map((word) => expect(formManager.errorMessageNotifier.value, contains(word)));
 
     //when
@@ -200,7 +200,7 @@ void main() {
     await tester.pump();
 
     //then
-    expect(formManager.checkState(), FormStatus.valid);
+    expect(formManager.checkStatus(), FormStatus.valid);
     expect(formManager.errorMessageNotifier.value, '');
   });
 
@@ -232,12 +232,12 @@ void main() {
     );
     await prepareTabulatedForm(tester, formManager, allTabData);
     await tester.pump();
-    formManager.checkState();
+    formManager.checkStatus();
     await tester.pump();
     expect(find.text("1234"), findsExactly(allKeys.length));
 
     await tester.enterText(find.byKey(const Key(input2Tab2Key)), "1");
-    expect(formManager.checkState(), FormStatus.invalid);
+    expect(formManager.checkStatus(), FormStatus.invalid);
     expect(formManager.errorMessageNotifier.value.isNotEmpty, true);
 
     //when
@@ -246,7 +246,7 @@ void main() {
     await tester.pump();
 
     //then
-    expect(formManager.checkState(), FormStatus.noChange);
+    expect(formManager.checkStatus(), FormStatus.noChange);
     expect(formManager.errorMessageNotifier.value.isNotEmpty, false);
     expect(find.text("1"), findsNothing);
   });
@@ -265,7 +265,7 @@ void main() {
     expect(find.text("input with trailing space "), findsExactly(allKeys.length));
 
     //when
-    final FormStatus result = formManager.checkState();
+    final FormStatus result = formManager.checkStatus();
 
     //then
     expect(result, FormStatus.valid);
@@ -290,7 +290,7 @@ void main() {
     }
     await tester.pump();
 
-    expect(formManager.checkState(), FormStatus.invalid);
+    expect(formManager.checkStatus(), FormStatus.invalid);
 
     //when
     formManager.setDisabled(tabKey1, true);
@@ -298,7 +298,7 @@ void main() {
     //then
     expect(formManager.isTabDisabled(tabKey1), true);
     expect(formManager.isTabDisabled(tabKey2), false);
-    expect(formManager.checkState(), FormStatus.valid);
+    expect(formManager.checkStatus(), FormStatus.valid);
   });
 }
 

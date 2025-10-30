@@ -6,7 +6,7 @@ class RangeController {
   bool _isBuilding = false;
   bool areFieldsValidated = false;
   bool isEditCompleted = false;
-  final Map<String, FormFieldValidator<String>> validatorExceptRange = {};
+  final Map<String, FormFieldValidator<String>> validatorsExceptRange = {};
 
   RangeController(this.rangeId);
 

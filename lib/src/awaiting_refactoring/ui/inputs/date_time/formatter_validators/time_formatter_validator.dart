@@ -1,6 +1,7 @@
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/string_parse_result.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
+import 'package:intl/intl.dart';
 
 class TimeFormatterValidator {
   static TimeFormatterValidator? _instance;
@@ -34,13 +35,12 @@ class TimeFormatterValidator {
       maxNDigits: 4,
       maxNumberDelimiters: 1,
     );
-    if (!parseResult.isStringValid) return StringParseResult(inputString, false, parseResult.errorMessage);
+    if (!parseResult.isStringValid) return StringParseResult.err(inputString, null, parseResult.errorMessage);
 
     parseResult = parseTimeFromString(localizations, parseResult);
-    if (!parseResult.isStringValid) return StringParseResult(inputString, false, parseResult.errorMessage);
+    if (!parseResult.isStringValid) return StringParseResult.err(inputString, null, parseResult.errorMessage);
 
     parseResult = validateTime(localizations, parseResult);
-    if (!parseResult.isStringValid) return parseResult;
 
     return parseResult;
   }
@@ -57,7 +57,7 @@ class TimeFormatterValidator {
   }
 
   StringParseResult makeTimeStringNoDelimiters(BricksLocalizations localizations, String text) {
-    if (text.length < 3) return StringParseResult(text, false, localizations.timeStringErrorTooFewDigits);
+    if (text.length < 3) return StringParseResult.err(text, null, localizations.timeStringErrorTooFewDigits);
 
     String formattedResult = '';
     String element = '';
@@ -76,7 +76,7 @@ class TimeFormatterValidator {
       }
       formattedResult = element + formattedResult;
     }
-    return StringParseResult(formattedResult, true, '');
+    return StringParseResult.transient(formattedResult);
   }
 
   StringParseResult makeTimeStringWithDelimiters(BricksLocalizations localizations, String inputString) {
@@ -105,9 +105,16 @@ class TimeFormatterValidator {
 
     if (errHours.isNotEmpty) errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, errHours);
     if (errMinutes.isNotEmpty) errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, errMinutes);
-    if (errMsg.isNotEmpty) return StringParseResult(timeString, false, errMsg);
+    if (errMsg.isNotEmpty) return StringParseResult.err(timeString, null, errMsg);
 
-    return StringParseResult(timeString, true, '');
+    DateTime time = parseTime(timeString);
+    return StringParseResult.ok(timeString, time);
+  }
+
+  DateTime parseTime(String timeString) {
+    final timeFormat = DateFormat("HH:mm");
+    final time = timeFormat.parseStrict(timeString);
+    return time;
   }
 
   StringParseResult validateTime(BricksLocalizations localizations, StringParseResult stringParseResult) {
@@ -125,8 +132,9 @@ class TimeFormatterValidator {
 
     if (errHours.isNotEmpty) errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, errHours);
     if (errMinutes.isNotEmpty) errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, errMinutes);
-    if (errMsg.isNotEmpty) return StringParseResult(timeString, false, errMsg);
+    if (errMsg.isNotEmpty) return StringParseResult.err(timeString, null, errMsg);
 
-    return StringParseResult(timeString, true, '');
+    DateTime time = parseTime(timeString);
+    return StringParseResult.ok(timeString, time);
   }
 }

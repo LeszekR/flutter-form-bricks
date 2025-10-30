@@ -11,10 +11,10 @@ void main() {
     ];
 
     for (param in testParameters) {
-      testWidgets('Formatter should turn "${param.input}" into: "${param.expected}"', (WidgetTester tester) async {
+      testWidgets('Formatter should turn "${param.inputString}" into: "${param.expected}"', (WidgetTester tester) async {
         //given
         const TextEditingValue initial = TextEditingValue(text: "");
-        final TextEditingValue newInput = TextEditingValue(text: param.input);
+        final TextEditingValue newInput = TextEditingValue(text: param.inputString);
 
         //when
         final result = ForbiddenWhitespacesFormatter().formatEditUpdate(initial, newInput);

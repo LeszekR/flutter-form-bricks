@@ -1,10 +1,8 @@
-import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/form_manager/form_manager_OLD.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_status.dart';
-import 'package:flutter_form_bricks/src/inputs/base/form_field_brick.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 
-class SingleFormManager extends FormManager {
-  SingleFormManager(super.stateData, super.schema);
-
+class SingleFormManager extends FormManagerOLD {
   @override
   void fillInitialInputValuesMap() {
     setInitialValues(formKey);
@@ -16,9 +14,9 @@ class SingleFormManager extends FormManager {
   }
 
   @override
-  FormFieldStateBrick<FormFieldBrick>? findField(String keyString) {
+  FormBuilderFieldState<FormBuilderField<dynamic>, dynamic>? findField(String keyString) {
     // TODO refactor to FlutterFormBuilder pattern - ?
-    // return formKey.currentState?.fields[keyString];
+    return formKey.currentState?.fields[keyString];
   }
 
   @override

@@ -65,6 +65,25 @@ validations.
 This design deliberately favors slightly worse UX in rare edge cases over continuous revalidation on
 focus.
 
+### 🔹 Dual-State Input Handling
+
+Each `FormFieldBrick` tracks:
+
+- `inputString`: what the user types
+- `value` (`T?`): the parsed, validated result (or `null` if invalid)
+
+This design ensures:
+- Safe typed values for saving
+- Raw input preserved across rebuilds
+- Friendly error handling without input loss
+
+Validators (like `DateTimeFormatterValidator`) parse `inputString` and return `StringParseResult<T>` with:
+- `parsedValue`: nullable, for precision control
+- `errorMessage`: used for in-form feedback
+
+On submit, parsed values are read from the field and passed to your domain layer for saving.
+
+
 ## TODO
 
 **describe / explain / elaborate on:**

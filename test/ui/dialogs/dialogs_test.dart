@@ -39,7 +39,7 @@ void main() {
     ];
 
     for (param in testParameters) {
-      testWidgets('confirmation dialog should return "${param.expected}" when "${param.input}" is pressed',
+      testWidgets('confirmation dialog should return "${param.expected}" when "${param.inputString}" is pressed',
           (WidgetTester tester) async {
         // given
         final initialListeners = KeyboardEvents().countListeners();
@@ -59,7 +59,7 @@ void main() {
         expect(KeyboardEvents().countListeners(), initialListeners + 1);
 
         // when
-        await tester.tap(find.text(param.input));
+        await tester.tap(find.text(param.inputString));
         await tester.pumpAndSettle();
 
         // then
@@ -77,7 +77,7 @@ void main() {
 
     for (param in testParameters) {
       testWidgets(
-          'confirmation dialog should return "${param.expected}" when key with KeyCode ${keyCodeMapping[param.input]} is pressed',
+          'confirmation dialog should return "${param.expected}" when key with KeyCode ${keyCodeMapping[param.inputString]} is pressed',
           (WidgetTester tester) async {
         // given
         final initialListeners = KeyboardEvents().countListeners();
@@ -97,7 +97,7 @@ void main() {
         expect(KeyboardEvents().countListeners(), initialListeners + 1);
 
         // when
-        final keyCode = param.input;
+        final keyCode = param.inputString;
         final keyEvent = RawKeyDownEvent(data: RawKeyEventDataAndroid(keyCode: keyCode, flags: 0));
         KeyboardEvents().handleKey(keyEvent);
         await tester.pumpAndSettle();
@@ -117,7 +117,7 @@ void main() {
 
     for (param in testParameters) {
       final message = param.expected == 1 ? "" : "NOT";
-      testWidgets('action dialog should $message trigger action when "${param.input}" is pressed',
+      testWidgets('action dialog should $message trigger action when "${param.inputString}" is pressed',
           (WidgetTester tester) async {
         // given
         final initialListeners = KeyboardEvents().countListeners();
@@ -135,7 +135,7 @@ void main() {
         expect(KeyboardEvents().countListeners(), initialListeners + 1);
 
         // when
-        await tester.tap(find.text(param.input));
+        await tester.tap(find.text(param.inputString));
         await tester.pumpAndSettle();
 
         // then
@@ -153,7 +153,7 @@ void main() {
 
     for (param in testParameters) {
       final message = param.expected == 1 ? "" : "NOT";
-      testWidgets('action dialog should $message trigger action when "${keyCodeMapping[param.input]}" is pressed',
+      testWidgets('action dialog should $message trigger action when "${keyCodeMapping[param.inputString]}" is pressed',
           (WidgetTester tester) async {
         // given
         final initialListeners = KeyboardEvents().countListeners();
@@ -171,7 +171,7 @@ void main() {
         expect(KeyboardEvents().countListeners(), initialListeners + 1);
 
         // when
-        final keyCode = param.input;
+        final keyCode = param.inputString;
         final keyEvent = RawKeyDownEvent(data: RawKeyEventDataAndroid(keyCode: keyCode, flags: 0));
         KeyboardEvents().handleKey(keyEvent);
         await tester.pumpAndSettle();
@@ -210,7 +210,7 @@ void main() {
     ];
 
     for (param in testParameters) {
-      testWidgets('information dialog should close when key with KeyCode ${keyCodeMapping[param.input]} is pressed',
+      testWidgets('information dialog should close when key with KeyCode ${keyCodeMapping[param.inputString]} is pressed',
           (WidgetTester tester) async {
         // given
         final initialListeners = KeyboardEvents().countListeners();
@@ -224,7 +224,7 @@ void main() {
         expect(KeyboardEvents().countListeners(), initialListeners + 1);
 
         // when
-        final keyCode = param.input;
+        final keyCode = param.inputString;
         final keyEvent = RawKeyDownEvent(data: RawKeyEventDataAndroid(keyCode: keyCode, flags: 0));
         KeyboardEvents().handleKey(keyEvent);
         await tester.pumpAndSettle();

@@ -20,7 +20,7 @@ void main() {
     ];
 
     for (param in testParameters) {
-      testWidgets('If required is "${param.input}" then validation result should be: "${param.expected}"',
+      testWidgets('If required is "${param.inputString}" then validation result should be: "${param.expected}"',
           (WidgetTester tester) async {
         BuildContext context = await pumpAppGetContext(tester);
 
@@ -51,13 +51,13 @@ void main() {
 
     for (maxLength in testParameters) {
       testWidgets(
-          'If max length is "${maxLength.input}" and user input length is "${inputText.length}" then validation result should be: "${maxLength.expected}"',
+          'If max length is "${maxLength.inputString}" and user input length is "${inputText.length}" then validation result should be: "${maxLength.expected}"',
           (WidgetTester tester) async {
         BuildContext context = await pumpAppGetContext(tester);
 
         //given
         var formManager = SingleFormManager();
-        validatorMaker() => ValidatorProvider.compose(context: context, maxLength: maxLength.input as int);
+        validatorMaker() => ValidatorProvider.compose(context: context, maxLength: maxLength.inputString as int);
         await prepareTextSimpleInForm(tester, validatorMaker, formManager);
 
         //when
@@ -83,13 +83,13 @@ void main() {
 
     for (minLength in testParameters) {
       testWidgets(
-          'If min length is "${minLength.input}" and user input length is "${inputText.length}" then validation result should be: "${minLength.expected}"',
+          'If min length is "${minLength.inputString}" and user input length is "${inputText.length}" then validation result should be: "${minLength.expected}"',
           (WidgetTester tester) async {
         BuildContext context = await pumpAppGetContext(tester);
 
         //given
         var formManager = SingleFormManager();
-        validatorMaker() => ValidatorProvider.compose(context: context, minLength: minLength.input as int);
+        validatorMaker() => ValidatorProvider.compose(context: context, minLength: minLength.inputString as int);
         await prepareTextSimpleInForm(tester, validatorMaker, formManager);
 
         //when
@@ -115,13 +115,13 @@ void main() {
 
     for (validationValue in testParameters) {
       testWidgets(
-          'If max value is "${validationValue.input}" and user input is "$inputContent" then validation result should be: "${validationValue.expected}"',
+          'If max value is "${validationValue.inputString}" and user input is "$inputContent" then validation result should be: "${validationValue.expected}"',
           (WidgetTester tester) async {
         BuildContext context = await pumpAppGetContext(tester);
 
         //given
         var formManager = SingleFormManager();
-        validatorMaker() => ValidatorProvider.compose(context: context, maxIntValue: validationValue.input as int);
+        validatorMaker() => ValidatorProvider.compose(context: context, maxIntValue: validationValue.inputString as int);
         await prepareIntegerFieldInForm(tester, validatorMaker, formManager);
 
         //when
@@ -147,13 +147,13 @@ void main() {
 
     for (validationValue in testParameters) {
       testWidgets(
-          'If min value is "${validationValue.input}" and user input is "$inputContent" then validation result should be: "${validationValue.expected}"',
+          'If min value is "${validationValue.inputString}" and user input is "$inputContent" then validation result should be: "${validationValue.expected}"',
           (WidgetTester tester) async {
         BuildContext context = await pumpAppGetContext(tester);
 
         //given
         var formManager = SingleFormManager();
-        validatorMaker() => ValidatorProvider.compose(context: context, minIntValue: validationValue.input as int);
+        validatorMaker() => ValidatorProvider.compose(context: context, minIntValue: validationValue.inputString as int);
         await prepareIntegerFieldInForm(tester, validatorMaker, formManager);
 
         //when
@@ -181,7 +181,7 @@ void main() {
 
     for (testParam in testParameters) {
       testWidgets(
-          'If user input is "${testParam.input}" then email regex validation result should be: "${testParam.expected}"',
+          'If user input is "${testParam.inputString}" then email regex validation result should be: "${testParam.expected}"',
           (WidgetTester tester) async {
         BuildContext context = await pumpAppGetContext(tester);
         BricksLocalizations localizations = await getLocalizations();
@@ -192,7 +192,7 @@ void main() {
         await prepareTextSimpleInForm(tester, validatorMaker, formManager);
 
         //when
-        await tester.enterText(find.byKey(key), testParam.input);
+        await tester.enterText(find.byKey(key), testParam.inputString);
         await tester.pump();
         formManager.formKey.currentState!.save();
         final bool isValid = formManager.formKey.currentState!.validate();
