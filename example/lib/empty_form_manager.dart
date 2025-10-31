@@ -8,7 +8,7 @@ class EmptyFormSchema extends FormSchema {
 }
 
 class EmptyFormManager extends FormManager {
-  EmptyFormManager() : super(stateData: EmptyFormStateData(), schema: EmptyFormSchema());
+  EmptyFormManager({required super.stateData, required super.schema});
 
   @override
   void afterFieldChanged() {}
@@ -33,4 +33,10 @@ class EmptyFormManager extends FormManager {
 
   @override
   void resetForm() {}
+}
+
+class ExampleFormStateData extends FormStateData {}
+
+class ExampleFormSchema extends FormSchema {
+  ExampleFormSchema(super.descriptors, super.initialFocusKeyString);
 }

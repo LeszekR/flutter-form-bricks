@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_bricks/src/forms/state/text_input_value.dart';
+import 'package:flutter_form_bricks/src/inputs/state/text_editing_value_brick.dart';
 import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/inputs/states_controller/update_once_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_input_base/state_colored_icon_button.dart';
@@ -14,7 +14,7 @@ import '../../../ui_params/ui_params.dart';
 import '../../base/form_field_brick.dart';
 import 'icon_button_params.dart';
 
-abstract class TextFieldBrick<K> extends FormFieldBrick<TextInputValue<K>> {
+abstract class TextFieldBrick<K> extends FormFieldBrick<TextEditingValueBrick<K>> {
   // BrickTextField
   final double? width;
 
@@ -197,7 +197,12 @@ class _TextFieldStateBrick extends FormFieldStateBrick<TextFieldBrick> {
     if (formManager.hasFocusOnStart(keyString)) _focusNode.requestFocus();
     formManager.registerFocusNode(keyString, _focusNode);
 
-    _controller = widget.controller ?? TextEditingController(text: formManager.getInitialValue(keyString));
+    if (widget.controller == null) {
+      _controller = TextEditingController(text: formManager.getInitialValue(keyString));
+    } else {
+      _controller = widget.controller!;
+      _controller.text = formManager.getInitialValue(keyString);
+    }
 
     _states = widget.statesNotifier?.value;
     widget.statesNotifier?.addListener(_onStatesChanged);

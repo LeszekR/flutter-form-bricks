@@ -4,12 +4,34 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'empty_form_manager.dart';
 
+
 class ExampleApp extends StatelessWidget {
-  const ExampleApp({super.key});
+
+  late final String plainTextKeyString1;
+  late final String plainTextKeyString2;
+  late final String plainTextKeyString3;
+  late final FormStateData formStateData;
+  late final EmptyFormManager emptyFormManager;
+  late final UiParamsData uiParamsData;
+  late final FormSchema schema;
+
+  ExampleApp({super.key}) {
+    plainTextKeyString1 = 'plainTextKeyString1';
+    plainTextKeyString2 = 'plainTextKeyString2';
+    plainTextKeyString3 = 'plainTextKeyString3';
+    formStateData = ExampleFormStateData();
+    schema = ExampleFormSchema([
+      FormFieldDescriptor(plainTextKeyString1, null, null),
+      FormFieldDescriptor(plainTextKeyString2, null, null),
+      FormFieldDescriptor(plainTextKeyString1, null, null),
+    ], plainTextKeyString1,);
+    emptyFormManager = EmptyFormManager(stateData: formStateData, schema: schema);
+    uiParamsData = UiParamsData();
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    var uiParamsData = UiParamsData();
     return UiParams(
       data: uiParamsData,
       child: MaterialApp(
@@ -33,16 +55,16 @@ class ExampleApp extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 // mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextFieldBrick(
-                    keyString: 'text_1',
-                    formManager: EmptyFormManager(),
+                  PlainTextField(
+                    keyString: plainTextKeyString1,
+                    formManager: emptyFormManager,
                     colorMaker: StatesColorMaker(),
                     width: 150,
                   ),
                   uiParamsData.appSize.spacerBoxVerticalMedium,
-                  TextFieldBrick(
-                    keyString: 'text_2',
-                    formManager: EmptyFormManager(),
+                  PlainTextField(
+                    keyString: plainTextKeyString1,
+                    formManager: emptyFormManager,
                     colorMaker: StatesColorMaker(),
                     width: 150,
                     maxLines: 3,
@@ -83,3 +105,4 @@ class ExampleApp extends StatelessWidget {
     );
   }
 }
+
