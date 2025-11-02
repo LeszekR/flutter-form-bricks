@@ -14,7 +14,7 @@ import '../../../ui_params/ui_params.dart';
 import '../../base/form_field_brick.dart';
 import 'icon_button_params.dart';
 
-abstract class TextFieldBrick<K> extends FormFieldBrick<TextEditingValueBrick<K>> {
+abstract class TextFieldBrick extends FormFieldBrick<TextEditingValue> {
   // BrickTextField
   final double? width;
 
@@ -94,7 +94,6 @@ abstract class TextFieldBrick<K> extends FormFieldBrick<TextEditingValueBrick<K>
 
   TextFieldBrick({
     super.key,
-    super.initialValue,
     //
     // BrickFormField
     required super.keyString,
@@ -177,13 +176,13 @@ abstract class TextFieldBrick<K> extends FormFieldBrick<TextEditingValueBrick<K>
     this.magnifierConfiguration,
     this.buttonParams,
     this.hintLocales,
-  });
+  }) : super(initialValue: formManager.getInitialValue(keyString));
 
   @override
-  State<StatefulWidget> createState() => _TextFieldStateBrick();
+  State<StatefulWidget> createState() => TextFieldStateBrick();
 }
 
-class _TextFieldStateBrick extends FormFieldStateBrick<TextFieldBrick> {
+class TextFieldStateBrick extends FormFieldStateBrick<TextFieldBrick> {
   late final FocusNode _focusNode;
   late final TextEditingController _controller;
   Set<WidgetState>? _states;
@@ -201,7 +200,7 @@ class _TextFieldStateBrick extends FormFieldStateBrick<TextFieldBrick> {
       _controller = TextEditingController(text: formManager.getInitialValue(keyString));
     } else {
       _controller = widget.controller!;
-      _controller.text = formManager.getInitialValue(keyString);
+      _controller.text = (formManager.getInitialValue(keyString) as TextEditingValue).text;
     }
 
     _states = widget.statesNotifier?.value;

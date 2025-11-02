@@ -5,16 +5,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter_form_bricks/src/inputs/state/text_editing_value_brick.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_input_base/text_field_brick.dart';
 
-class PlainTextField extends TextFieldBrick<String> {
+class PlainTextField extends TextFieldBrick {
   @override
-  TextEditingValueBrick<String> getValue() {
-    TextEditingValue? value = controller!.value;
-    return TextEditingValueBrick<String>(textEditingValue: value, parsedValue: value.text);
+  TextEditingValue getValue() {
+    return controller!.value;
   }
 
   PlainTextField({
     super.key,
-    super.initialValue,
     //
     // BrickFormField
     required super.keyString,

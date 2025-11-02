@@ -23,13 +23,13 @@ abstract class FormManager extends ChangeNotifier {
       : _stateData = stateData,
         _schema = schema {
     if (!_stateData.isInitialised) {
-      resetForm();
+      _resetForm();
     }
     String? error = getFieldError(_getFocusedKeyString());
     _showErrorMessage(error);
   }
 
-  void resetForm() {
+  void _resetForm() {
     _schema.init(_stateData);
     _validate();
     _showErrorMessage(getFieldError(_getFocusedKeyString()));

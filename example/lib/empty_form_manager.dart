@@ -1,7 +1,17 @@
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_status.dart';
 
-class EmptyFormStateData extends FormStateData {}
+class ExampleFormStateData extends FormStateData {
+  ExampleFormStateData({required super.focusedKeyString});
+}
+
+class ExampleFormSchema extends FormSchema {
+  ExampleFormSchema(super.descriptors, super.initialFocusKeyString);
+}
+
+class EmptyFormStateData extends FormStateData {
+  EmptyFormStateData({required super.focusedKeyString});
+}
 
 class EmptyFormSchema extends FormSchema {
   EmptyFormSchema() : super([], '');
@@ -9,9 +19,6 @@ class EmptyFormSchema extends FormSchema {
 
 class EmptyFormManager extends FormManager {
   EmptyFormManager({required super.stateData, required super.schema});
-
-  @override
-  void afterFieldChanged() {}
 
   @override
   FormStatus checkStatus() {
@@ -22,21 +29,4 @@ class EmptyFormManager extends FormManager {
   Map<String, dynamic> collectInputs() {
     return {};
   }
-
-  @override
-  void fillInitialInputValuesMap() {}
-
-  @override
-  FormFieldStateBrick<FormFieldBrick>? findField(String keyString) {
-    return null;
-  }
-
-  @override
-  void resetForm() {}
-}
-
-class ExampleFormStateData extends FormStateData {}
-
-class ExampleFormSchema extends FormSchema {
-  ExampleFormSchema(super.descriptors, super.initialFocusKeyString);
 }

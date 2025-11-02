@@ -1,7 +1,4 @@
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/inputs/state/form_field_state_data.dart';
-
-import 'form_field_descriptor.dart';
 
 abstract class FormSchema {
   final Map<String, FormFieldDescriptor> _descriptorsMap;
