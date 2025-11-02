@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/dateTimeRange_validator.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/dateTimeRange_validator.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 

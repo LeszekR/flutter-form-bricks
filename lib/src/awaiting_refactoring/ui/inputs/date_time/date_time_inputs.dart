@@ -474,23 +474,4 @@ class DateTimeInputs {
     return formattedText;
   }
 
-  static String makeRangeKeyStringStart(String rangeKeyString) => "${rangeKeyString}_start";
-
-  static String makeRangeKeyStringEnd(String rangeKeyString) => "${rangeKeyString}_end";
-
-  static String makeDateKeyString(String rangePartKeyString) => "${rangePartKeyString}_date";
-
-  static String mameTimeKeyString(String rangePartKeyString) => "${rangePartKeyString}_time";
-
-  static String rangeDateStartKeyString(String rangeKeyString) =>
-      makeDateKeyString(makeRangeKeyStringStart(rangeKeyString));
-
-  static String rangeTimeStartKeyString(String rangeKeyString) =>
-      mameTimeKeyString(makeRangeKeyStringStart(rangeKeyString));
-
-  static String rangeDateEndKeyString(String rangeKeyString) =>
-      makeDateKeyString(makeRangeKeyStringEnd(rangeKeyString));
-
-  static String rangeTimeEndKeyString(String rangeKeyString) =>
-      mameTimeKeyString(makeRangeKeyStringEnd(rangeKeyString));
 }

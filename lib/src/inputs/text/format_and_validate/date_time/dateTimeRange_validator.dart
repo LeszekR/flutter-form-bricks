@@ -1,11 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/dateTime_range_error_controller.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/dateTime_range_error_controller.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
-
-import '../../../forms/form_manager/form_manager_OLD.dart';
-import '../date_time_inputs.dart';
 
 class DateTimeRangeValidator {
   String? _dateStartKeyString;
@@ -20,7 +17,7 @@ class DateTimeRangeValidator {
   String? timeEndText;
 
   final String _keyString;
-  final FormManagerOLD _formManager;
+  final FormManager _formManager;
   final RangeController _rangeController;
   FormFieldValidator<String>? _validator;
   final BricksLocalizations _localizations;
@@ -229,10 +226,10 @@ class DateTimeRangeValidator {
   }
 
   void _setkeyStrings(String rangeId) {
-    _dateStartKeyString = DateTimeInputs.rangeDateStartKeyString(rangeId);
-    _timeStartKeyString = DateTimeInputs.rangeTimeStartKeyString(rangeId);
-    _dateEndKeyString = DateTimeInputs.rangeDateEndKeyString(rangeId);
-    _timeEndKeyString = DateTimeInputs.rangeTimeEndKeyString(rangeId);
+    _dateStartKeyString = rangeDateStartKeyString(rangeId);
+    _timeStartKeyString = rangeTimeStartKeyString(rangeId);
+    _dateEndKeyString = rangeDateEndKeyString(rangeId);
+    _timeEndKeyString = rangeTimeEndKeyString(rangeId);
     _keyStrings = [_dateStartKeyString!, _timeStartKeyString!, _dateEndKeyString!, _timeEndKeyString!];
   }
 
@@ -240,3 +237,19 @@ class DateTimeRangeValidator {
     return _formManager.getFieldValue(keyString);
   }
 }
+
+String makeRangeKeyStringStart(String rangeKeyString) => "${rangeKeyString}_start";
+
+String makeRangeKeyStringEnd(String rangeKeyString) => "${rangeKeyString}_end";
+
+String makeDateKeyString(String rangePartKeyString) => "${rangePartKeyString}_date";
+
+String mameTimeKeyString(String rangePartKeyString) => "${rangePartKeyString}_time";
+
+String rangeDateStartKeyString(String rangeKeyString) => makeDateKeyString(makeRangeKeyStringStart(rangeKeyString));
+
+String rangeTimeStartKeyString(String rangeKeyString) => mameTimeKeyString(makeRangeKeyStringStart(rangeKeyString));
+
+String rangeDateEndKeyString(String rangeKeyString) => makeDateKeyString(makeRangeKeyStringEnd(rangeKeyString));
+
+String rangeTimeEndKeyString(String rangeKeyString) => mameTimeKeyString(makeRangeKeyStringEnd(rangeKeyString));
