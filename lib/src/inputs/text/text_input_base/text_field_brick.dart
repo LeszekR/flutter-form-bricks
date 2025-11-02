@@ -15,7 +15,7 @@ import '../../base/form_field_brick.dart';
 import 'icon_button_params.dart';
 
 abstract class TextFieldBrick extends FormFieldBrick<TextEditingValue> {
-  // BrickTextField
+  // TextFieldBrick
   final double? width;
 
   // Flutter TextField
@@ -95,7 +95,7 @@ abstract class TextFieldBrick extends FormFieldBrick<TextEditingValue> {
   TextFieldBrick({
     super.key,
     //
-    // BrickFormField
+    // FormFieldBrick
     required super.keyString,
     required super.formManager,
     required super.colorMaker,

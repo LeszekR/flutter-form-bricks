@@ -60,7 +60,7 @@ abstract class FormManager extends ChangeNotifier {
 
   void setFieldValid(String keyString, bool valid) => _getFieldStateData(keyString).valid = valid;
 
-  FormatterValidatorChain? getFieldValidator(String keyString) => getFormatterValidator(keyString);
+  FormatterValidatorChain? getFieldValidator(String keyString) => getFormatterValidatorChain(keyString);
 
   Type getFieldValueType(String keyString) => _getValueRuntimeType(keyString);
 
@@ -70,7 +70,7 @@ abstract class FormManager extends ChangeNotifier {
 
   void registerFocusNode(String keyString, FocusNode focusNode) => _focusNodeMap[keyString] = focusNode;
 
-  FormatterValidatorChain? getFormatterValidator(String keyString) =>
+  FormatterValidatorChain? getFormatterValidatorChain(String keyString) =>
       _getFieldDescriptor(keyString).formatterValidatorChain;
 
   Type _getValueRuntimeType(String keyString) => _getFieldDescriptor(keyString).valueType;
@@ -93,7 +93,7 @@ abstract class FormManager extends ChangeNotifier {
     FormatterValidatorChain? formatterValidator;
     String? error;
     for (String keyString in _schema.descriptorsMap.keys) {
-      formatterValidator = getFormatterValidator(keyString);
+      formatterValidator = getFormatterValidatorChain(keyString);
       error = formatterValidator?.run(_getFieldStateData(keyString).value);
       setFieldError(keyString, error);
     }
@@ -147,7 +147,7 @@ abstract class FormManager extends ChangeNotifier {
 // ==============================================================================
   String? validateFieldQuietly(String keyString) {
     dynamic value = getFieldValue(keyString);
-    String? error = getFormatterValidator(keyString)!.getError(value);
+    String? error = getFormatterValidatorChain(keyString)!.getError(value);
     setFieldError(keyString, error);
     return error;
   }

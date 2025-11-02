@@ -14,7 +14,7 @@ class PlainTextField extends TextFieldBrick {
   PlainTextField({
     super.key,
     //
-    // BrickFormField
+    // FormFieldBrick
     required super.keyString,
     required super.formManager,
     required super.colorMaker,
