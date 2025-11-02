@@ -31,7 +31,7 @@ abstract class FormManager extends ChangeNotifier {
 
   void _resetForm() {
     _schema.init(_stateData);
-    _validate();
+    _validateForm();
     _showErrorMessage(getFieldError(_getFocusedKeyString()));
   }
 
@@ -70,6 +70,8 @@ abstract class FormManager extends ChangeNotifier {
 
   void registerFocusNode(String keyString, FocusNode focusNode) => _focusNodeMap[keyString] = focusNode;
 
+  String? _getFocusedKeyString() => _stateData.focusedKeyString;
+
   FormatterValidatorChain? getFormatterValidatorChain(String keyString) =>
       _getFieldDescriptor(keyString).formatterValidatorChain;
 
@@ -89,7 +91,7 @@ abstract class FormManager extends ChangeNotifier {
     });
   }
 
-  void _validate() {
+  void _validateForm() {
     FormatterValidatorChain? formatterValidator;
     String? error;
     for (String keyString in _schema.descriptorsMap.keys) {
@@ -99,9 +101,7 @@ abstract class FormManager extends ChangeNotifier {
     }
   }
 
-  String? _getFocusedKeyString() => _stateData.focusedKeyString;
-
-  void onFieldChanged(String keyString, dynamic value) {
+  String? onFieldChanged(String keyString, dynamic value) {
     storeFieldValue(keyString, value);
     _validateField(keyString);
     // TODO uncomment and refactor

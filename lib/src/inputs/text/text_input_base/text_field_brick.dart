@@ -176,7 +176,7 @@ abstract class TextFieldBrick extends FormFieldBrick<TextEditingValue> {
     this.magnifierConfiguration,
     this.buttonParams,
     this.hintLocales,
-  }) : super(initialValue: formManager.getInitialValue(keyString));
+  });
 
   @override
   State<StatefulWidget> createState() => TextFieldStateBrick();
