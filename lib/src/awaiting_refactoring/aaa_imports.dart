@@ -7,7 +7,7 @@ import 'package:flutter_form_bricks/src/inputs/labelled_box/label_position.dart'
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/date_time_inputs.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/misc/time_stamp.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/time_stamp.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/time_formatter_validator.dart';
 

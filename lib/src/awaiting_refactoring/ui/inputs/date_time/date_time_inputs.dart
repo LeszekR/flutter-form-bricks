@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/misc/time_stamp.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/current_date.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/date_time_limits.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/date_time_utils.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/dateTime_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/time_formatter_validator.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/inputs/labelled_box/label_position.dart';
 import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/current_date.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_limits.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_utils.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/time_stamp.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/dateTimeRange_validator.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/dateTime_formatter_validator.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/dateTime_range_error_controller.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/date_formatter_validator.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/time_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
 import '../../../../inputs/text/format_and_validate/input_validator_provider.dart';
 import '../../buttons/buttons.dart';
-import '../../forms/form_manager/form_manager_OLD.dart';
 import '../../shortcuts/keyboard_shortcuts.dart';
 import '../text/text_input_base/basic_text_input.dart';
 import 'date_time_validators.dart';
-import 'formatter_validators/dateTime_range_error_controller.dart';
-import 'formatter_validators/date_formatter_validator.dart';
 
 class DateTimeInputs {
   static final DateTimeUtils _dateTimeUtils = DateTimeUtils();
@@ -34,7 +35,7 @@ class DateTimeInputs {
     required String keyString,
     required String label,
     required LabelPosition labelPosition,
-    required FormManagerOLD formManager,
+    required FormManager formManager,
     required CurrentDate currentDate,
     required DateTimeLimits dateLimits,
     Date? initialValue,
@@ -103,7 +104,7 @@ class DateTimeInputs {
     required String keyString,
     required String label,
     required LabelPosition labelPosition,
-    required FormManagerOLD formManager,
+    required FormManager formManager,
     Time? initialValue,
     bool readonly = false,
     bool isRequired = false,
@@ -167,7 +168,7 @@ class DateTimeInputs {
     required String label,
     required LabelPosition labelPosition,
     required CurrentDate currentDate,
-    required FormManagerOLD formManager,
+    required FormManager formManager,
     required DateTimeLimits dateTimeLimits,
     required int maxRangeSpanDays,
     required int minRangeSpanMinutes,
@@ -275,7 +276,7 @@ class DateTimeInputs {
     required LabelPosition labelPosition,
     required CurrentDate currentDate,
     required DateTimeLimits dateTimeLimits,
-    required FormManagerOLD formManager,
+    required FormManager formManager,
     required int maxRangeSpanDays,
     required int minRangeSpanMinutes,
     final bool readonly = false,
@@ -327,7 +328,7 @@ class DateTimeInputs {
     required String keyString,
     required String label,
     required LabelPosition labelPosition,
-    required FormManagerOLD formManager,
+    required FormManager formManager,
     required CurrentDate currentDate,
     required DateTimeLimits dateTimeLimits,
     DateTime? initialValue,
@@ -380,7 +381,7 @@ class DateTimeInputs {
   static void _showDatePicker({
     required BuildContext context,
     required String keyString,
-    required FormManagerOLD formManager,
+    required FormManager formManager,
     Duration? maxDateSpan,
   }) {
     final now = DateTime.now();
@@ -402,7 +403,7 @@ class DateTimeInputs {
   static void _showTimePicker({
     required BuildContext context,
     required String keyString,
-    required FormManagerOLD formManager,
+    required FormManager formManager,
   }) {
     showTimePicker(
       context: context,
@@ -423,7 +424,7 @@ class DateTimeInputs {
 
   static void _showDateTimePicker({
     required BuildContext context,
-    required FormManagerOLD formManager,
+    required FormManager formManager,
     required String keyString,
   }) async {
     final now = DateTime.now();
@@ -455,7 +456,7 @@ class DateTimeInputs {
   }
 
   static String? _onEditingComplete(
-    final FormManagerOLD formManager,
+    final FormManager formManager,
     final String keyString,
     final String? Function(String) formatter,
     final RangeController? rangeController,
@@ -473,5 +474,4 @@ class DateTimeInputs {
     KeyboardEvents.onEditTriggered();
     return formattedText;
   }
-
 }

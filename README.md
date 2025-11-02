@@ -176,6 +176,10 @@ On submit, parsed values are read from the field and passed to your domain layer
     - Validates the new value.
     - Updates `FormFieldStateData` and triggers revalidation or saving.
 
+  - **FormBrick**
+   - must only use `keyStrings` declared in `FormSchema`
+   - for validation to work
+
 Ensures type safety, single source of truth, and automatic validation across the form.
 
 

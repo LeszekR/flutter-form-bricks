@@ -1,9 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_input_base/states_color_maker.dart';
-
-typedef OnFieldChanged = String? Function(String keyString, dynamic fieldValue);
 
 abstract class FormFieldBrick<T> extends StatefulWidget {
   final String keyString;
@@ -12,7 +9,6 @@ abstract class FormFieldBrick<T> extends StatefulWidget {
   final WidgetStatesController? statesObserver;
   final WidgetStatesController? statesNotifier;
   final T? initialValue;
-  final OnFieldChanged onFieldChanged;
 
   // TODO implement identical functionality as in flutter_form_builder using onChange, onEditingComplete, onSave
   final AutovalidateMode autoValidateMode;
@@ -20,7 +16,6 @@ abstract class FormFieldBrick<T> extends StatefulWidget {
   T getValue();
 
   FormFieldBrick({
-    // TODO refactor to obligatory use of KeyString class guaranteeing key uniqueness
     super.key,
     required this.keyString,
     required this.formManager,
@@ -28,15 +23,30 @@ abstract class FormFieldBrick<T> extends StatefulWidget {
     this.statesObserver,
     this.statesNotifier,
     this.autoValidateMode = AutovalidateMode.disabled,
-  })  : initialValue = formManager.getInitialValue(keyString),
-        onFieldChanged = formManager.onFieldChanged {
+  }) : initialValue = formManager.getInitialValue(keyString) {
     formManager.registerField(keyString, T.runtimeType);
   }
 }
 
 abstract class FormFieldStateBrick<T extends FormFieldBrick> extends State<T> {
-  // TODO implement onChange common to all inputs
   FormManager get formManager => widget.formManager;
 
   String get keyString => widget.keyString;
+
+  /// Controls the field's color and is passed to `InputDecoration` it the field shows its error this way.
+  String? _error;
+
+  /// **Must be called** either in `onChanged` or `onEditingComplete`. If not called there neither validation nor error
+  /// display will be performed.
+  /// ---
+  /// Makes `FormManager`
+  /// - validate the field
+  /// - register both new value and error in `FormManager` -> `FormStateBrick` -> `FormFieldStateBrick`
+  /// - return error which then controls the field's color and if the field uses `InputDecoration` to display error it
+  ///   is passed there.
+  void _onFieldChanged(dynamic value) {
+    setState(() {
+      _error = formManager.onFieldChanged(keyString, value);
+    });
+  }
 }
