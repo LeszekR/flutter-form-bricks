@@ -28,11 +28,11 @@ void main() {
     final focusNode = formManager.getFocusNode(LOWERCASE_KEY);
     final controller = formManager.getTextEditingController(LOWERCASE_KEY);
 
-    focusNode.addListener(() {
-      if (!focusNode.hasFocus) {
-        FormatterHelper.onSubmittedTrimming(controller.text, controller);
-      }
-    });
+    // focusNode.addListener(() {
+    //   if (!focusNode.hasFocus) {
+    //     FormatterHelper.onSubmittedTrimming(controller.text, controller);
+    //   }
+    // });
 
     final regularInput = TextInputs.textMultiline(
         context: context,

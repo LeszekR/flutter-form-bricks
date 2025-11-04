@@ -17,7 +17,7 @@ class NumberInputs {
 
   static Widget id({
     required BuildContext context,
-    required FormManagerOLD formManager,
+    required FormManager formManager,
     required int? initialValue,
     required LabelPosition labelPosition,
     final String keyString = "id",
@@ -49,7 +49,7 @@ class NumberInputs {
       required String keyString,
       required String label,
       required LabelPosition labelPosition,
-      required FormManagerOLD formManager,
+      required FormManager formManager,
       final int? initialValue,
       final bool readonly = false,
       final FormFieldValidator<String>? validator,
@@ -95,7 +95,7 @@ class NumberInputs {
       required String keyString,
       required String label,
       required LabelPosition labelPosition,
-      required FormManagerOLD formManager,
+      required FormManager formManager,
       final double? initialValue,
       final int decimalPoints = 2,
       final bool readonly = false,

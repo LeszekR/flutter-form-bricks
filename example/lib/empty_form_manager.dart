@@ -1,7 +1,7 @@
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_status.dart';
 
-class ExampleFormStateData extends FormStateData {
+class ExampleFormStateData extends FormData {
   ExampleFormStateData({required super.focusedKeyString});
 }
 
@@ -9,7 +9,7 @@ class ExampleFormSchema extends FormSchema {
   ExampleFormSchema(super.descriptors, super.initialFocusKeyString);
 }
 
-class EmptyFormStateData extends FormStateData {
+class EmptyFormStateData extends FormData {
   EmptyFormStateData({required super.focusedKeyString});
 }
 

@@ -3,9 +3,9 @@ import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params_data.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../test_implementations/dummy_color_maker.dart';
-import '../../../test_implementations/dummy_form_manager.dart';
-import '../../../test_implementations/dummy_form_schema.dart';
+import '../../../test_implementations/test_color_maker.dart';
+import '../../../test_implementations/test_form_manager.dart';
+import '../../../test_implementations/test_form_schema.dart';
 import '../../../test_implementations/test_form_field_brick.dart';
 import '../../../ui/test_constants.dart';
 
@@ -34,7 +34,7 @@ void _testKeyStringInTheSchema({
   required bool expectThrows,
 }) {
   testWidgets(description, (tester) async {
-    final schema = DummyFormSchema.forText(
+    final schema = TestFormSchema.forText(
       keyString: schemaKeyString,
       initialValue: null,
     );
@@ -46,10 +46,11 @@ void _testKeyStringInTheSchema({
         UiParams(
           data: UiParamsData(),
           child: MaterialApp(
-            home: TestTextFormFieldBrick(
+            home: TestFormFieldBrick(
+              GlobalKey(),
               keyString: fieldKeyString,
-              formManager: DummyFormManager(schema: schema),
-              colorMaker: DummyColorMaker(),
+              formManager: TestFormManager(schema: schema),
+              colorMaker: TestColorMaker(),
             ),
           ),
         ),
@@ -62,7 +63,7 @@ void _testKeyStringInTheSchema({
       expect(didThrow, isTrue, reason: 'Expected widget to throw assertion');
     } else {
       expect(didThrow, isFalse, reason: 'Widget unexpectedly threw');
-      expect(find.byType(TestTextFormFieldBrick), findsOneWidget);
+      expect(find.byType(TestFormFieldBrick), findsOneWidget);
     }
   });
 }

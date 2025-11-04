@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/text/text_input_base/error_message_notifier_OLD.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 
 import '../../../../../ui_params/ui_params.dart';
-import '../../../forms/form_manager/form_manager_OLD.dart';
 
 class TextFieldColored extends StatefulWidget {
   final String keyString;
-  final FormManagerOLD formManager;
+  final FormManager formManager;
   final AutovalidateMode autovalidateMode;
   final double? textWidth;
   final int? maxLines;
@@ -58,19 +57,19 @@ class TextFieldColored extends StatefulWidget {
   State<StatefulWidget> createState() => _TextFieldColoredState();
 }
 
-class _TextFieldColoredState extends State<TextFieldColored> with ErrorMessageNotifierOLD {
+class _TextFieldColoredState extends State<TextFieldColored> /*with ErrorMessageNotifierOLD*/ {
   dynamic firstValue;
 
   @override
   void initState() {
     super.initState();
 
-    super.setFieldErrorListener(widget.formManager, widget.keyString);
+    // super.setFieldErrorListener(widget.formManager, widget.keyString);
 
     if (widget.withTextEditingController ?? true) {
       var controllerValue = widget.initialValue;
       if (controllerValue != null) controllerValue = controllerValue.toString();
-      widget.formManager.setEditingController(widget.keyString, controllerValue);
+      // widget.formManager.setEditingController(widget.keyString, controllerValue);
     } else {
       firstValue = widget.initialValue;
     }
@@ -85,6 +84,8 @@ class _TextFieldColoredState extends State<TextFieldColored> with ErrorMessageNo
 
     // STATE AWARE - color depends on state
     // ======================================================
+    var textEditingController = TextEditingController(text: widget.initialValue);
+    var focusNode = FocusNode();
     if (widget.notifierDoubleStatesController != null) {
       return ValueListenableBuilder(
           valueListenable: widget.notifierDoubleStatesController!,
@@ -102,8 +103,8 @@ class _TextFieldColoredState extends State<TextFieldColored> with ErrorMessageNo
                   statesController: widget.notifierDoubleStatesController!.receiverStatesController,
                   autovalidateMode: widget.autovalidateMode,
                   validator: widget.validator,
-                  controller: widget.formManager.getTextEditingController(widget.keyString),
-                  focusNode: widget.formManager.getFocusNode(widget.keyString),
+                  controller: textEditingController,
+                  focusNode: focusNode,
                   initialValue: firstValue,
                   readOnly: widget.readonly,
                   inputFormatters: widget.inputFormatters,
@@ -133,8 +134,8 @@ class _TextFieldColoredState extends State<TextFieldColored> with ErrorMessageNo
           ),
           autovalidateMode: AutovalidateMode.always,
           validator: widget.validator,
-          controller: widget.formManager.getTextEditingController(widget.keyString),
-          focusNode: widget.formManager.getFocusNode(widget.keyString),
+          controller: textEditingController,
+          focusNode: focusNode,
           initialValue: firstValue,
           readOnly: widget.readonly,
           inputFormatters: widget.inputFormatters,

@@ -10,7 +10,7 @@ class ExampleApp extends StatelessWidget {
   late final String plainTextKeyString1;
   late final String plainTextKeyString2;
   late final String plainTextKeyString3;
-  late final FormStateData formStateData;
+  late final FormData formStateData;
   late final EmptyFormManager emptyFormManager;
   late final UiParamsData uiParamsData;
   late final FormSchema schema;

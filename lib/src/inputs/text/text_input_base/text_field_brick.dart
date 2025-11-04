@@ -182,10 +182,14 @@ abstract class TextFieldBrick extends FormFieldBrick<TextEditingValue> {
   State<StatefulWidget> createState() => TextFieldStateBrick();
 }
 
-class TextFieldStateBrick extends FormFieldStateBrick<TextFieldBrick> {
+class TextFieldStateBrick extends FormFieldStateBrick<TextFieldBrick, TextEditingValue> {
   late final FocusNode _focusNode;
   late final TextEditingController _controller;
   Set<WidgetState>? _states;
+
+
+  @override
+  TextEditingValue getValue() => _controller.value;
 
   @override
   void initState() {

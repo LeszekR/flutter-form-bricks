@@ -11,13 +11,8 @@ class TestTextFieldBrick extends TextFieldBrick {
   });
 
   @override
-  TextFieldStateBrick createState() => TestTextFieldBrickState();
+  TestTextFieldBrickState createState() => TestTextFieldBrickState();
 
-  @override
-  TextEditingValue getValue() {
-    // TODO: implement getValue
-    throw UnimplementedError();
-  }
 }
 
 class TestTextFieldBrickState extends TextFieldStateBrick {

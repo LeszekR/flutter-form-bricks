@@ -3,9 +3,9 @@ import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params_data.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../../../test_implementations/dummy_color_maker.dart';
-import '../../../../../test_implementations/dummy_form_manager.dart';
-import '../../../../../test_implementations/dummy_form_schema.dart';
+import '../../../../../test_implementations/test_color_maker.dart';
+import '../../../../../test_implementations/test_form_manager.dart';
+import '../../../../../test_implementations/test_form_schema.dart';
 import '../../../../../test_implementations/test_text_field_brick.dart';
 import '../../../../../ui/test_constants.dart';
 
@@ -50,9 +50,8 @@ void _testControllerIniitalValue({
   required String expectedText,
 }) {
   testWidgets(description, (tester) async {
-    final schema = DummyFormSchema.forText(
+    final schema = TestFormSchema(
       keyString: keyString1,
-      initialValue: initialValue,
     );
 
     await tester.pumpWidget(
@@ -62,8 +61,8 @@ void _testControllerIniitalValue({
           home: TestTextFieldBrick(
             keyString: keyString1,
             controller: controller,
-            formManager: DummyFormManager(schema: schema),
-            colorMaker: DummyColorMaker(),
+            formManager: TestFormManager(schema: schema),
+            colorMaker: TestColorMaker(),
           ),
         ),
       ),

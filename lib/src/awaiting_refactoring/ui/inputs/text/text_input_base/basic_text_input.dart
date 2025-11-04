@@ -21,7 +21,7 @@ class BasicTextInput {
       dynamic initialValue,
       bool readonly = false,
       List<TextInputFormatter>? inputFormatters,
-      required FormManagerOLD formManager,
+      required FormManager formManager,
       FormFieldValidator<String>? validator,
       bool? withTextEditingController,
       ValueChanged<String?>? onChanged,

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/inputs/base/form_field_brick.dart';
 
-class TestTextFormFieldBrick extends FormFieldBrick<String> {
-  TestTextFormFieldBrick({
+class TestFormFieldBrick extends FormFieldBrick<String> {
+  TestFormFieldBrick({
+    super.key,
     required super.keyString,
     required super.formManager,
     required super.colorMaker,
@@ -10,15 +11,23 @@ class TestTextFormFieldBrick extends FormFieldBrick<String> {
 
   @override
   State<FormFieldBrick<String>> createState() => TestFormFieldBrickState();
-
-  @override
-  String getValue() {
-    // TODO: implement getValue
-    throw UnimplementedError();
-  }
 }
 
-class TestFormFieldBrickState extends State<TestTextFormFieldBrick> {
+class TestFormFieldBrickState extends FormFieldStateBrick<TestFormFieldBrick, String?> {
+  String? value;
+
+  void changeValue(String newValue) {
+    value = newValue;
+    onFieldChanged(newValue);
+  }
+
   @override
-  Widget build(BuildContext context) => const SizedBox.shrink();
+  String? getValue() => value;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.shrink(
+      key: GlobalKey<TestFormFieldBrickState>(debugLabel: widget.keyString),
+    );
+  }
 }

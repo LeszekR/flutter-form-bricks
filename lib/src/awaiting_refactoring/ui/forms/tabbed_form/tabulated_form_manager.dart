@@ -1,43 +1,44 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/form_manager/form_manager_OLD.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_status.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import 'tab_data.dart';
 import 'tab_status.dart';
 
-class TabulatedFormManager extends FormManagerOLD {
+class TabulatedFormManager extends FormManager {
   final ValueNotifier<Map<String, TabStatus>> tabStatusNotifier = ValueNotifier<Map<String, TabStatus>>({});
   GlobalKey<FormBuilderState>? _currentTabGlobalKey;
   final Map<GlobalKey<FormBuilderState>, TabData> tabsDataMap = {};
 
-  TabulatedFormManager();
+  TabulatedFormManager({required super.stateData, required super.schema});
 
-  @override
-  void fillInitialInputValuesMap() {
-    for (var tabData in tabsDataMap.values) {
-      setInitialValues(tabData.globalKey);
-    }
-  }
-
-  @override
-  void afterFieldChanged() {
-    calculateTabStatus(_currentTabGlobalKey!);
-    _notifyTabStatusChange();
-  }
+  // @override
+  // void fillInitialInputValuesMap() {
+  //   for (var tabData in tabsDataMap.values) {
+  //     setInitialValues(tabData.globalKey);
+  //   }
+  // }
+  //
+  // @override
+  // void afterFieldChanged() {
+  //   calculateTabStatus(_currentTabGlobalKey!);
+  //   _notifyTabStatusChange();
+  // }
 
   @override
   FormStatus checkStatus() {
-    final activeTabsData =
-        tabsDataMap.entries.where((entry) => tabsDataMap[entry.key]!.currentStatus != TabStatus.tabDisabled);
-
-    var hasInvalidTab =
-        activeTabsData.any((tabData) => getFormPartState(tabData.value.globalKey) == FormStatus.invalid);
-    if (hasInvalidTab) return FormStatus.invalid;
-
-    var hasValidTab = activeTabsData.any((tabData) => getFormPartState(tabData.value.globalKey) == FormStatus.valid);
-    if (hasValidTab) return FormStatus.valid;
+    // TODO uncomment and refactor
+    // final activeTabsData =
+    //     tabsDataMap.entries.where((entry) => tabsDataMap[entry.key]!.currentStatus != TabStatus.tabDisabled);
+    //
+    // var hasInvalidTab =
+    //     activeTabsData.any((tabData) => getFormPartState(tabData.value.globalKey) == FormStatus.invalid);
+    // if (hasInvalidTab) return FormStatus.invalid;
+    //
+    // var hasValidTab = activeTabsData.any((tabData) => getFormPartState(tabData.value.globalKey) == FormStatus.valid);
+    // if (hasValidTab) return FormStatus.valid;
 
     return FormStatus.noChange;
   }

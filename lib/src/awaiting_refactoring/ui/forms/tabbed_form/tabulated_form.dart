@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_bricks/src/forms/base/form_brick.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../../../../../shelf.dart';
-import '../base/abstract_form.dart';
 import 'tabulated_form_manager.dart';
 
 abstract class TabulatedForm extends AbstractForm {
-  TabulatedForm({super.key}) : super(formManager: TabulatedFormManager());
+  TabulatedForm({super.key, required FormData stateData, required FormSchema schema})
+      : super(formManager: TabulatedFormManager(stateData: stateData, schema: schema));
 }
 
 abstract class TabulatedFormState<T extends TabulatedForm> extends AbstractFormState<T>

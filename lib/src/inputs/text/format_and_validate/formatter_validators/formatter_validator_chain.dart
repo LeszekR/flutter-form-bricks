@@ -15,6 +15,8 @@ abstract class FormatterValidatorChain<T, K> {
 class FormatterValidatorChainEarlyStop extends FormatterValidatorChain<String, StringParseResult> {
   FormatterValidatorChainEarlyStop(super.steps);
 
+  // TODO lock field types accepted as clients of each FormatterValidatorChain
+
   StringParseResult run(String inputString) {
     StringParseResult result = StringParseResult.transient('');
 

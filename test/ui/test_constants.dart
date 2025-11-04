@@ -7,3 +7,7 @@ String initialStringValue1 =  'initialStringValue1';
 String initialStringValue2 =  'initialStringValue2';
 String initialStringValue3 =  'initialStringValue3';
 String initialStringValue4 =  'initialStringValue4';
+
+String newStringValue1 = 'newStringValue1';
+
+String mockError1 = 'mockError1';

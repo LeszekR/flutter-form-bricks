@@ -13,28 +13,46 @@ abstract class FormFieldBrick<T> extends StatefulWidget {
   // TODO implement identical functionality as in flutter_form_builder using onChange, onEditingComplete, onSave
   final AutovalidateMode autoValidateMode;
 
-  T getValue();
-
   FormFieldBrick({
-    super.key,
+    Key? key,
     required this.keyString,
     required this.formManager,
     required this.colorMaker,
     this.statesObserver,
     this.statesNotifier,
     this.autoValidateMode = AutovalidateMode.disabled,
-  }) : initialValue = formManager.getInitialValue(keyString) {
-    formManager.registerField(keyString, T.runtimeType);
+  })  : initialValue = formManager.getInitialValue(keyString),
+        super(key: key ?? ValueKey(keyString)) {
+    formManager.registerField(keyString, T);
   }
 }
 
-abstract class FormFieldStateBrick<T extends FormFieldBrick> extends State<T> {
+abstract class FormFieldStateBrick<K extends FormFieldBrick, T> extends State<K> {
+  T getValue();
+
+  late final FocusNode focusNode;
+
   FormManager get formManager => widget.formManager;
 
   String get keyString => widget.keyString;
 
   /// Controls the field's color and is passed to `InputDecoration` it the field shows its error this way.
   String? _error;
+
+  @override
+  void initState() {
+    focusNode = FocusNode();
+    focusNode.addListener(() {
+      if (focusNode.hasFocus) formManager.showFieldErrorMessage(keyString);
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
+  }
 
   /// **Must be called** either in `onChanged` or `onEditingComplete`. If not called there neither validation nor error
   /// display will be performed.
@@ -44,9 +62,9 @@ abstract class FormFieldStateBrick<T extends FormFieldBrick> extends State<T> {
   /// - register both new value and error in `FormManager` -> `FormStateBrick` -> `FormFieldStateBrick`
   /// - return error which then controls the field's color and if the field uses `InputDecoration` to display error it
   ///   is passed there.
-  void _onFieldChanged(dynamic value) {
-    setState(() {
-      _error = formManager.onFieldChanged(keyString, value);
-    });
+  void onFieldChanged(dynamic value, String? error) {
+    // TU PRZERWAŁEM
+    formManager.onFieldChanged(keyString, value, error);
+    setState(() {});
   }
 }

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_states_controller.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatters/lowercase_formatter.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatters/uppercase_formatter.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatters/vat_formatter.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/text/first_upper_then_lower_case_formatter.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/text/forbidden_whitespaces_formatter.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/text/lowercase_formatter.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/text/uppercase_formatter.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/text/vat_formatter.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 
 import '../../../../../shelf.dart';
-import '../../../../inputs/text/format_and_validate/formatters/first_upper_then_lower_case_formatter.dart';
-import '../../../../inputs/text/format_and_validate/formatters/forbidden_whitespaces_formatter.dart';
 import '../../buttons/buttons.dart';
 import '../../forms/form_manager/form_manager_OLD.dart';
 
@@ -19,7 +20,7 @@ class TextInputs {
     required String keyString,
     required String label,
     required LabelPosition labelPosition,
-    required FormManagerOLD formManager,
+    required FormManager formManager,
     final String? initialValue,
     final bool readonly = false,
     final TextInputFormatter? inputFormatter,
@@ -56,7 +57,7 @@ class TextInputs {
     required String keyString,
     required String label,
     required LabelPosition labelPosition,
-    required FormManagerOLD formManager,
+    required FormManager formManager,
     final String? initialValue,
     final bool readonly = false,
     final FormFieldValidator<String>? validator,
@@ -92,7 +93,7 @@ class TextInputs {
     required String keyString,
     required String label,
     required LabelPosition labelPosition,
-    required FormManagerOLD formManager,
+    required FormManager formManager,
     final String? initialValue,
     final bool readonly = false,
     final FormFieldValidator<String>? validator,
@@ -128,7 +129,7 @@ class TextInputs {
     required String keyString,
     required String label,
     required LabelPosition labelPosition,
-    required FormManagerOLD formManager,
+    required FormManager formManager,
     final String? initialValue,
     final bool readonly = false,
     final FormFieldValidator<String>? validator,
@@ -164,7 +165,7 @@ class TextInputs {
     required String keyString,
     required String label,
     required LabelPosition labelPosition,
-    required FormManagerOLD formManager,
+    required FormManager formManager,
     final String? initialValue,
     final bool readonly = false,
     final TextInputFormatter? inputFormatter,
@@ -203,7 +204,7 @@ class TextInputs {
     required String keyString,
     required String label,
     required LabelPosition labelPosition,
-    required FormManagerOLD formManager,
+    required FormManager formManager,
     final String? initialValue,
     final int? inputHeightMultiplier,
     final double? inputWidth,
@@ -236,7 +237,7 @@ class TextInputs {
     required String keyString,
     required String label,
     required LabelPosition labelPosition,
-    required FormManagerOLD formManager,
+    required FormManager formManager,
     required IconData iconData,
     required void Function() onPressed,
     required String tooltip,
@@ -284,7 +285,7 @@ class TextInputs {
     required String keyString,
     required String label,
     required LabelPosition labelPosition,
-    required FormManagerOLD formManager,
+    required FormManager formManager,
     required bool withTextEditingController,
     required FormFieldValidator<String> validator,
     String? initialValue,

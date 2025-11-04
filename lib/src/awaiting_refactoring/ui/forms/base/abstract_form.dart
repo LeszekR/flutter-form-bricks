@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/src/forms/base/form_brick.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_status.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
-import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../../../../dialogs/dialogs.dart';
 import '../../../../ui_params/ui_params.dart';
 import '../../buttons/buttons.dart';
 import '../../shortcuts/keyboard_shortcuts.dart';
-import '../form_manager/form_manager_OLD.dart';
-import '../form_manager/form_state.dart';
 import 'form_utils.dart';
 
 ///  Top layer of forms used by this software.
@@ -21,13 +19,13 @@ abstract class AbstractForm extends StatefulWidget {
 
   get errorKeyString => _errorTextKeyString;
 
-  final FormManagerOLD _formManager;
+  final FormManager _formManager;
 
-  FormManagerOLD get formManager => _formManager;
+  FormManager get formManager => _formManager;
 
-  GlobalKey<FormBuilderState> get formKey => _formManager.formKey;
+  GlobalKey<FormStateBrick> get formKey => _formManager.formKey;
 
-  const AbstractForm({super.key, required FormManagerOLD formManager}) : _formManager = formManager;
+  const AbstractForm({super.key, required FormManager formManager}) : _formManager = formManager;
 
   @override
   AbstractFormState createState();
@@ -45,9 +43,9 @@ abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
 
   late final Map<int, VoidCallback> _keyboardMapping;
 
-  FormManagerOLD get formManager => widget._formManager;
+  FormManager get formManager => widget._formManager;
 
-  GlobalKey<FormBuilderState> get formKey => formManager.formKey;
+  GlobalKey<FormStateBrick> get formKey => formManager.formKey;
 
   String provideLabel();
 
@@ -66,7 +64,6 @@ abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
     // applicationState = Provider.of<ApplicationState>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       postConstruct();
-      formManager.fillInitialInputValuesMap();
     });
   }
 
@@ -190,19 +187,22 @@ abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
 
   void onReset() {
     final localizations = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
-    Dialogs.decisionDialogYesNo(context, localizations.formReset, localizations.formResetConfirm, action: formManager.resetForm);
+    Dialogs.decisionDialogYesNo(context, localizations.formReset, localizations.formResetConfirm,
+        action: formManager.resetForm);
   }
 
   void onCancel() {
     final localizations = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
-    Dialogs.decisionDialogYesNo(context, localizations.buttonCancel, localizations.dialogsConfirmCancel, action: cancel);
+    Dialogs.decisionDialogYesNo(context, localizations.buttonCancel, localizations.dialogsConfirmCancel,
+        action: cancel);
   }
 
   void cancel() => Navigator.of(context).pop(false);
 
   void onDelete() {
     final localizations = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
-    Dialogs.decisionDialogOkCancel(context, localizations.dialogsWarning, localizations.deleteConfirm, action: deleteEntity);
+    Dialogs.decisionDialogOkCancel(context, localizations.dialogsWarning, localizations.deleteConfirm,
+        action: deleteEntity);
   }
 
   void onTab() => TextInputAction.next;
@@ -213,8 +213,8 @@ abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
 
     switch (formState) {
       case FormStatus.noChange:
-        Dialogs.informationDialog(
-            context, localizations.dialogsError, isEditMode() ? localizations.dialogsNoChanges : localizations.dialogsFinishOrCorrect);
+        Dialogs.informationDialog(context, localizations.dialogsError,
+            isEditMode() ? localizations.dialogsNoChanges : localizations.dialogsFinishOrCorrect);
         break;
       case FormStatus.invalid:
         Dialogs.informationDialog(context, localizations.dialogsError, localizations.dialogsFinishOrCorrect);
