@@ -9,7 +9,7 @@ import 'test_form_state_data.dart';
 class TestFormManager extends FormManager {
   TestFormManager({required FormSchema schema})
       : super(
-          stateData: TestFormStateData(),
+          formData: TestFormStateData(),
           schema: schema
         );
 

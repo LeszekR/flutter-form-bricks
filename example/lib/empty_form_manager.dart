@@ -18,7 +18,7 @@ class EmptyFormSchema extends FormSchema {
 }
 
 class EmptyFormManager extends FormManager {
-  EmptyFormManager({required super.stateData, required super.schema});
+  EmptyFormManager({required super.formData, required super.schema});
 
   @override
   FormStatus checkStatus() {

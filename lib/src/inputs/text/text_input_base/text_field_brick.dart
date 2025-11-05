@@ -196,9 +196,8 @@ class TextFieldStateBrick extends FormFieldStateBrick<TextFieldBrick, TextEditin
     super.initState();
 
     _focusNode = widget.focusNode ?? FocusNode();
-    formManager.setErrorMessageListener(_focusNode, keyString);
+    formManager.setFocusListener(_focusNode, keyString);
     if (formManager.hasFocusOnStart(keyString)) _focusNode.requestFocus();
-    formManager.registerFocusNode(keyString, _focusNode);
 
     if (widget.controller == null) {
       _controller = TextEditingController(text: formManager.getInitialValue(keyString));
@@ -423,7 +422,8 @@ class TextFieldStateBrick extends FormFieldStateBrick<TextFieldBrick, TextEditin
     // If onEditingComplete is called then formManager.onFieldChanged is called there so we skip it here
     if (widget.onEditingComplete == null || widget.onEditingComplete == () {}) {
       _skipOnChanged = true;
-      widget.formManager.onFieldChanged(keyString, value);
+      // TODO REFACTOR - formatting and validation done in FormManager, formatted value passed back here
+      // widget.formManager.onFieldChanged(keyString, value);
       _skipOnChanged = false;
     }
   }
@@ -433,6 +433,7 @@ class TextFieldStateBrick extends FormFieldStateBrick<TextFieldBrick, TextEditin
     // _skipOnChanged = true;
     // var value = widget.onEditingComplete?.call();
     // _skipOnChanged = false;
+    // TODO REFACTOR - formatting and validation done in FormManager, formatted value passed back here
     // widget.formManager.onFieldChanged(widget.keyString, value);
   }
 }

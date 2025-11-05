@@ -12,7 +12,7 @@ class TabulatedFormManager extends FormManager {
   GlobalKey<FormBuilderState>? _currentTabGlobalKey;
   final Map<GlobalKey<FormBuilderState>, TabData> tabsDataMap = {};
 
-  TabulatedFormManager({required super.stateData, required super.schema});
+  TabulatedFormManager({required super.formData, required super.schema});
 
   // @override
   // void fillInitialInputValuesMap() {

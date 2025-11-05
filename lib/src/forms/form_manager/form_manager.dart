@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_form_bricks/src/forms/base/form_field_descriptor.dart';
 import 'package:flutter_form_bricks/src/forms/base/form_schema.dart';
 import 'package:flutter_form_bricks/src/forms/state/form_data.dart';
 import 'package:flutter_form_bricks/src/inputs/state/form_field_data.dart';
@@ -11,26 +10,37 @@ import 'form_status.dart';
 abstract class FormManager extends ChangeNotifier {
   final ValueNotifier<String> errorMessageNotifier = ValueNotifier<String>('');
   final _formKey = GlobalKey<FormStateBrick>();
-  final FormData stateData;
-  final Map<String, FormatterValidatorChain> formatterValidators;
+  final FormData formData;
+  final Map<String, FormatterValidatorChain?> formatterValidators;
 
+  // TODO make flat map for tabbed form too and implement here
   FormStatus checkStatus();
 
+  // TODO make flat map for tabbed form too and implement here
   Map<String, dynamic> collectInputs();
 
-  FormManager({required this.stateData, required this.formatterValidators}) {
+  FormManager({required this.formData, required FormSchema formSchema})
+      : formatterValidators = {
+          for (final d in formSchema.descriptors) d.keyString: d.formatterValidatorChain,
+        } {
     resetForm();
-    String? error = getFieldError(_getFocusedKeyString());
-    _showErrorMessage(error);
   }
 
+  GlobalKey<FormStateBrick> get formKey => _formKey;
+
   void resetForm() {
-    // TODO solve settingState with reset values in all fields
-    for (FormFieldData data in stateData.fieldDataMap.values) {
+    // TODO solve setState with reset values in all fields
+    for (FormFieldData data in formData.fieldDataMap.values) {
       _resetField(data);
     }
     _validateForm();
-    _showErrorMessage(getFieldError(_getFocusedKeyString()));
+    _showFocusedFieldError();
+  }
+
+  void _showFocusedFieldError() {
+    String? focusedKeyString = formData.focusedKeyString;
+    if (focusedKeyString == null) return;
+    _showErrorMessage(getFieldError(formData.focusedKeyString!));
   }
 
   void _resetField(FormFieldData data) {
@@ -39,66 +49,55 @@ abstract class FormManager extends ChangeNotifier {
     data.errorMessage = null;
   }
 
-  GlobalKey<FormStateBrick> get formKey => _formKey;
-
-  void registerField<T>(String keyString) {
-    assert(stateData.fieldDataMap.keys.contains(keyString),
+  void registerField<T>(String keyString, Type T) {
+    assert(formData.fieldDataMap.keys.contains(keyString),
         'FormData does not contain FormFieldData with keyString: "$keyString".');
+    assert(T ==  _getFieldValueType(keyString),
+        'Field value type is different from FieldData valueType for keyString: "$keyString".');
   }
 
-  dynamic getFieldValue(String keyString) => _getFieldStateData(keyString).value;
+  Type _getFieldValueType(String keyString) => _getFieldData(keyString).initialValue.runtimeType;
 
-  void storeFieldValue(String keyString, dynamic value) => _getFieldStateData(keyString).value = value;
+  void storeFieldValue(String keyString, dynamic value) => _getFieldData(keyString).value = value;
 
-  String? getFieldError(String? keyString) => keyString == null ? null : _getFieldStateData(keyString).errorMessage;
+  dynamic getFieldValue(String keyString) => _getFieldData(keyString).value;
 
-  void setFieldError(String keyString, String? error) => _getFieldStateData(keyString).errorMessage = error;
+  void setFieldError(String keyString, String? error) => _getFieldData(keyString).errorMessage = error;
 
-  bool isFieldValid(String keyString) => _getFieldStateData(keyString).valid;
+  String? getFieldError(String keyString) => _getFieldData(keyString).errorMessage;
 
-  bool isFieldDirty(String keyString) => _getFieldStateData(keyString).value != getInitialValue(keyString);
+  dynamic getInitialValue(String keyString) => _getFieldData(keyString).initialValue;
 
-  bool isFieldValidating(String keyString) => _getFieldStateData(keyString).validating;
+  bool isFieldValidating(String keyString) => _getFieldData(keyString).validating;
 
-  void setFieldValid(String keyString, bool valid) => _getFieldStateData(keyString).valid = valid;
+  bool isFieldValid(String keyString) => _getFieldData(keyString).errorMessage == null;
+
+  bool isFieldDirty(String keyString) => _getFieldData(keyString).value != getInitialValue(keyString);
+
+  bool hasFocusOnStart(String keyString) => keyString == formData.focusedKeyString;
+
+  FormatterValidatorChain? getFormatterValidatorChain(String keyString) => formatterValidators[keyString];
 
   FormatterValidatorChain? getFieldValidator(String keyString) => getFormatterValidatorChain(keyString);
 
-  Type getFieldValueType(String keyString) => _getValueRuntimeType(keyString);
-
-  dynamic getInitialValue(String keyString) => _getFieldDescriptor(keyString).initialValue;
-
-  bool hasFocusOnStart(String keyString) => keyString == stateData.focusedKeyString;
-
-  void registerFocusNode(String keyString, FocusNode focusNode) => _focusNodeMap[keyString] = focusNode;
-
-  String? _getFocusedKeyString() => stateData.focusedKeyString;
-
-  Type _getValueRuntimeType(String keyString) => _getFieldDescriptor(keyString).valueType;
-
-  FormatterValidatorChain? getFormatterValidatorChain(String keyString) =>
-      _getFieldDescriptor(keyString).formatterValidatorChain;
-
-  FormFieldData _getFieldStateData(String keyString) {
-    return stateData.fieldDataMap[keyString]!;
+  FormFieldData _getFieldData(String keyString) {
+    return formData.fieldDataMap[keyString]!;
   }
 
-  // FormFieldDescriptor _getFieldDescriptor(String keyString) {
-  //   return _schema.descriptorsMap[keyString]!;
-  // }
-  //
-  // void setErrorMessageListener(FocusNode focusNode, String keyString) {
-  //   focusNode.addListener(() {
-  //     if (focusNode.hasFocus) showFieldErrorMessage(keyString);
-  //   });
-  // }
-  //
+  void setFocusListener(FocusNode focusNode, String keyString) {
+    focusNode.addListener(() {
+      if (focusNode.hasFocus) {
+        showFieldErrorMessage(keyString);
+      }
+    });
+  }
+
   void _validateForm() {
     FormatterValidatorChain? formatterValidator;
     String? error;
-    for (String keyString in _schema.descriptorsMap.keys) {
+    for (String keyString in formData.fieldDataMap.keys) {
       formatterValidator = getFormatterValidatorChain(keyString);
-      error = formatterValidator?.run(_getFieldStateData(keyString).value);
+      error = formatterValidator?.run(_getFieldData(keyString).value);
       setFieldError(keyString, error);
     }
   }

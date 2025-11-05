@@ -7,7 +7,4 @@ class FormFieldData<T> {
   String? errorMessage;
 
   FormFieldData([T? initialValue]) : value = initialValue;
-
-  bool get valid => errorMessage == null; // result of last validation
-  bool get touched => value != initialValue;
 }

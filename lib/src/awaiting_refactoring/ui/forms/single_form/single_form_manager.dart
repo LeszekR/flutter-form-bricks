@@ -4,7 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 
 class SingleFormManager extends FormManager {
-  SingleFormManager({required super.stateData, required super.schema});
+  SingleFormManager({required super.formData, required super.schema});
 
   // @override
   // void fillInitialInputValuesMap() {

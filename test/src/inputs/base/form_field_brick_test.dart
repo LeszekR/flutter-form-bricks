@@ -47,7 +47,7 @@ void _testKeyStringInTheSchema({
           data: UiParamsData(),
           child: MaterialApp(
             home: TestFormFieldBrick(
-              GlobalKey(),
+              key: GlobalKey(),
               keyString: fieldKeyString,
               formManager: TestFormManager(schema: schema),
               colorMaker: TestColorMaker(),

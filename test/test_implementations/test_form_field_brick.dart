@@ -18,7 +18,7 @@ class TestFormFieldBrickState extends FormFieldStateBrick<TestFormFieldBrick, St
 
   void changeValue(String newValue) {
     value = newValue;
-    onFieldChanged(newValue);
+    onFieldChanged(newValue, );
   }
 
   @override

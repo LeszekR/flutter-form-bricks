@@ -163,7 +163,8 @@ class _TextFieldColoredState extends State<TextFieldColored> /*with ErrorMessage
     // if onEditingComplete is called then formManager.onFieldChanged is called there so we skip it here
     if (widget.onEditingComplete == null || widget.onEditingComplete == () {}) {
       _skipOnChanged = true;
-      widget.formManager.onFieldChanged(widget.keyString, value);
+      // TODO REFACTOR - formatting and validation done in FormManager, formatted value passed back here
+      // widget.formManager.onFieldChanged(widget.keyString, value);
       _skipOnChanged = false;
     }
   }
@@ -172,6 +173,7 @@ class _TextFieldColoredState extends State<TextFieldColored> /*with ErrorMessage
     _skipOnChanged = true;
     var value = widget.onEditingComplete?.call();
     _skipOnChanged = false;
-    widget.formManager.onFieldChanged(widget.keyString, value);
+    // TODO REFACTOR - formatting and validation done in FormManager, formatted value passed back here
+    // widget.formManager.onFieldChanged(widget.keyString, value, '');
   }
 }
