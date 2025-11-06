@@ -25,11 +25,11 @@ class DateFormatterValidator {
     String inputString,
     DateTimeLimits dateLimits,
   ) {
-    return makeDateFromString(localizations, inputString, dateLimits).parsedString;
+    return makeDateFromString(localizations, inputString, dateLimits).formattedContent;
   }
 
-  StringParseResult makeDateFromString(BricksLocalizations localizations, String text, DateTimeLimits dateLimits) {
-    StringParseResult parseResult;
+  DateTimeValueAndError makeDateFromString(BricksLocalizations localizations, String text, DateTimeLimits dateLimits) {
+    DateTimeValueAndError parseResult;
 
     parseResult = _dateTimeUtils.cleanDateTimeString(
       bricksLocalizations: localizations,
@@ -41,21 +41,21 @@ class DateFormatterValidator {
       maxNDigits: 8,
       maxNumberDelimiters: 2,
     );
-    if (!parseResult.isStringValid) return StringParseResult.err(text, null, parseResult.errorMessage);
+    if (!parseResult.isStringValid) return DateTimeValueAndError.err(text, null, parseResult.errorMessage);
 
     parseResult = parseDateFromString(localizations, parseResult);
-    if (!parseResult.isStringValid) return StringParseResult.err(text, null, parseResult.errorMessage);
+    if (!parseResult.isStringValid) return DateTimeValueAndError.err(text, null, parseResult.errorMessage);
 
     parseResult = validateDate(localizations, parseResult, dateLimits);
 
     return parseResult;
   }
 
-  StringParseResult parseDateFromString(BricksLocalizations localizations, StringParseResult stringParseResult) {
-    String text = stringParseResult.parsedString;
+  DateTimeValueAndError parseDateFromString(BricksLocalizations localizations, DateTimeValueAndError DateTimeValueAndError) {
+    String text = DateTimeValueAndError.formattedContent;
     int nDelimiters = RegExp(dateDelimiter).allMatches(text).length;
 
-    StringParseResult parseResult;
+    DateTimeValueAndError parseResult;
 
     if (nDelimiters == 0) {
       parseResult = makeDateStringNoDelimiters(text);
@@ -68,7 +68,7 @@ class DateFormatterValidator {
     return addYear(parseResult, nDelimiters);
   }
 
-  StringParseResult makeDateStringNoDelimiters(String text) {
+  DateTimeValueAndError makeDateStringNoDelimiters(String text) {
     String dateString = '';
     String element = '';
     int nElements = 0;
@@ -90,10 +90,10 @@ class DateFormatterValidator {
       }
       dateString = element + dateString;
     }
-    return StringParseResult.transient(dateString);
+    return DateTimeValueAndError.transient(dateString);
   }
 
-  StringParseResult makeDateStringWithDelimiters(BricksLocalizations localizations, String text, int nDelimiters) {
+  DateTimeValueAndError makeDateStringWithDelimiters(BricksLocalizations localizations, String text, int nDelimiters) {
     String dateString = '';
     String element = '';
     List<String> resultList = text.split(dateDelimiter);
@@ -135,15 +135,15 @@ class DateFormatterValidator {
       }
     }
 
-    if (errMsg.isNotEmpty) return StringParseResult.err(dateString, false, errMsg);
-    return StringParseResult.transient(dateString);
+    if (errMsg.isNotEmpty) return DateTimeValueAndError.err(dateString, false, errMsg);
+    return DateTimeValueAndError.transient(dateString);
   }
 
-  StringParseResult addYear(StringParseResult dateString, int nDelimiters) {
-    String dateWithoutYear = dateString.parsedString;
+  DateTimeValueAndError addYear(DateTimeValueAndError dateString, int nDelimiters) {
+    String dateWithoutYear = dateString.formattedContent;
     nDelimiters = RegExp(dateDelimiter).allMatches(dateWithoutYear).length;
 
-    if (nDelimiters < 2) return StringParseResult.transient(dateWithoutYear);
+    if (nDelimiters < 2) return DateTimeValueAndError.transient(dateWithoutYear);
 
     String year = _currentDate.getDateNow().year.toString();
     String yearElement = dateWithoutYear.split(dateDelimiter)[0];
@@ -155,15 +155,15 @@ class DateFormatterValidator {
       yearElement = year.substring(0, 4 - yearElementLength);
       dateWithoutYear = '$yearElement$dateWithoutYear';
     }
-    return StringParseResult.transient(dateWithoutYear);
+    return DateTimeValueAndError.transient(dateWithoutYear);
   }
 
-  StringParseResult validateDate(
+  DateTimeValueAndError validateDate(
     BricksLocalizations localizations,
-    StringParseResult stringParseResult,
+    DateTimeValueAndError DateTimeValueAndError,
     DateTimeLimits dateLimits,
   ) {
-    String dateString = stringParseResult.parsedString;
+    String dateString = DateTimeValueAndError.formattedContent;
     List<String> dateElementsList = dateString.split(dateDelimiter);
     int elementsListLength = dateElementsList.length;
     String connector = '\n';
@@ -215,8 +215,8 @@ class DateFormatterValidator {
     DateTime? parsedDate = null;
     if (errDays.isEmpty && errMonth.isEmpty) parsedDate = DateTime.parse(dateString);
 
-    if (errMsg.isNotEmpty) return StringParseResult.err(dateString, parsedDate, errMsg);
+    if (errMsg.isNotEmpty) return DateTimeValueAndError.err(dateString, parsedDate, errMsg);
 
-    return StringParseResult.ok(dateString, parsedDate);
+    return DateTimeValueAndError.ok(dateString, parsedDate);
   }
 }

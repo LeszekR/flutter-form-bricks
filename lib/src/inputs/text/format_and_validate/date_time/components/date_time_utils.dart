@@ -17,7 +17,7 @@ class DateTimeUtils {
     return _instance!;
   }
 
-  StringParseResult cleanDateTimeString({
+  DateTimeValueAndError cleanDateTimeString({
     required BricksLocalizations bricksLocalizations,
     required String text,
     required DateTimeOrBoth dateTimeOrBoth,
@@ -31,7 +31,7 @@ class DateTimeUtils {
     RegExp allowedRegex = RegExp('([0-9]|$stringDelimiterPattern)');
     var allowedCharsLength = allowedRegex.allMatches(text).length;
     if (allowedCharsLength < text.length)
-      return StringParseResult.err(text, null, errMsgForbiddenChars(bricksLocalizations, dateTimeOrBoth));
+      return DateTimeValueAndError.err(text, null, errMsgForbiddenChars(bricksLocalizations, dateTimeOrBoth));
 
     // remove forbidden chars
     // replace all delimiter-type elements and groups with single '-'
@@ -46,16 +46,16 @@ class DateTimeUtils {
     // too many groups of digits
     var nDelimiters = RegExp(stringDelimiter).allMatches(result).length;
     if (nDelimiters > maxNumberDelimiters)
-      return StringParseResult.err(text, null, getErMsgTooManyDelimiters(bricksLocalizations, dateTimeOrBoth));
+      return DateTimeValueAndError.err(text, null, getErMsgTooManyDelimiters(bricksLocalizations, dateTimeOrBoth));
 
     // too few digits or too many digits
     var nDigits = RegExp('[0-9]').allMatches(text).length;
     if (nDigits + nDelimiters < minNumberOfDigits)
-      return StringParseResult.err(text, null, errMsgTooFewDigits(bricksLocalizations, dateTimeOrBoth));
+      return DateTimeValueAndError.err(text, null, errMsgTooFewDigits(bricksLocalizations, dateTimeOrBoth));
     if (nDigits > maxNDigits && nDelimiters == 0)
-      return StringParseResult.err(text, null, errMsgTooManyDigits(bricksLocalizations, dateTimeOrBoth));
+      return DateTimeValueAndError.err(text, null, errMsgTooManyDigits(bricksLocalizations, dateTimeOrBoth));
 
-    return StringParseResult.ok(result, null);
+    return DateTimeValueAndError.ok(result, null);
   }
 
   String removeBadChars(String text, String stringDelimiterPattern) {

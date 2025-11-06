@@ -21,11 +21,11 @@ class TimeFormatterValidator {
   final nMaxDelimiters = 1;
 
   String makeTimeString(BricksLocalizations localizations, String inputString) {
-    return makeTimeFromString(localizations, inputString).parsedString;
+    return makeTimeFromString(localizations, inputString).formattedContent;
   }
 
-  StringParseResult makeTimeFromString(BricksLocalizations localizations, String inputString) {
-    StringParseResult parseResult = _dateTimeUtils!.cleanDateTimeString(
+  DateTimeValueAndError makeTimeFromString(BricksLocalizations localizations, String inputString) {
+    DateTimeValueAndError parseResult = _dateTimeUtils!.cleanDateTimeString(
       bricksLocalizations: localizations,
       text: inputString,
       dateTimeOrBoth: DateTimeOrBoth.TIME,
@@ -35,18 +35,18 @@ class TimeFormatterValidator {
       maxNDigits: 4,
       maxNumberDelimiters: 1,
     );
-    if (!parseResult.isStringValid) return StringParseResult.err(inputString, null, parseResult.errorMessage);
+    if (!parseResult.isStringValid) return DateTimeValueAndError.err(inputString, null, parseResult.errorMessage);
 
     parseResult = parseTimeFromString(localizations, parseResult);
-    if (!parseResult.isStringValid) return StringParseResult.err(inputString, null, parseResult.errorMessage);
+    if (!parseResult.isStringValid) return DateTimeValueAndError.err(inputString, null, parseResult.errorMessage);
 
     parseResult = validateTime(localizations, parseResult);
 
     return parseResult;
   }
 
-  StringParseResult parseTimeFromString(BricksLocalizations localizations, StringParseResult stringParseResult) {
-    var inputString = stringParseResult.parsedString;
+  DateTimeValueAndError parseTimeFromString(BricksLocalizations localizations, DateTimeValueAndError DateTimeValueAndError) {
+    var inputString = DateTimeValueAndError.formattedContent;
     var nDelimiters = RegExp(timeDelimiter).allMatches(inputString).length;
 
     if (nDelimiters == 0) {
@@ -56,8 +56,8 @@ class TimeFormatterValidator {
     }
   }
 
-  StringParseResult makeTimeStringNoDelimiters(BricksLocalizations localizations, String text) {
-    if (text.length < 3) return StringParseResult.err(text, null, localizations.timeStringErrorTooFewDigits);
+  DateTimeValueAndError makeTimeStringNoDelimiters(BricksLocalizations localizations, String text) {
+    if (text.length < 3) return DateTimeValueAndError.err(text, null, localizations.timeStringErrorTooFewDigits);
 
     String formattedResult = '';
     String element = '';
@@ -76,10 +76,10 @@ class TimeFormatterValidator {
       }
       formattedResult = element + formattedResult;
     }
-    return StringParseResult.transient(formattedResult);
+    return DateTimeValueAndError.transient(formattedResult);
   }
 
-  StringParseResult makeTimeStringWithDelimiters(BricksLocalizations localizations, String inputString) {
+  DateTimeValueAndError makeTimeStringWithDelimiters(BricksLocalizations localizations, String inputString) {
     var timeString = '';
     var element = '';
     var resultList = inputString.split(timeDelimiter);
@@ -105,10 +105,10 @@ class TimeFormatterValidator {
 
     if (errHours.isNotEmpty) errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, errHours);
     if (errMinutes.isNotEmpty) errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, errMinutes);
-    if (errMsg.isNotEmpty) return StringParseResult.err(timeString, null, errMsg);
+    if (errMsg.isNotEmpty) return DateTimeValueAndError.err(timeString, null, errMsg);
 
     DateTime time = parseTime(timeString);
-    return StringParseResult.ok(timeString, time);
+    return DateTimeValueAndError.ok(timeString, time);
   }
 
   DateTime parseTime(String timeString) {
@@ -117,8 +117,8 @@ class TimeFormatterValidator {
     return time;
   }
 
-  StringParseResult validateTime(BricksLocalizations localizations, StringParseResult stringParseResult) {
-    var timeString = stringParseResult.parsedString;
+  DateTimeValueAndError validateTime(BricksLocalizations localizations, DateTimeValueAndError DateTimeValueAndError) {
+    var timeString = DateTimeValueAndError.formattedContent;
     var resultList = timeString.split(timeDelimiter);
     var connector = '\n';
     var errMsg = '';
@@ -132,9 +132,9 @@ class TimeFormatterValidator {
 
     if (errHours.isNotEmpty) errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, errHours);
     if (errMinutes.isNotEmpty) errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, errMinutes);
-    if (errMsg.isNotEmpty) return StringParseResult.err(timeString, null, errMsg);
+    if (errMsg.isNotEmpty) return DateTimeValueAndError.err(timeString, null, errMsg);
 
     DateTime time = parseTime(timeString);
-    return StringParseResult.ok(timeString, time);
+    return DateTimeValueAndError.ok(timeString, time);
   }
 }

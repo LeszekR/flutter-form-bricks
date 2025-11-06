@@ -94,12 +94,12 @@ bool assertSingleCaseDateTimeFormatter(
       "Both must be either null or not-null: delimitersList and placeholder");
 
   String input = (placeholder == null) ? testCase.input : (testCase.input.replaceAll(RegExp(placeholder), delimiter));
-  StringParseResult result = testDateTimeFormatter.makeDateTime(localizations, input, testCase.dateTimeLimits);
+  DateTimeValueAndError result = testDateTimeFormatter.makeDateTime(localizations, input, testCase.dateTimeLimits);
   String? errors;
 
   var actual =
       (placeholder == null) ? testCase.expected : (testCase.expected.replaceAll(RegExp(placeholder), delimiter));
-  errors = tryExpect(input, result.parsedString, actual, errors, 'parsedString');
+  errors = tryExpect(input, result.formattedContent, actual, errors, 'parsedString');
   errors = tryExpect(input, result.errorMessage, testCase.errorMessage, errors, 'errorMessage');
   errors = tryExpect(input, result.isStringValid, testCase.isValid, errors, 'isStringValid');
 
@@ -142,7 +142,7 @@ class TestDateFormatter implements ATestDateTimeFormatter {
   TestDateFormatter(this.dateFormatter);
 
   @override
-  StringParseResult makeDateTime(BricksLocalizations localizations, String inputString, DateTimeLimits dateLimits) {
+  DateTimeValueAndError makeDateTime(BricksLocalizations localizations, String inputString, DateTimeLimits dateLimits) {
     return dateFormatter.makeDateFromString(localizations, inputString, dateLimits);
   }
 }
@@ -153,7 +153,7 @@ class TestTimeFormatter implements ATestDateTimeFormatter {
   TestTimeFormatter(this.timeFormatter);
 
   @override
-  StringParseResult makeDateTime(BricksLocalizations localizations, String inputString, DateTimeLimits dateLimits) {
+  DateTimeValueAndError makeDateTime(BricksLocalizations localizations, String inputString, DateTimeLimits dateLimits) {
     return timeFormatter.makeTimeFromString(localizations, inputString);
   }
 }
@@ -164,7 +164,7 @@ class TestDateTimeFormatter implements ATestDateTimeFormatter {
   TestDateTimeFormatter(this.dateTimeFormatter);
 
   @override
-  StringParseResult makeDateTime(BricksLocalizations localizations, String inputString, DateTimeLimits dateLimits) {
+  DateTimeValueAndError makeDateTime(BricksLocalizations localizations, String inputString, DateTimeLimits dateLimits) {
     return dateTimeFormatter.makeDateTimeFromString(localizations, inputString, dateLimits);
   }
 }

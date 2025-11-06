@@ -1,24 +1,30 @@
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/string_parse_result.dart';
 
-typedef FormatterValidator = StringParseResult Function(StringParseResult input);
+// class FormatValidateResult<T> {
+//   final T? parsedValue;
+//   final String? error;
+//   FormatValidateResult({required this.parsedValue, required this.error});
+// }
 
-abstract class FormatterValidatorChain<T, K> {
+typedef FormatterValidator = DateTimeValueAndError Function(DateTimeValueAndError input);
+
+abstract class FormatterValidatorChain<V> {
   final List<FormatterValidator> steps;
 
   FormatterValidatorChain(this.steps);
 
-  K run(T inputValue);
+  ValueAndError run(V value);
 
-  String? getError(T inputValue);
+  String? getError(V value);
 }
 
-class FormatterValidatorChainEarlyStop extends FormatterValidatorChain<String, StringParseResult> {
+class FormatterValidatorChainEarlyStop extends FormatterValidatorChain<String, DateTimeValueAndError> {
   FormatterValidatorChainEarlyStop(super.steps);
 
   // TODO lock field types accepted as clients of each FormatterValidatorChain
 
-  StringParseResult run(String inputString) {
-    StringParseResult result = StringParseResult.transient('');
+  DateTimeValueAndError run(String inputString) {
+    DateTimeValueAndError result = DateTimeValueAndError.transient('');
 
     for (FormatterValidator step in steps) {
       result = step(result);
@@ -31,16 +37,16 @@ class FormatterValidatorChainEarlyStop extends FormatterValidatorChain<String, S
 
   @override
   String? getError(inputValue) {
-    StringParseResult result = run(inputValue);
+    DateTimeValueAndError result = run(inputValue);
     return result.errorMessage;
   }
 }
 
-class FormatterValidatorChainFullRun extends FormatterValidatorChain<String, StringParseResult> {
+class FormatterValidatorChainFullRun extends FormatterValidatorChain<String, DateTimeValueAndError> {
   FormatterValidatorChainFullRun(super.steps);
 
-  StringParseResult run(String inputString) {
-    var result = StringParseResult.transient(inputString);
+  DateTimeValueAndError run(String inputString) {
+    var result = DateTimeValueAndError.transient(inputString);
     for (FormatterValidator step in steps) {
       result = step(result);
       if (!result.isStringValid) break; // stop on first error
@@ -50,7 +56,7 @@ class FormatterValidatorChainFullRun extends FormatterValidatorChain<String, Str
 
   @override
   String? getError(String inputValue) {
-    StringParseResult result = run(inputValue);
+    DateTimeValueAndError result = run(inputValue);
     return result.errorMessage;
   }
 }

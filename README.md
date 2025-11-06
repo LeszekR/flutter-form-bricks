@@ -77,7 +77,7 @@ This design ensures:
 - Raw input preserved across rebuilds
 - Friendly error handling without input loss
 
-Validators (like `DateTimeFormatterValidator`) parse `inputString` and return `StringParseResult<T>` with:
+Validators (like `DateTimeFormatterValidator`) parse `inputString` and return `DateTimeValueAndError<T>` with:
 - `parsedValue`: nullable, for precision control
 - `errorMessage`: used for in-form feedback
 

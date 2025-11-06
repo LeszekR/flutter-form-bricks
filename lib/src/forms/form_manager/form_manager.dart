@@ -3,6 +3,7 @@ import 'package:flutter_form_bricks/src/forms/base/form_schema.dart';
 import 'package:flutter_form_bricks/src/forms/state/form_data.dart';
 import 'package:flutter_form_bricks/src/inputs/state/form_field_data.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/string_parse_result.dart';
 
 import '../base/form_brick.dart';
 import 'form_status.dart';
@@ -62,7 +63,7 @@ abstract class FormManager extends ChangeNotifier {
 
   dynamic getFieldValue(String keyString) => _getFieldData(keyString).value;
 
-  void setFieldError(String keyString, String? error) => _getFieldData(keyString).errorMessage = error;
+  void storeFieldError(String keyString, String? error) => _getFieldData(keyString).errorMessage = error;
 
   String? getFieldError(String keyString) => _getFieldData(keyString).errorMessage;
 
@@ -98,12 +99,13 @@ abstract class FormManager extends ChangeNotifier {
     for (String keyString in formData.fieldDataMap.keys) {
       formatterValidator = getFormatterValidatorChain(keyString);
       error = formatterValidator?.run(_getFieldData(keyString).value);
-      setFieldError(keyString, error);
+      storeFieldError(keyString, error);
     }
   }
 
-  void onFieldChanged(String keyString, dynamic value, String? error) {
-    storeFieldValue(keyString, value);
+  void onFieldChanged(String keyString, ValueAndError valueAndError) {
+    storeFieldValue(keyString, valueAndError.formattedContent);
+    storeFieldError(keyString, valueAndError.errorMessage);
     _validateField(keyString);
     // TODO uncomment and refactor
     // var field = findField(keyString);
@@ -149,7 +151,7 @@ abstract class FormManager extends ChangeNotifier {
   String? validateFieldQuietly(String keyString) {
     dynamic value = getFieldValue(keyString);
     String? error = getFormatterValidatorChain(keyString)!.getError(value);
-    setFieldError(keyString, error);
+    storeFieldError(keyString, error);
     return error;
   }
 

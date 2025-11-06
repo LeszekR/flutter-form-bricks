@@ -1,15 +1,37 @@
-class StringParseResult<T> {
-  final String parsedString;
-  final T? parsedValue;
-  final bool isStringValid;
+abstract class ValueAndError<C> {
+  final C? formattedContent;
+  final bool? isStringValid;
   final String? errorMessage;
 
-  StringParseResult(this.parsedString, this.parsedValue, this.isStringValid, [this.errorMessage]);
+  const ValueAndError._(this.formattedContent, [this.isStringValid, this.errorMessage]);
 
-  factory StringParseResult.ok(String parsed, T value) => StringParseResult(parsed, value, true);
+  const ValueAndError.transient(C formattedContent) : this._(formattedContent);
 
-  factory StringParseResult.transient(String parsed) => StringParseResult(parsed, null, true);
+  const ValueAndError.ok(C? formattedContent) : this._(formattedContent, true);
 
-  factory StringParseResult.err(String parsed, T? value, String? message) =>
-      StringParseResult(parsed, value, false, message);
+  const ValueAndError.err(C? formattedContent, String? errorMessage) : this._(formattedContent, false, errorMessage);
+}
+
+abstract class ValueDisplayError<C, V> extends ValueAndError<C> {
+  final V? parsedValue;
+
+  const ValueDisplayError.transient(C formattedContent)
+      : parsedValue = null,
+        super.transient(formattedContent);
+
+  const ValueDisplayError.ok(C? formattedContent, this.parsedValue) : super.ok(formattedContent);
+
+  const ValueDisplayError.err(C? formattedContent, String? errorMessage)
+      : parsedValue = null,
+        super.err(formattedContent, errorMessage);
+}
+
+final class DateTimeValueAndError extends ValueDisplayError<String, DateTime> {
+  const DateTimeValueAndError.transient(String formattedContent) : super.transient(formattedContent);
+
+  const DateTimeValueAndError.ok(String? formattedContent, DateTime? parsedValue)
+      : super.ok(formattedContent, parsedValue);
+
+  const DateTimeValueAndError.err(String? formattedContent, String? errorMessage)
+      : super.err(formattedContent, errorMessage);
 }

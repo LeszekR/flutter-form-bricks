@@ -31,10 +31,10 @@ class DateTimeFormatterValidator {
     String inputString,
     DateTimeLimits dateLimits,
   ) {
-    return makeDateTimeFromString(localizations, inputString, dateLimits).parsedString;
+    return makeDateTimeFromString(localizations, inputString, dateLimits).formattedContent;
   }
 
-  StringParseResult makeDateTimeFromString(
+  DateTimeValueAndError makeDateTimeFromString(
     BricksLocalizations localizations,
     String inputString,
     DateTimeLimits dateLimits,
@@ -44,17 +44,17 @@ class DateTimeFormatterValidator {
     textTrimmed = textTrimmed.replaceAll(RegExp(' +'), ' ');
 
     var nSpaces = RegExp(' ').allMatches(textTrimmed).length;
-    if (nSpaces == 0) return StringParseResult.err(textTrimmed, null, localizations.datetimeStringErrorNoSpace);
-    if (nSpaces > 1) return StringParseResult.err(textTrimmed, null, localizations.datetimeStringErrorTooManySpaces);
+    if (nSpaces == 0) return DateTimeValueAndError.err(textTrimmed, null, localizations.datetimeStringErrorNoSpace);
+    if (nSpaces > 1) return DateTimeValueAndError.err(textTrimmed, null, localizations.datetimeStringErrorTooManySpaces);
 
     var elementsList = textTrimmed.split(RegExp(' '));
     String dateString = elementsList[0];
     String timeString = elementsList[1];
 
-    StringParseResult parseResultDate = _dateFormatter!.makeDateFromString(localizations, dateString, dateLimits);
-    StringParseResult parseResultTime = _timeFormatter!.makeTimeFromString(localizations, timeString);
+    DateTimeValueAndError parseResultDate = _dateFormatter!.makeDateFromString(localizations, dateString, dateLimits);
+    DateTimeValueAndError parseResultTime = _timeFormatter!.makeTimeFromString(localizations, timeString);
 
-    var parsedString = '${parseResultDate.parsedString} ${parseResultTime.parsedString}';
+    var parsedString = '${parseResultDate.formattedContent} ${parseResultTime.formattedContent}';
     var errorMessageDate = parseResultDate.errorMessage;
     var errorMessageTime = parseResultTime.errorMessage;
     var isStringValidDate = parseResultDate.isStringValid;
@@ -63,12 +63,12 @@ class DateTimeFormatterValidator {
     // valid
     if (isStringValidDate && isStringValidTime) {
       DateTime dateTime = DateTime.parse(parsedString);
-      return StringParseResult.ok(parsedString, dateTime);
+      return DateTimeValueAndError.ok(parsedString, dateTime);
     }
 
     // invalid
     var connector = (!isStringValidDate && !isStringValidTime) ? '\n' : '';
     var errorMessage = '$errorMessageDate$connector$errorMessageTime';
-    return StringParseResult.err(parsedString, null, errorMessage);
+    return DateTimeValueAndError.err(parsedString, null, errorMessage);
   }
 }

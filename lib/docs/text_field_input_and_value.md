@@ -12,7 +12,7 @@
 /// - `FormFieldStateData` stores both the current input and parsed value; this state is preserved across widget rebuilds and navigation
 /// 
 /// Parsing and Validation:
-/// All conversion and validation are handled by the associated `FormatterValidatorChain<T>`, which processes `inputString` and returns a `StringParseResult<T>`:
+/// All conversion and validation are handled by the associated `FormatterValidatorChain<T>`, which processes `inputString` and returns a `DateTimeValueAndError<T>`:
 /// 
 /// - If parsing and validation succeed, `parsedValue` is stored in `FormFieldStateData.value`
 /// - If parsing or validation fail, `value` is set to `null`, but `inputString` remains unchanged
