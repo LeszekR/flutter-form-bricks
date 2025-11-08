@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/string_parse_result.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/input_value_error.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_input_base/states_color_maker.dart';
 
 abstract class FormFieldBrick<T> extends StatefulWidget {
@@ -45,9 +45,7 @@ abstract class FormFieldStateBrick<K extends FormFieldBrick, T> extends State<K>
   @override
   void initState() {
     focusNode = FocusNode();
-    focusNode.addListener(() {
-      if (focusNode.hasFocus) formManager.showFieldErrorMessage(keyString);
-    });
+    formManager.setFocusListener(focusNode, keyString);
     super.initState();
   }
 
@@ -66,7 +64,7 @@ abstract class FormFieldStateBrick<K extends FormFieldBrick, T> extends State<K>
   /// - return error which then controls the field's color and if the field uses `InputDecoration` to display error it
   ///   is passed there.
   void onFieldChanged(dynamic value) {
-    ValueAndError valueAndError = formManager.getFormatterValidatorChain(keyString)!.run(value);
+    InputValueError valueAndError = formManager.getFormatterValidatorChain(keyString)!.run(value);
     formManager.onFieldChanged(keyString, valueAndError);
     setState(() {});
   }

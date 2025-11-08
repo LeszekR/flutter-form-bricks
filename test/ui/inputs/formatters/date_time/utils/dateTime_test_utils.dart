@@ -4,7 +4,7 @@ import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/dateTime_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/date_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/time_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/string_parse_result.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/input_value_error.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -99,9 +99,9 @@ bool assertSingleCaseDateTimeFormatter(
 
   var actual =
       (placeholder == null) ? testCase.expected : (testCase.expected.replaceAll(RegExp(placeholder), delimiter));
-  errors = tryExpect(input, result.formattedContent, actual, errors, 'parsedString');
-  errors = tryExpect(input, result.errorMessage, testCase.errorMessage, errors, 'errorMessage');
-  errors = tryExpect(input, result.isStringValid, testCase.isValid, errors, 'isStringValid');
+  errors = tryExpect(input, result.input, actual, errors, 'parsedString');
+  errors = tryExpect(input, result.error, testCase.errorMessage, errors, 'errorMessage');
+  errors = tryExpect(input, result.isValid, testCase.isValid, errors, 'isStringValid');
 
   if (errors != null) debugPrint("test failed: input $input $errors");
   return errors == null;

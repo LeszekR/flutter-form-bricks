@@ -26,13 +26,13 @@ class DateTimeValidators {
 
   static FormFieldValidator<String> dateInputValidator(BricksLocalizations localizations, DateTimeLimits dateLimits) {
     ValidatorFunction validator =
-        (String inputString) => _dateFormatter.makeDateFromString(localizations, inputString, dateLimits).errorMessage;
+        (String inputString) => _dateFormatter.makeDateFromString(localizations, inputString, dateLimits).error;
     return (inputString) => validate(inputString, validator);
   }
 
   static FormFieldValidator<String> timeInputValidator(BricksLocalizations localizations) {
     ValidatorFunction validator =
-        (inputString) => _timeFormatter.makeTimeFromString(localizations, inputString).errorMessage;
+        (inputString) => _timeFormatter.makeTimeFromString(localizations, inputString).error;
     return (inputString) => validate(inputString, validator);
   }
 
@@ -46,7 +46,7 @@ class DateTimeValidators {
           inputString,
           dateLimits,
         )
-        .errorMessage!;
+        .error!;
     return (inputString) => validate(inputString, validator);
   }
 

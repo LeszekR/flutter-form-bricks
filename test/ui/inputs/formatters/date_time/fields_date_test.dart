@@ -41,7 +41,7 @@ void main() {
       DateTimeTestData(datTimLim, "20-@", "20-", false, ''),
     ];
     var formManager = SingleFormManager();
-    testAction<String>(String text) => formManager.formKey.currentState!.fields[dateName]?.parsedValue;
+    testAction<String>(String text) => formManager.formKey.currentState!.fields[dateName]?.valueParsed;
     makeWidgetFunction(context) => makeTextFieldDate(context, dateName, formManager, mockCurrentDate, datTimLim);
     await testAllCasesInTextField(tester, makeWidgetFunction, formManager, testCases, testAction);
   });
@@ -57,7 +57,7 @@ void main() {
       DateTimeTestData(datTimLim, "20-@", "20-@", false, ''),
     ];
     var formManager = SingleFormManager();
-    testAction<String>(text) => verifyDate(formManager.formKey.currentState!.fields[dateName]?.parsedValue);
+    testAction<String>(text) => verifyDate(formManager.formKey.currentState!.fields[dateName]?.valueParsed);
     makeWidgetFunction(context) => makeTextFieldDate(context, dateName, formManager, mockCurrentDate, datTimLim);
     await testAllCasesInTextField(tester, makeWidgetFunction, formManager, testCases, testAction);
   });
@@ -73,7 +73,7 @@ void main() {
       DateTimeTestData(datTimLim, "0101", "${today.year}-01-01", true, ''),
     ];
     var formManager = SingleFormManager();
-    testAction<String>(String text) => formManager.formKey.currentState!.fields[dateName]?.parsedValue;
+    testAction<String>(String text) => formManager.formKey.currentState!.fields[dateName]?.valueParsed;
     makeWidgetFunction(context) => makeTextFieldDate(context, dateName, formManager, mockCurrentDate, datTimLim);
     // makeWidgetFunction() => makeTextFieldDate(dateName, formManager);
     await testAllCasesInTextField(tester, makeWidgetFunction, formManager, testCases, testAction);

@@ -1,7 +1,7 @@
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_utils.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/string_parse_result.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/input_value_error.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 class DateFormatterValidator {
@@ -25,7 +25,7 @@ class DateFormatterValidator {
     String inputString,
     DateTimeLimits dateLimits,
   ) {
-    return makeDateFromString(localizations, inputString, dateLimits).formattedContent;
+    return makeDateFromString(localizations, inputString, dateLimits).input;
   }
 
   DateTimeValueAndError makeDateFromString(BricksLocalizations localizations, String text, DateTimeLimits dateLimits) {
@@ -41,10 +41,10 @@ class DateFormatterValidator {
       maxNDigits: 8,
       maxNumberDelimiters: 2,
     );
-    if (!parseResult.isStringValid) return DateTimeValueAndError.err(text, null, parseResult.errorMessage);
+    if (!parseResult.isValid) return DateTimeValueAndError.err(text, null, parseResult.error);
 
     parseResult = parseDateFromString(localizations, parseResult);
-    if (!parseResult.isStringValid) return DateTimeValueAndError.err(text, null, parseResult.errorMessage);
+    if (!parseResult.isValid) return DateTimeValueAndError.err(text, null, parseResult.error);
 
     parseResult = validateDate(localizations, parseResult, dateLimits);
 
@@ -52,7 +52,7 @@ class DateFormatterValidator {
   }
 
   DateTimeValueAndError parseDateFromString(BricksLocalizations localizations, DateTimeValueAndError DateTimeValueAndError) {
-    String text = DateTimeValueAndError.formattedContent;
+    String text = DateTimeValueAndError.input;
     int nDelimiters = RegExp(dateDelimiter).allMatches(text).length;
 
     DateTimeValueAndError parseResult;
@@ -63,7 +63,7 @@ class DateFormatterValidator {
       parseResult = makeDateStringWithDelimiters(localizations, text, nDelimiters);
     }
 
-    if (!parseResult.isStringValid) return parseResult;
+    if (!parseResult.isValid) return parseResult;
 
     return addYear(parseResult, nDelimiters);
   }
@@ -140,7 +140,7 @@ class DateFormatterValidator {
   }
 
   DateTimeValueAndError addYear(DateTimeValueAndError dateString, int nDelimiters) {
-    String dateWithoutYear = dateString.formattedContent;
+    String dateWithoutYear = dateString.input;
     nDelimiters = RegExp(dateDelimiter).allMatches(dateWithoutYear).length;
 
     if (nDelimiters < 2) return DateTimeValueAndError.transient(dateWithoutYear);
@@ -163,7 +163,7 @@ class DateFormatterValidator {
     DateTimeValueAndError DateTimeValueAndError,
     DateTimeLimits dateLimits,
   ) {
-    String dateString = DateTimeValueAndError.formattedContent;
+    String dateString = DateTimeValueAndError.input;
     List<String> dateElementsList = dateString.split(dateDelimiter);
     int elementsListLength = dateElementsList.length;
     String connector = '\n';

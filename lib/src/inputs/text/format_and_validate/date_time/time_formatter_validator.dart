@@ -1,5 +1,5 @@
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_utils.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/string_parse_result.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/input_value_error.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:intl/intl.dart';
 
@@ -21,7 +21,7 @@ class TimeFormatterValidator {
   final nMaxDelimiters = 1;
 
   String makeTimeString(BricksLocalizations localizations, String inputString) {
-    return makeTimeFromString(localizations, inputString).formattedContent;
+    return makeTimeFromString(localizations, inputString).input;
   }
 
   DateTimeValueAndError makeTimeFromString(BricksLocalizations localizations, String inputString) {
@@ -35,10 +35,10 @@ class TimeFormatterValidator {
       maxNDigits: 4,
       maxNumberDelimiters: 1,
     );
-    if (!parseResult.isStringValid) return DateTimeValueAndError.err(inputString, null, parseResult.errorMessage);
+    if (!parseResult.isValid) return DateTimeValueAndError.err(inputString, null, parseResult.error);
 
     parseResult = parseTimeFromString(localizations, parseResult);
-    if (!parseResult.isStringValid) return DateTimeValueAndError.err(inputString, null, parseResult.errorMessage);
+    if (!parseResult.isValid) return DateTimeValueAndError.err(inputString, null, parseResult.error);
 
     parseResult = validateTime(localizations, parseResult);
 
@@ -46,7 +46,7 @@ class TimeFormatterValidator {
   }
 
   DateTimeValueAndError parseTimeFromString(BricksLocalizations localizations, DateTimeValueAndError DateTimeValueAndError) {
-    var inputString = DateTimeValueAndError.formattedContent;
+    var inputString = DateTimeValueAndError.input;
     var nDelimiters = RegExp(timeDelimiter).allMatches(inputString).length;
 
     if (nDelimiters == 0) {
@@ -118,7 +118,7 @@ class TimeFormatterValidator {
   }
 
   DateTimeValueAndError validateTime(BricksLocalizations localizations, DateTimeValueAndError DateTimeValueAndError) {
-    var timeString = DateTimeValueAndError.formattedContent;
+    var timeString = DateTimeValueAndError.input;
     var resultList = timeString.split(timeDelimiter);
     var connector = '\n';
     var errMsg = '';

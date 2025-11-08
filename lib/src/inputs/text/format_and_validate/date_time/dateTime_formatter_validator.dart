@@ -2,7 +2,7 @@ import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_tim
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/time_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/string_parse_result.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/input_value_error.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 import 'date_formatter_validator.dart';
@@ -31,7 +31,7 @@ class DateTimeFormatterValidator {
     String inputString,
     DateTimeLimits dateLimits,
   ) {
-    return makeDateTimeFromString(localizations, inputString, dateLimits).formattedContent;
+    return makeDateTimeFromString(localizations, inputString, dateLimits).input;
   }
 
   DateTimeValueAndError makeDateTimeFromString(
@@ -54,11 +54,11 @@ class DateTimeFormatterValidator {
     DateTimeValueAndError parseResultDate = _dateFormatter!.makeDateFromString(localizations, dateString, dateLimits);
     DateTimeValueAndError parseResultTime = _timeFormatter!.makeTimeFromString(localizations, timeString);
 
-    var parsedString = '${parseResultDate.formattedContent} ${parseResultTime.formattedContent}';
-    var errorMessageDate = parseResultDate.errorMessage;
-    var errorMessageTime = parseResultTime.errorMessage;
-    var isStringValidDate = parseResultDate.isStringValid;
-    var isStringValidTime = parseResultTime.isStringValid;
+    var parsedString = '${parseResultDate.input} ${parseResultTime.input}';
+    var errorMessageDate = parseResultDate.error;
+    var errorMessageTime = parseResultTime.error;
+    var isStringValidDate = parseResultDate.isValid;
+    var isStringValidTime = parseResultTime.isValid;
 
     // valid
     if (isStringValidDate && isStringValidTime) {

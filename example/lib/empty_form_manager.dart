@@ -6,7 +6,7 @@ class ExampleFormStateData extends FormData {
 }
 
 class ExampleFormSchema extends FormSchema {
-  ExampleFormSchema(super.descriptors, super.initialFocusKeyString);
+  ExampleFormSchema(super.focusedKeyString, super.initialFocusKeyString);
 }
 
 class EmptyFormStateData extends FormData {

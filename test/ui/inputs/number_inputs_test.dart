@@ -42,7 +42,7 @@ void main() {
         //then
         formManager.formKey.currentState!.saveAndValidate();
         final formState = formManager.checkStatus();
-        final String? fieldValue = formManager.formKey.currentState!.fields[key]?.parsedValue;
+        final String? fieldValue = formManager.formKey.currentState!.fields[key]?.valueParsed;
 
         expect(params.expected, fieldValue);
         expect(find.text(params.expected), findsOneWidget);
@@ -75,7 +75,7 @@ void main() {
 
     //then
     formManager.formKey.currentState!.save();
-    final String? fieldValue = formManager.formKey.currentState!.fields[key]?.parsedValue;
+    final String? fieldValue = formManager.formKey.currentState!.fields[key]?.valueParsed;
 
     expect("12", fieldValue);
     expect(find.text("12"), findsOneWidget);

@@ -81,7 +81,7 @@ class DateTimeRangeValidator {
   void _validateOthersQuietly() {
     for (var _keyString in _keyStrings) {
       if (_keyString == _keyString) continue;
-      _formManager.validateFieldQuietly(_keyString);
+      _formManager.formatAndValidateQuietly(_keyString);
     }
   }
 

@@ -3,14 +3,13 @@ import 'package:flutter_form_bricks/src/forms/base/form_schema.dart';
 import 'package:flutter_form_bricks/src/forms/state/form_data.dart';
 import 'package:flutter_form_bricks/src/inputs/state/form_field_data.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/string_parse_result.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/input_value_error.dart';
 
 import '../base/form_brick.dart';
 import 'form_status.dart';
 
 abstract class FormManager extends ChangeNotifier {
   final ValueNotifier<String> errorMessageNotifier = ValueNotifier<String>('');
-  final _formKey = GlobalKey<FormStateBrick>();
   final FormData formData;
   final Map<String, FormatterValidatorChain?> formatterValidators;
 
@@ -27,11 +26,13 @@ abstract class FormManager extends ChangeNotifier {
     resetForm();
   }
 
-  GlobalKey<FormStateBrick> get formKey => _formKey;
+  GlobalKey<FormStateBrick> get formKey => formData.formKey;
+
+  Map<String, FormFieldData> get fieldDataMap => formData.fieldDataMap;
 
   void resetForm() {
     // TODO solve setState with reset values in all fields
-    for (FormFieldData data in formData.fieldDataMap.values) {
+    for (FormFieldData data in fieldDataMap.values) {
       _resetField(data);
     }
     _validateForm();
@@ -45,35 +46,49 @@ abstract class FormManager extends ChangeNotifier {
   }
 
   void _resetField(FormFieldData data) {
-    data.value = data.initialValue;
+    data.value = data.initialInput;
     data.validating = false;
-    data.errorMessage = null;
+    data.error = null;
   }
 
   void registerField<T>(String keyString, Type T) {
-    assert(formData.fieldDataMap.keys.contains(keyString),
-        'FormData does not contain FormFieldData with keyString: "$keyString".');
-    assert(T ==  _getFieldValueType(keyString),
-        'Field value type is different from FieldData valueType for keyString: "$keyString".');
+    assert(
+      fieldDataMap.keys.contains(keyString),
+      'No "$keyString" found in fieldDataMap. All fields in form must be declared in FormSchema => FormFieldData.',
+    );
+    assert(
+      T == _fieldData(keyString).initialInput.runtimeType,
+      'Field value type is different from FieldData valueType for keyString: "$keyString".',
+    );
   }
 
-  Type _getFieldValueType(String keyString) => _getFieldData(keyString).initialValue.runtimeType;
+  String? getFocusedKeyString() => formData.focusedKeyString;
 
-  void storeFieldValue(String keyString, dynamic value) => _getFieldData(keyString).value = value;
+  void setFocusedKeyString(String keyString) => formData.focusedKeyString = keyString;
 
-  dynamic getFieldValue(String keyString) => _getFieldData(keyString).value;
+  Type _getFieldValueType(String keyString) => _fieldData(keyString).initialInput.runtimeType;
 
-  void storeFieldError(String keyString, String? error) => _getFieldData(keyString).errorMessage = error;
+  void storeFieldValue(String keyString, dynamic value) => _fieldData(keyString).value = value;
 
-  String? getFieldError(String keyString) => _getFieldData(keyString).errorMessage;
+  dynamic getFieldValue(String keyString) => _fieldData(keyString).value;
 
-  dynamic getInitialValue(String keyString) => _getFieldData(keyString).initialValue;
+  void storeFieldError(String keyString, String? error) => _fieldData(keyString).error = error;
+  
+  void storeFieldInputValueError(String keyString, InputValueError inputValueError) {
+    _fieldData(keyString).input = inputValueError.input;
+    _fieldData(keyString).value = inputValueError.value;
+    _fieldData(keyString).error = inputValueError.error;
+  }
 
-  bool isFieldValidating(String keyString) => _getFieldData(keyString).validating;
+  String? getFieldError(String keyString) => _fieldData(keyString).error;
 
-  bool isFieldValid(String keyString) => _getFieldData(keyString).errorMessage == null;
+  dynamic getInitialValue(String keyString) => _fieldData(keyString).initialInput;
 
-  bool isFieldDirty(String keyString) => _getFieldData(keyString).value != getInitialValue(keyString);
+  bool isFieldValidating(String keyString) => _fieldData(keyString).validating;
+
+  bool isFieldValid(String keyString) => _fieldData(keyString).error == null;
+
+  bool isFieldDirty(String keyString) => _fieldData(keyString).value != getInitialValue(keyString);
 
   bool hasFocusOnStart(String keyString) => keyString == formData.focusedKeyString;
 
@@ -81,46 +96,45 @@ abstract class FormManager extends ChangeNotifier {
 
   FormatterValidatorChain? getFieldValidator(String keyString) => getFormatterValidatorChain(keyString);
 
-  FormFieldData _getFieldData(String keyString) {
-    return formData.fieldDataMap[keyString]!;
+  /// Obligatory for any field planning to get its `FormatterValidatorChain`, save its value and error in `FormManager`.
+  /// `FormManager` will throw on any unregistered field's attempt to access it.
+  FormFieldData _fieldData(String keyString) {
+    return fieldDataMap[keyString]!;
   }
 
   void setFocusListener(FocusNode focusNode, String keyString) {
     focusNode.addListener(() {
       if (focusNode.hasFocus) {
-        showFieldErrorMessage(keyString);
+        _showErrorMessage(getFieldError(keyString) ?? '');
       }
     });
   }
 
   void _validateForm() {
     FormatterValidatorChain? formatterValidator;
-    String? error;
-    for (String keyString in formData.fieldDataMap.keys) {
+    InputValueError valueAndError;
+
+    for (String keyString in fieldDataMap.keys) {
       formatterValidator = getFormatterValidatorChain(keyString);
-      error = formatterValidator?.run(_getFieldData(keyString).value);
-      storeFieldError(keyString, error);
+      if (formatterValidator == null) continue;
+
+      valueAndError = formatterValidator.run(_fieldData(keyString).value);
+      storeFieldError(keyString, valueAndError.error);
     }
   }
 
-  void onFieldChanged(String keyString, ValueAndError valueAndError) {
-    storeFieldValue(keyString, valueAndError.formattedContent);
-    storeFieldError(keyString, valueAndError.errorMessage);
-    _validateField(keyString);
-    // TODO uncomment and refactor
-    // var field = findField(keyString);
-    // if (!(field?.isTouched ?? false)) {
-    //   return;
-    // }
-    //
-    // // sets state of the field with new value
-    // // validates the field
-    // // calls rebuild of all fields in the form
-    // // if the form autoValidateMode is "always" or "onUserInteraction" revalidates all fields in the form
-    // formKey.currentState?.fields[keyString]?.didChange(value ?? field?.value);
-    //
-    // validateField(keyString);
-    // afterFieldChanged();
+  bool isFormValid() {
+    for (FormFieldData data in fieldDataMap.values) {
+      if (data.error != null) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  void onFieldChanged(String keyString, InputValueError valueAndError) {
+    storeFieldValue(keyString, valueAndError.input);
+    storeFieldError(keyString, valueAndError.error);
   }
 
   FormStatus getFormPartState(GlobalKey<FormStateBrick> formPartKey) {
@@ -148,21 +162,21 @@ abstract class FormManager extends ChangeNotifier {
 
 // field validation functionality
 // ==============================================================================
-  String? validateFieldQuietly(String keyString) {
+  InputValueError? formatAndValidateQuietly(String keyString) {
     dynamic value = getFieldValue(keyString);
-    String? error = getFormatterValidatorChain(keyString)!.getError(value);
-    storeFieldError(keyString, error);
+    InputValueError inputValueError = getFormatterValidatorChain(keyString)!.run(value);
+    storeFieldError(keyString, inputValueError);
     return error;
   }
 
-  void _validateField(String keyString) {
-    String? errorText = validateFieldQuietly(keyString);
+  void formatAndValidate(String keyString) {
+    String? errorText = formatAndValidateQuietly(keyString);
     _showErrorMessage(errorText);
   }
 
 // show error message functionality
 // ==============================================================================
-  void showFieldErrorMessage(String keyString) {
+  void _showFieldErrorMessage(String keyString) {
     _showErrorMessage(getFieldError(keyString) ?? '');
   }
 
