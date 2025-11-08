@@ -10,30 +10,30 @@
 ///
 /// **error** is error message which will be displayed in UI either in `InputDecoration` or in form area dedicated
 /// for this purpose.
-class InputValueError<I, V> {
+class FieldContent<I, V> {
   final I? input;
   final V? value;
   final bool? isValid;
   final String? error;
 
-  /// Creates `InputValueError`.
-  const InputValueError.of(this.input, [this.value, this.isValid, this.error]);
+  /// Creates `fieldContent`.
+  const FieldContent.of(this.input, [this.value, this.isValid, this.error]);
 
   /// Only to be used as **temporary result** carrying transient state of the formatted input in formatting-validating
   /// procedure (e.g. partly formatted date string).
   /// **Never** to be used as a return value of `FormatterValidator`.
-  const InputValueError.transient(I input) : this.of(input);
+  const FieldContent.transient(I input) : this.of(input);
 
   /// Use in formatting-validating procedure when the result is valid.
-  const InputValueError.ok(I? input, V? value) : this.of(input, value, true);
+  const FieldContent.ok(I? input, V? value) : this.of(input, value, true);
 
   /// Use in formatting-validating procedure when the result is invalid.
-  const InputValueError.err(I? input, String? error) : this.of(input, null, false, error);
+  const FieldContent.err(I? input, String? error) : this.of(input, null, false, error);
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is InputValueError<I, V> &&
+      other is FieldContent<I, V> &&
           other.input == input &&
           other.value == value &&
           other.isValid == isValid &&
@@ -46,10 +46,10 @@ class InputValueError<I, V> {
 /// To be returned from formatting-validation procedure for input of type `DateTime`.
 ///
 /// Usage - format-validation of: `DateFieldBrick`, `TimeFieldBrick`, `DateTimeFieldBrick`, and their `..Range` fields.
-final class DateTimeValueAndError extends InputValueError<String, DateTime> {
-  const DateTimeValueAndError.transient(String value) : super.transient(value);
+final class DateTimefieldContent extends FieldContent<String, DateTime> {
+  const DateTimefieldContent.transient(String value) : super.transient(value);
 
-  const DateTimeValueAndError.ok(String? value, DateTime? parsedValue) : super.ok(value, parsedValue);
+  const DateTimefieldContent.ok(String? value, DateTime? parsedValue) : super.ok(value, parsedValue);
 
-  const DateTimeValueAndError.err(String? value, String? errorMessage) : super.err(value, errorMessage);
+  const DateTimefieldContent.err(String? value, String? errorMessage) : super.err(value, errorMessage);
 }

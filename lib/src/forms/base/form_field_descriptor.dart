@@ -4,10 +4,9 @@ class FormFieldDescriptor<T> {
   final String keyString;
   final T? initialValue;
   final FormatterValidatorChain? formatterValidatorChain;
+  final Type valueType;
 
   // TODO guarantee validator chain adequate to field type - e.g. checkbox with date-validator throws
 
-  const FormFieldDescriptor(this.keyString, [this.initialValue, this.formatterValidatorChain]);
-
-  Type get valueType => T;
+  const FormFieldDescriptor(this.keyString, [this.initialValue, this.formatterValidatorChain]) : valueType = T;
 }

@@ -78,7 +78,7 @@ Future<void> _runValueChangeTest(
   // await tester.pumpAndSettle();
   state.changeValue(testCase.newValue);
 
-  // TODO can I assume that validation error ALWAYS shows errorText? Then FormFieldStateData.isValid is redundant
+  // TODO can I assume that validation error ALWAYS shows errorText? Then FormFieldData.isValid is redundant
   // --- Verify final FormManager state ---
   expect(formManager.getFieldValue(keyString), testCase.newValue);
   expect(formManager.isFieldDirty(keyString), true);

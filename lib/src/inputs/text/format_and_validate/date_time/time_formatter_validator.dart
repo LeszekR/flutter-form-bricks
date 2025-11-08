@@ -1,5 +1,5 @@
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_utils.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/input_value_error.dart';
+import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:intl/intl.dart';
 
@@ -24,8 +24,8 @@ class TimeFormatterValidator {
     return makeTimeFromString(localizations, inputString).input;
   }
 
-  DateTimeValueAndError makeTimeFromString(BricksLocalizations localizations, String inputString) {
-    DateTimeValueAndError parseResult = _dateTimeUtils!.cleanDateTimeString(
+  DateTimefieldContent makeTimeFromString(BricksLocalizations localizations, String inputString) {
+    DateTimefieldContent parseResult = _dateTimeUtils!.cleanDateTimeString(
       bricksLocalizations: localizations,
       text: inputString,
       dateTimeOrBoth: DateTimeOrBoth.TIME,
@@ -35,18 +35,18 @@ class TimeFormatterValidator {
       maxNDigits: 4,
       maxNumberDelimiters: 1,
     );
-    if (!parseResult.isValid) return DateTimeValueAndError.err(inputString, null, parseResult.error);
+    if (!parseResult.isValid) return DateTimefieldContent.err(inputString, null, parseResult.error);
 
     parseResult = parseTimeFromString(localizations, parseResult);
-    if (!parseResult.isValid) return DateTimeValueAndError.err(inputString, null, parseResult.error);
+    if (!parseResult.isValid) return DateTimefieldContent.err(inputString, null, parseResult.error);
 
     parseResult = validateTime(localizations, parseResult);
 
     return parseResult;
   }
 
-  DateTimeValueAndError parseTimeFromString(BricksLocalizations localizations, DateTimeValueAndError DateTimeValueAndError) {
-    var inputString = DateTimeValueAndError.input;
+  DateTimefieldContent parseTimeFromString(BricksLocalizations localizations, DateTimefieldContent DateTimefieldContent) {
+    var inputString = DateTimefieldContent.input;
     var nDelimiters = RegExp(timeDelimiter).allMatches(inputString).length;
 
     if (nDelimiters == 0) {
@@ -56,8 +56,8 @@ class TimeFormatterValidator {
     }
   }
 
-  DateTimeValueAndError makeTimeStringNoDelimiters(BricksLocalizations localizations, String text) {
-    if (text.length < 3) return DateTimeValueAndError.err(text, null, localizations.timeStringErrorTooFewDigits);
+  DateTimefieldContent makeTimeStringNoDelimiters(BricksLocalizations localizations, String text) {
+    if (text.length < 3) return DateTimefieldContent.err(text, null, localizations.timeStringErrorTooFewDigits);
 
     String formattedResult = '';
     String element = '';
@@ -76,10 +76,10 @@ class TimeFormatterValidator {
       }
       formattedResult = element + formattedResult;
     }
-    return DateTimeValueAndError.transient(formattedResult);
+    return DateTimefieldContent.transient(formattedResult);
   }
 
-  DateTimeValueAndError makeTimeStringWithDelimiters(BricksLocalizations localizations, String inputString) {
+  DateTimefieldContent makeTimeStringWithDelimiters(BricksLocalizations localizations, String inputString) {
     var timeString = '';
     var element = '';
     var resultList = inputString.split(timeDelimiter);
@@ -105,10 +105,10 @@ class TimeFormatterValidator {
 
     if (errHours.isNotEmpty) errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, errHours);
     if (errMinutes.isNotEmpty) errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, errMinutes);
-    if (errMsg.isNotEmpty) return DateTimeValueAndError.err(timeString, null, errMsg);
+    if (errMsg.isNotEmpty) return DateTimefieldContent.err(timeString, null, errMsg);
 
     DateTime time = parseTime(timeString);
-    return DateTimeValueAndError.ok(timeString, time);
+    return DateTimefieldContent.ok(timeString, time);
   }
 
   DateTime parseTime(String timeString) {
@@ -117,8 +117,8 @@ class TimeFormatterValidator {
     return time;
   }
 
-  DateTimeValueAndError validateTime(BricksLocalizations localizations, DateTimeValueAndError DateTimeValueAndError) {
-    var timeString = DateTimeValueAndError.input;
+  DateTimefieldContent validateTime(BricksLocalizations localizations, DateTimefieldContent DateTimefieldContent) {
+    var timeString = DateTimefieldContent.input;
     var resultList = timeString.split(timeDelimiter);
     var connector = '\n';
     var errMsg = '';
@@ -132,9 +132,9 @@ class TimeFormatterValidator {
 
     if (errHours.isNotEmpty) errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, errHours);
     if (errMinutes.isNotEmpty) errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, errMinutes);
-    if (errMsg.isNotEmpty) return DateTimeValueAndError.err(timeString, null, errMsg);
+    if (errMsg.isNotEmpty) return DateTimefieldContent.err(timeString, null, errMsg);
 
     DateTime time = parseTime(timeString);
-    return DateTimeValueAndError.ok(timeString, time);
+    return DateTimefieldContent.ok(timeString, time);
   }
 }

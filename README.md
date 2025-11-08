@@ -77,7 +77,7 @@ This design ensures:
 - Raw input preserved across rebuilds
 - Friendly error handling without input loss
 
-Validators (like `DateTimeFormatterValidator`) parse `inputString` and return `DateTimeValueAndError<T>` with:
+Validators (like `DateTimeFormatterValidator`) parse `inputString` and return `DateTimeFieldContent<T>` with:
 - `parsedValue`: nullable, for precision control
 - `errorMessage`: used for in-form feedback
 
@@ -160,10 +160,10 @@ On submit, parsed values are read from the field and passed to your domain layer
 
 - **FormManager**
   - Receives `FormSchema` and `FormStateData`.
-  - Populates its `fieldStateMap`:
+  - Populates its `fieldContentMap`:
     - From **FormSchema** if `isInitiated == false`.
     - From **FormStateData** otherwise.
-  - Runs validation on all fields and saves error messages in `FormFieldStateData`.
+  - Runs validation on all fields and saves error messages in `FormFieldData`.
 
 - **FormBrick**
   - Receives the initialized `FormManager` and builds all form fields.
@@ -174,7 +174,7 @@ On submit, parsed values are read from the field and passed to your domain layer
   - Gets its initial value and `onFieldChanged` callback from `FormManager`.
   - `onFieldChanged`:
     - Validates the new value.
-    - Updates `FormFieldStateData` and triggers revalidation or saving.
+    - Updates `FormData` and triggers revalidation or saving.
 
   - **FormBrick**
    - must only use `keyStrings` declared in `FormSchema`
@@ -190,7 +190,7 @@ Ensures type safety, single source of truth, and automatic validation across the
   `formManager.onFieldChanged(keyString, value) -> validateField(keyString)`.
 - **`FormManager`**:
   - Runs the corresponding `FormatterValidatorChain`.
-  - Updates `FormFieldStateData`
+  - Updates `FormData`
   - Returns a `ValidationResult` to the field.
   - notifies global UI error display area.
 - **FormFieldBrick** reacts locally (color or inline error)

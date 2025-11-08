@@ -77,7 +77,7 @@ abstract class FormManagerOLD {
   final ValueNotifier<String> errorMessageNotifier = ValueNotifier<String>("");
   final Map<String, String?> _errorsMap = {};
 
-  FormBuilderFieldState<FormBuilderField<dynamic>, dynamic>? findField(String keyString);
+  FormBuilderfieldContent<FormBuilderField<dynamic>, dynamic>? findField(String keyString);
 
   void afterFieldChanged();
 

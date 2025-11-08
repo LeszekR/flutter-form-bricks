@@ -2,7 +2,7 @@ import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_tim
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/time_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/input_value_error.dart';
+import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 import 'date_formatter_validator.dart';
@@ -34,7 +34,7 @@ class DateTimeFormatterValidator {
     return makeDateTimeFromString(localizations, inputString, dateLimits).input;
   }
 
-  DateTimeValueAndError makeDateTimeFromString(
+  DateTimefieldContent makeDateTimeFromString(
     BricksLocalizations localizations,
     String inputString,
     DateTimeLimits dateLimits,
@@ -44,15 +44,15 @@ class DateTimeFormatterValidator {
     textTrimmed = textTrimmed.replaceAll(RegExp(' +'), ' ');
 
     var nSpaces = RegExp(' ').allMatches(textTrimmed).length;
-    if (nSpaces == 0) return DateTimeValueAndError.err(textTrimmed, null, localizations.datetimeStringErrorNoSpace);
-    if (nSpaces > 1) return DateTimeValueAndError.err(textTrimmed, null, localizations.datetimeStringErrorTooManySpaces);
+    if (nSpaces == 0) return DateTimefieldContent.err(textTrimmed, null, localizations.datetimeStringErrorNoSpace);
+    if (nSpaces > 1) return DateTimefieldContent.err(textTrimmed, null, localizations.datetimeStringErrorTooManySpaces);
 
     var elementsList = textTrimmed.split(RegExp(' '));
     String dateString = elementsList[0];
     String timeString = elementsList[1];
 
-    DateTimeValueAndError parseResultDate = _dateFormatter!.makeDateFromString(localizations, dateString, dateLimits);
-    DateTimeValueAndError parseResultTime = _timeFormatter!.makeTimeFromString(localizations, timeString);
+    DateTimefieldContent parseResultDate = _dateFormatter!.makeDateFromString(localizations, dateString, dateLimits);
+    DateTimefieldContent parseResultTime = _timeFormatter!.makeTimeFromString(localizations, timeString);
 
     var parsedString = '${parseResultDate.input} ${parseResultTime.input}';
     var errorMessageDate = parseResultDate.error;
@@ -63,12 +63,12 @@ class DateTimeFormatterValidator {
     // valid
     if (isStringValidDate && isStringValidTime) {
       DateTime dateTime = DateTime.parse(parsedString);
-      return DateTimeValueAndError.ok(parsedString, dateTime);
+      return DateTimefieldContent.ok(parsedString, dateTime);
     }
 
     // invalid
     var connector = (!isStringValidDate && !isStringValidTime) ? '\n' : '';
     var errorMessage = '$errorMessageDate$connector$errorMessageTime';
-    return DateTimeValueAndError.err(parsedString, null, errorMessage);
+    return DateTimefieldContent.err(parsedString, null, errorMessage);
   }
 }

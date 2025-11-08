@@ -1,4 +1,4 @@
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/input_value_error.dart';
+import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 enum DateTimeOrBoth {
@@ -17,7 +17,7 @@ class DateTimeUtils {
     return _instance!;
   }
 
-  DateTimeValueAndError cleanDateTimeString({
+  DateTimefieldContent cleanDateTimeString({
     required BricksLocalizations bricksLocalizations,
     required String text,
     required DateTimeOrBoth dateTimeOrBoth,
@@ -31,7 +31,7 @@ class DateTimeUtils {
     RegExp allowedRegex = RegExp('([0-9]|$stringDelimiterPattern)');
     var allowedCharsLength = allowedRegex.allMatches(text).length;
     if (allowedCharsLength < text.length)
-      return DateTimeValueAndError.err(text, null, errMsgForbiddenChars(bricksLocalizations, dateTimeOrBoth));
+      return DateTimefieldContent.err(text, null, errMsgForbiddenChars(bricksLocalizations, dateTimeOrBoth));
 
     // remove forbidden chars
     // replace all delimiter-type elements and groups with single '-'
@@ -46,16 +46,16 @@ class DateTimeUtils {
     // too many groups of digits
     var nDelimiters = RegExp(stringDelimiter).allMatches(result).length;
     if (nDelimiters > maxNumberDelimiters)
-      return DateTimeValueAndError.err(text, null, getErMsgTooManyDelimiters(bricksLocalizations, dateTimeOrBoth));
+      return DateTimefieldContent.err(text, null, getErMsgTooManyDelimiters(bricksLocalizations, dateTimeOrBoth));
 
     // too few digits or too many digits
     var nDigits = RegExp('[0-9]').allMatches(text).length;
     if (nDigits + nDelimiters < minNumberOfDigits)
-      return DateTimeValueAndError.err(text, null, errMsgTooFewDigits(bricksLocalizations, dateTimeOrBoth));
+      return DateTimefieldContent.err(text, null, errMsgTooFewDigits(bricksLocalizations, dateTimeOrBoth));
     if (nDigits > maxNDigits && nDelimiters == 0)
-      return DateTimeValueAndError.err(text, null, errMsgTooManyDigits(bricksLocalizations, dateTimeOrBoth));
+      return DateTimefieldContent.err(text, null, errMsgTooManyDigits(bricksLocalizations, dateTimeOrBoth));
 
-    return DateTimeValueAndError.ok(result, null);
+    return DateTimefieldContent.ok(result, null);
   }
 
   String removeBadChars(String text, String stringDelimiterPattern) {

@@ -4,7 +4,7 @@ import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/dateTime_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/date_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/time_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/input_value_error.dart';
+import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -94,7 +94,7 @@ bool assertSingleCaseDateTimeFormatter(
       "Both must be either null or not-null: delimitersList and placeholder");
 
   String input = (placeholder == null) ? testCase.input : (testCase.input.replaceAll(RegExp(placeholder), delimiter));
-  DateTimeValueAndError result = testDateTimeFormatter.makeDateTime(localizations, input, testCase.dateTimeLimits);
+  DateTimefieldContent result = testDateTimeFormatter.makeDateTime(localizations, input, testCase.dateTimeLimits);
   String? errors;
 
   var actual =
@@ -142,7 +142,7 @@ class TestDateFormatter implements ATestDateTimeFormatter {
   TestDateFormatter(this.dateFormatter);
 
   @override
-  DateTimeValueAndError makeDateTime(BricksLocalizations localizations, String inputString, DateTimeLimits dateLimits) {
+  DateTimefieldContent makeDateTime(BricksLocalizations localizations, String inputString, DateTimeLimits dateLimits) {
     return dateFormatter.makeDateFromString(localizations, inputString, dateLimits);
   }
 }
@@ -153,7 +153,7 @@ class TestTimeFormatter implements ATestDateTimeFormatter {
   TestTimeFormatter(this.timeFormatter);
 
   @override
-  DateTimeValueAndError makeDateTime(BricksLocalizations localizations, String inputString, DateTimeLimits dateLimits) {
+  DateTimefieldContent makeDateTime(BricksLocalizations localizations, String inputString, DateTimeLimits dateLimits) {
     return timeFormatter.makeTimeFromString(localizations, inputString);
   }
 }
@@ -164,7 +164,7 @@ class TestDateTimeFormatter implements ATestDateTimeFormatter {
   TestDateTimeFormatter(this.dateTimeFormatter);
 
   @override
-  DateTimeValueAndError makeDateTime(BricksLocalizations localizations, String inputString, DateTimeLimits dateLimits) {
+  DateTimefieldContent makeDateTime(BricksLocalizations localizations, String inputString, DateTimeLimits dateLimits) {
     return dateTimeFormatter.makeDateTimeFromString(localizations, inputString, dateLimits);
   }
 }

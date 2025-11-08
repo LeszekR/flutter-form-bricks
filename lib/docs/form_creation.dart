@@ -15,14 +15,14 @@
 /// - If `FormStateData` is meant to persist, this is the object that should be
 ///   stored higher in the widget tree.
 /// - Upon initialization, `FormManager` populates its
-///   `FormStateData.fieldStateMap`:
+///   `FormStateData.fieldContentMap`:
 ///   - From **FormSchema** if `FormStateData.isInitiated == false`.
 ///   - From **FormStateData** itself if already initiated.
 ///
 /// ## 3. Validation Initialization
 /// - After population, `FormManager` validates all field values.
 /// - Validation results (error messages) are stored in
-///   `_stateData.fieldStateDataMap`.
+///   `_stateData.fieldContentDataMap`.
 ///
 /// ## 4. FormBrick Creation
 /// - The main `FormBrick` receives the initialized `FormManager`.
@@ -39,7 +39,7 @@
 /// - Obtains its `onFieldChanged` callback from `FormManager`, which:
 ///   - Validates the new field value.
 ///   - Updates both the value and validation result in
-///     the corresponding `FormFieldStateData`.
+///     the corresponding `FormFieldData`.
 ///   - Triggers revalidation and save logic as needed.
 ///
 /// ## Summary

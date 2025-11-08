@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/input_value_error.dart';
+import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_input_base/states_color_maker.dart';
 
 abstract class FormFieldBrick<T> extends StatefulWidget {
   final String keyString;
   final FormManager formManager;
   final StatesColorMaker colorMaker;
+  final bool withValidator;
   final WidgetStatesController? statesObserver;
   final WidgetStatesController? statesNotifier;
-  final T? initialValue;
 
   // TODO implement identical functionality as in flutter_form_builder using onChange, onEditingComplete, onSave
   final AutovalidateMode autoValidateMode;
@@ -19,19 +19,19 @@ abstract class FormFieldBrick<T> extends StatefulWidget {
     required this.keyString,
     required this.formManager,
     required this.colorMaker,
+    required this.withValidator,
     this.statesObserver,
     this.statesNotifier,
     this.autoValidateMode = AutovalidateMode.disabled,
-  })  : initialValue = formManager.getInitialValue(keyString),
-        super(key: key ?? ValueKey(keyString)) {
-    formManager.registerField(keyString, T);
-  }
+  }) : super(key: key ?? ValueKey(keyString));
 }
 
 abstract class FormFieldStateBrick<K extends FormFieldBrick, T> extends State<K> {
   T getValue();
 
-
+  /// Object holding state of this `FormFieldBrick`. Fetched from `FormManager` prior to `build()`
+  /// and updated in `setState()`;
+  late FieldContent _fieldContent;
 
   late final FocusNode focusNode;
 
@@ -44,28 +44,40 @@ abstract class FormFieldStateBrick<K extends FormFieldBrick, T> extends State<K>
 
   @override
   void initState() {
-    focusNode = FocusNode();
-    formManager.setFocusListener(focusNode, keyString);
+    formManager.registerField(keyString, T);
+    if (widget.withValidator) {
+      focusNode = FocusNode();
+      formManager.setFocusListener(focusNode, keyString);
+    }
+    _fieldContent = formManager.getFieldContent(keyString);
     super.initState();
   }
 
   @override
   void dispose() {
-    focusNode.dispose();
+    if (widget.withValidator) {
+      focusNode.dispose();
+    }
     super.dispose();
   }
 
-  /// **Must be called** either in `onChanged` or `onEditingComplete`. If not called there neither validation nor error
-  /// display will be performed.
+  /// **Must be called** either in `onChanged` or `onEditingComplete`. If not called there neither of the below
+  /// functions will be performed.
   /// ---
-  /// Makes `FormManager`
-  /// - validate the field
-  /// - register both new value and error in `FormManager` -> `FormStateBrick` -> `FormFieldStateBrick`
-  /// - return error which then controls the field's color and if the field uses `InputDecoration` to display error it
-  ///   is passed there.
-  void onFieldChanged(dynamic value) {
-    InputValueError valueAndError = formManager.getFormatterValidatorChain(keyString)!.run(value);
-    formManager.onFieldChanged(keyString, valueAndError);
-    setState(() {});
+  /// Makes `FormManager`:
+  /// - format the input
+  /// - validate the input
+  /// - register both new value and error in `FormManager` -> `FormStateBrick` -> `FieldContent`
+  /// - return new `FieldContent` which then sets the field's input (if formatted), controls its color,
+  ///   displays error if the field uses `InputDecoration` for this (error alternatively it can be displayed in
+  ///   dedicated `FormBrick` area by `FormManager`.
+  void onFieldChanged(T input) {
+    // Here FormManager:
+    // - validates the input
+    // - saves results of format-validation in FormData -> FormFieldData -> FieldContent
+    FieldContent fieldContent = formManager.onFieldChanged(keyString, input);
+    setState(() {
+      _fieldContent = fieldContent;
+    });
   }
 }

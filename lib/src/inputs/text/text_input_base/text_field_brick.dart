@@ -179,10 +179,10 @@ abstract class TextFieldBrick extends FormFieldBrick<TextEditingValue> {
   });
 
   @override
-  State<StatefulWidget> createState() => TextFieldStateBrick();
+  State<StatefulWidget> createState() => TextfieldContentBrick();
 }
 
-class TextFieldStateBrick extends FormFieldStateBrick<TextFieldBrick, TextEditingValue> {
+class TextfieldContentBrick extends FormFieldStateBrick<TextFieldBrick, TextEditingValue> {
   late final FocusNode _focusNode;
   late final TextEditingController _controller;
   Set<WidgetState>? _states;
@@ -197,13 +197,13 @@ class TextFieldStateBrick extends FormFieldStateBrick<TextFieldBrick, TextEditin
 
     _focusNode = widget.focusNode ?? FocusNode();
     formManager.setFocusListener(_focusNode, keyString);
-    if (formManager.hasFocusOnStart(keyString)) _focusNode.requestFocus();
+    if (formManager.isFocusedOnStart(keyString)) _focusNode.requestFocus();
 
     if (widget.controller == null) {
-      _controller = TextEditingController(text: formManager.getInitialValue(keyString));
+      _controller = TextEditingController(text: formManager.getInitialInput(keyString));
     } else {
       _controller = widget.controller!;
-      _controller.text = (formManager.getInitialValue(keyString) as TextEditingValue).text;
+      _controller.text = (formManager.getInitialInput(keyString) as TextEditingValue).text;
     }
 
     _states = widget.statesNotifier?.value;

@@ -72,7 +72,7 @@ class TabulatedFormManager extends FormManager {
   }
 
   @override
-  FormBuilderFieldState<FormBuilderField<dynamic>, dynamic>? findField(String keyString) {
+  FormBuilderfieldContent<FormBuilderField<dynamic>, dynamic>? findField(String keyString) {
     // TODO refactor to FlutterFormBuilder pattern - ?
     _setCurrentTab(keyString);
     return _currentTabGlobalKey!.currentState?.fields[keyString];
