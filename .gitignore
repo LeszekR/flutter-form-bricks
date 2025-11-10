@@ -55,3 +55,7 @@ app.*.map.json
 **/prod-config.json
 
 */windows
+
+# project-specific
+**/string_literals/gen/
+assets/config/
