@@ -31,10 +31,10 @@ class DateTimeFormatterValidator {
     String inputString,
     DateTimeLimits dateLimits,
   ) {
-    return makeDateTimeFromString(localizations, inputString, dateLimits).input;
+    return makeDateTimeFromString(localizations, inputString, dateLimits).input!;
   }
 
-  DateTimefieldContent makeDateTimeFromString(
+  DateTimeFieldContent makeDateTimeFromString(
     BricksLocalizations localizations,
     String inputString,
     DateTimeLimits dateLimits,
@@ -44,31 +44,31 @@ class DateTimeFormatterValidator {
     textTrimmed = textTrimmed.replaceAll(RegExp(' +'), ' ');
 
     var nSpaces = RegExp(' ').allMatches(textTrimmed).length;
-    if (nSpaces == 0) return DateTimefieldContent.err(textTrimmed, null, localizations.datetimeStringErrorNoSpace);
-    if (nSpaces > 1) return DateTimefieldContent.err(textTrimmed, null, localizations.datetimeStringErrorTooManySpaces);
+    if (nSpaces == 0) return DateTimeFieldContent.err(textTrimmed, localizations.datetimeStringErrorNoSpace);
+    if (nSpaces > 1) return DateTimeFieldContent.err(textTrimmed, localizations.datetimeStringErrorTooManySpaces);
 
     var elementsList = textTrimmed.split(RegExp(' '));
     String dateString = elementsList[0];
     String timeString = elementsList[1];
 
-    DateTimefieldContent parseResultDate = _dateFormatter!.makeDateFromString(localizations, dateString, dateLimits);
-    DateTimefieldContent parseResultTime = _timeFormatter!.makeTimeFromString(localizations, timeString);
+    DateTimeFieldContent parseResultDate = _dateFormatter!.makeDateFromString(localizations, dateString, dateLimits);
+    DateTimeFieldContent parseResultTime = _timeFormatter!.makeTimeFromString(localizations, timeString);
 
     var parsedString = '${parseResultDate.input} ${parseResultTime.input}';
     var errorMessageDate = parseResultDate.error;
     var errorMessageTime = parseResultTime.error;
-    var isStringValidDate = parseResultDate.isValid;
-    var isStringValidTime = parseResultTime.isValid;
+    var isStringValidDate = parseResultDate.isValid!;
+    var isStringValidTime = parseResultTime.isValid!;
 
     // valid
     if (isStringValidDate && isStringValidTime) {
       DateTime dateTime = DateTime.parse(parsedString);
-      return DateTimefieldContent.ok(parsedString, dateTime);
+      return DateTimeFieldContent.ok(parsedString, dateTime);
     }
 
     // invalid
     var connector = (!isStringValidDate && !isStringValidTime) ? '\n' : '';
     var errorMessage = '$errorMessageDate$connector$errorMessageTime';
-    return DateTimefieldContent.err(parsedString, null, errorMessage);
+    return DateTimeFieldContent.err(parsedString, errorMessage);
   }
 }

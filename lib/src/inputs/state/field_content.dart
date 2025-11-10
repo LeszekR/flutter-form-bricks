@@ -22,10 +22,10 @@ class FieldContent<I, V> {
   /// Only to be used as **temporary result** carrying transient state of the formatted input in formatting-validating
   /// procedure (e.g. partly formatted date string).
   /// **Never** to be used as a return value of `FormatterValidator`.
-  const FieldContent.transient(I input) : this.of(input);
+  const FieldContent.transient(I input) : this.of(input, null, null, null);
 
   /// Use in formatting-validating procedure when the result is valid.
-  const FieldContent.ok(I? input, V? value) : this.of(input, value, true);
+  const FieldContent.ok(I? input, V? value) : this.of(input, value, true, null);
 
   /// Use in formatting-validating procedure when the result is invalid.
   const FieldContent.err(I? input, String? error) : this.of(input, null, false, error);
@@ -46,10 +46,10 @@ class FieldContent<I, V> {
 /// To be returned from formatting-validation procedure for input of type `DateTime`.
 ///
 /// Usage - format-validation of: `DateFieldBrick`, `TimeFieldBrick`, `DateTimeFieldBrick`, and their `..Range` fields.
-final class DateTimefieldContent extends FieldContent<String, DateTime> {
-  const DateTimefieldContent.transient(String value) : super.transient(value);
+final class DateTimeFieldContent extends FieldContent<String, DateTime> {
+  const DateTimeFieldContent.transient(String value) : super.transient(value);
 
-  const DateTimefieldContent.ok(String? value, DateTime? parsedValue) : super.ok(value, parsedValue);
+  const DateTimeFieldContent.ok(String? value, DateTime? parsedValue) : super.ok(value, parsedValue);
 
-  const DateTimefieldContent.err(String? value, String? errorMessage) : super.err(value, errorMessage);
+  const DateTimeFieldContent.err(String? value, String? errorMessage) : super.err(value, errorMessage);
 }

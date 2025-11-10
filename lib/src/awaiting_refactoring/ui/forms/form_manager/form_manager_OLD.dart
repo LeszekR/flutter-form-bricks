@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_status.dart';
+import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../../../../../shelf.dart';
@@ -77,7 +78,7 @@ abstract class FormManagerOLD {
   final ValueNotifier<String> errorMessageNotifier = ValueNotifier<String>("");
   final Map<String, String?> _errorsMap = {};
 
-  FormBuilderfieldContent<FormBuilderField<dynamic>, dynamic>? findField(String keyString);
+  FieldContent<FormBuilderField<dynamic>, dynamic>? findField(String keyString);
 
   void afterFieldChanged();
 
@@ -126,11 +127,13 @@ abstract class FormManagerOLD {
   }
 
   String? validateFieldQuietly(String keyString) {
-    var field = findField(keyString);
-    field?.validate();
-    var errorText = field?.errorText;
-    _errorsMap[keyString] = errorText;
-    return errorText;
+    // TODO the whole class will be removed - do NOT refactor
+    // var field = findField(keyString);
+    // field?.validate();
+    // var errorText = field?.errorText;
+    // _errorsMap[keyString] = errorText;
+    // return errorText;
+    return null;
   }
 
   void showErrorMessage(String? errorText) {

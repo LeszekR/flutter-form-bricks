@@ -17,7 +17,7 @@ void main() {
     (DateTimeInputs.rangeTimeEndKeyString(rangeId)),
   ];
 
-  var dateTimeLimits = DateTimeLimits(minDateTimeRequired: DateTime(2014), maxDateTimeRequired: DateTime(2026));
+  var dateTimeLimits = DateTimeLimits(minDateTime: DateTime(2014), maxDateTime: DateTime(2026));
   int maxDaysSpan = 7;
   int minMinutesSpan = 15;
 

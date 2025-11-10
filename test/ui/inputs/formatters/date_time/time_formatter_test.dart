@@ -10,9 +10,9 @@ void main() {
   final dateTimeInputUtils = DateTimeUtils();
   TestTimeFormatter timeFormatter = TestTimeFormatter(TimeFormatterValidator(dateTimeInputUtils));
 
-  DateTimeLimits datTimLim = DateTimeLimits(minDateTimeRequired: DateTime(2014), maxDateTimeRequired: DateTime(2026));
-  int yearMaxBack = datTimLim.minDateTimeRequired!.year;
-  int yearMaxForward = datTimLim.maxDateTimeRequired!.year;
+  DateTimeLimits datTimLim = DateTimeLimits(minDateTime: DateTime(2014), maxDateTime: DateTime(2026));
+  int yearMaxBack = datTimLim.minDateTime!.year;
+  int yearMaxForward = datTimLim.maxDateTime!.year;
 
   testWidgets('refuses to format excel-style time when input with delimiters incorrect', (WidgetTester tester) async {
     final local = await getLocalizations();

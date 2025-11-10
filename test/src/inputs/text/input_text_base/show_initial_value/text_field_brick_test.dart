@@ -7,7 +7,7 @@ import '../../../../../test_implementations/test_color_maker.dart';
 import '../../../../../test_implementations/test_form_manager.dart';
 import '../../../../../test_implementations/test_form_schema.dart';
 import '../../../../../test_implementations/test_text_field_brick.dart';
-import '../../../../../ui/test_constants.dart';
+import '../../../../../test_implementations/test_constants.dart';
 
 // TODO test all FormFieldBrick implementations for showing initial value: double, integer, checkbox, radio, ...
 void main() {

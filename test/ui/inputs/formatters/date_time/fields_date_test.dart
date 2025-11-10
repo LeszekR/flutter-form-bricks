@@ -19,9 +19,9 @@ void main() {
   final mockCurrentDate = MockCurrentDate();
   when(mockCurrentDate.getDateNow()).thenReturn(today);
 
-  var datTimLim = DateTimeLimits(minDateTimeRequired: DateTime(2014), maxDateTimeRequired: DateTime(2026));
-  var yearMaxBack = datTimLim.minDateTimeRequired!.year;
-  var yearMaxForward = datTimLim.maxDateTimeRequired!.year;
+  var datTimLim = DateTimeLimits(minDateTime: DateTime(2014), maxDateTime: DateTime(2026));
+  var yearMaxBack = datTimLim.minDateTime!.year;
+  var yearMaxForward = datTimLim.maxDateTime!.year;
 
   testWidgets('DATE - refuses to parse with invalid characters', (WidgetTester tester) async {
     final List<DateTimeTestData> testCases = [

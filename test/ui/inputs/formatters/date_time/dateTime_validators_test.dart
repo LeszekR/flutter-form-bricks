@@ -18,7 +18,7 @@ void main() {
 
       DateTime earliestDate = dateNow.subtract(Duration(days: oneYearDays));
       DateTime latestDate = dateNow.add(Duration(days: oneYearDays));
-      final dateTimeLimits = DateTimeLimits(minDateTimeRequired: earliestDate, maxDateTimeRequired: latestDate);
+      final dateTimeLimits = DateTimeLimits(minDateTime: earliestDate, maxDateTime: latestDate);
       final ValidatorFunction validator = DateTimeValidators.dateInputValidator(localizations, dateTimeLimits);
 
       // border cases

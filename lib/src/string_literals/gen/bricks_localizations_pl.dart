@@ -237,13 +237,13 @@ class BricksLocalizationsPl extends BricksLocalizations {
   String get dateErrorMonthOver12 => 'Nie ma miesiąca większego niż 12';
 
   @override
-  String dateErrorYearTooFarBack(int dateMaxYearsBack) {
-    return 'Rok nie może być wcześniejszy niż $dateMaxYearsBack';
+  String dateErrorTooFarBack(String minDateParam) {
+    return 'Data i czas nie mogą być wcześniejsze niż $minDateParam';
   }
 
   @override
-  String dateErrorYearTooFarForward(int dateMaxYearsForward) {
-    return 'Rok nie może być późniejszy niż $dateMaxYearsForward';
+  String dateErrorTooFarForward(String maxDateParam) {
+    return 'Data nie może być późniejsza niż $maxDateParam';
   }
 
   @override

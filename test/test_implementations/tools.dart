@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../ui/test_constants.dart';
+import 'test_constants.dart';
 import 'test_form_schema.dart';
 
 // DummyFormSchema makeDummyFormSchemaForText(TextEditingValue? initialValue) {

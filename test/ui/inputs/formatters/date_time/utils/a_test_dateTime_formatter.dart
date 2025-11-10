@@ -3,5 +3,5 @@ import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 abstract class ATestDateTimeFormatter {
-  DateTimefieldContent makeDateTime(BricksLocalizations localizations, String inputString, DateTimeLimits dateLimits);
+  DateTimeFieldContent makeDateTime(BricksLocalizations localizations, String inputString, DateTimeLimits dateLimits);
 }

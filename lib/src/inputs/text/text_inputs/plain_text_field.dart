@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter_form_bricks/src/inputs/state/text_editing_value_brick.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_input_base/text_field_brick.dart';
 
 class PlainTextField extends TextFieldBrick {
@@ -18,6 +17,7 @@ class PlainTextField extends TextFieldBrick {
     required super.keyString,
     required super.formManager,
     required super.colorMaker,
+    required super.withValidator,
     super.statesObserver,
     super.statesNotifier,
     super.autoValidateMode = AutovalidateMode.disabled,

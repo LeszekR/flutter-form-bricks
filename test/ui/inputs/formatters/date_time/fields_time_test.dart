@@ -15,9 +15,9 @@ import 'utils/dateTime_test_utils.dart';
 void main() {
   const timeName = 'time_input_test';
 
-  DateTimeLimits datTimLim = DateTimeLimits(minDateTimeRequired: DateTime(2014), maxDateTimeRequired: DateTime(2026));
-  int yearMaxBack = datTimLim.minDateTimeRequired!.year;
-  int yearMaxForward = datTimLim.maxDateTimeRequired!.year;
+  DateTimeLimits datTimLim = DateTimeLimits(minDateTime: DateTime(2014), maxDateTime: DateTime(2026));
+  int yearMaxBack = datTimLim.minDateTime!.year;
+  int yearMaxForward = datTimLim.maxDateTime!.year;
 
   testWidgets('TIME - should refuse to parse when bad character', (WidgetTester tester) async {
     final List<DateTimeTestData> testCases = [

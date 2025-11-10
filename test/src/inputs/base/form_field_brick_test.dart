@@ -7,7 +7,7 @@ import '../../../test_implementations/test_color_maker.dart';
 import '../../../test_implementations/test_form_manager.dart';
 import '../../../test_implementations/test_form_schema.dart';
 import '../../../test_implementations/test_form_field_brick.dart';
-import '../../../ui/test_constants.dart';
+import '../../../test_implementations/test_constants.dart';
 
 void main() {
   group('FormFieldBrick basic build behavior', () {

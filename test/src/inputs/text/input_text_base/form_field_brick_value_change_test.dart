@@ -8,7 +8,7 @@ import '../../../../test_implementations/test_form_field_brick.dart';
 import '../../../../test_implementations/test_form_manager.dart';
 import '../../../../test_implementations/test_form_schema.dart';
 import '../../../../test_implementations/test_formatter_validator_chain.dart';
-import '../../../../ui/test_constants.dart';
+import '../../../../test_implementations/test_constants.dart';
 
 void main() {
   group('FormFieldBrick value change → validation flow', () {
@@ -30,7 +30,7 @@ Future<void> _runValueChangeTest(
   List<FormFieldDescriptor> descriptors = [
     FormFieldDescriptor<String>(
       keyString,
-      testCase.initialValue,
+      initialInputtestCase.initialValue,
       formatterValidatorChain,
     )
   ];

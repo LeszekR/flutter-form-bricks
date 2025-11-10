@@ -21,9 +21,9 @@ class ExampleApp extends StatelessWidget {
     plainTextKeyString3 = 'plainTextKeyString3';
     formStateData = ExampleFormStateData(focusedKeyString: plainTextKeyString1);
     schema = ExampleFormSchema([
-      FormFieldDescriptor(plainTextKeyString1, null, null),
-      FormFieldDescriptor(plainTextKeyString2, null, null),
-      FormFieldDescriptor(plainTextKeyString1, null, null),
+      FormFieldDescriptor(plainTextKeyString1, initialInputnull, null),
+      FormFieldDescriptor(plainTextKeyString2, initialInputnull, null),
+      FormFieldDescriptor(plainTextKeyString1, initialInputnull, null),
     ], plainTextKeyString1,);
     emptyFormManager = EmptyFormManager(stateData: formStateData, schema: schema);
     uiParamsData = UiParamsData();

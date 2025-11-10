@@ -26,9 +26,9 @@ class Date implements Comparable<Date> {
     return Date(parsed);
   }
 
-  Date modify(Duration duration) {
-    return Date(_dateTime.add(duration));
-  }
+  // Date modify(Duration duration) {
+  //   return Date(_dateTime.add(duration));
+  // }
 
   Date subtract(Duration duration) {
     return Date(_dateTime.subtract(duration));

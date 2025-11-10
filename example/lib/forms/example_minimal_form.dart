@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/current_date.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_limits.dart';
 
 class ExampleMinimalForm extends SingleForm {
   ExampleMinimalForm({super.key});
@@ -23,7 +25,7 @@ class _ExampleMinimalFormState extends SingleFormState {
           minRangeSpanMinutes: 15,
           labelPosition: LabelPosition.topLeft,
           label: "Załadunek",
-          initialRangeStartDate: Date.fromString('2024-12-15'),
+          dateTimeLimits: Date.fromString('2024-12-15'),
         ),
       ])
     ];

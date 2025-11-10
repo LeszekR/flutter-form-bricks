@@ -24,9 +24,9 @@ void main() {
   ATestDateTimeFormatter dateTimeFormatter =
       TestDateTimeFormatter(DateTimeFormatterValidator(dateFormatter, timeFormatter, dateTimeInputUtils));
 
-  var datTimLim = DateTimeLimits(minDateTimeRequired: DateTime(2014), maxDateTimeRequired: DateTime(2026));
-  var yearMaxBack = datTimLim.minDateTimeRequired!.year;
-  var yearMaxForward = datTimLim.maxDateTimeRequired!.year;
+  var datTimLim = DateTimeLimits(minDateTime: DateTime(2014), maxDateTime: DateTime(2026));
+  var yearMaxBack = datTimLim.minDateTime!.year;
+  var yearMaxForward = datTimLim.maxDateTime!.year;
 
   testWidgets('refuses to format excel-style invalid input', (WidgetTester tester) async {
     final local = await getLocalizations();
@@ -60,9 +60,9 @@ void main() {
       DateTimeTestData(datTimLim, '4--31 1515', '2024-04-31 15:15', false, local.dateErrorTooManyDaysInMonth),
       DateTimeTestData(datTimLim, '5-15-2 8,8', '2025-15-02 08:08', false, local.dateErrorMonthOver12),
       DateTimeTestData(
-          datTimLim, '00;2;5 8;8', '2000-02-05 08:08', false, local.dateErrorYearTooFarBack(yearMaxBack)),
+          datTimLim, '00;2;5 8;8', '2000-02-05 08:08', false, local.dateErrorTooFarBack(yearMaxBack)),
       DateTimeTestData(
-          datTimLim, '50-11-5 6;15', '2050-11-05 06:15', false, local.dateErrorYearTooFarForward(yearMaxForward)),
+          datTimLim, '50-11-5 6;15', '2050-11-05 06:15', false, local.dateErrorTooFarForward(yearMaxForward)),
     ];
     var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
@@ -364,53 +364,53 @@ void main() {
     expect(passedOk, true);
   });
 
-  testWidgets('dateErrorYearTooFarBack (dateErrorYearTooFarBack)', (WidgetTester tester) async {
+  testWidgets('dateErrorTooFarBack (dateErrorTooFarBack)', (WidgetTester tester) async {
     final local = await getLocalizations();
     // var yearMaxBack = (mockCurrentDate.getDateNow().year - AppParams.maxYearsBackInDate);
 
     var testCases = [
       DateTimeTestData(datTimLim, '006/10/13 9x8', '2006-10-13 9x8', false,
-          local.dateErrorYearTooFarBack(yearMaxBack) + '\n' + local.timeStringErrorBadChars),
+          local.dateErrorTooFarBack(yearMaxBack) + '\n' + local.timeStringErrorBadChars),
       DateTimeTestData(datTimLim, '006/10/13 8', '2006-10-13 8', false,
-          local.dateErrorYearTooFarBack(yearMaxBack) + '\n' + local.timeStringErrorTooFewDigits),
+          local.dateErrorTooFarBack(yearMaxBack) + '\n' + local.timeStringErrorTooFewDigits),
       DateTimeTestData(datTimLim, '006/10/13 55580', '2006-10-13 55580', false,
-          local.dateErrorYearTooFarBack(yearMaxBack) + '\n' + local.timeStringErrorTooManyDigits),
+          local.dateErrorTooFarBack(yearMaxBack) + '\n' + local.timeStringErrorTooManyDigits),
       DateTimeTestData(datTimLim, '006/10/13 5-5-5', '2006-10-13 5-5-5', false,
-          local.dateErrorYearTooFarBack(yearMaxBack) + '\n' + local.timeStringErrorTooManyDelimiters),
+          local.dateErrorTooFarBack(yearMaxBack) + '\n' + local.timeStringErrorTooManyDelimiters),
       DateTimeTestData(datTimLim, '006/10/13 5-120', '2006-10-13 5-120', false,
-          local.dateErrorYearTooFarBack(yearMaxBack) + '\n' + local.timeStringErrorTooManyDigitsMinutes),
+          local.dateErrorTooFarBack(yearMaxBack) + '\n' + local.timeStringErrorTooManyDigitsMinutes),
       DateTimeTestData(datTimLim, '006/10/13 1220;08', '2006-10-13 1220;08', false,
-          local.dateErrorYearTooFarBack(yearMaxBack) + '\n' + local.timeStringErrorTooManyDigitsHours),
+          local.dateErrorTooFarBack(yearMaxBack) + '\n' + local.timeStringErrorTooManyDigitsHours),
       DateTimeTestData(datTimLim, '006/10/13 22:81', '2006-10-13 22:81', false,
-          local.dateErrorYearTooFarBack(yearMaxBack) + '\n' + local.timeErrorTooBigMinute),
+          local.dateErrorTooFarBack(yearMaxBack) + '\n' + local.timeErrorTooBigMinute),
       DateTimeTestData(datTimLim, '006/10/13 29:08', '2006-10-13 29:08', false,
-          local.dateErrorYearTooFarBack(yearMaxBack) + '\n' + local.timeErrorTooBigHour),
+          local.dateErrorTooFarBack(yearMaxBack) + '\n' + local.timeErrorTooBigHour),
     ];
     var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
-  testWidgets('dateErrorYearTooFarForward (dateErrorYearTooFarForward)', (WidgetTester tester) async {
+  testWidgets('dateErrorTooFarForward (dateErrorTooFarForward)', (WidgetTester tester) async {
     final local = await getLocalizations();
     // var yearMaxForward = (mockCurrentDate.getDateNow().year + AppParams.maxYearsForwardInDate);
 
     var testCases = [
       DateTimeTestData(datTimLim, '36/10/13 9x8', '2036-10-13 9x8', false,
-          local.dateErrorYearTooFarForward(yearMaxForward) + '\n' + local.timeStringErrorBadChars),
+          local.dateErrorTooFarForward(yearMaxForward) + '\n' + local.timeStringErrorBadChars),
       DateTimeTestData(datTimLim, '36/10/13 8', '2036-10-13 8', false,
-          local.dateErrorYearTooFarForward(yearMaxForward) + '\n' + local.timeStringErrorTooFewDigits),
+          local.dateErrorTooFarForward(yearMaxForward) + '\n' + local.timeStringErrorTooFewDigits),
       DateTimeTestData(datTimLim, '36/10/13 55580', '2036-10-13 55580', false,
-          local.dateErrorYearTooFarForward(yearMaxForward) + '\n' + local.timeStringErrorTooManyDigits),
+          local.dateErrorTooFarForward(yearMaxForward) + '\n' + local.timeStringErrorTooManyDigits),
       DateTimeTestData(datTimLim, '36/10/13 5-5-5', '2036-10-13 5-5-5', false,
-          local.dateErrorYearTooFarForward(yearMaxForward) + '\n' + local.timeStringErrorTooManyDelimiters),
+          local.dateErrorTooFarForward(yearMaxForward) + '\n' + local.timeStringErrorTooManyDelimiters),
       DateTimeTestData(datTimLim, '36/10/13 5-120', '2036-10-13 5-120', false,
-          local.dateErrorYearTooFarForward(yearMaxForward) + '\n' + local.timeStringErrorTooManyDigitsMinutes),
+          local.dateErrorTooFarForward(yearMaxForward) + '\n' + local.timeStringErrorTooManyDigitsMinutes),
       DateTimeTestData(datTimLim, '36/10/13 1220;08', '2036-10-13 1220;08', false,
-          local.dateErrorYearTooFarForward(yearMaxForward) + '\n' + local.timeStringErrorTooManyDigitsHours),
+          local.dateErrorTooFarForward(yearMaxForward) + '\n' + local.timeStringErrorTooManyDigitsHours),
       DateTimeTestData(datTimLim, '36/10/13 22:81', '2036-10-13 22:81', false,
-          local.dateErrorYearTooFarForward(yearMaxForward) + '\n' + local.timeErrorTooBigMinute),
+          local.dateErrorTooFarForward(yearMaxForward) + '\n' + local.timeErrorTooBigMinute),
       DateTimeTestData(datTimLim, '36/10/13 29:08', '2036-10-13 29:08', false,
-          local.dateErrorYearTooFarForward(yearMaxForward) + '\n' + local.timeErrorTooBigHour),
+          local.dateErrorTooFarForward(yearMaxForward) + '\n' + local.timeErrorTooBigHour),
     ];
     var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
@@ -425,7 +425,7 @@ void main() {
         "39/18/00 000-111",
         "2039-18-00 000-111",
         false,
-        local.dateErrorYearTooFarForward(yearMaxForward) +
+        local.dateErrorTooFarForward(yearMaxForward) +
             '\n' +
             local.dateErrorMonthOver12 +
             '\n' +
@@ -440,7 +440,7 @@ void main() {
           "01-0-80 5x60",
           "2001-00-80 5x60",
           false,
-          local.dateErrorYearTooFarBack(yearMaxBack) +
+          local.dateErrorTooFarBack(yearMaxBack) +
               '\n' +
               local.dateErrorMonth0 +
               '\n' +
@@ -452,7 +452,7 @@ void main() {
           "  01-0-00 12561",
           "2001-00-00 12561",
           false,
-          local.dateErrorYearTooFarBack(yearMaxBack) +
+          local.dateErrorTooFarBack(yearMaxBack) +
               '\n' +
               local.dateErrorMonth0 +
               '\n' +
@@ -464,7 +464,7 @@ void main() {
           "01-0-31 5  ",
           "2001-00-31 5",
           false,
-          local.dateErrorYearTooFarBack(yearMaxBack) +
+          local.dateErrorTooFarBack(yearMaxBack) +
               '\n' +
               local.dateErrorMonth0 +
               '\n' +
@@ -484,7 +484,7 @@ void main() {
           "0000/0/0   156;5699 ",
           "0000-00-00 156;5699",
           false,
-          local.dateErrorYearTooFarBack(yearMaxBack) +
+          local.dateErrorTooFarBack(yearMaxBack) +
               '\n' +
               local.dateErrorMonth0 +
               '\n' +

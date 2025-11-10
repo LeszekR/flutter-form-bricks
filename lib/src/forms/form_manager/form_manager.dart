@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_form_bricks/src/forms/base/form_schema.dart';
-import 'package:flutter_form_bricks/src/forms/state/form_data.dart';
+import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
-import 'package:flutter_form_bricks/src/inputs/state/form_field_data.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 
 import '../base/form_brick.dart';
@@ -11,7 +9,7 @@ import 'form_status.dart';
 abstract class FormManager extends ChangeNotifier {
   final ValueNotifier<String> errorMessageNotifier = ValueNotifier<String>('');
   final FormData formData;
-  final Map<String, FormatterValidatorChain?> formatterValidators;
+  final Map<String, FormatterValidatorChain?> formatterValidatorMap;
 
   // TODO make flat map for tabbed form too and implement here
   FormStatus checkStatus();
@@ -24,14 +22,22 @@ abstract class FormManager extends ChangeNotifier {
   Map<String, FormFieldData> get fieldDataMap => formData.fieldDataMap;
 
   FormManager({required this.formData, required FormSchema formSchema})
-      : formatterValidators = {
+      : formatterValidatorMap = {
           for (final d in formSchema.descriptors) d.keyString: d.formatterValidatorChain,
         } {
+    _initFormData(formSchema, formData);
     resetForm();
   }
 
   // form reset
   // ==============================================================================
+  void _initFormData(FormSchema formSchema, FormData formData) {
+    if (formData.fieldDataMap.isNotEmpty) return;
+
+    for (FormFieldDescriptor d in formSchema.descriptors)
+      formData.fieldDataMap[d.keyString] = FormFieldData(fieldContent: FieldContent.transient(d.initialInput));
+  }
+
   // TODO setState with new FormData after button 'Reset' clicked
   void resetForm() {
     for (String keyString in fieldDataMap.keys) {
@@ -54,15 +60,24 @@ abstract class FormManager extends ChangeNotifier {
   /// Obligatory for every field
   ///  - guarantees access to `FormatterValidatorChain`
   ///  - saves field's input, value, isValid and error in state preservation object: `FormData`.
-  void registerField<T>(String keyString, Type T) {
+  void registerField<T>(String keyString, Type T, bool withValidator) {
     assert(
       fieldDataMap.keys.contains(keyString),
-      'No "$keyString" found in fieldDataMap. All fields in form must be declared in FormSchema => FormFieldData.',
+      'No "$keyString" found in FormData.fieldDataMap; '
+      'all fields in form must be declared in FormSchema => FormFieldData.',
     );
+
+    var fieldRuntimeType = _fieldData(keyString).initialInput.runtimeType;
     assert(
-      T == _fieldData(keyString).initialInput.runtimeType,
-      'Field value type is different from FieldData valueType for keyString: "$keyString".',
+      T == fieldRuntimeType,
+      'Field value type is different from FieldData valueType ("${T.toString()}" vs. "${fieldRuntimeType}") '
+      'for keyString: "$keyString" declared in FormSchema -> FormFieldDescriptor.',
     );
+
+    assert(
+        withValidator == (getFormatterValidator(keyString) != null),
+        'No "$keyString" found in formatterValidatorsMap while the field declares "withValidator == true"; '
+        'there must be one FormatterValidatorChain in the map for every such field.');
   }
 
   void setFocusListener(FocusNode focusNode, String keyString) {
@@ -88,6 +103,8 @@ abstract class FormManager extends ChangeNotifier {
 
   bool isFieldValidating(String keyString) => _fieldData(keyString).isValidating;
 
+  dynamic getFieldError(String keyString) => getFieldContent(keyString).error;
+
   void setFieldValidating(String keyString, bool isValidating) =>
       _updateFieldData(keyString, isValidating: isValidating);
 
@@ -95,7 +112,7 @@ abstract class FormManager extends ChangeNotifier {
 
   bool isFieldDirty(String keyString) => getFieldContent(keyString).input != _fieldData(keyString).initialInput;
 
-  FormatterValidatorChain? getFormatterValidator(String keyString) => formatterValidators[keyString];
+  FormatterValidatorChain? getFormatterValidator(String keyString) => formatterValidatorMap[keyString];
 
   void _setFocusedKeyString(String keyString) => formData.focusedKeyString = keyString;
 

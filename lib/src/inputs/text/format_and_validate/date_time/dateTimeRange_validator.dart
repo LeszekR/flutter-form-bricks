@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_limits.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_range_span.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/dateTime_range_error_controller.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
@@ -21,8 +23,8 @@ class DateTimeRangeValidator {
   final RangeController _rangeController;
   FormFieldValidator<String>? _validator;
   final BricksLocalizations _localizations;
-  final int _maxRangeSpanDays;
-  final int _minRangeSpanMinutes;
+  final DateTimeLimits? _dateTimeLimits;
+  final DateTimeRangeSpan? _dateTimeSpanLimits;
 
   FormFieldValidator<String> get validator => _validator!;
 
@@ -31,8 +33,8 @@ class DateTimeRangeValidator {
     this._keyString,
     this._formManager,
     this._rangeController,
-    this._maxRangeSpanDays,
-    this._minRangeSpanMinutes,
+    this._dateTimeLimits,
+    this._dateTimeSpanLimits,
   ) {
     _rangeController.delayValidationAfterBuilt();
     _setkeyStrings(_rangeController.rangeId);
@@ -68,11 +70,11 @@ class DateTimeRangeValidator {
   }
 
   void _loadErrorsExceptRange() {
-    for (var _keyString in _keyStrings) {
+    for (String _keyString in _keyStrings) {
       FormFieldValidator<String>? dateTimeValidator = _rangeController.validatorsExceptRange[_keyString];
       if (dateTimeValidator != null) {
-        var text = _getRangeFieldText(_keyString);
-        var errorText = dateTimeValidator.call(text);
+        String text = _getRangeFieldText(_keyString);
+        String? errorText = dateTimeValidator.call(text);
         _formManager.storeFieldError(_keyString, errorText);
       }
     }
@@ -123,8 +125,8 @@ class DateTimeRangeValidator {
 
       // start-date present & end-date present & end-date too far from start-date
       // -----------------------------------------------------------------
-      if (difference > _maxRangeSpanDays) {
-        errorText = _localizations.rangeDatesTooFarApart(_maxRangeSpanDays);
+      if (difference > _maxDateTimeSpan) {
+        errorText = _localizations.rangeDatesTooFarApart(_maxDateTimeSpan);
         _formManager.storeFieldError(_dateStartKeyString!, errorText);
         _formManager.storeFieldError(_dateEndKeyString!, errorText);
         return;
@@ -161,8 +163,8 @@ class DateTimeRangeValidator {
         }
         // start-time less than minimum before end-time
         // -----------------------------------------------------------------
-        else if (difference < _minRangeSpanMinutes) {
-          errorText = _localizations.rangeTimeStartEndTooCloseOrAddDateEnd(_minRangeSpanMinutes);
+        else if (difference < _minDateTimeSpan) {
+          errorText = _localizations.rangeTimeStartEndTooCloseOrAddDateEnd(_minDateTimeSpan);
           // _formManager.setFieldError(_dateStartKeyString!, errorText);
           _formManager.storeFieldError(_timeStartKeyString!, errorText);
           _formManager.storeFieldError(_dateEndKeyString!, errorText);
@@ -189,8 +191,8 @@ class DateTimeRangeValidator {
         }
         // start-time less than minimum before end-time
         // -----------------------------------------------------------------
-        else if (difference < _minRangeSpanMinutes) {
-          errorText = _localizations.rangeTimeStartEndTooCloseSameDate(_minRangeSpanMinutes);
+        else if (difference < _minDateTimeSpan) {
+          errorText = _localizations.rangeTimeStartEndTooCloseSameDate(_minDateTimeSpan);
           _formManager.storeFieldError(_timeStartKeyString!, errorText);
           _formManager.storeFieldError(_timeEndKeyString!, errorText);
           return;

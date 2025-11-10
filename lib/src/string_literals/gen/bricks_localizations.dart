@@ -476,17 +476,17 @@ abstract class BricksLocalizations {
   /// **'There are only 12 months, not more'**
   String get dateErrorMonthOver12;
 
-  /// No description provided for @dateErrorYearTooFarBack.
+  /// No description provided for @dateErrorTooFarBack.
   ///
   /// In en, this message translates to:
-  /// **'You can not input year before {dateMaxYearsBack}'**
-  String dateErrorYearTooFarBack(int dateMaxYearsBack);
+  /// **'Date and time must not be earlier than {minDateParam}'**
+  String dateErrorTooFarBack(String minDateParam);
 
-  /// No description provided for @dateErrorYearTooFarForward.
+  /// No description provided for @dateErrorTooFarForward.
   ///
   /// In en, this message translates to:
-  /// **'You can not input year after {dateMaxYearsForward}'**
-  String dateErrorYearTooFarForward(int dateMaxYearsForward);
+  /// **'Date and time must not be later than {maxDateParam}'**
+  String dateErrorTooFarForward(String maxDateParam);
 
   /// No description provided for @mustNotPrecede.
   ///

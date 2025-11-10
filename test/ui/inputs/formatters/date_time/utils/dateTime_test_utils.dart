@@ -94,7 +94,7 @@ bool assertSingleCaseDateTimeFormatter(
       "Both must be either null or not-null: delimitersList and placeholder");
 
   String input = (placeholder == null) ? testCase.input : (testCase.input.replaceAll(RegExp(placeholder), delimiter));
-  DateTimefieldContent result = testDateTimeFormatter.makeDateTime(localizations, input, testCase.dateTimeLimits);
+  DateTimeFieldContent result = testDateTimeFormatter.makeDateTime(localizations, input, testCase.dateTimeLimits);
   String? errors;
 
   var actual =
@@ -142,7 +142,7 @@ class TestDateFormatter implements ATestDateTimeFormatter {
   TestDateFormatter(this.dateFormatter);
 
   @override
-  DateTimefieldContent makeDateTime(BricksLocalizations localizations, String inputString, DateTimeLimits dateLimits) {
+  DateTimeFieldContent makeDateTime(BricksLocalizations localizations, String inputString, DateTimeLimits dateLimits) {
     return dateFormatter.makeDateFromString(localizations, inputString, dateLimits);
   }
 }
@@ -153,7 +153,7 @@ class TestTimeFormatter implements ATestDateTimeFormatter {
   TestTimeFormatter(this.timeFormatter);
 
   @override
-  DateTimefieldContent makeDateTime(BricksLocalizations localizations, String inputString, DateTimeLimits dateLimits) {
+  DateTimeFieldContent makeDateTime(BricksLocalizations localizations, String inputString, DateTimeLimits dateLimits) {
     return timeFormatter.makeTimeFromString(localizations, inputString);
   }
 }
@@ -164,7 +164,7 @@ class TestDateTimeFormatter implements ATestDateTimeFormatter {
   TestDateTimeFormatter(this.dateTimeFormatter);
 
   @override
-  DateTimefieldContent makeDateTime(BricksLocalizations localizations, String inputString, DateTimeLimits dateLimits) {
+  DateTimeFieldContent makeDateTime(BricksLocalizations localizations, String inputString, DateTimeLimits dateLimits) {
     return dateTimeFormatter.makeDateTimeFromString(localizations, inputString, dateLimits);
   }
 }

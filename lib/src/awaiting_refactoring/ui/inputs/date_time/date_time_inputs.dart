@@ -4,6 +4,9 @@ import 'package:flutter_form_bricks/src/inputs/labelled_box/label_position.dart'
 import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_limits.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_range_initial_set.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_range_required_fields.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_range_span.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/time_stamp.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/dateTimeRange_validator.dart';
@@ -30,6 +33,102 @@ class DateTimeInputs {
 
   DateTimeInputs._();
 
+  static Widget dateTimeSeparateFields({
+    required BuildContext context,
+    required String keyString,
+    required String label,
+    required LabelPosition labelPosition,
+    required CurrentDate currentDate,
+    required FormManager formManager,
+    DateTimeLimits? dateTimeLimits,
+    DateTimeInitialSet? initialSet,
+    DateTimeRequiredFields? requiredFields,
+    DateTimeRangeSpan? rangeSpan,
+    RangeController? rangeController,
+    bool readonly = false,
+    List<FormFieldValidator<String>>? additionalValidators,
+  }) {
+    assert(
+        rangeSpan == null || rangeController != null, 'DateTimeRangeSpan requires RangeController which is null here.');
+
+    final localizations = BricksLocalizations.of(context);
+    final uiParams = UiParams.of(context);
+    final appSize = uiParams.appSize;
+
+    var dateKeyString = makeDateKeyString(keyString);
+    var timeKeyString = mameTimeKeyString(keyString);
+
+    FormFieldValidator<String>? rangeDateValidator;
+    if (rangeController != null) {
+      // TODO remove dateTimeLimits from here - this is validated in DateField
+      rangeDateValidator = DateTimeValidators.dateTimeRangeValidator(
+          localizations, dateKeyString, formManager, rangeController, dateTimeLimits, rangeSpan);
+// if (isDateRequired || additionalValidators != null) {
+      var validatorsExceptRange = ValidatorProvider.compose(
+        context: context,
+        isRequired: requiredFields == null ? null : requiredFields.date,
+        customValidator: DateTimeValidators.dateInputValidator(localizations, dateTimeLimits),
+        validatorsList: additionalValidators,
+      );
+      rangeController.validatorsExceptRange[dateKeyString] = validatorsExceptRange;
+// }
+    }
+
+    FormFieldValidator<String>? rangeTimeValidator;
+    if (rangeController != null) {
+      // TODO remove dateTimeLimits from here - this is validated in DateField
+      rangeTimeValidator = DateTimeValidators.dateTimeRangeValidator(
+          localizations, timeKeyString, formManager, rangeController, dateTimeLimits, rangeSpan);
+      var validatorsExceptRange = ValidatorProvider.compose(
+        context: context,
+        isRequired: requiredFields == null ? null : requiredFields.time,
+        customValidator: DateTimeValidators.timeInputValidator(localizations),
+        validatorsList: additionalValidators,
+      );
+// if (isTimeRequired || additionalValidators != null) {
+      rangeController.validatorsExceptRange[timeKeyString] = validatorsExceptRange;
+// }
+    }
+
+    final elements = [
+      date(
+        context: context,
+        keyString: dateKeyString,
+        label: localizations.date,
+        labelPosition: LabelPosition.topLeft,
+        initialValue: initialSet == null ? null : initialSet.date,
+        readonly: readonly,
+        currentDate: currentDate,
+        dateLimits: dateTimeLimits,
+        formManager: formManager,
+        isRequired: requiredFields == null ? false : requiredFields.date,
+        rangeController: rangeController,
+        rangeValidator: rangeDateValidator,
+        additionalValidators: additionalValidators,
+      ),
+      appSize.spacerBoxHorizontalSmallest,
+      time(
+        context: context,
+        keyString: timeKeyString,
+        label: localizations.time,
+        labelPosition: LabelPosition.topLeft,
+        initialValue: initialSet == null ? null : initialSet.time,
+        readonly: readonly,
+        formManager: formManager,
+        isRequired: requiredFields == null ? false : requiredFields.time,
+        rangeController: rangeController,
+        rangeValidator: rangeTimeValidator,
+        additionalValidators: additionalValidators,
+      )
+    ];
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [Text(label), Row(children: elements)],
+    );
+  }
+
   static Widget date({
     required BuildContext context,
     required String keyString,
@@ -37,7 +136,7 @@ class DateTimeInputs {
     required LabelPosition labelPosition,
     required FormManager formManager,
     required CurrentDate currentDate,
-    required DateTimeLimits dateLimits,
+    required DateTimeLimits? dateLimits,
     Date? initialValue,
     bool readonly = false,
     bool isRequired = false,
@@ -162,128 +261,18 @@ class DateTimeInputs {
     );
   }
 
-  static Widget dateTimeSeparateFields({
-    required BuildContext context,
-    required String keyString,
-    required String label,
-    required LabelPosition labelPosition,
-    required CurrentDate currentDate,
-    required FormManager formManager,
-    required DateTimeLimits dateTimeLimits,
-    required int maxRangeSpanDays,
-    required int minRangeSpanMinutes,
-    bool isDateRequired = false,
-    bool isTimeRequired = false,
-    RangeController? rangeController,
-    Date? initialDate,
-    Time? initialTime,
-    bool readonly = false,
-    List<FormFieldValidator<String>>? additionalValidators,
-  }) {
-    final localizations = BricksLocalizations.of(context);
-    final uiParams = UiParams.of(context);
-    final appSize = uiParams.appSize;
-    final appStyle = uiParams.appStyle;
-    final appColor = uiParams.appColor;
-
-    var dateKeyString = makeDateKeyString(keyString);
-    var timeKeyString = mameTimeKeyString(keyString);
-
-    FormFieldValidator<String>? rangeDateValidator;
-    if (rangeController != null) {
-      rangeDateValidator = DateTimeValidators.dateTimeRangeValidator(
-        localizations,
-        dateKeyString,
-        formManager,
-        rangeController,
-        maxRangeSpanDays,
-        minRangeSpanMinutes,
-      );
-// if (isDateRequired || additionalValidators != null) {
-      var validatorsExceptRange = ValidatorProvider.compose(
-        context: context,
-        isRequired: isDateRequired,
-        customValidator: DateTimeValidators.dateInputValidator(localizations, dateTimeLimits),
-        validatorsList: additionalValidators,
-      );
-      rangeController.validatorsExceptRange[dateKeyString] = validatorsExceptRange;
-// }
-    }
-    FormFieldValidator<String>? rangeTimeValidator;
-    if (rangeController != null) {
-      rangeTimeValidator = DateTimeValidators.dateTimeRangeValidator(
-        localizations,
-        timeKeyString,
-        formManager,
-        rangeController,
-        maxRangeSpanDays,
-        minRangeSpanMinutes,
-      );
-      var validatorExceptRange = ValidatorProvider.compose(
-        context: context,
-        isRequired: isTimeRequired,
-        customValidator: DateTimeValidators.timeInputValidator(localizations),
-        validatorsList: additionalValidators,
-      );
-// if (isTimeRequired || additionalValidators != null) {
-      rangeController.validatorsExceptRange[timeKeyString] = validatorExceptRange;
-// }
-    }
-
-    final elements = [
-      date(
-        context: context,
-        keyString: dateKeyString,
-        label: localizations.date,
-        labelPosition: LabelPosition.topLeft,
-        initialValue: initialDate,
-        readonly: readonly,
-        currentDate: currentDate,
-        dateLimits: dateTimeLimits,
-        formManager: formManager,
-        isRequired: isDateRequired,
-        rangeController: rangeController,
-        rangeValidator: rangeDateValidator,
-        additionalValidators: additionalValidators,
-      ),
-      appSize.spacerBoxHorizontalSmallest,
-      time(
-        context: context,
-        keyString: timeKeyString,
-        label: localizations.time,
-        labelPosition: LabelPosition.topLeft,
-        initialValue: initialTime,
-        readonly: readonly,
-        formManager: formManager,
-        isRequired: isTimeRequired,
-        rangeController: rangeController,
-        rangeValidator: rangeTimeValidator,
-        additionalValidators: additionalValidators,
-      )
-    ];
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [Text(label), Row(children: elements)],
-    );
-  }
-
   static Widget dateTimeRange({
     required BuildContext context,
     required String rangeId,
     required String label,
     required LabelPosition labelPosition,
     required CurrentDate currentDate,
-    required DateTimeLimits dateTimeLimits,
     required FormManager formManager,
-    required int maxRangeSpanDays,
-    required int minRangeSpanMinutes,
-    final bool readonly = false,
-    final Date? initialRangeStartDate,
-    final Time? initialRangeStartTime,
-    final Date? initialRangeEndDate,
-    final Time? initialRangeEndTime,
+    DateTimeLimits? dateTimeLimits,
+    DateTimeRangeSpan? dateTimeSpanLimits,
+    DateTimeRangeInitialSet? initialSet,
+    DateTimeRangeRequiredFields? requiredFields,
+    bool readonly = false,
   }) {
     final localizations = BricksLocalizations.of(context);
     final uiParams = UiParams.of(context);
@@ -296,27 +285,24 @@ class DateTimeInputs {
       keyString: makeRangeKeyStringStart(rangeId),
       label: "$label ${localizations.start}",
       labelPosition: labelPosition,
-      initialDate: initialRangeStartDate,
-      initialTime: initialRangeStartTime,
       formManager: formManager,
       dateTimeLimits: dateTimeLimits,
-      maxRangeSpanDays: maxRangeSpanDays,
-      minRangeSpanMinutes: minRangeSpanMinutes,
+      initialSet: initialSet == null ? null : initialSet.start,
+      requiredFields: requiredFields == null ? null : requiredFields.start,
+      rangeSpan: dateTimeSpanLimits,
       currentDate: currentDate,
       rangeController: rangeController,
-      isDateRequired: true,
     );
     final rangeEnd = dateTimeSeparateFields(
       context: context,
       keyString: makeRangeKeyStringEnd(rangeId),
       label: "$label ${localizations.end}",
       labelPosition: labelPosition,
-      initialDate: initialRangeEndDate,
-      initialTime: initialRangeEndTime,
       formManager: formManager,
       dateTimeLimits: dateTimeLimits,
-      maxRangeSpanDays: maxRangeSpanDays,
-      minRangeSpanMinutes: minRangeSpanMinutes,
+      initialSet: initialSet == null ? null : initialSet.end,
+      requiredFields: requiredFields == null ? null : requiredFields.end,
+      rangeSpan: dateTimeSpanLimits,
       currentDate: currentDate,
       rangeController: rangeController,
     );

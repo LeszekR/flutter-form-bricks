@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_limits.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_range_span.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/dateTimeRange_validator.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/dateTime_formatter_validator.dart';
@@ -24,7 +25,7 @@ class DateTimeValidators {
 
   DateTimeValidators._();
 
-  static FormFieldValidator<String> dateInputValidator(BricksLocalizations localizations, DateTimeLimits dateLimits) {
+  static FormFieldValidator<String> dateInputValidator(BricksLocalizations localizations, DateTimeLimits? dateLimits) {
     ValidatorFunction validator =
         (String inputString) => _dateFormatter.makeDateFromString(localizations, inputString, dateLimits).error;
     return (inputString) => validate(inputString, validator);
@@ -56,21 +57,18 @@ class DateTimeValidators {
     String keyString,
     FormManager formManager,
     RangeController errorController,
-    int maxRangeSpanDays,
-    int minRangeSpanMinutes,
+    DateTimeLimits? dateTimeLimits,
+    DateTimeRangeSpan? dateTimeRangeSpan,
   ) {
     return DateTimeRangeValidator(
       localizations,
       keyString,
       formManager,
       errorController,
-      maxRangeSpanDays,
-      minRangeSpanMinutes,
+      dateTimeLimits,
+      dateTimeRangeSpan,
     ).validator;
   }
-
-  // static getFieldInputString(GlobalKey<FormBuilderState> formKey, String rangeStartDateKey) =>
-  //     formKey.currentState?.fields[rangeStartDateKey]?.value ?? "";
 
   static String? validate(String? inputString, String? Function(String inputString) validator) {
     if (inputString == null || inputString.isEmpty) return null;

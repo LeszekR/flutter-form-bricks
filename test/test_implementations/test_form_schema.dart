@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 
-import '../ui/test_constants.dart';
+import 'test_constants.dart';
 
 class TestFormSchema extends FormSchema {
   TestFormSchema({required String keyString})
@@ -24,7 +24,7 @@ class TestFormSchema extends FormSchema {
           [
             FormFieldDescriptor<TextEditingValue>(
               keyString,
-              initialValue ?? TextEditingValue(text: initialStringValue1),
+              initialInputinitialValue ?? TextEditingValue(text: initialStringValue1),
               formatterValidatorChain,
             )
           ],

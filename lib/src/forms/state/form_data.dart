@@ -6,12 +6,12 @@ import '../../inputs/state/form_field_data.dart';
 
 abstract class FormData {
   final GlobalKey<FormStateBrick> formKey;
-  final Map<String, FormFieldData> fieldDataMap;
+  final Map<String, FormFieldData> fieldDataMap = {};
   String? focusedKeyString;
 
-  FormData({required this.formKey, required this.focusedKeyString, required this.fieldDataMap});
+  FormData({required this.formKey, required this.focusedKeyString});
 }
 
 class SingleFormData extends FormData {
-  SingleFormData({required super.formKey, required super.focusedKeyString, required super.fieldDataMap});
+  SingleFormData({required super.formKey, required super.focusedKeyString});
 }

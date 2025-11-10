@@ -44,7 +44,8 @@ abstract class FormFieldStateBrick<K extends FormFieldBrick, T> extends State<K>
 
   @override
   void initState() {
-    formManager.registerField(keyString, T);
+    formManager.registerField(keyString, T, widget.withValidator);
+
     if (widget.withValidator) {
       focusNode = FocusNode();
       formManager.setFocusListener(focusNode, keyString);

@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_bricks/src/inputs/state/text_editing_value_brick.dart';
 import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/inputs/states_controller/update_once_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_input_base/state_colored_icon_button.dart';
@@ -99,6 +98,7 @@ abstract class TextFieldBrick extends FormFieldBrick<TextEditingValue> {
     required super.keyString,
     required super.formManager,
     required super.colorMaker,
+    required super.withValidator,
     super.statesObserver,
     super.statesNotifier,
     super.autoValidateMode = AutovalidateMode.disabled,
@@ -186,7 +186,6 @@ class TextfieldContentBrick extends FormFieldStateBrick<TextFieldBrick, TextEdit
   late final FocusNode _focusNode;
   late final TextEditingController _controller;
   Set<WidgetState>? _states;
-
 
   @override
   TextEditingValue getValue() => _controller.value;

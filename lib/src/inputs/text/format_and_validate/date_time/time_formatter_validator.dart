@@ -21,11 +21,11 @@ class TimeFormatterValidator {
   final nMaxDelimiters = 1;
 
   String makeTimeString(BricksLocalizations localizations, String inputString) {
-    return makeTimeFromString(localizations, inputString).input;
+    return makeTimeFromString(localizations, inputString).input!;
   }
 
-  DateTimefieldContent makeTimeFromString(BricksLocalizations localizations, String inputString) {
-    DateTimefieldContent parseResult = _dateTimeUtils!.cleanDateTimeString(
+  DateTimeFieldContent makeTimeFromString(BricksLocalizations localizations, String inputString) {
+    DateTimeFieldContent parseResult = _dateTimeUtils!.cleanDateTimeString(
       bricksLocalizations: localizations,
       text: inputString,
       dateTimeOrBoth: DateTimeOrBoth.TIME,
@@ -35,19 +35,19 @@ class TimeFormatterValidator {
       maxNDigits: 4,
       maxNumberDelimiters: 1,
     );
-    if (!parseResult.isValid) return DateTimefieldContent.err(inputString, null, parseResult.error);
+    if (!parseResult.isValid!) return DateTimeFieldContent.err(inputString, parseResult.error);
 
     parseResult = parseTimeFromString(localizations, parseResult);
-    if (!parseResult.isValid) return DateTimefieldContent.err(inputString, null, parseResult.error);
+    if (!parseResult.isValid!) return DateTimeFieldContent.err(inputString, parseResult.error);
 
     parseResult = validateTime(localizations, parseResult);
 
     return parseResult;
   }
 
-  DateTimefieldContent parseTimeFromString(BricksLocalizations localizations, DateTimefieldContent DateTimefieldContent) {
-    var inputString = DateTimefieldContent.input;
-    var nDelimiters = RegExp(timeDelimiter).allMatches(inputString).length;
+  DateTimeFieldContent parseTimeFromString(BricksLocalizations localizations, DateTimeFieldContent fieldContent) {
+    String inputString = fieldContent.input!;
+    int nDelimiters = RegExp(timeDelimiter).allMatches(inputString).length;
 
     if (nDelimiters == 0) {
       return makeTimeStringNoDelimiters(localizations, inputString);
@@ -56,13 +56,13 @@ class TimeFormatterValidator {
     }
   }
 
-  DateTimefieldContent makeTimeStringNoDelimiters(BricksLocalizations localizations, String text) {
-    if (text.length < 3) return DateTimefieldContent.err(text, null, localizations.timeStringErrorTooFewDigits);
+  DateTimeFieldContent makeTimeStringNoDelimiters(BricksLocalizations localizations, String text) {
+    if (text.length < 3) return DateTimeFieldContent.err(text,  localizations.timeStringErrorTooFewDigits);
 
     String formattedResult = '';
     String element = '';
 
-    var nElements = 0;
+    int nElements = 0;
     for (int i = text.length - 2; i >= -1 && nElements <= nMaxDelimiters; i -= 2) {
       nElements++;
 
@@ -76,17 +76,17 @@ class TimeFormatterValidator {
       }
       formattedResult = element + formattedResult;
     }
-    return DateTimefieldContent.transient(formattedResult);
+    return DateTimeFieldContent.transient(formattedResult);
   }
 
-  DateTimefieldContent makeTimeStringWithDelimiters(BricksLocalizations localizations, String inputString) {
-    var timeString = '';
-    var element = '';
-    var resultList = inputString.split(timeDelimiter);
-    var nElements = 0;
-    var connector = '\n';
-    var errMsg = '';
-    var errHours = '', errMinutes = '';
+  DateTimeFieldContent makeTimeStringWithDelimiters(BricksLocalizations localizations, String inputString) {
+    String timeString = '';
+    String element = '';
+    List<String> resultList = inputString.split(timeDelimiter);
+    int nElements = 0;
+    String connector = '\n';
+    String errMsg = '';
+    String errHours = '', errMinutes = '';
     int elementLength;
 
     for (int i = nMaxDelimiters; i >= 0; i--) {
@@ -105,10 +105,10 @@ class TimeFormatterValidator {
 
     if (errHours.isNotEmpty) errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, errHours);
     if (errMinutes.isNotEmpty) errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, errMinutes);
-    if (errMsg.isNotEmpty) return DateTimefieldContent.err(timeString, null, errMsg);
+    if (errMsg.isNotEmpty) return DateTimeFieldContent.err(timeString, errMsg);
 
     DateTime time = parseTime(timeString);
-    return DateTimefieldContent.ok(timeString, time);
+    return DateTimeFieldContent.ok(timeString, time);
   }
 
   DateTime parseTime(String timeString) {
@@ -117,24 +117,24 @@ class TimeFormatterValidator {
     return time;
   }
 
-  DateTimefieldContent validateTime(BricksLocalizations localizations, DateTimefieldContent DateTimefieldContent) {
-    var timeString = DateTimefieldContent.input;
-    var resultList = timeString.split(timeDelimiter);
-    var connector = '\n';
-    var errMsg = '';
-    var errHours = '', errMinutes = '';
+  DateTimeFieldContent validateTime(BricksLocalizations localizations, DateTimeFieldContent fieldContent) {
+    String timeString = fieldContent.input!;
+    List<String> resultList = timeString.split(timeDelimiter);
+    String connector = '\n';
+    String errMsg = '';
+    String errHours = '', errMinutes = '';
 
-    var hour = int.parse(resultList[0]);
+    int hour = int.parse(resultList[0]);
     if (hour > 23) errHours = localizations.timeErrorTooBigHour;
 
-    var minute = int.parse(resultList[1]);
+    int minute = int.parse(resultList[1]);
     if (minute > 60) errMinutes = localizations.timeErrorTooBigMinute;
 
     if (errHours.isNotEmpty) errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, errHours);
     if (errMinutes.isNotEmpty) errMsg = _dateTimeUtils!.addErrMsg(errMsg, connector, errMinutes);
-    if (errMsg.isNotEmpty) return DateTimefieldContent.err(timeString, null, errMsg);
+    if (errMsg.isNotEmpty) return DateTimeFieldContent.err(timeString, errMsg);
 
     DateTime time = parseTime(timeString);
-    return DateTimefieldContent.ok(timeString, time);
+    return DateTimeFieldContent.ok(timeString, time);
   }
 }

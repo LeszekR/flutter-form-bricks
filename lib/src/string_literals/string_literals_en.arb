@@ -114,19 +114,19 @@
   "dateErrorTooManyDaysInMonth": "Too many days in month",
   "dateErrorMonthOver12": "There are only 12 months, not more",
 
-  "dateErrorYearTooFarBack": "You can not input year before {dateMaxYearsBack}",
-    "@dateErrorYearTooFarBack": {
+  "dateErrorTooFarBack": "Date and time must not be earlier than {minDateParam}",
+    "@dateErrorTooFarBack": {
       "placeholders": {
-        "dateMaxYearsBack": {
-          "type": "DateTime"
+        "minDateParam": {
+          "type": "String"
         }
       }
     },
-  "dateErrorYearTooFarForward": "You can not input year after {dateMaxYearsForward}",
-    "@dateErrorYearTooFarForward": {
+  "dateErrorTooFarForward": "Date and time must not be later than {maxDateParam}",
+    "@dateErrorTooFarForward": {
       "placeholders": {
-        "dateMaxYearsForward": {
-          "type": "DateTime"
+        "maxDateParam": {
+          "type": "String"
         }
       }
     },
