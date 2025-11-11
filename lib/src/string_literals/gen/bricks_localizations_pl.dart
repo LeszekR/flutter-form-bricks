@@ -194,7 +194,7 @@ class BricksLocalizationsPl extends BricksLocalizations {
   }
 
   @override
-  String rangeDatesTooFarApart(int maxDatesDifference) {
+  String rangeDatesTooFarApart(String maxDatesDifference) {
     return 'Maksymalna liczba dni między datą początku a datą końca, to $maxDatesDifference';
   }
 

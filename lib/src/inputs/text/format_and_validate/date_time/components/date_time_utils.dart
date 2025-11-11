@@ -8,6 +8,11 @@ enum DateTimeOrBoth {
   DATE_TIME,
 }
 
+const int minutesInMonth = 43920; // 60*24*30.5
+const int minutesInYear = 525600; // 60*24*365
+const int minutesInDay = 1440;
+const int minutesInHour = 60;
+
 class DateTimeUtils {
   static DateTimeUtils? _instance;
 
@@ -16,6 +21,23 @@ class DateTimeUtils {
   factory DateTimeUtils() {
     _instance ??= DateTimeUtils._();
     return _instance!;
+  }
+
+  String minutesToSpanCondition(int nMinutes) {
+    String years = '${nMinutes ~/ minutesInYear} years';
+    if (nMinutes % minutesInYear == 0) return years;
+
+    String months = '${(nMinutes % minutesInYear) ~/ minutesInMonth} months';
+    if (nMinutes % minutesInMonth == 0) return '$years, $months';
+
+    String days = '${(nMinutes % minutesInMonth) ~/ minutesInDay} days';
+    if (nMinutes % minutesInDay == 0) return '$years, $months, $days';
+
+    String hours = '${(nMinutes % minutesInDay) ~/ minutesInHour} hours';
+    if (nMinutes % minutesInHour == 0) return '$years, $months, $days, $hours';
+
+    String minutes = '${nMinutes % minutesInHour} minutes';
+    return '$years, $months, $days, $hours, $minutes';
   }
 
   DateTimeFieldContent cleanDateTimeString({

@@ -1,256 +1,241 @@
-import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
+import 'dart:ffi';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_range_span.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/dateTime_range_controller.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_utils.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/date_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 class DateTimeRangeFormatterValidator extends FormatterValidatorChain<String, DateTime> {
+  final String _keyString;
+  final FormManager _formManager;
+  final DateTimeUtils _dateTimeUtils;
+  final BricksLocalizations _localizations;
+  final DateTimeLimits? _dateTimeLimits; // TODO 1: use dateTimeLimits
+  final DateTimeRangeSpan? _dateTimeSpanLimits;
+
+  List<String> _keyStrings = [];
+  final Map<String, DateTimeFieldContent> _resultsCache = {};
+  final Map<String, DateTimeFormatterValidatorChain> _dateTimeFormatterValidators = {};
+
   String? _dateStartKeyString;
   String? _timeStartKeyString;
   String? _dateEndKeyString;
   String? _timeEndKeyString;
-  List<String> _keyStrings = [];
 
-  String? dateStartText;
-  String? timeStartText;
-  String? dateEndText;
-  String? timeEndText;
-
-  final String _keyString;
-  final FormManager _formManager;
-  final RangeController _rangeController;
-
-  // FormFieldValidator<String>? _validator;
-  final BricksLocalizations _localizations;
-  final DateTimeLimits? _dateTimeLimits;
-  final DateTimeRangeSpan? _dateTimeSpanLimits;
-
-  // FormFieldValidator<String> get validator => _validator!;
+  String? _dateStart;
+  String? _timeStart;
+  String? _dateEnd;
+  String? _timeEnd;
 
   DateTimeRangeFormatterValidator(
-    this._localizations,
     this._keyString,
     this._formManager,
-    this._rangeController,
+    this._dateTimeUtils,
+    this._localizations,
     this._dateTimeLimits,
     this._dateTimeSpanLimits,
-  ) {
-    _rangeController.delayValidationAfterBuilt();
-    _setKeyStrings(_rangeController.rangeId);
-    // _validator = _validatorFunction as FormFieldValidator<String>;
+  ) : super([]) {
+    _setKeyStrings(_keyString);
+    _fillDateTimeFormatterValidators();
   }
 
   @override
   DateTimeFieldContent call(String input, [String? keyString, FormatValidatePayload? payload]) {
-    // String? _validatorFunction(String text, String keyString) {
-    if (!_rangeController.isBuildCompleted) return DateTimeFieldContent.empty();
-    if (!_rangeController.isEditCompleted) return DateTimeFieldContent.empty();
-    if (_rangeController.areFieldsValidated)
-      return _rangeController.getFieldContent(keyString!) ?? DateTimeFieldContent.empty(); // _getMyErrorText();
+    DateTimeFormatterValidatorChain fieldFormaterValidator = _dateTimeFormatterValidators[keyString!]!;
+    DateTimeFieldContent fieldContent = fieldFormaterValidator(input, keyString);
 
-    DateTimeFormatterValidatorChain fieldFormaterValidator = _rangeController.getFormatterValidator(keyString!);
-    DateTimeFieldContent fieldContent = fieldFormaterValidator.call(input, keyString);
+    cacheFieldContent(keyString, fieldContent);
 
-    _rangeController.setFieldContent(keyString, fieldContent);
+    bool allFieldsValid = fieldContent.isValid! && _areOtherFieldsValid(keyString);
 
-    if (!fieldContent.isValid!) {
-      _saveIndividualContentsInFormData(keyString);
-    //
-    } else if (!_areOtherFieldsValid(keyString)) {
-      _saveIndividualContentsInFormData(keyString);
-    //
+    if (!allFieldsValid) {
+      _saveFieldsContentsInFormData(keyString);
+      //
     } else {
-      _loadRangeErrors();
-
-      _rangeController.areFieldsValidated = true;
-      _validateOthersQuietly();
-      _rangeController.areFieldsValidated = false;
-      _rangeController.isEditCompleted = false;
+      _validateRange();
+      _saveFieldsContentsInFormData();
     }
-    return _getMyErrorText();
+    return _getFieldContent(keyString);
   }
 
-  bool _areOtherFieldsValid(String initiatingKeyString) {
-    for (String keyString in _otherFields(initiatingKeyString)) {
-      if (!_rangeController.isFieldValid(keyString)) return false;
-    }
-    return false;
+  void _fillDateTimeFormatterValidators(){
+    // TODO - CRITICAL! init validatorsExceptRange !!! Now empty
+    throw UnimplementedError('Fill _dateTimeFormatterValidators not implemented!');
   }
 
-  Iterable<String> _otherFields(String initiatingKeyString) {
-    var otherFields = _keyStrings.where((k) => k != initiatingKeyString);
-    return otherFields;
-  }
-
-  void _saveIndividualContentsInFormData(String initiatingKeyString) {
-    for (String keyString in  _otherFields(initiatingKeyString)) {
-     _formManager.storeFieldContent(keyString, _rangeController.getFieldContent(keyString));
-    }
-  }
-
-  String? _getMyErrorText() {
-    var errorText = _formManager.getFieldError(_keyString);
-    return errorText == '' ? null : errorText;
-  }
-
-  bool noErrors() {
-    for (var _keyString in _keyStrings) {
-      if (_formManager.getFieldError(_keyString) != null) return false;
+  bool _areOtherFieldsValid(String excludedKeyString) {
+    bool isFieldValid;
+    for (String keyString in _getIncludedFields(excludedKeyString)) {
+      isFieldValid = _resultsCache[keyString]?.isValid ?? false;
+      if (!isFieldValid) return false;
     }
     return true;
   }
 
-  void _loadErrorsExceptRange() {
-    for (String _keyString in _keyStrings) {
-      DateTimeFormatterValidatorChain dateTimeValidator = _rangeController.getFormatterValidator(_keyString);
-      if (dateTimeValidator != null) {
-        // TU PRZERWAŁEM
-        String text = _getRangeFieldText(_keyString);
-        String? errorText = dateTimeValidator.call(text);
-        _formManager.storeFieldError(_keyString, errorText);
-      }
+  void _saveFieldsContentsInFormData([String? excludedKeyString]) {
+    for (String keyString in _getIncludedFields(excludedKeyString)) {
+      _formManager.storeFieldContent(keyString, _getFieldContent(keyString));
     }
   }
 
-  void _validateOthersQuietly() {
-    for (var _keyString in _keyStrings) {
-      if (_keyString == _keyString) continue;
-      _formManager.formatAndValidateQuietly(_keyString);
-    }
+  Iterable<String> _getIncludedFields(String? excludedKeyString) {
+    var otherFields = _keyStrings.where((k) => k != excludedKeyString);
+    return otherFields;
   }
 
-  void _loadRangeErrors() {
+  DateTimeFieldContent _getFieldContent(String keyString) {
+    return _resultsCache[keyString]!;
+  }
+
+  void cacheFieldContent(String keyString, DateTimeFieldContent content) {
+    _resultsCache[keyString] = content;
+  }
+
+  void _validateRange() {
     _setFieldTexts();
     String errorText;
 
     // start-date absent
     // -----------------------------------------------------------------
-    if (empty(dateStartText)) {
+    if (_empty(_dateStart)) {
       errorText = _localizations.rangeDateStartRequired;
-      _formManager.storeFieldContent(_dateStartKeyString!, DateTimeFieldContent.err(dateStartText, errorText));
-      // _formManager.storeFieldError(_dateStartKeyString!, errorText);
+      _cacheError(_dateStartKeyString!, _dateStart, errorText);
       return;
     }
 
     // start-time absent & end-date absent & end-time present
     // -----------------------------------------------------------------
-    if (empty(timeStartText) && empty(dateEndText) && notEmpty(timeEndText)) {
+    if (_empty(_timeStart) && _empty(_dateEnd) && _notEmpty(_timeEnd)) {
       errorText = _localizations.rangeDateEndRequiredOrRemoveTimeEnd;
-      _formManager.storeFieldError(_timeStartKeyString!, errorText);
-      _formManager.storeFieldError(_dateEndKeyString!, errorText);
-      _formManager.storeFieldError(_timeEndKeyString!, errorText);
+      _cacheError(_timeStartKeyString!, _timeStart, errorText);
+      _cacheError(_dateEndKeyString!, _dateEnd, errorText);
+      _cacheError(_timeEndKeyString!, _timeEnd, errorText);
       return;
     }
 
-    if (notEmpty(dateStartText) && notEmpty(dateEndText)) {
-      var dateStart = DateTime.parse(dateStartText!);
-      var dateEnd = DateTime.parse(dateEndText!);
-      var difference = dateEnd.difference(dateStart).inDays;
+    if (_notEmpty(_dateStart) && _notEmpty(_dateEnd)) {
+      DateTime dateStart = _makeDateTimeOptional(_dateStart!, _timeStart);
+      DateTime dateEnd = _makeDateTimeOptional(_dateEnd!, _timeEnd);
+      int dateDiffMinutes = dateEnd.difference(dateStart).inMinutes;
 
       // start-date present & end-date present & start-date after end-date
       // -----------------------------------------------------------------
-      if (difference < 0) {
+      if (dateDiffMinutes < 0) {
         errorText = _localizations.rangeDateStartAfterEnd;
-        _formManager.storeFieldError(_dateStartKeyString!, errorText);
-        _formManager.storeFieldError(_dateEndKeyString!, errorText);
+        _cacheError(_dateStartKeyString!, _dateStart, errorText);
+        _cacheError(_dateEndKeyString!, _dateEnd, errorText);
         return;
       }
 
       // start-date present & end-date present & end-date too far from start-date
       // -----------------------------------------------------------------
-      if (difference > _maxDateTimeSpan) {
-        errorText = _localizations.rangeDatesTooFarApart(_maxDateTimeSpan);
-        _formManager.storeFieldError(_dateStartKeyString!, errorText);
-        _formManager.storeFieldError(_dateEndKeyString!, errorText);
-        return;
+      if (_dateTimeSpanLimits != null && _dateTimeSpanLimits!.maxDateTimeSpanMinutes != null) {
+        int maxSpanMinutes = _dateTimeSpanLimits!.maxDateTimeSpanMinutes!;
+        if (dateDiffMinutes > maxSpanMinutes) {
+          String maxSpanCondition = _dateTimeUtils.minutesToSpanCondition(maxSpanMinutes);
+          errorText = _localizations.rangeDatesTooFarApart(maxSpanCondition);
+          _cacheError(_dateStartKeyString!, _dateStart, errorText);
+          _cacheError(_dateEndKeyString!, _dateEnd, errorText);
+          return;
+        }
       }
     }
 
-    if (notEmpty(timeStartText) && notEmpty(timeEndText)) {
+    if (_notEmpty(_timeStart) && _notEmpty(_timeEnd)) {
       // identical start and end
-      if (dateStartText == dateEndText && timeStartText == timeEndText) {
+      if (_dateStart == _dateEnd && _timeStart == _timeEnd) {
         errorText = _localizations.rangeStartSameAsEnd;
-        _formManager.storeFieldError(_dateStartKeyString!, errorText);
-        _formManager.storeFieldError(_timeStartKeyString!, errorText);
-        _formManager.storeFieldError(_dateEndKeyString!, errorText);
-        _formManager.storeFieldError(_timeEndKeyString!, errorText);
+        _cacheError(_dateStartKeyString!, _dateStart, errorText);
+        _cacheError(_timeStartKeyString!, _timeStart, errorText);
+        _cacheError(_dateEndKeyString!, _dateEnd, errorText);
+        _cacheError(_timeEndKeyString!, _timeEnd, errorText);
         return;
       }
 
-      var dummyDate = '2000-01-01';
-      DateTime timeStart = makeDateTime(dummyDate, timeStartText!);
-      DateTime timeEnd = makeDateTime(dummyDate, timeEndText!);
-      int difference = timeEnd.difference(timeStart).inMinutes;
+      String dummyDate = '2000-01-01';
+      DateTime timeStart = _makeDateTime(dummyDate, _timeStart!);
+      DateTime timeEnd = _makeDateTime(dummyDate, _timeEnd!);
+      int timeDiffMinutes = timeEnd.difference(timeStart).inMinutes;
 
       // end-date absent
-      if (notEmpty(dateStartText) && empty(dateEndText)) {
+      if (_notEmpty(_dateStart) && _empty(_dateEnd)) {
         // start-time after end-time
         // -----------------------------------------------------------------
-        if (difference < 0) {
+        if (timeDiffMinutes < 0) {
           errorText = _localizations.rangeTimeStartAfterEndOrAddDateEnd;
-          // _formManager.setFieldError(_dateStartKeyString!, errorText);
-          _formManager.storeFieldError(_timeStartKeyString!, errorText);
-          _formManager.storeFieldError(_dateEndKeyString!, errorText);
-          _formManager.storeFieldError(_timeEndKeyString!, errorText);
+          _cacheError(_timeStartKeyString!, _timeStart, errorText);
+          _cacheError(_dateEndKeyString!, _dateEnd, errorText);
+          _cacheError(_timeEndKeyString!, _timeEnd, errorText);
           return;
         }
         // start-time less than minimum before end-time
         // -----------------------------------------------------------------
-        else if (difference < _minDateTimeSpan) {
-          errorText = _localizations.rangeTimeStartEndTooCloseOrAddDateEnd(_minDateTimeSpan);
-          // _formManager.setFieldError(_dateStartKeyString!, errorText);
-          _formManager.storeFieldError(_timeStartKeyString!, errorText);
-          _formManager.storeFieldError(_dateEndKeyString!, errorText);
-          _formManager.storeFieldError(_timeEndKeyString!, errorText);
-          return;
+        if (_dateTimeSpanLimits != null && _dateTimeSpanLimits!.minDateTimeSpanMinutes != null) {
+          int minSpanMinutes = _dateTimeSpanLimits!.minDateTimeSpanMinutes!;
+          if (timeDiffMinutes < minSpanMinutes) {
+            String minSpanCondition = _dateTimeUtils.minutesToSpanCondition(minSpanMinutes);
+            errorText = _localizations.rangeTimeStartEndTooCloseOrAddDateEnd(minSpanCondition);
+            _cacheError(_timeStartKeyString!, _timeStart, errorText);
+            _cacheError(_dateEndKeyString!, _dateEnd, errorText);
+            _cacheError(_timeEndKeyString!, _timeEnd, errorText);
+            return;
+          }
         }
       }
 
       // start-date = end-date
-      if (notEmpty(dateEndText) && notEmpty(dateStartText)) {
-        var dateTimeStart = makeDateTime(dateStartText!, timeStartText!);
-        var dateTimeEnd = makeDateTime(dateEndText!, timeEndText!);
-        var difference = dateTimeEnd.difference(dateTimeStart).inMinutes;
+      if (_notEmpty(_dateEnd) && _notEmpty(_dateStart)) {
+        DateTime dateTimeStart = _makeDateTime(_dateStart!, _timeStart!);
+        DateTime dateTimeEnd = _makeDateTime(_dateEnd!, _timeEnd!);
+        int dateTimeDiffMinutes = dateTimeEnd.difference(dateTimeStart).inMinutes;
 
         // start-time after end-time
         // -----------------------------------------------------------------
-        if (difference < 0) {
+        if (dateTimeDiffMinutes < 0) {
           errorText = _localizations.rangeTimeStartAfterEnd;
-          // _formManager.setFieldError(_dateStartKeyString!, errorText);
-          _formManager.storeFieldError(_timeStartKeyString!, errorText);
-          // _formManager.setFieldError(_dateEndKeyString!, errorText);
-          _formManager.storeFieldError(_timeEndKeyString!, errorText);
+          _cacheError(_timeStartKeyString!, _timeStart, errorText);
+          _cacheError(_timeEndKeyString!, _timeEnd, errorText);
           return;
         }
         // start-time less than minimum before end-time
         // -----------------------------------------------------------------
-        else if (difference < _minDateTimeSpan) {
-          errorText = _localizations.rangeTimeStartEndTooCloseSameDate(_minDateTimeSpan);
-          _formManager.storeFieldError(_timeStartKeyString!, errorText);
-          _formManager.storeFieldError(_timeEndKeyString!, errorText);
-          return;
+        if (_dateTimeSpanLimits != null && _dateTimeSpanLimits!.minDateTimeSpanMinutes != null) {
+          int minSpanMinutes = _dateTimeSpanLimits!.minDateTimeSpanMinutes!;
+          if (dateTimeDiffMinutes < minSpanMinutes) {
+            String minSpan = _dateTimeUtils.minutesToSpanCondition(minSpanMinutes);
+            errorText = _localizations.rangeTimeStartEndTooCloseSameDate(minSpan);
+            _cacheError(_timeStartKeyString!, _timeStart, errorText);
+            _cacheError(_timeEndKeyString!, _timeEnd, errorText);
+            return;
+          }
         }
       }
     }
     return;
   }
 
-  bool empty(String? text) {
+  void _cacheError(String keyString, text, String errorText) {
+    cacheFieldContent(keyString, DateTimeFieldContent.err(text, errorText));
+  }
+
+  bool _empty(String? text) {
     return text == null || text.isEmpty;
   }
 
-  bool notEmpty(String? text) {
+  bool _notEmpty(String? text) {
     return text != null && text.isNotEmpty;
   }
 
-  DateTime makeDateTime(String dateText, final String timeText) {
+  DateTime _makeDateTimeOptional(String dateStartText, String? timeStartText) {
+    final String time = (timeStartText == null || timeStartText.isEmpty) ? '00:00' : '$timeStartText';
+    return DateTime.parse('$dateStartText $time');
+  }
+
+  DateTime _makeDateTime(String dateText, final String timeText) {
     var dateStart = DateTime.parse(dateText);
     var timeArr = timeText.split(':');
     var hour = int.parse(timeArr[0]);
@@ -259,10 +244,10 @@ class DateTimeRangeFormatterValidator extends FormatterValidatorChain<String, Da
   }
 
   void _setFieldTexts() {
-    dateStartText = _getRangeFieldText(_dateStartKeyString!);
-    timeStartText = _getRangeFieldText(_timeStartKeyString!);
-    dateEndText = _getRangeFieldText(_dateEndKeyString!);
-    timeEndText = _getRangeFieldText(_timeEndKeyString!);
+    _dateStart = _getRangeFieldText(_dateStartKeyString!);
+    _timeStart = _getRangeFieldText(_timeStartKeyString!);
+    _dateEnd = _getRangeFieldText(_dateEndKeyString!);
+    _timeEnd = _getRangeFieldText(_timeEndKeyString!);
   }
 
   void _setKeyStrings(String rangeId) {
@@ -284,12 +269,12 @@ String makeRangeKeyStringEnd(String rangeKeyString) => "${rangeKeyString}_end";
 
 String makeDateKeyString(String rangePartKeyString) => "${rangePartKeyString}_date";
 
-String mameTimeKeyString(String rangePartKeyString) => "${rangePartKeyString}_time";
+String makeTimeKeyString(String rangePartKeyString) => "${rangePartKeyString}_time";
 
 String rangeDateStartKeyString(String rangeKeyString) => makeDateKeyString(makeRangeKeyStringStart(rangeKeyString));
 
-String rangeTimeStartKeyString(String rangeKeyString) => mameTimeKeyString(makeRangeKeyStringStart(rangeKeyString));
+String rangeTimeStartKeyString(String rangeKeyString) => makeTimeKeyString(makeRangeKeyStringStart(rangeKeyString));
 
 String rangeDateEndKeyString(String rangeKeyString) => makeDateKeyString(makeRangeKeyStringEnd(rangeKeyString));
 
-String rangeTimeEndKeyString(String rangeKeyString) => mameTimeKeyString(makeRangeKeyStringEnd(rangeKeyString));
+String rangeTimeEndKeyString(String rangeKeyString) => makeTimeKeyString(makeRangeKeyStringEnd(rangeKeyString));

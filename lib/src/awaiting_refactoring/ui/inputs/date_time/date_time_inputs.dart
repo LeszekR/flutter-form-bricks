@@ -56,7 +56,7 @@ class DateTimeInputs {
     final appSize = uiParams.appSize;
 
     var dateKeyString = makeDateKeyString(keyString);
-    var timeKeyString = mameTimeKeyString(keyString);
+    var timeKeyString = makeTimeKeyString(keyString);
 
     FormFieldValidator<String>? rangeDateValidator;
     if (rangeController != null) {
@@ -70,7 +70,7 @@ class DateTimeInputs {
         customValidator: DateTimeValidators.dateInputValidator(localizations, dateTimeLimits),
         validatorsList: additionalValidators,
       );
-      rangeController.validatorsExceptRange[dateKeyString] = validatorsExceptRange;
+      rangeController._dateTimeFormatterValidators[dateKeyString] = validatorsExceptRange;
 // }
     }
 
@@ -86,7 +86,7 @@ class DateTimeInputs {
         validatorsList: additionalValidators,
       );
 // if (isTimeRequired || additionalValidators != null) {
-      rangeController.validatorsExceptRange[timeKeyString] = validatorsExceptRange;
+      rangeController._dateTimeFormatterValidators[timeKeyString] = validatorsExceptRange;
 // }
     }
 

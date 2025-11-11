@@ -25,7 +25,7 @@ class FormatterValidatorChainEarlyStop<I, V> extends FormatterValidatorChain<I, 
     FieldContent<I, V> result = FieldContent<I, V>.transient(inputString);
 
     for (FormatterValidator<I, V> step in steps) {
-      result = step.call(result, keyString, payload);
+      result = step(result, keyString, payload);
       if (result.isValid != null && result.isValid!) {
         return result;
       }
@@ -48,5 +48,7 @@ class FormatterValidatorChainFullRun<I, V> extends FormatterValidatorChain<I, V>
 }
 
 typedef DateTimeFormatterValidatorChain = FormatterValidatorChainEarlyStop<String, DateTime>;
+
+typedef TimeTimeFormatterValidatorChain = FormatterValidatorChainEarlyStop<String, DateTime>;
 
 abstract class FormatValidatePayload {}

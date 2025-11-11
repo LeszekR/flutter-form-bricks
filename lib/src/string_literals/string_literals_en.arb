@@ -86,7 +86,7 @@
   "@timeStartEndTooClose": {
       "placeholders": {
           "timesMinDifference": {
-              "type": "int"
+              "type": "String"
           }
       }
   },
@@ -94,7 +94,7 @@
   "@rangeDatesTooFarApart": {
       "placeholders": {
           "maxDatesDifference": {
-              "type": "int"
+              "type": "String"
           }
       }
   },

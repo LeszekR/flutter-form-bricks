@@ -6,9 +6,13 @@ class DateTimeRangeSpan {
     this.minDateTimeSpanMinutes,
     this.maxDateTimeSpanMinutes,
   }) : assert(
-          minDateTimeSpanMinutes == null ||
-              maxDateTimeSpanMinutes == null ||
-              minDateTimeSpanMinutes <= maxDateTimeSpanMinutes,
-          'Minimal date-time-span must be before maximal date-time-span or one of them must be null',
+          ((minDateTimeSpanMinutes == null) != (maxDateTimeSpanMinutes == null)) ||
+              (minDateTimeSpanMinutes != null &&
+                  maxDateTimeSpanMinutes != null &&
+                  minDateTimeSpanMinutes > 0 &&
+                  maxDateTimeSpanMinutes > 0 &&
+                  minDateTimeSpanMinutes <= maxDateTimeSpanMinutes),
+          'Minimal date-time-span must less than maximal date-time-span or one of them must be null '
+          'and both must be positive',
         );
 }

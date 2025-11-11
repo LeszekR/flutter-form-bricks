@@ -102,7 +102,7 @@ abstract class FormManager extends ChangeNotifier {
   // ==============================================================================
   FieldContent getFieldContent(String keyString) => _fieldData(keyString).fieldContent;
 
-  bool isFocusedKeyString(String keyString) => _formData.focusedKeyString == keyString;
+  bool isFocusedOnStart(String keyString) => _formData.focusedKeyString == keyString;
 
   dynamic getInitialInput(String keyString) => _fieldData(keyString).initialInput;
 

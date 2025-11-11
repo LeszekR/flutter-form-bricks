@@ -402,7 +402,7 @@ abstract class BricksLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Dates must not be more than {maxDatesDifference} min after start-time'**
-  String rangeDatesTooFarApart(int maxDatesDifference);
+  String rangeDatesTooFarApart(String maxDatesDifference);
 
   /// No description provided for @rangeStartSameAsEnd.
   ///
