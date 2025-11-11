@@ -30,6 +30,9 @@ class FieldContent<I, V> {
   /// Use in formatting-validating procedure when the result is invalid.
   const FieldContent.err(I? input, String? error) : this.of(input, null, false, error);
 
+  /// Use wherever no result should be returned as a step of the multi-step format-validating procedure.
+  const FieldContent.empty() : this.of(null, null, false, null);
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -46,10 +49,4 @@ class FieldContent<I, V> {
 /// To be returned from formatting-validation procedure for input of type `DateTime`.
 ///
 /// Usage - format-validation of: `DateFieldBrick`, `TimeFieldBrick`, `DateTimeFieldBrick`, and their `..Range` fields.
-final class DateTimeFieldContent extends FieldContent<String, DateTime> {
-  const DateTimeFieldContent.transient(String value) : super.transient(value);
-
-  const DateTimeFieldContent.ok(String? value, DateTime? parsedValue) : super.ok(value, parsedValue);
-
-  const DateTimeFieldContent.err(String? value, String? errorMessage) : super.err(value, errorMessage);
-}
+typedef DateTimeFieldContent = FieldContent<String, DateTime>;

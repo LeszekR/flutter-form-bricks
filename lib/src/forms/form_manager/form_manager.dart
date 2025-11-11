@@ -7,9 +7,10 @@ import '../base/form_brick.dart';
 import 'form_status.dart';
 
 abstract class FormManager extends ChangeNotifier {
+  @visibleForTesting
   final ValueNotifier<String> errorMessageNotifier = ValueNotifier<String>('');
-  final FormData formData;
-  final Map<String, FormatterValidatorChain?> formatterValidatorMap;
+  final FormData _formData;
+  final Map<String, FormatterValidatorChain?> _formatterValidatorMap;
 
   // TODO make flat map for tabbed form too and implement here
   FormStatus checkStatus();
@@ -17,15 +18,15 @@ abstract class FormManager extends ChangeNotifier {
   // TODO make flat map for tabbed form too and implement here
   Map<String, dynamic> collectInputs();
 
-  GlobalKey<FormStateBrick> get formKey => formData.formKey;
+  GlobalKey<FormStateBrick> get formKey => _formData.formKey;
 
-  Map<String, FormFieldData> get fieldDataMap => formData.fieldDataMap;
+  Map<String, FormFieldData> get fieldDataMap => _formData.fieldDataMap;
 
-  FormManager({required this.formData, required FormSchema formSchema})
-      : formatterValidatorMap = {
+  FormManager({required FormData formData, required FormSchema formSchema})
+      : _formData = formData, _formatterValidatorMap = {
           for (final d in formSchema.descriptors) d.keyString: d.formatterValidatorChain,
         } {
-    _initFormData(formSchema, formData);
+    _initFormData(formSchema, _formData);
     resetForm();
   }
 
@@ -44,7 +45,7 @@ abstract class FormManager extends ChangeNotifier {
       _resetField(keyString);
     }
     _validateForm();
-    _showFocusedFieldError();
+    _showFieldErrorMessage(_formData.focusedKeyString);
   }
 
   void _resetField(String keyString) {
@@ -85,9 +86,15 @@ abstract class FormManager extends ChangeNotifier {
       if (focusNode.hasFocus) {
         _setFocusedKeyString(keyString);
         _showFieldErrorMessage(keyString);
-      } else if (errorMessageNotifier.value != '') {
-        _showFieldErrorMessage(null);
       }
+
+      /* // test this functionality: when a field losses focus and no other FormFieldBrick acquires it then focusedKeyString
+      // remains unchanged and the last error message is displayed - case: clicking a button
+      // this way on return from navigation focus will be requested by the last focused field
+      else if (errorMessageNotifier.value != '') {
+        _setFocusedKeyString(null);
+        _showFieldErrorMessage(null);
+      }*/
     });
   }
 
@@ -95,7 +102,7 @@ abstract class FormManager extends ChangeNotifier {
   // ==============================================================================
   FieldContent getFieldContent(String keyString) => _fieldData(keyString).fieldContent;
 
-  bool isFocusedOnStart(String keyString) => keyString == formData.focusedKeyString;
+  bool isFocusedKeyString(String keyString) => _formData.focusedKeyString == keyString;
 
   dynamic getInitialInput(String keyString) => _fieldData(keyString).initialInput;
 
@@ -112,11 +119,11 @@ abstract class FormManager extends ChangeNotifier {
 
   bool isFieldDirty(String keyString) => getFieldContent(keyString).input != _fieldData(keyString).initialInput;
 
-  FormatterValidatorChain? getFormatterValidator(String keyString) => formatterValidatorMap[keyString];
+  FormatterValidatorChain? getFormatterValidator(String keyString) => _formatterValidatorMap[keyString];
 
-  void _setFocusedKeyString(String keyString) => formData.focusedKeyString = keyString;
+  void _setFocusedKeyString(String keyString) => _formData.focusedKeyString = keyString;
 
-  void _storeFieldContent(String keyString, FieldContent fieldContent) =>
+  void storeFieldContent(String keyString, FieldContent fieldContent) =>
       _updateFieldData(keyString, fieldContent: fieldContent);
 
   /// `FormManager` will throw on any unregistered field's attempt to access it.
@@ -142,12 +149,12 @@ abstract class FormManager extends ChangeNotifier {
     FormatterValidatorChain? formatterValidator = getFormatterValidator(keyString);
 
     if (formatterValidator != null) {
-      fieldContent = formatterValidator.run(input);
+      fieldContent = formatterValidator.run(input, keyString);
     } else {
       fieldContent = FieldContent.ok(input, input);
     }
 
-    _storeFieldContent(keyString, fieldContent);
+    storeFieldContent(keyString, fieldContent);
     return fieldContent;
   }
 
@@ -168,8 +175,8 @@ abstract class FormManager extends ChangeNotifier {
       formatterValidator = getFormatterValidator(keyString);
       if (formatterValidator == null) continue;
 
-      fieldContent = formatterValidator.run(getFieldContent(keyString));
-      _storeFieldContent(keyString, fieldContent);
+      fieldContent = formatterValidator.run(getFieldContent(keyString), keyString);
+      storeFieldContent(keyString, fieldContent);
     }
   }
 
@@ -178,12 +185,6 @@ abstract class FormManager extends ChangeNotifier {
   void _showFieldErrorMessage(String? keyString) {
     String error = (keyString == null) ? '' : (getFieldContent(keyString).error ?? '');
     errorMessageNotifier.value = error;
-  }
-
-  void _showFocusedFieldError() {
-    String? focusedKeyString = formData.focusedKeyString;
-    if (focusedKeyString == null) return;
-    _showFieldErrorMessage(formData.focusedKeyString);
   }
 
   // collecting values

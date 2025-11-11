@@ -1,12 +1,17 @@
+import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
+import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_range_span.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/dateTime_range_error_controller.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/dateTime_range_controller.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
-class DateTimeRangeValidator {
+class DateTimeRangeFormatterValidator extends FormatterValidatorChain<String, DateTime> {
   String? _dateStartKeyString;
   String? _timeStartKeyString;
   String? _dateEndKeyString;
@@ -21,14 +26,15 @@ class DateTimeRangeValidator {
   final String _keyString;
   final FormManager _formManager;
   final RangeController _rangeController;
-  FormFieldValidator<String>? _validator;
+
+  // FormFieldValidator<String>? _validator;
   final BricksLocalizations _localizations;
   final DateTimeLimits? _dateTimeLimits;
   final DateTimeRangeSpan? _dateTimeSpanLimits;
 
-  FormFieldValidator<String> get validator => _validator!;
+  // FormFieldValidator<String> get validator => _validator!;
 
-  DateTimeRangeValidator(
+  DateTimeRangeFormatterValidator(
     this._localizations,
     this._keyString,
     this._formManager,
@@ -37,24 +43,56 @@ class DateTimeRangeValidator {
     this._dateTimeSpanLimits,
   ) {
     _rangeController.delayValidationAfterBuilt();
-    _setkeyStrings(_rangeController.rangeId);
-    _validator = _validatorFunction as FormFieldValidator<String>;
+    _setKeyStrings(_rangeController.rangeId);
+    // _validator = _validatorFunction as FormFieldValidator<String>;
   }
 
-  String? _validatorFunction(text) {
-    if (!_rangeController.isBuildCompleted) return null;
-    if (!_rangeController.isEditCompleted) return null;
-    if (_rangeController.areFieldsValidated) return _getMyErrorText();
+  @override
+  DateTimeFieldContent call(String input, [String? keyString, FormatValidatePayload? payload]) {
+    // String? _validatorFunction(String text, String keyString) {
+    if (!_rangeController.isBuildCompleted) return DateTimeFieldContent.empty();
+    if (!_rangeController.isEditCompleted) return DateTimeFieldContent.empty();
+    if (_rangeController.areFieldsValidated)
+      return _rangeController.getFieldContent(keyString!) ?? DateTimeFieldContent.empty(); // _getMyErrorText();
 
-    _loadErrorsExceptRange();
-    if (noErrors()) _loadRangeErrors();
+    DateTimeFormatterValidatorChain fieldFormaterValidator = _rangeController.getFormatterValidator(keyString!);
+    DateTimeFieldContent fieldContent = fieldFormaterValidator.call(input, keyString);
 
-    _rangeController.areFieldsValidated = true;
-    _validateOthersQuietly();
-    _rangeController.areFieldsValidated = false;
-    _rangeController.isEditCompleted = false;
+    _rangeController.setFieldContent(keyString, fieldContent);
 
+    if (!fieldContent.isValid!) {
+      _saveIndividualContentsInFormData(keyString);
+    //
+    } else if (!_areOtherFieldsValid(keyString)) {
+      _saveIndividualContentsInFormData(keyString);
+    //
+    } else {
+      _loadRangeErrors();
+
+      _rangeController.areFieldsValidated = true;
+      _validateOthersQuietly();
+      _rangeController.areFieldsValidated = false;
+      _rangeController.isEditCompleted = false;
+    }
     return _getMyErrorText();
+  }
+
+  bool _areOtherFieldsValid(String initiatingKeyString) {
+    for (String keyString in _otherFields(initiatingKeyString)) {
+      if (!_rangeController.isFieldValid(keyString)) return false;
+    }
+    return false;
+  }
+
+  Iterable<String> _otherFields(String initiatingKeyString) {
+    var otherFields = _keyStrings.where((k) => k != initiatingKeyString);
+    return otherFields;
+  }
+
+  void _saveIndividualContentsInFormData(String initiatingKeyString) {
+    for (String keyString in  _otherFields(initiatingKeyString)) {
+     _formManager.storeFieldContent(keyString, _rangeController.getFieldContent(keyString));
+    }
   }
 
   String? _getMyErrorText() {
@@ -71,8 +109,9 @@ class DateTimeRangeValidator {
 
   void _loadErrorsExceptRange() {
     for (String _keyString in _keyStrings) {
-      FormFieldValidator<String>? dateTimeValidator = _rangeController.validatorsExceptRange[_keyString];
+      DateTimeFormatterValidatorChain dateTimeValidator = _rangeController.getFormatterValidator(_keyString);
       if (dateTimeValidator != null) {
+        // TU PRZERWAŁEM
         String text = _getRangeFieldText(_keyString);
         String? errorText = dateTimeValidator.call(text);
         _formManager.storeFieldError(_keyString, errorText);
@@ -95,7 +134,8 @@ class DateTimeRangeValidator {
     // -----------------------------------------------------------------
     if (empty(dateStartText)) {
       errorText = _localizations.rangeDateStartRequired;
-      _formManager.storeFieldError(_dateStartKeyString!, errorText);
+      _formManager.storeFieldContent(_dateStartKeyString!, DateTimeFieldContent.err(dateStartText, errorText));
+      // _formManager.storeFieldError(_dateStartKeyString!, errorText);
       return;
     }
 
@@ -225,7 +265,7 @@ class DateTimeRangeValidator {
     timeEndText = _getRangeFieldText(_timeEndKeyString!);
   }
 
-  void _setkeyStrings(String rangeId) {
+  void _setKeyStrings(String rangeId) {
     _dateStartKeyString = rangeDateStartKeyString(rangeId);
     _timeStartKeyString = rangeTimeStartKeyString(rangeId);
     _dateEndKeyString = rangeDateEndKeyString(rangeId);
