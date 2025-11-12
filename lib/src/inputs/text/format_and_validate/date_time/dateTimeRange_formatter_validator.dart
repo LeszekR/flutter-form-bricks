@@ -1,7 +1,6 @@
-import 'dart:ffi';
-
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_range_span.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_utils.dart';
@@ -14,6 +13,7 @@ class DateTimeRangeFormatterValidator extends FormatterValidatorChain<String, Da
   final FormManager _formManager;
   final DateTimeUtils _dateTimeUtils;
   final BricksLocalizations _localizations;
+  final CurrentDate _currentDate;
   final DateTimeLimits? _dateTimeLimits; // TODO 1: use dateTimeLimits
   final DateTimeRangeSpan? _dateTimeSpanLimits;
 
@@ -36,6 +36,7 @@ class DateTimeRangeFormatterValidator extends FormatterValidatorChain<String, Da
     this._formManager,
     this._dateTimeUtils,
     this._localizations,
+    this._currentDate,
     this._dateTimeLimits,
     this._dateTimeSpanLimits,
   ) : super([]) {
@@ -48,23 +49,34 @@ class DateTimeRangeFormatterValidator extends FormatterValidatorChain<String, Da
     DateTimeFormatterValidatorChain fieldFormaterValidator = _dateTimeFormatterValidators[keyString!]!;
     DateTimeFieldContent fieldContent = fieldFormaterValidator(input, keyString);
 
+    // FieldContent cached here will be used during validation of any DateTime fields contained in
+    // this formatter-validator by:
+    // - providing FieldContent.isValid for future validation of other fields in this DateTimeRangeField
+    // - providing FieldContent to be stored in FormManager, (including the field's input and value)
     cacheFieldContent(keyString, fieldContent);
 
-    bool allFieldsValid = fieldContent.isValid! && _areOtherFieldsValid(keyString);
-
-    if (!allFieldsValid) {
-      _saveFieldsContentsInFormData(keyString);
-      //
-    } else {
+    // All four fields will be validated against range criteria here. They have been checked for date/times correctness
+    // by now.
+    // FieldContent of the field which triggered validation here will be stored after being returned from this method.
+    // The other fields' contents will be stored in FormManager -> FormData here.
+    if (fieldContent.isValid! && _areOtherFieldsValid(keyString)) {
       _validateRange();
-      _saveFieldsContentsInFormData();
+      _storeOtherFieldsContentsInFormData(keyString);
     }
+
+    // FieldContent returned here will:
+    // - be stored in FormData by FormManager
+    // - FieldContent.input (just formatted by FormatterValidator) will be entered into the field
     return _getFieldContent(keyString);
   }
 
-  void _fillDateTimeFormatterValidators(){
-    // TODO - CRITICAL! init validatorsExceptRange !!! Now empty
-    throw UnimplementedError('Fill _dateTimeFormatterValidators not implemented!');
+  void _fillDateTimeFormatterValidators() {
+    // TU PRZERWAŁEM
+    _dateTimeFormatterValidators[_dateStartKeyString!] =
+        DateTimeFormatterValidatorChain([DateFormatterValidator(_dateTimeUtils, _currentDate)]);
+    // _dateTimeFormatterValidators[_]
+    // _dateTimeFormatterValidators[_]
+    // _dateTimeFormatterValidators[_]
   }
 
   bool _areOtherFieldsValid(String excludedKeyString) {
@@ -76,7 +88,7 @@ class DateTimeRangeFormatterValidator extends FormatterValidatorChain<String, Da
     return true;
   }
 
-  void _saveFieldsContentsInFormData([String? excludedKeyString]) {
+  void _storeOtherFieldsContentsInFormData([String? excludedKeyString]) {
     for (String keyString in _getIncludedFields(excludedKeyString)) {
       _formManager.storeFieldContent(keyString, _getFieldContent(keyString));
     }
@@ -219,7 +231,9 @@ class DateTimeRangeFormatterValidator extends FormatterValidatorChain<String, Da
   }
 
   void _cacheError(String keyString, text, String errorText) {
-    cacheFieldContent(keyString, DateTimeFieldContent.err(text, errorText));
+    // TU PRZERWAŁEM
+    // TODO preserve DateTime isValid when range error makes the field invalid
+    cacheFieldContent(keyString, _getFieldContent(keyString).copyWith(error: errorText));
   }
 
   bool _empty(String? text) {

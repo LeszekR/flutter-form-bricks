@@ -28,12 +28,12 @@ class FieldContent<I, V> {
   const FieldContent.ok(I? input, V? value) : this.of(input, value, true, null);
 
   /// Use in formatting-validating procedure when the result is invalid.
-  factory FieldContent.err(I? input, String? error) {
-    // TU PRZERWAŁEM
-    return _copyWith(input: input, isValid: false,error:  error);
-  }
+  const FieldContent.err(I? input, String? error) : this.of(input, null, false, error);
 
-  FieldContent _copyWith({
+  /// Use wherever no result should be returned as a step of the multi-step format-validating procedure.
+  const FieldContent.empty() : this.of(null, null, false, null);
+
+  T copyWith<T extends FieldContent>({
     I? input,
     V? value,
     bool? isValid,
@@ -43,22 +43,18 @@ class FieldContent<I, V> {
       input ?? this.input,
       value ?? this.value,
       isValid ?? this.isValid,
-      error ?? this.error,);
+      error ?? this.error,
+    );
   }
-
-  ;
-
-  /// Use wherever no result should be returned as a step of the multi-step format-validating procedure.
-  const FieldContent.empty() : this.of(null, null, false, null);
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is FieldContent<I, V> &&
-              other.input == input &&
-              other.value == value &&
-              other.isValid == isValid &&
-              other.error == error;
+      other is FieldContent<I, V> &&
+          other.input == input &&
+          other.value == value &&
+          other.isValid == isValid &&
+          other.error == error;
 
   @override
   int get hashCode => Object.hash(input, value, isValid, error);
