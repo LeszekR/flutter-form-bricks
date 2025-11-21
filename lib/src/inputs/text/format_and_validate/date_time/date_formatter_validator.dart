@@ -2,13 +2,14 @@ import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_utils.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
-class DateFormatterValidator /*extends FormatterValidator<String, DateTime>*/ {
-  static const dateDelimiterPattern = '( |/|-|,|;|\\.)';
-  static const dateDelimiter = '-';
+const dateDelimiterPattern = '( |/|-|,|;|\\.)';
+const dateDelimiter = '-';
 
+class DateFormatterValidator extends FormatterValidator<String, DateTime, DateTimeFormatValidatePayload> {
   static DateFormatterValidator? _instance;
 
   DateTimeUtils _dateTimeUtils;
@@ -20,34 +21,30 @@ class DateFormatterValidator /*extends FormatterValidator<String, DateTime>*/ {
     return _instance ??= DateFormatterValidator._(dateTimeUtils, currentDate);
   }
 
-  // TODO refactor to exact minimum and maximum DATE not only years
-  String makeDateString(
+  @override
+  DateTimeFieldContent run(
     BricksLocalizations localizations,
-    String inputString,
-    DateTimeLimits? dateLimits,
-  ) {
-    return makeDateFromString(localizations, inputString, dateLimits).input!;
-  }
-
-  DateTimeFieldContent makeDateFromString(BricksLocalizations localizations, String text, DateTimeLimits? dateLimits) {
+    DateTimeFieldContent fieldContent, [
+    DateTimeFormatValidatePayload? payload,
+  ]) {
     DateTimeFieldContent parseResult;
 
     parseResult = _dateTimeUtils.cleanDateTimeString(
       bricksLocalizations: localizations,
-      text: text,
-      dateTimeOrBoth: DateTimeOrBoth.DATE,
+      text: fieldContent.input!,
+      dateTimeOrBoth: DateTimeOrBoth.date,
       stringDelimiterPattern: dateDelimiterPattern,
       stringDelimiter: dateDelimiter,
       minNumberOfDigits: 3,
       maxNDigits: 8,
       maxNumberDelimiters: 2,
     );
-    if (!parseResult.isValid!) return DateTimeFieldContent.err(text, parseResult.error);
+    if (!parseResult.isValid!) return DateTimeFieldContent.err(fieldContent.input, parseResult.error);
 
     parseResult = parseDateFromString(localizations, parseResult);
-    if (!parseResult.isValid!) return DateTimeFieldContent.err(text, parseResult.error);
+    if (!parseResult.isValid!) return DateTimeFieldContent.err(fieldContent.input, parseResult.error);
 
-    parseResult = validateDate(localizations, parseResult, dateLimits);
+    parseResult = validateDate(localizations, parseResult, payload!.dateTimeLimits);
 
     return parseResult;
   }

@@ -56,7 +56,7 @@ class DateTimeValidators {
     BricksLocalizations localizations,
     String keyString,
     FormManager formManager,
-    RangeController errorController,
+    // RangeController errorController,
     DateTimeLimits? dateTimeLimits,
     DateTimeRangeSpan? dateTimeRangeSpan,
   ) {
@@ -64,7 +64,7 @@ class DateTimeValidators {
       localizations,
       keyString,
       formManager,
-      errorController,
+      // errorController,
       dateTimeLimits,
       dateTimeRangeSpan,
     ).validator;
@@ -72,7 +72,7 @@ class DateTimeValidators {
 
   static String? validate(String? inputString, String? Function(String inputString) validator) {
     if (inputString == null || inputString.isEmpty) return null;
-    String? errorMessage = validator.call(inputString);
+    String? errorMessage = validator.runChain(inputString);
     return errorMessage == null || errorMessage.isEmpty ? null : errorMessage;
   }
 }

@@ -33,7 +33,8 @@ class FieldContent<I, V> {
   /// Use wherever no result should be returned as a step of the multi-step format-validating procedure.
   const FieldContent.empty() : this.of(null, null, false, null);
 
-  T copyWith<T extends FieldContent>({
+  // TODO verify, refactor? - should use of named constructors vs copyWith - ?
+  FieldContent<I, V> copyWith({
     I? input,
     V? value,
     bool? isValid,

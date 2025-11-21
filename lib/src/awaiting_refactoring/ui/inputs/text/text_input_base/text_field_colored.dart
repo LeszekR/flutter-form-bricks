@@ -157,7 +157,7 @@ class _TextFieldColoredState extends State<TextFieldColored> /*with ErrorMessage
     // stop infinite call here at changing the field value to trimmed one
     if (_skipOnChanged) return;
 
-    widget.onChanged?.call(value?.trim());
+    widget.onChanged?.runChain(value?.trim());
 
     // we need formManager to validate and show error when onEditingComplete will NOT be called
     // if onEditingComplete is called then formManager.onFieldChanged is called there so we skip it here
@@ -171,7 +171,7 @@ class _TextFieldColoredState extends State<TextFieldColored> /*with ErrorMessage
 
   void _onEditingComplete() {
     _skipOnChanged = true;
-    var value = widget.onEditingComplete?.call();
+    var value = widget.onEditingComplete?.runChain();
     _skipOnChanged = false;
     // TODO REFACTOR - formatting and validation done in FormManager, formatted value passed back here
     // widget.formManager.onFieldChanged(widget.keyString, value, '');

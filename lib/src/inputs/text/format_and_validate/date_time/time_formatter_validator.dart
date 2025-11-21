@@ -1,9 +1,13 @@
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_utils.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:intl/intl.dart';
 
-class TimeFormatterValidator {
+const timeDelimiterPattern = '( |/|-|,|\\.|:|;)';
+const timeDelimiter = ':';
+
+class TimeFormatterValidator extends FormatterValidator<String, DateTime> {
   static TimeFormatterValidator? _instance;
 
   TimeFormatterValidator._(DateTimeUtils dateTimeUtils) {
@@ -16,29 +20,36 @@ class TimeFormatterValidator {
   }
 
   DateTimeUtils? _dateTimeUtils;
-  static const timeDelimiterPattern = '( |/|-|,|\\.|:|;)';
-  static const timeDelimiter = ':';
   final nMaxDelimiters = 1;
 
-  String makeTimeString(BricksLocalizations localizations, String inputString) {
-    return makeTimeFromString(localizations, inputString).input!;
+  String makeTimeString(
+    BricksLocalizations localizations,
+    FieldContent<String, DateTime> fieldContent,
+  ) {
+    return run(localizations, fieldContent).input!;
   }
 
-  DateTimeFieldContent makeTimeFromString(BricksLocalizations localizations, String inputString) {
+  @override
+  DateTimeFieldContent run(
+    BricksLocalizations localizations,
+    FieldContent<String, DateTime> fieldContent, [
+    String? keyString,
+    FormatValidatePayload? payload,
+  ]) {
     DateTimeFieldContent parseResult = _dateTimeUtils!.cleanDateTimeString(
       bricksLocalizations: localizations,
-      text: inputString,
-      dateTimeOrBoth: DateTimeOrBoth.TIME,
+      text: fieldContent.input!,
+      dateTimeOrBoth: DateTimeOrBoth.time,
       stringDelimiterPattern: timeDelimiterPattern,
       stringDelimiter: timeDelimiter,
       minNumberOfDigits: 2,
       maxNDigits: 4,
       maxNumberDelimiters: 1,
     );
-    if (!parseResult.isValid!) return DateTimeFieldContent.err(inputString, parseResult.error);
+    if (!parseResult.isValid!) return DateTimeFieldContent.err(fieldContent.input, parseResult.error);
 
     parseResult = parseTimeFromString(localizations, parseResult);
-    if (!parseResult.isValid!) return DateTimeFieldContent.err(inputString, parseResult.error);
+    if (!parseResult.isValid!) return DateTimeFieldContent.err(fieldContent.input, parseResult.error);
 
     parseResult = validateTime(localizations, parseResult);
 
@@ -57,7 +68,7 @@ class TimeFormatterValidator {
   }
 
   DateTimeFieldContent makeTimeStringNoDelimiters(BricksLocalizations localizations, String text) {
-    if (text.length < 3) return DateTimeFieldContent.err(text,  localizations.timeStringErrorTooFewDigits);
+    if (text.length < 3) return DateTimeFieldContent.err(text, localizations.timeStringErrorTooFewDigits);
 
     String formattedResult = '';
     String element = '';

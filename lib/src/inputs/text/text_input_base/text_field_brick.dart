@@ -415,7 +415,7 @@ class TextfieldContentBrick extends FormFieldStateBrick<TextFieldBrick, TextEdit
     // stop infinite call here at changing the field value to trimmed one
     if (_skipOnChanged) return;
 
-    widget.onChanged?.call(value?.trim());
+    widget.onChanged?.runChain(value?.trim());
 
     // we need formManager to validate and show error when onEditingComplete will NEVER be called.
     // If onEditingComplete is called then formManager.onFieldChanged is called there so we skip it here

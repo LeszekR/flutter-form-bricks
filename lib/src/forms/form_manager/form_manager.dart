@@ -149,7 +149,7 @@ abstract class FormManager extends ChangeNotifier {
     FormatterValidatorChain? formatterValidator = getFormatterValidator(keyString);
 
     if (formatterValidator != null) {
-      fieldContent = formatterValidator.run(input, keyString);
+      fieldContent = formatterValidator(input, keyString);
     } else {
       fieldContent = FieldContent.ok(input, input);
     }
@@ -175,7 +175,7 @@ abstract class FormManager extends ChangeNotifier {
       formatterValidator = getFormatterValidator(keyString);
       if (formatterValidator == null) continue;
 
-      fieldContent = formatterValidator.run(getFieldContent(keyString), keyString);
+      fieldContent = formatterValidator(getFieldContent(keyString), keyString);
       storeFieldContent(keyString, fieldContent);
     }
   }

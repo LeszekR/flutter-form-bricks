@@ -5,6 +5,7 @@ import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_tim
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_range_span.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/date_formatter_validator.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/time_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
@@ -45,7 +46,7 @@ class DateTimeRangeFormatterValidator extends FormatterValidatorChain<String, Da
   }
 
   @override
-  DateTimeFieldContent call(String input, [String? keyString, FormatValidatePayload? payload]) {
+  DateTimeFieldContent runChain(String input, [String? keyString, FormatValidatePayload? payload]) {
     DateTimeFormatterValidatorChain fieldFormaterValidator = _dateTimeFormatterValidators[keyString!]!;
     DateTimeFieldContent fieldContent = fieldFormaterValidator(input, keyString);
 
@@ -74,6 +75,13 @@ class DateTimeRangeFormatterValidator extends FormatterValidatorChain<String, Da
     // TU PRZERWAŁEM
     _dateTimeFormatterValidators[_dateStartKeyString!] =
         DateTimeFormatterValidatorChain([DateFormatterValidator(_dateTimeUtils, _currentDate)]);
+    _dateTimeFormatterValidators[_dateEndKeyString!] =
+        DateTimeFormatterValidatorChain([DateFormatterValidator(_dateTimeUtils, _currentDate)]);
+    _dateTimeFormatterValidators[_timeStartKeyString!] =
+        DateTimeFormatterValidatorChain([TimeFormatterValidator(_dateTimeUtils)]);
+    _dateTimeFormatterValidators[_timeEndKeyString!] =
+        DateTimeFormatterValidatorChain([TimeFormatterValidator(_dateTimeUtils)]);
+    // DateTimeFormatterValidator([DateTimeFormatterValidatorChain(_dateTimeUtils, _currentDate)]);
     // _dateTimeFormatterValidators[_]
     // _dateTimeFormatterValidators[_]
     // _dateTimeFormatterValidators[_]
@@ -231,8 +239,6 @@ class DateTimeRangeFormatterValidator extends FormatterValidatorChain<String, Da
   }
 
   void _cacheError(String keyString, text, String errorText) {
-    // TU PRZERWAŁEM
-    // TODO preserve DateTime isValid when range error makes the field invalid
     cacheFieldContent(keyString, _getFieldContent(keyString).copyWith(error: errorText));
   }
 

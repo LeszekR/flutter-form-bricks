@@ -3,9 +3,9 @@ import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations
 import 'package:intl/intl.dart';
 
 enum DateTimeOrBoth {
-  DATE,
-  TIME,
-  DATE_TIME,
+  date,
+  time,
+  dateTime,
 }
 
 const int minutesInMonth = 43920; // 60*24*30.5
@@ -21,23 +21,6 @@ class DateTimeUtils {
   factory DateTimeUtils() {
     _instance ??= DateTimeUtils._();
     return _instance!;
-  }
-
-  String minutesToSpanCondition(int nMinutes) {
-    String years = '${nMinutes ~/ minutesInYear} years';
-    if (nMinutes % minutesInYear == 0) return years;
-
-    String months = '${(nMinutes % minutesInYear) ~/ minutesInMonth} months';
-    if (nMinutes % minutesInMonth == 0) return '$years, $months';
-
-    String days = '${(nMinutes % minutesInMonth) ~/ minutesInDay} days';
-    if (nMinutes % minutesInDay == 0) return '$years, $months, $days';
-
-    String hours = '${(nMinutes % minutesInDay) ~/ minutesInHour} hours';
-    if (nMinutes % minutesInHour == 0) return '$years, $months, $days, $hours';
-
-    String minutes = '${nMinutes % minutesInHour} minutes';
-    return '$years, $months, $days, $hours, $minutes';
   }
 
   DateTimeFieldContent cleanDateTimeString({
@@ -92,28 +75,28 @@ class DateTimeUtils {
   }
 
   String errMsgForbiddenChars(BricksLocalizations localizations, DateTimeOrBoth eDateTime) {
-    if (eDateTime == DateTimeOrBoth.DATE) {
+    if (eDateTime == DateTimeOrBoth.date) {
       return localizations.dateStringErrorBadChars;
     }
     return localizations.timeStringErrorBadChars;
   }
 
   String errMsgTooFewDigits(BricksLocalizations localizations, DateTimeOrBoth eDateTime) {
-    if (eDateTime == DateTimeOrBoth.DATE) {
+    if (eDateTime == DateTimeOrBoth.date) {
       return localizations.dateStringErrorTooFewDigits;
     }
     return localizations.timeStringErrorTooFewDigits;
   }
 
   String errMsgTooManyDigits(BricksLocalizations localizations, DateTimeOrBoth eDateTime) {
-    if (eDateTime == DateTimeOrBoth.DATE) {
+    if (eDateTime == DateTimeOrBoth.date) {
       return localizations.dateStringErrorTooManyDigits;
     }
     return localizations.timeStringErrorTooManyDigits;
   }
 
   String getErMsgTooManyDelimiters(BricksLocalizations localizations, DateTimeOrBoth eDateTime) {
-    if (eDateTime == DateTimeOrBoth.DATE) {
+    if (eDateTime == DateTimeOrBoth.date) {
       return localizations.dateStringErrorTooManyDelimiters;
     }
     return localizations.timeStringErrorTooManyDelimiters;
@@ -125,5 +108,22 @@ class DateTimeUtils {
 
   String formatDate(DateTime dateTime, String format) {
     return DateFormat(format).format(dateTime);
+  }
+
+  String minutesToSpanCondition(int nMinutes) {
+    String years = '${nMinutes ~/ minutesInYear} years';
+    if (nMinutes % minutesInYear == 0) return years;
+
+    String months = '${(nMinutes % minutesInYear) ~/ minutesInMonth} months';
+    if (nMinutes % minutesInMonth == 0) return '$years, $months';
+
+    String days = '${(nMinutes % minutesInMonth) ~/ minutesInDay} days';
+    if (nMinutes % minutesInDay == 0) return '$years, $months, $days';
+
+    String hours = '${(nMinutes % minutesInDay) ~/ minutesInHour} hours';
+    if (nMinutes % minutesInHour == 0) return '$years, $months, $days, $hours';
+
+    String minutes = '${nMinutes % minutesInHour} minutes';
+    return '$years, $months, $days, $hours, $minutes';
   }
 }

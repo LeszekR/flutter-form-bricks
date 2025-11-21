@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_input_base/states_color_maker.dart';
 
 abstract class FormFieldBrick<T> extends StatefulWidget {

@@ -1,13 +1,16 @@
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_utils.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/format_validate_components.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/time_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 import 'date_formatter_validator.dart';
 
-class DateTimeFormatterValidator {
+class DateTimeFormatterValidator extends FormatterValidator<String, DateTime, DateTimeFormatValidatePayload> {
   static DateTimeFormatterValidator? _instance;
 
   DateTimeFormatterValidator._(
@@ -25,16 +28,16 @@ class DateTimeFormatterValidator {
   DateFormatterValidator? _dateFormatter;
   TimeFormatterValidator? _timeFormatter;
 
-  String makeDateTimeString(
-    BricksLocalizations localizations,
-    CurrentDate currentDate,
-    String inputString,
-    DateTimeLimits dateLimits,
-  ) {
-    return makeDateTimeFromString(localizations, inputString, dateLimits).input!;
-  }
-
-  DateTimeFieldContent makeDateTimeFromString(
+  // String makeDateTimeString(
+  //   BricksLocalizations localizations,
+  //   CurrentDate currentDate,
+  //   String inputString,
+  //   DateTimeLimits dateLimits,
+  // ) {
+  //   return makeDateTimeFromString(localizations, inputString, dateLimits).input!;
+  // }
+  //
+  DateTimeFieldContent run(
     BricksLocalizations localizations,
     String inputString,
     DateTimeLimits dateLimits,

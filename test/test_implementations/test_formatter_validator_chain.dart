@@ -11,7 +11,7 @@ class TestFormatterValidatorChain extends FormatterValidatorChain {
   String? getError(Object? value) => mockError;
 
   @override
-  run(inputValue) {
+  runChain(inputValue) {
     // no op
   }
 }

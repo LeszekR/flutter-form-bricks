@@ -84,7 +84,7 @@ class ChoiceInputs {
       onChanged: readonly
           ? null
           : (value) {
-              onChanged?.call(value);
+              onChanged?.runChain(value);
               formManager?.onFieldChanged(keyString, value);
             },
       enabled: !readonly,

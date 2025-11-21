@@ -73,7 +73,7 @@ abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
       return;
     }
     final ctrlPrefix = event.isControlPressed ? LogicalKeyboardKey.control.keyId : 0;
-    _keyboardMapping[ctrlPrefix + event.logicalKey.keyId]?.call();
+    _keyboardMapping[ctrlPrefix + event.logicalKey.keyId]?.runChain();
   }
 
   Map<int, VoidCallback> provideKeyboardActions() {
