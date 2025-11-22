@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/src/inputs/base/form_field_brick.dart';
 
+import '../../string_literals/gen/bricks_localizations.dart';
 import '../form_manager/form_manager.dart';
 
 ///  Top layer of forms used by this software.
@@ -70,6 +71,14 @@ abstract class FormStateBrick<T extends FormBrick> extends State<T> {
     });
   }
 
+  @mustCallSuper
+  @override
+  void didChangeDependencies() {
+    formManager.localizations = BricksLocalizations.of(context);
+    formManager.validateForm();
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO make focusedKeyString actually request focus
@@ -88,7 +97,7 @@ abstract class FormStateBrick<T extends FormBrick> extends State<T> {
       return;
     }
     final ctrlPrefix = event.isControlPressed ? LogicalKeyboardKey.control.keyId : 0;
-    _keyboardMapping[ctrlPrefix + event.logicalKey.keyId]?.runChain();
+    _keyboardMapping[ctrlPrefix + event.logicalKey.keyId]?.call();
   }
 
   Map<int, VoidCallback> provideKeyboardActions() {

@@ -4,7 +4,6 @@ import 'package:flutter_form_bricks/src/forms/base/form_brick.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_status.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../../../../dialogs/dialogs.dart';
 import '../../../../ui_params/ui_params.dart';
@@ -73,7 +72,7 @@ abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
       return;
     }
     final ctrlPrefix = event.isControlPressed ? LogicalKeyboardKey.control.keyId : 0;
-    _keyboardMapping[ctrlPrefix + event.logicalKey.keyId]?.runChain();
+    _keyboardMapping[ctrlPrefix + event.logicalKey.keyId]?.call();
   }
 
   Map<int, VoidCallback> provideKeyboardActions() {
@@ -185,12 +184,14 @@ abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
     );
   }
 
+  /// 'Reset' button action
   void onReset() {
     final localizations = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
     Dialogs.decisionDialogYesNo(context, localizations.formReset, localizations.formResetConfirm,
         action: formManager.resetForm);
   }
 
+  /// 'Cancel' button action
   void onCancel() {
     final localizations = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
     Dialogs.decisionDialogYesNo(context, localizations.buttonCancel, localizations.dialogsConfirmCancel,
@@ -199,14 +200,14 @@ abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
 
   void cancel() => Navigator.of(context).pop(false);
 
+  /// 'Delete' button action
   void onDelete() {
     final localizations = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
     Dialogs.decisionDialogOkCancel(context, localizations.dialogsWarning, localizations.deleteConfirm,
         action: deleteEntity);
   }
 
-  void onTab() => TextInputAction.next;
-
+  /// 'Submit' button action
   onSubmit() {
     final localizations = Localizations.of<BricksLocalizations>(context, BricksLocalizations)!;
     final formState = formManager.checkStatus();
@@ -224,6 +225,8 @@ abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
         break;
     }
   }
+
+  void onTab() => TextInputAction.next;
 
   bool isEditMode() {
     return false;

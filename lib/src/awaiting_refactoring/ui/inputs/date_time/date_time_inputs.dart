@@ -449,7 +449,7 @@ class DateTimeInputs {
   ) {
     final inputText = formManager.getFieldValue(keyString);
     String? formattedText;
-    if (inputText != null) formattedText = formatter.runChain(inputText);
+    if (inputText != null) formattedText = formatter.call(inputText);
 
     // false: stops rangeValidator from triggering - because we only want rangeValidator to call in onEditingComplete
     // after Enter pressed where it is set to true

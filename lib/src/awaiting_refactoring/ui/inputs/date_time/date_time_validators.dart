@@ -27,7 +27,7 @@ class DateTimeValidators {
 
   static FormFieldValidator<String> dateInputValidator(BricksLocalizations localizations, DateTimeLimits? dateLimits) {
     ValidatorFunction validator =
-        (String inputString) => _dateFormatter.makeDateFromString(localizations, inputString, dateLimits).error;
+        (String inputString) => _dateFormatter.run(localizations, inputString, dateLimits).error;
     return (inputString) => validate(inputString, validator);
   }
 
@@ -72,7 +72,7 @@ class DateTimeValidators {
 
   static String? validate(String? inputString, String? Function(String inputString) validator) {
     if (inputString == null || inputString.isEmpty) return null;
-    String? errorMessage = validator.runChain(inputString);
+    String? errorMessage = validator.run(inputString);
     return errorMessage == null || errorMessage.isEmpty ? null : errorMessage;
   }
 }

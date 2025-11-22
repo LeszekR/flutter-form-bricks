@@ -1,13 +1,14 @@
 import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_utils.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/format_validate_components.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:intl/intl.dart';
 
 const timeDelimiterPattern = '( |/|-|,|\\.|:|;)';
 const timeDelimiter = ':';
 
-class TimeFormatterValidator extends FormatterValidator<String, DateTime> {
+class TimeFormatterValidator extends FormatterValidator<String, DateTime, DateTimeFormatterValidatorPayload> {
   static TimeFormatterValidator? _instance;
 
   TimeFormatterValidator._(DateTimeUtils dateTimeUtils) {
@@ -33,8 +34,8 @@ class TimeFormatterValidator extends FormatterValidator<String, DateTime> {
   DateTimeFieldContent run(
     BricksLocalizations localizations,
     FieldContent<String, DateTime> fieldContent, [
+    DateTimeFormatterValidatorPayload? limitsCarrier,
     String? keyString,
-    FormatValidatePayload? payload,
   ]) {
     DateTimeFieldContent parseResult = _dateTimeUtils!.cleanDateTimeString(
       bricksLocalizations: localizations,
@@ -51,7 +52,7 @@ class TimeFormatterValidator extends FormatterValidator<String, DateTime> {
     parseResult = parseTimeFromString(localizations, parseResult);
     if (!parseResult.isValid!) return DateTimeFieldContent.err(fieldContent.input, parseResult.error);
 
-    parseResult = validateTime(localizations, parseResult);
+    parseResult = validateTime(localizations, parseResult, limitsCarrier?.dateTimeLimits); // TODO observe time limits
 
     return parseResult;
   }

@@ -32,7 +32,7 @@ Future<bool> testDateTimeExcelStyleInput(
     await tester.pump();
 
     //then
-    final dynamic actual = testAction.runChain(textInput);
+    final dynamic actual = testAction.call(textInput);
 
     passedOk &= (actual == testCase.expected) == (testCase.isValid);
     if (!passedOk) debugPrint(makerrorString(testCase.inputString, testCase.inputString, actual, testCase.expected));

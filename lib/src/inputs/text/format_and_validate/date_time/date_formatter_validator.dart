@@ -2,14 +2,14 @@ import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_utils.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/format_validate_components.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 const dateDelimiterPattern = '( |/|-|,|;|\\.)';
 const dateDelimiter = '-';
 
-class DateFormatterValidator extends FormatterValidator<String, DateTime, DateTimeFormatValidatePayload> {
+class DateFormatterValidator extends FormatterValidator<String, DateTime, DateTimeFormatterValidatorPayload> {
   static DateFormatterValidator? _instance;
 
   DateTimeUtils _dateTimeUtils;
@@ -25,7 +25,8 @@ class DateFormatterValidator extends FormatterValidator<String, DateTime, DateTi
   DateTimeFieldContent run(
     BricksLocalizations localizations,
     DateTimeFieldContent fieldContent, [
-    DateTimeFormatValidatePayload? payload,
+    DateTimeFormatterValidatorPayload? limitsCarrier,
+    String? keyString,
   ]) {
     DateTimeFieldContent parseResult;
 
@@ -44,7 +45,7 @@ class DateFormatterValidator extends FormatterValidator<String, DateTime, DateTi
     parseResult = parseDateFromString(localizations, parseResult);
     if (!parseResult.isValid!) return DateTimeFieldContent.err(fieldContent.input, parseResult.error);
 
-    parseResult = validateDate(localizations, parseResult, payload!.dateTimeLimits);
+    parseResult = validateDate(localizations, parseResult, limitsCarrier?.dateTimeLimits);
 
     return parseResult;
   }

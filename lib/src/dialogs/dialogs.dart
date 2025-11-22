@@ -72,7 +72,7 @@ class Dialogs {
       closeTimer?.cancel();
       if (isOk) {
         Navigator.of(context, rootNavigator: true).pop(true);
-        if (action != null) action.runChain();
+        if (action != null) action.call();
       } else {
         Navigator.of(context, rootNavigator: true).pop(false);
       }

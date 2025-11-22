@@ -9,7 +9,7 @@
 /// FormFieldBrick acquires it then focusedKeyString remains unchanged and the last error message
 /// is displayed - example case: clicking a button
 
-/// Args `String keyString` and `FormatValidatePayload payload` passed to `FormatterValidator`
+/// Args `String keyString` and `FormatterValidatorPayload payload` passed to `FormatterValidator`
 /// allow passing additional data to `FormatterValidator` should be required in future implementations.
 /// Already `keyString` is required by `DateTimeRangeFormatterValidator` to identify which of the
 /// range fields is triggering the validation so that the others are not validated only their

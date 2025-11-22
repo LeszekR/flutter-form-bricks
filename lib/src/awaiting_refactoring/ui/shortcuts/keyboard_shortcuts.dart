@@ -47,9 +47,9 @@ class KeyboardEvents {
     if (event.repeat || event is! RawKeyDownEvent) return;
 
     if (_listener.isEmpty) {
-      _menuListener!.runChain(event);
+      _menuListener!.call(event);
     } else {
-      _listener.last.runChain(event);
+      _listener.last.call(event);
     }
   }
 }

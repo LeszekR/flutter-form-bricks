@@ -3,6 +3,9 @@ import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_input_base/states_color_maker.dart';
+import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations_en.dart';
+
+import '../../string_literals/gen/bricks_localizations.dart';
 
 abstract class FormFieldBrick<T> extends StatefulWidget {
   final String keyString;
@@ -73,11 +76,11 @@ abstract class FormFieldStateBrick<K extends FormFieldBrick, T> extends State<K>
   /// - return new `FieldContent` which then sets the field's input (if formatted), controls its color,
   ///   displays error if the field uses `InputDecoration` for this (error alternatively it can be displayed in
   ///   dedicated `FormBrick` area by `FormManager`.
-  void onFieldChanged(T input) {
+  void onFieldChanged(BricksLocalizations localizations, T input) {
     // Here FormManager:
     // - validates the input
     // - saves results of format-validation in FormData -> FormFieldData -> FieldContent
-    FieldContent fieldContent = formManager.onFieldChanged(keyString, input);
+    FieldContent fieldContent = formManager.onFieldChanged(localizations, keyString, input);
     setState(() {
       _fieldContent = fieldContent;
     });

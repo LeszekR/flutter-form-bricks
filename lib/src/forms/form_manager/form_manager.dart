@@ -11,6 +11,7 @@ abstract class FormManager extends ChangeNotifier {
   final ValueNotifier<String> errorMessageNotifier = ValueNotifier<String>('');
   final FormData _formData;
   final Map<String, FormatterValidatorChain?> _formatterValidatorMap;
+  late BricksLocalizations _localizations;
 
   // TODO make flat map for tabbed form too and implement here
   FormStatus checkStatus();
@@ -18,16 +19,18 @@ abstract class FormManager extends ChangeNotifier {
   // TODO make flat map for tabbed form too and implement here
   Map<String, dynamic> collectInputs();
 
+  void set localizations(BricksLocalizations localizations) => _localizations = localizations;
+
   GlobalKey<FormStateBrick> get formKey => _formData.formKey;
 
   Map<String, FormFieldData> get fieldDataMap => _formData.fieldDataMap;
 
   FormManager({required FormData formData, required FormSchema formSchema})
-      : _formData = formData, _formatterValidatorMap = {
+      : _formData = formData,
+        _formatterValidatorMap = {
           for (final d in formSchema.descriptors) d.keyString: d.formatterValidatorChain,
         } {
     _initFormData(formSchema, _formData);
-    resetForm();
   }
 
   // form reset
@@ -44,8 +47,7 @@ abstract class FormManager extends ChangeNotifier {
     for (String keyString in fieldDataMap.keys) {
       _resetField(keyString);
     }
-    _validateForm();
-    _showFieldErrorMessage(_formData.focusedKeyString);
+    validateForm();
   }
 
   void _resetField(String keyString) {
@@ -76,7 +78,7 @@ abstract class FormManager extends ChangeNotifier {
     );
 
     assert(
-        withValidator == (getFormatterValidator(keyString) != null),
+        withValidator == (getFormatterValidatorChain(keyString) != null),
         'No "$keyString" found in formatterValidatorsMap while the field declares "withValidator == true"; '
         'there must be one FormatterValidatorChain in the map for every such field.');
   }
@@ -119,7 +121,7 @@ abstract class FormManager extends ChangeNotifier {
 
   bool isFieldDirty(String keyString) => getFieldContent(keyString).input != _fieldData(keyString).initialInput;
 
-  FormatterValidatorChain? getFormatterValidator(String keyString) => _formatterValidatorMap[keyString];
+  FormatterValidatorChain? getFormatterValidatorChain(String keyString) => _formatterValidatorMap[keyString];
 
   void _setFocusedKeyString(String keyString) => _formData.focusedKeyString = keyString;
 
@@ -138,18 +140,18 @@ abstract class FormManager extends ChangeNotifier {
 
   // validation
   // ==============================================================================
-  FieldContent onFieldChanged(String keyString, dynamic input) {
-    FieldContent fieldContent = formatAndValidateQuietly(keyString, input);
+  FieldContent onFieldChanged(BricksLocalizations localizations, String keyString, dynamic input) {
+    FieldContent fieldContent = formatAndValidateQuietly(localizations, keyString, input);
     _showFieldErrorMessage(keyString);
     return fieldContent;
   }
 
-  FieldContent formatAndValidateQuietly(String keyString, dynamic input) {
+  FieldContent formatAndValidateQuietly(BricksLocalizations localizations, String keyString, dynamic input) {
     FieldContent fieldContent;
-    FormatterValidatorChain? formatterValidator = getFormatterValidator(keyString);
+    FormatterValidatorChain? formatterValidatorChain = getFormatterValidatorChain(keyString);
 
-    if (formatterValidator != null) {
-      fieldContent = formatterValidator(input, keyString);
+    if (formatterValidatorChain != null) {
+      fieldContent = formatterValidatorChain.runChain(localizations, input, keyString);
     } else {
       fieldContent = FieldContent.ok(input, input);
     }
@@ -167,17 +169,19 @@ abstract class FormManager extends ChangeNotifier {
     return true;
   }
 
-  void _validateForm() {
-    FormatterValidatorChain? formatterValidator;
+  void validateForm() {
+    FormatterValidatorChain? formatterValidatorChain;
     FieldContent fieldContent;
 
     for (String keyString in fieldDataMap.keys) {
-      formatterValidator = getFormatterValidator(keyString);
-      if (formatterValidator == null) continue;
+      formatterValidatorChain = getFormatterValidatorChain(keyString);
+      if (formatterValidatorChain == null) continue;
 
-      fieldContent = formatterValidator(getFieldContent(keyString), keyString);
+      fieldContent = formatterValidatorChain.runChain(_localizations, getFieldContent(keyString), keyString);
       storeFieldContent(keyString, fieldContent);
     }
+
+    _showFieldErrorMessage(_formData.focusedKeyString);
   }
 
   // showing error message
