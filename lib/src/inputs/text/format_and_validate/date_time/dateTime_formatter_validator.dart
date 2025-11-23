@@ -18,8 +18,8 @@ class DateTimeFormatterValidator extends FormatterValidator<String, DateTime, Da
     TimeFormatterValidator timeFormatter,
     DateTimeUtils dateTimeUtils,
   ) {
-    _dateFormatter = dateFormatter;
-    _timeFormatter = timeFormatter;
+    _dateFormatterValidator = dateFormatter;
+    _timeFormatterValidator = timeFormatter;
   }
 
   factory DateTimeFormatterValidator(
@@ -28,8 +28,8 @@ class DateTimeFormatterValidator extends FormatterValidator<String, DateTime, Da
     return _instance!;
   }
 
-  DateFormatterValidator? _dateFormatter;
-  TimeFormatterValidator? _timeFormatter;
+  DateFormatterValidator? _dateFormatterValidator;
+  TimeFormatterValidator? _timeFormatterValidator;
 
   // String makeDateTimeString(
   //   BricksLocalizations localizations,
@@ -55,11 +55,11 @@ class DateTimeFormatterValidator extends FormatterValidator<String, DateTime, Da
     if (nSpaces > 1) return DateTimeFieldContent.err(textTrimmed, localizations.datetimeStringErrorTooManySpaces);
 
     var elementsList = textTrimmed.split(RegExp(' '));
-    String dateString = elementsList[0];
-    String timeString = elementsList[1];
+    DateFieldContent dateFieldContent = DateFieldContent.transient(elementsList[0]);
+    TimeFieldContent timeFieldContent = TimeFieldContent.transient(elementsList[1]);
 
-    DateTimeFieldContent parseResultDate = _dateFormatter!.run(localizations, fieldContent,  limitsCarrier);
-    DateTimeFieldContent parseResultTime = _timeFormatter!.run(localizations, fieldContent,  limitsCarrier);
+    DateFieldContent parseResultDate = _dateFormatterValidator!.run(localizations, dateFieldContent,  limitsCarrier);
+    TimeFieldContent parseResultTime = _timeFormatterValidator!.run(localizations, timeFieldContent,  limitsCarrier);
 
     var parsedString = '${parseResultDate.input} ${parseResultTime.input}';
     var errorMessageDate = parseResultDate.error;

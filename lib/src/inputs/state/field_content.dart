@@ -12,9 +12,9 @@ import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_tim
 ///
 /// **error** is error message which will be displayed in UI either in `InputDecoration` or in form area dedicated
 /// for this purpose.
-class FieldContent<I, V> {
-  final I? input;
-  final V? value;
+class FieldContent<Input, Value> {
+  final Input? input;
+  final Value? value;
   final bool? isValid;
   final String? error;
 
@@ -24,21 +24,21 @@ class FieldContent<I, V> {
   /// Only to be used as **temporary result** carrying transient state of the formatted input in formatting-validating
   /// procedure (e.g. partly formatted date string).
   /// **Never** to be used as a return value of `FormatterValidator`.
-  const FieldContent.transient(I input) : this.of(input, null, null, null);
+  const FieldContent.transient(Input input) : this.of(input, null, null, null);
 
   /// Use in formatting-validating procedure when the result is valid.
-  const FieldContent.ok(I? input, V? value) : this.of(input, value, true, null);
+  const FieldContent.ok(Input? input, Value? value) : this.of(input, value, true, null);
 
   /// Use in formatting-validating procedure when the result is invalid.
-  const FieldContent.err(I? input, String? error) : this.of(input, null, false, error);
+  const FieldContent.err(Input? input, String? error) : this.of(input, null, false, error);
 
   /// Use wherever no result should be returned as a step of the multi-step format-validating procedure.
   const FieldContent.empty() : this.of(null, null, false, null);
 
   // TODO verify, refactor? - should use of named constructors vs copyWith - ?
-  FieldContent<I, V> copyWith({
-    I? input,
-    V? value,
+  FieldContent<Input, Value> copyWith({
+    Input? input,
+    Value? value,
     bool? isValid,
     String? error,
   }) {
@@ -53,7 +53,7 @@ class FieldContent<I, V> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is FieldContent<I, V> &&
+      other is FieldContent<Input, Value> &&
           other.input == input &&
           other.value == value &&
           other.isValid == isValid &&
@@ -65,7 +65,7 @@ class FieldContent<I, V> {
 
 /// Formatting-validation procedure return type for input of type `DateTime`.
 ///
-/// Usage - format-validation of: `DateeFieldBrick`.
+/// Usage - format-validation of: `DateFieldBrick`.
 typedef DateFieldContent = FieldContent<String, Date>;
 
 /// Formatting-validation procedure return type for input of type `DateTime`.

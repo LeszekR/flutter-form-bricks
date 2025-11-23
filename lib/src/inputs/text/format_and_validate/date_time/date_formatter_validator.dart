@@ -5,11 +5,12 @@ import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_tim
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/format_validate_components.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/time_stamp.dart';
 
 const dateDelimiterPattern = '( |/|-|,|;|\\.)';
 const dateDelimiter = '-';
 
-class DateFormatterValidator extends FormatterValidator<String, DateTime, DateTimeFormatterValidatorPayload> {
+class DateFormatterValidator extends FormatterValidator<String, Date, DateTimeFormatterValidatorPayload> {
   static DateFormatterValidator? _instance;
 
   final DateTimeUtils _dateTimeUtils;
@@ -23,13 +24,13 @@ class DateFormatterValidator extends FormatterValidator<String, DateTime, DateTi
   }
 
   @override
-  DateTimeFieldContent run(
+  DateFieldContent run(
     BricksLocalizations localizations,
-    DateTimeFieldContent fieldContent, [
+    DateFieldContent fieldContent, [
     DateTimeFormatterValidatorPayload? payload,
     String? keyString,
   ]) {
-    DateTimeFieldContent parseResult;
+    DateFieldContent parseResult;
 
     parseResult = _dateTimeUtils.cleanDateTimeString(
       bricksLocalizations: localizations,
@@ -40,23 +41,23 @@ class DateFormatterValidator extends FormatterValidator<String, DateTime, DateTi
       minNumberOfDigits: 3,
       maxNDigits: 8,
       maxNumberDelimiters: 2,
-    );
-    if (!parseResult.isValid!) return DateTimeFieldContent.err(fieldContent.input, parseResult.error);
+    ) as DateFieldContent;
+    if (!parseResult.isValid!) return DateFieldContent.err(fieldContent.input, parseResult.error);
 
     parseResult = parseDateFromString(localizations, parseResult);
-    if (!parseResult.isValid!) return DateTimeFieldContent.err(fieldContent.input, parseResult.error);
+    if (!parseResult.isValid!) return DateFieldContent.err(fieldContent.input, parseResult.error);
 
     parseResult = validateDate(localizations, parseResult, payload?.dateTimeLimits);
 
     return parseResult;
   }
 
-  DateTimeFieldContent parseDateFromString(
-      BricksLocalizations localizations, DateTimeFieldContent dateTimeFieldContent) {
+  DateFieldContent parseDateFromString(
+      BricksLocalizations localizations, DateFieldContent dateTimeFieldContent) {
     String text = dateTimeFieldContent.input!;
     int nDelimiters = RegExp(dateDelimiter).allMatches(text).length;
 
-    DateTimeFieldContent parseResult;
+    DateFieldContent parseResult;
 
     if (nDelimiters == 0) {
       parseResult = makeDateStringNoDelimiters(text);
@@ -69,7 +70,7 @@ class DateFormatterValidator extends FormatterValidator<String, DateTime, DateTi
     return addYear(parseResult, nDelimiters);
   }
 
-  DateTimeFieldContent makeDateStringNoDelimiters(String text) {
+  DateFieldContent makeDateStringNoDelimiters(String text) {
     String dateString = '';
     String element = '';
     int nElements = 0;
@@ -91,10 +92,10 @@ class DateFormatterValidator extends FormatterValidator<String, DateTime, DateTi
       }
       dateString = element + dateString;
     }
-    return DateTimeFieldContent.transient(dateString);
+    return DateFieldContent.transient(dateString);
   }
 
-  DateTimeFieldContent makeDateStringWithDelimiters(BricksLocalizations localizations, String text, int nDelimiters) {
+  DateFieldContent makeDateStringWithDelimiters(BricksLocalizations localizations, String text, int nDelimiters) {
     String dateString = '';
     String element = '';
     List<String> resultList = text.split(dateDelimiter);
@@ -136,15 +137,15 @@ class DateFormatterValidator extends FormatterValidator<String, DateTime, DateTi
       }
     }
 
-    if (errMsg.isNotEmpty) return DateTimeFieldContent.err(dateString, errMsg);
-    return DateTimeFieldContent.transient(dateString);
+    if (errMsg.isNotEmpty) return DateFieldContent.err(dateString, errMsg);
+    return DateFieldContent.transient(dateString);
   }
 
-  DateTimeFieldContent addYear(DateTimeFieldContent dateString, int nDelimiters) {
+  DateFieldContent addYear(DateFieldContent dateString, int nDelimiters) {
     String dateWithoutYear = dateString.input!;
     nDelimiters = RegExp(dateDelimiter).allMatches(dateWithoutYear).length;
 
-    if (nDelimiters < 2) return DateTimeFieldContent.transient(dateWithoutYear);
+    if (nDelimiters < 2) return DateFieldContent.transient(dateWithoutYear);
 
     String year = _currentDate.getDateNow().year.toString();
     String yearElement = dateWithoutYear.split(dateDelimiter)[0];
@@ -156,12 +157,12 @@ class DateFormatterValidator extends FormatterValidator<String, DateTime, DateTi
       yearElement = year.substring(0, 4 - yearElementLength);
       dateWithoutYear = '$yearElement$dateWithoutYear';
     }
-    return DateTimeFieldContent.transient(dateWithoutYear);
+    return DateFieldContent.transient(dateWithoutYear);
   }
 
-  DateTimeFieldContent validateDate(
+  DateFieldContent validateDate(
     BricksLocalizations localizations,
-    DateTimeFieldContent fieldContent,
+    DateFieldContent fieldContent,
     DateTimeLimits? dateLimits,
   ) {
     String dateString = fieldContent.input!;
@@ -170,7 +171,7 @@ class DateFormatterValidator extends FormatterValidator<String, DateTime, DateTi
     String connector = '\n';
     String errMsg = '';
     String errLimit = '', errMonth = '', errDays = '';
-    DateTime? parsedDate;
+    Date? parsedDate;
 
     // non-existing month
     int monthIndex = elementsListLength - 2;
@@ -204,18 +205,18 @@ class DateFormatterValidator extends FormatterValidator<String, DateTime, DateTi
 
     // date-time limits
     if (errDays.isEmpty && errMonth.isEmpty) {
-      parsedDate = DateTime.parse(dateString);
+      parsedDate = Date.fromString(dateString);
 
       if (dateLimits != null) {
         DateTime? minDate = dateLimits.minDateTime;
         if (minDate != null) {
-          if (parsedDate.compareTo(minDate) < 0) {
+          if (parsedDate.dateTime.compareTo(minDate) < 0) {
             errLimit = localizations.dateErrorTooFarBack(_dateTimeUtils.formatDate(minDate, "yMd"));
           }
         }
         DateTime? maxDate = dateLimits.maxDateTime;
         if (maxDate != null) {
-          if (parsedDate.compareTo(maxDate) > 0) {
+          if (parsedDate.dateTime.compareTo(maxDate) > 0) {
             errLimit = localizations.dateErrorTooFarForward(_dateTimeUtils.formatDate(maxDate, "yMd"));
           }
         }
@@ -224,8 +225,8 @@ class DateFormatterValidator extends FormatterValidator<String, DateTime, DateTi
 
     if (errLimit.isNotEmpty) errMsg = _dateTimeUtils.addErrMsg(errMsg, connector, errLimit);
 
-    if (errMsg.isNotEmpty) return DateTimeFieldContent.err(dateString, errMsg);
+    if (errMsg.isNotEmpty) return DateFieldContent.err(dateString, errMsg);
 
-    return DateTimeFieldContent.ok(dateString, parsedDate);
+    return DateFieldContent.ok(dateString, parsedDate);
   }
 }

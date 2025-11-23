@@ -24,7 +24,7 @@ class DateTimeUtils {
     return _instance!;
   }
 
-  DateTimeFieldContent cleanDateTimeString({
+  FieldContent cleanDateTimeString({
     required BricksLocalizations bricksLocalizations,
     required String text,
     required DateTimeOrBoth dateTimeOrBoth,
@@ -141,5 +141,11 @@ class DateTimeUtils {
       hour,
       minute,
     );
+  }
+
+  int timeInMinutes(DateTime timeSource) {
+    int hourMinutes = timeSource.hour * 60;
+    int minutes = timeSource.minute;
+    return hourMinutes + minutes;
   }
 }
