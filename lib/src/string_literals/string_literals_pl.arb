@@ -145,6 +145,23 @@
   "timeErrorTooBigMinute": "Za dużo minut - nie ma takiej godziny",
   "timeErrorTooBigHour": "Za dużo godzin - nie ma takiej godziny (północ to 00:00)",
 
+  "timeErrorTooFarBack": "Godzina nie może być wcześniejsza niż {minTimeParam}",
+  "@timeErrorTooFarBack": {
+    "placeholders": {
+      "minTimeParam": {
+        "type": "String"
+      }
+    }
+  },
+  "timeErrorTooFarForward": "Godzina nie może być późniejsza niż {maxTimeParam}",
+  "@timeErrorTooFarForward": {
+    "placeholders": {
+      "maxTimeParam": {
+        "type": "String"
+      }
+    }
+  },
+
   "datetimeStringErrorNoSpace": "Data musi być oddzielona spacją od godziny",
   "datetimeStringErrorTooManySpaces": "Za dużo spacji"
 }

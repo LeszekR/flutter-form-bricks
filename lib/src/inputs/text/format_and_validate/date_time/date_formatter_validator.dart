@@ -12,20 +12,21 @@ const dateDelimiter = '-';
 class DateFormatterValidator extends FormatterValidator<String, DateTime, DateTimeFormatterValidatorPayload> {
   static DateFormatterValidator? _instance;
 
-  DateTimeUtils _dateTimeUtils;
-  CurrentDate _currentDate;
+  final DateTimeUtils _dateTimeUtils;
+  final CurrentDate _currentDate;
+  final DateTimeLimits? _dateTimeLimits;
 
-  DateFormatterValidator._(this._dateTimeUtils, this._currentDate) {}
+  DateFormatterValidator._(this._dateTimeUtils, this._currentDate, this._dateTimeLimits) {}
 
-  factory DateFormatterValidator(DateTimeUtils dateTimeUtils, CurrentDate currentDate) {
-    return _instance ??= DateFormatterValidator._(dateTimeUtils, currentDate);
+  factory DateFormatterValidator(DateTimeUtils dateTimeUtils, CurrentDate currentDate, DateTimeLimits? dateTimeLimits) {
+    return _instance ??= DateFormatterValidator._(dateTimeUtils, currentDate, dateTimeLimits);
   }
 
   @override
   DateTimeFieldContent run(
     BricksLocalizations localizations,
     DateTimeFieldContent fieldContent, [
-    DateTimeFormatterValidatorPayload? limitsCarrier,
+    DateTimeFormatterValidatorPayload? payload,
     String? keyString,
   ]) {
     DateTimeFieldContent parseResult;
@@ -45,7 +46,7 @@ class DateFormatterValidator extends FormatterValidator<String, DateTime, DateTi
     parseResult = parseDateFromString(localizations, parseResult);
     if (!parseResult.isValid!) return DateTimeFieldContent.err(fieldContent.input, parseResult.error);
 
-    parseResult = validateDate(localizations, parseResult, limitsCarrier?.dateTimeLimits);
+    parseResult = validateDate(localizations, parseResult, payload?.dateTimeLimits);
 
     return parseResult;
   }

@@ -542,6 +542,18 @@ abstract class BricksLocalizations {
   /// **'Too high hours number - no such time exists (midnight is 00:00)'**
   String get timeErrorTooBigHour;
 
+  /// No description provided for @timeErrorTooFarBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Time must not be earlier than {minTimeParam}'**
+  String timeErrorTooFarBack(String minTimeParam);
+
+  /// No description provided for @timeErrorTooFarForward.
+  ///
+  /// In en, this message translates to:
+  /// **'Time must not be later than {maxTimeParam}'**
+  String timeErrorTooFarForward(String maxTimeParam);
+
   /// No description provided for @datetimeStringErrorNoSpace.
   ///
   /// In en, this message translates to:

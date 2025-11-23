@@ -2,17 +2,14 @@ import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_limits.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_range_span.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/format_validate_components.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/dateTime_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/date_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/time_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 class DateTimeRangeFormatterValidator extends FormatterValidator<String, DateTime, DateTimeFormatterValidatorPayload> {
-  final String _keyString;
   final FormManager _formManager;
   final DateTimeUtils _dateTimeUtils;
   final CurrentDate _currentDate;
@@ -31,41 +28,67 @@ class DateTimeRangeFormatterValidator extends FormatterValidator<String, DateTim
   String? _dateEnd;
   String? _timeEnd;
 
+  final DateTimeRangeLimits? _rangeLimits;
+
   DateTimeRangeFormatterValidator(
-    this._keyString,
+    String keyString,
     this._formManager,
     this._dateTimeUtils,
     this._currentDate,
-    DateTimeRangeLimits dateTimeRangeLimits,
+    this._rangeLimits,
   ) {
-    _setKeyStrings(_keyString);
-    _fillDateTimeFormatterValidators(dateTimeRangeLimits);
+    _setKeyStrings(keyString);
+    _fillDateTimeFormatterValidators();
+  }
+
+  void _setKeyStrings(String keyString) {
+    _dateStartKeyString = rangeDateStartKeyString(keyString);
+    _timeStartKeyString = rangeTimeStartKeyString(keyString);
+    _dateEndKeyString = rangeDateEndKeyString(keyString);
+    _timeEndKeyString = rangeTimeEndKeyString(keyString);
+    _keyStrings = [_dateStartKeyString!, _timeStartKeyString!, _dateEndKeyString!, _timeEndKeyString!];
+  }
+
+  void _fillDateTimeFormatterValidators() {
+    _formatterValidators[_dateStartKeyString!] = DateFormatterValidator(
+      _dateTimeUtils,
+      _currentDate,
+      _rangeLimits?.startDateTimeLimits,
+    );
+    _formatterValidators[_timeStartKeyString!] = TimeFormatterValidator(_dateTimeUtils);
+
+    _formatterValidators[_dateEndKeyString!] = DateFormatterValidator(
+      _dateTimeUtils,
+      _currentDate,
+      _rangeLimits?.endDateTimeLimits,
+    );
+    _formatterValidators[_timeEndKeyString!] = TimeFormatterValidator(_dateTimeUtils);
   }
 
   @override
   DateTimeFieldContent run(
     BricksLocalizations localizations,
-    DateTimeFieldContent input, [
+    DateTimeFieldContent fieldContent, [
     DateTimeFormatterValidatorPayload? payload,
     String? keyString,
   ]) {
     assert(keyString != null, 'Null keyString - DateTimeRangeFormatterValidator must receive non-null keyString.');
 
-    // TODO DateValidator? TimeValidator? identify - adjust
     FormatterValidator fieldFormaterValidator = _formatterValidators[keyString!]!;
-    DateTimeFieldContent fieldContent = fieldFormaterValidator.run(localizations, input) as DateTimeFieldContent;
+    DateTimeFieldContent resultContent =
+        fieldFormaterValidator.run(localizations, fieldContent) as DateTimeFieldContent;
 
     // FieldContent cached here will be used during validation of any DateTime fields contained in
     // this formatter-validator by:
     // - providing FieldContent.isValid for future validation of other fields in this DateTimeRangeField
     // - providing FieldContent to be stored in FormManager, (including the field's input and value)
-    cacheFieldContent(keyString, fieldContent);
+    cacheFieldContent(keyString, resultContent);
 
     // All four fields will be validated against range criteria here. They have been checked for date/times correctness
     // by now.
     // FieldContent of the field which triggered validation here will be stored after being returned from this method.
     // The other fields' contents will be stored in FormManager -> FormData here.
-    if (fieldContent.isValid! && _areOtherFieldsValid(keyString)) {
+    if (resultContent.isValid! && _areOtherFieldsValid(keyString)) {
       _validateRange(localizations);
       _storeOtherFieldsContentsInFormData(keyString);
     }
@@ -74,13 +97,6 @@ class DateTimeRangeFormatterValidator extends FormatterValidator<String, DateTim
     // - be stored in FormData by FormManager
     // - FieldContent.input (just formatted by FormatterValidator) will be entered into the field
     return _getFieldContent(keyString);
-  }
-
-  void _fillDateTimeFormatterValidators(DateTimeRangeLimits dateTimeRangeLimits) {
-    _formatterValidators[_dateStartKeyString!] = DateFormatterValidator(_dateTimeUtils, _currentDate);
-    _formatterValidators[_dateEndKeyString!] = DateFormatterValidator(_dateTimeUtils, _currentDate);
-    _formatterValidators[_timeStartKeyString!] = TimeFormatterValidator(_dateTimeUtils);
-    _formatterValidators[_timeEndKeyString!] = TimeFormatterValidator(_dateTimeUtils);
   }
 
   bool _areOtherFieldsValid(String excludedKeyString) {
@@ -149,8 +165,8 @@ class DateTimeRangeFormatterValidator extends FormatterValidator<String, DateTim
 
       // start-date present & end-date present & end-date too far from start-date
       // -----------------------------------------------------------------
-      if (_dateTimeSpanLimits != null && _dateTimeSpanLimits!.maxDateTimeSpanMinutes != null) {
-        int maxSpanMinutes = _dateTimeSpanLimits!.maxDateTimeSpanMinutes!;
+      int? maxSpanMinutes = _rangeLimits?.maxSpanMinutes;
+      if (maxSpanMinutes != null) {
         if (dateDiffMinutes > maxSpanMinutes) {
           String maxSpanCondition = _dateTimeUtils.minutesToSpanCondition(maxSpanMinutes);
           errorText = localizations.rangeDatesTooFarApart(maxSpanCondition);
@@ -190,8 +206,8 @@ class DateTimeRangeFormatterValidator extends FormatterValidator<String, DateTim
         }
         // start-time less than minimum before end-time
         // -----------------------------------------------------------------
-        if (_dateTimeSpanLimits != null && _dateTimeSpanLimits!.minDateTimeSpanMinutes != null) {
-          int minSpanMinutes = _dateTimeSpanLimits!.minDateTimeSpanMinutes!;
+        int? minSpanMinutes = _rangeLimits?.minSpanMinutes;
+        if (minSpanMinutes != null) {
           if (timeDiffMinutes < minSpanMinutes) {
             String minSpanCondition = _dateTimeUtils.minutesToSpanCondition(minSpanMinutes);
             errorText = localizations.rangeTimeStartEndTooCloseOrAddDateEnd(minSpanCondition);
@@ -219,8 +235,8 @@ class DateTimeRangeFormatterValidator extends FormatterValidator<String, DateTim
         }
         // start-time less than minimum before end-time
         // -----------------------------------------------------------------
-        if (_dateTimeSpanLimits != null && _dateTimeSpanLimits!.minDateTimeSpanMinutes != null) {
-          int minSpanMinutes = _dateTimeSpanLimits!.minDateTimeSpanMinutes!;
+        int? minSpanMinutes = _rangeLimits?.minSpanMinutes;
+        if (minSpanMinutes != null) {
           if (dateTimeDiffMinutes < minSpanMinutes) {
             String minSpan = _dateTimeUtils.minutesToSpanCondition(minSpanMinutes);
             errorText = localizations.rangeTimeStartEndTooCloseSameDate(minSpan);
@@ -264,14 +280,6 @@ class DateTimeRangeFormatterValidator extends FormatterValidator<String, DateTim
     _timeStart = _getRangeFieldText(_timeStartKeyString!);
     _dateEnd = _getRangeFieldText(_dateEndKeyString!);
     _timeEnd = _getRangeFieldText(_timeEndKeyString!);
-  }
-
-  void _setKeyStrings(String rangeId) {
-    _dateStartKeyString = rangeDateStartKeyString(rangeId);
-    _timeStartKeyString = rangeTimeStartKeyString(rangeId);
-    _dateEndKeyString = rangeDateEndKeyString(rangeId);
-    _timeEndKeyString = rangeTimeEndKeyString(rangeId);
-    _keyStrings = [_dateStartKeyString!, _timeStartKeyString!, _dateEndKeyString!, _timeEndKeyString!];
   }
 
   String? _getRangeFieldText(String keyString) {

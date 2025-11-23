@@ -1,6 +1,7 @@
 import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 
 enum DateTimeOrBoth {
   date,
@@ -125,5 +126,20 @@ class DateTimeUtils {
 
     String minutes = '${nMinutes % minutesInHour} minutes';
     return '$years, $months, $days, $hours, $minutes';
+  }
+
+  DateTime replaceTime(DateTime dateSource, String timeString) {
+    final parts = timeString.split(':');
+
+    final hour = int.parse(parts[0]);
+    final minute = int.parse(parts[1]);
+
+    return DateTime(
+      dateSource.year,
+      dateSource.month,
+      dateSource.day,
+      hour,
+      minute,
+    );
   }
 }

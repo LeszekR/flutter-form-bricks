@@ -276,6 +276,16 @@ class BricksLocalizationsPl extends BricksLocalizations {
       'Za dużo godzin - nie ma takiej godziny (północ to 00:00)';
 
   @override
+  String timeErrorTooFarBack(String minTimeParam) {
+    return 'Godzina nie może być wcześniejsza niż $minTimeParam';
+  }
+
+  @override
+  String timeErrorTooFarForward(String maxTimeParam) {
+    return 'Godzina nie może być późniejsza niż $maxTimeParam';
+  }
+
+  @override
   String get datetimeStringErrorNoSpace =>
       'Data musi być oddzielona spacją od godziny';
 

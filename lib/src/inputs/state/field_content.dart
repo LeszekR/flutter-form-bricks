@@ -1,3 +1,5 @@
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/time_stamp.dart';
+
 /// Result of formatting-validation operation by `FormatterValidator`.
 ///
 /// **input** is what the user edits and can / see in the UI.
@@ -61,7 +63,17 @@ class FieldContent<I, V> {
   int get hashCode => Object.hash(input, value, isValid, error);
 }
 
-/// To be returned from formatting-validation procedure for input of type `DateTime`.
+/// Formatting-validation procedure return type for input of type `DateTime`.
 ///
-/// Usage - format-validation of: `DateFieldBrick`, `TimeFieldBrick`, `DateTimeFieldBrick`, and their `..Range` fields.
+/// Usage - format-validation of: `DateeFieldBrick`.
+typedef DateFieldContent = FieldContent<String, Date>;
+
+/// Formatting-validation procedure return type for input of type `DateTime`.
+///
+/// Usage - format-validation of: `TimeFieldBrick` and its `..Range` fields.
+typedef TimeFieldContent = FieldContent<String, Time>;
+
+/// Formatting-validation procedure return type for input of type `DateTime`.
+///
+/// Usage - format-validation of: `DateTimeFieldBrick`.
 typedef DateTimeFieldContent = FieldContent<String, DateTime>;

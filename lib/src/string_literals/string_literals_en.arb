@@ -144,6 +144,23 @@
   "timeErrorTooBigMinute": "Too high minutes number - no such time exists",
   "timeErrorTooBigHour": "Too high hours number - no such time exists (midnight is 00:00)",
 
+  "timeErrorTooFarBack": "Time must not be earlier than {minTimeParam}",
+  "@timeErrorTooFarBack": {
+    "placeholders": {
+      "minTimeParam": {
+        "type": "String"
+      }
+    }
+  },
+  "timeErrorTooFarForward": "Time must not be later than {maxTimeParam}",
+  "@timeErrorTooFarForward": {
+    "placeholders": {
+      "maxTimeParam": {
+        "type": "String"
+      }
+    }
+  },
+
   "datetimeStringErrorNoSpace": "Date must be separated from time with space",
   "datetimeStringErrorTooManySpaces": "Too many spaces"
 }
