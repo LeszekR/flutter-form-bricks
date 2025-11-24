@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart' hide RadioGroup;
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/choice/radio_group.dart';
-
-import '../../forms/form_manager/form_manager_OLD.dart';
-import '../text/text_input_base/basic_text_input.dart';
-import 'checkbox_custom.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 enum ECheckboxShape { square, round }
 
@@ -59,6 +54,7 @@ class ChoiceInputs {
 
   /// Important! T must implement equals in order for this to work!
   static Widget dropdown<T>({
+    required BricksLocalizations localizations,
     required String keyString,
     required String label,
     required Map<String, T> choices,
@@ -85,7 +81,7 @@ class ChoiceInputs {
           ? null
           : (value) {
               onChanged?.call(value);
-              formManager?.onFieldChanged(keyString, value);
+              formManager?.onFieldChanged(localizations, keyString, value);
             },
       enabled: !readonly,
       focusNode: focusNode,
@@ -94,66 +90,66 @@ class ChoiceInputs {
     return SizedBox(width: 400.0, child: dropdown);
   }
 
-  // static Widget popup<T extends Entity>({
-  //   required String keyString,
-  //   required String label,
-  //   required List<T> choices,
-  //   required BuildContext context,
-  //   required FormManager formManager,
-  //   final T? initialValue,
-  //   final bool readonly = false,
-  //   final bool required = false,
-  //   final ValueChanged<String?>? onChanged,
-  //   final List<String>? linkedFields,
-  //   final double? inputSize,
-  // }) {
-  //   final validator = required ? FormBuilderValidators.required(errorText: "Wymagane") : null;
-  //
-  //   final TextEditingController controller = TextEditingController(text: initialValue?.shortDescription());
-  //
-  //   final chosenItem = SizedBox(
-  //       width: 200,
-  //       child: FormBuilderTextField(
-  //         controller: controller,
-  //         name: "${FormManager.ignoreFieldKey}.$keyString",
-  //         // decoration: AppStyle.inputDecoration(label),
-  //         readOnly: true,
-  //         validator: validator,
-  //       ));
-  //
-  //   final input = Visibility(
-  //     visible: false,
-  //     maintainState: true,
-  //     child: BasicTextInput.basicTextInput(
-  //       keyString: keyString,
-  //       autovalidateMode: AutovalidateMode.disabled,
-  //       label: label,
-  //       labelPosition: LabelPosition.topLeft,
-  //       initialValue: initialValue?.getId().toString(),
-  //       readonly: readonly,
-  //       validator: validator,
-  //       formManager: formManager,
-  //       onChanged: onChanged,
-  //       linkedFields: linkedFields,
-  //       inputWidth: inputSize,
-  //     ),
-  //   );
-  //
-  //   final button = IconButton(
-  //     icon: const Icon(Icons.search_sharp),
-  //     onPressed: () {
-  //       formManager.formKey.currentState?.fields[keyString]?.focus();
-  //       openPopupTable(context, form: EntityPopupForm(entities: choices)).then((value) {
-  //         controller.text = value?.shortDescription() ?? "";
-  //         formManager.onFieldChanged(keyString, value);
-  //       });
-  //     },
-  //   );
-  //   return Row(children: [chosenItem, input, button]);
-  // }
-  //
-  // static Future<Entity?> openPopupTable({required BuildContext context, required EntityPopupForm form}) {
-  //   return showDialog(context, barrierDismissible: false, builder: (BuildContext context) => form)
-  //       .then((value) => value);
-  // }
+// static Widget popup<T extends Entity>({
+//   required String keyString,
+//   required String label,
+//   required List<T> choices,
+//   required BuildContext context,
+//   required FormManager formManager,
+//   final T? initialValue,
+//   final bool readonly = false,
+//   final bool required = false,
+//   final ValueChanged<String?>? onChanged,
+//   final List<String>? linkedFields,
+//   final double? inputSize,
+// }) {
+//   final validator = required ? FormBuilderValidators.required(errorText: "Wymagane") : null;
+//
+//   final TextEditingController controller = TextEditingController(text: initialValue?.shortDescription());
+//
+//   final chosenItem = SizedBox(
+//       width: 200,
+//       child: FormBuilderTextField(
+//         controller: controller,
+//         name: "${FormManager.ignoreFieldKey}.$keyString",
+//         // decoration: AppStyle.inputDecoration(label),
+//         readOnly: true,
+//         validator: validator,
+//       ));
+//
+//   final input = Visibility(
+//     visible: false,
+//     maintainState: true,
+//     child: BasicTextInput.basicTextInput(
+//       keyString: keyString,
+//       autovalidateMode: AutovalidateMode.disabled,
+//       label: label,
+//       labelPosition: LabelPosition.topLeft,
+//       initialValue: initialValue?.getId().toString(),
+//       readonly: readonly,
+//       validator: validator,
+//       formManager: formManager,
+//       onChanged: onChanged,
+//       linkedFields: linkedFields,
+//       inputWidth: inputSize,
+//     ),
+//   );
+//
+//   final button = IconButton(
+//     icon: const Icon(Icons.search_sharp),
+//     onPressed: () {
+//       formManager.formKey.currentState?.fields[keyString]?.focus();
+//       openPopupTable(context, form: EntityPopupForm(entities: choices)).then((value) {
+//         controller.text = value?.shortDescription() ?? "";
+//         formManager.onFieldChanged(keyString, value);
+//       });
+//     },
+//   );
+//   return Row(children: [chosenItem, input, button]);
+// }
+//
+// static Future<Entity?> openPopupTable({required BuildContext context, required EntityPopupForm form}) {
+//   return showDialog(context, barrierDismissible: false, builder: (BuildContext context) => form)
+//       .then((value) => value);
+// }
 }

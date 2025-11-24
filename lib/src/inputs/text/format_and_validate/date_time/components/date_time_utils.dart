@@ -1,7 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
 
 enum DateTimeOrBoth {
   date,
@@ -53,7 +53,7 @@ class DateTimeUtils {
     // too many groups of digits
     var nDelimiters = RegExp(stringDelimiter).allMatches(result).length;
     if (nDelimiters > maxNumberDelimiters)
-      return DateTimeFieldContent.err(text, getErMsgTooManyDelimiters(bricksLocalizations, dateTimeOrBoth));
+      return DateTimeFieldContent.err(text, erMsgTooManyDelimiters(bricksLocalizations, dateTimeOrBoth));
 
     // too few digits or too many digits
     var nDigits = RegExp('[0-9]').allMatches(text).length;
@@ -75,6 +75,7 @@ class DateTimeUtils {
     return textClean;
   }
 
+  @visibleForTesting
   String errMsgForbiddenChars(BricksLocalizations localizations, DateTimeOrBoth eDateTime) {
     if (eDateTime == DateTimeOrBoth.date) {
       return localizations.dateStringErrorBadChars;
@@ -82,6 +83,7 @@ class DateTimeUtils {
     return localizations.timeStringErrorBadChars;
   }
 
+  @visibleForTesting
   String errMsgTooFewDigits(BricksLocalizations localizations, DateTimeOrBoth eDateTime) {
     if (eDateTime == DateTimeOrBoth.date) {
       return localizations.dateStringErrorTooFewDigits;
@@ -89,6 +91,7 @@ class DateTimeUtils {
     return localizations.timeStringErrorTooFewDigits;
   }
 
+  @visibleForTesting
   String errMsgTooManyDigits(BricksLocalizations localizations, DateTimeOrBoth eDateTime) {
     if (eDateTime == DateTimeOrBoth.date) {
       return localizations.dateStringErrorTooManyDigits;
@@ -96,7 +99,8 @@ class DateTimeUtils {
     return localizations.timeStringErrorTooManyDigits;
   }
 
-  String getErMsgTooManyDelimiters(BricksLocalizations localizations, DateTimeOrBoth eDateTime) {
+  @visibleForTesting
+  String erMsgTooManyDelimiters(BricksLocalizations localizations, DateTimeOrBoth eDateTime) {
     if (eDateTime == DateTimeOrBoth.date) {
       return localizations.dateStringErrorTooManyDelimiters;
     }

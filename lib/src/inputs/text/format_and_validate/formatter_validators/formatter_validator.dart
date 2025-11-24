@@ -1,12 +1,10 @@
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_payload.dart';
 
-abstract class FormatterValidator<I, V, P extends FormatterValidatorPayload> {
-  FieldContent<I, V> run(
+abstract class FormatterValidator<Input, Value> {
+  FieldContent<Input, Value> run(
     BricksLocalizations localizations,
-    FieldContent<I, V> fieldContent, [
-    P? payload,
-    String? keyString,
-  ]);
+    String keyString,
+    FieldContent<Input, Value> fieldContent,
+  );
 }

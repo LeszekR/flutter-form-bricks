@@ -3,16 +3,16 @@ import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_utils.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/format_validate_components.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/date_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/time_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
-class DateTimeRangeFormatterValidator extends FormatterValidator<String, DateTime, DateTimeFormatterValidatorPayload> {
+class DateTimeRangeFormatterValidator extends FormatterValidator<String, DateTime> {
   final FormManager _formManager;
   final DateTimeUtils _dateTimeUtils;
   final CurrentDate _currentDate;
+  final DateTimeRangeLimits? _rangeLimits;
 
   List<String> _keyStrings = [];
   final Map<String, DateTimeFieldContent> _resultsCache = {};
@@ -27,8 +27,6 @@ class DateTimeRangeFormatterValidator extends FormatterValidator<String, DateTim
   String? _timeStart;
   String? _dateEnd;
   String? _timeEnd;
-
-  final DateTimeRangeLimits? _rangeLimits;
 
   DateTimeRangeFormatterValidator(
     String keyString,
@@ -46,7 +44,13 @@ class DateTimeRangeFormatterValidator extends FormatterValidator<String, DateTim
     _timeStartKeyString = rangeTimeStartKeyString(keyString);
     _dateEndKeyString = rangeDateEndKeyString(keyString);
     _timeEndKeyString = rangeTimeEndKeyString(keyString);
-    _keyStrings = [_dateStartKeyString!, _timeStartKeyString!, _dateEndKeyString!, _timeEndKeyString!];
+
+    _keyStrings = [
+      _dateStartKeyString!,
+      _timeStartKeyString!,
+      _dateEndKeyString!,
+      _timeEndKeyString!,
+    ];
   }
 
   void _fillDateTimeFormatterValidators() {
@@ -55,28 +59,30 @@ class DateTimeRangeFormatterValidator extends FormatterValidator<String, DateTim
       _currentDate,
       _rangeLimits?.startDateTimeLimits,
     );
-    _formatterValidators[_timeStartKeyString!] = TimeFormatterValidator(_dateTimeUtils);
-
+    _formatterValidators[_timeStartKeyString!] = TimeFormatterValidator(
+      _dateTimeUtils,
+      _rangeLimits?.startDateTimeLimits,
+    );
     _formatterValidators[_dateEndKeyString!] = DateFormatterValidator(
       _dateTimeUtils,
       _currentDate,
       _rangeLimits?.endDateTimeLimits,
     );
-    _formatterValidators[_timeEndKeyString!] = TimeFormatterValidator(_dateTimeUtils);
+    _formatterValidators[_timeEndKeyString!] = TimeFormatterValidator(
+      _dateTimeUtils,
+      _rangeLimits?.endDateTimeLimits,
+    );
   }
 
   @override
   DateTimeFieldContent run(
     BricksLocalizations localizations,
-    DateTimeFieldContent fieldContent, [
-    DateTimeFormatterValidatorPayload? payload,
-    String? keyString,
-  ]) {
-    assert(keyString != null, 'Null keyString - DateTimeRangeFormatterValidator must receive non-null keyString.');
-
-    FormatterValidator fieldFormaterValidator = _formatterValidators[keyString!]!;
+    String keyString,
+    DateTimeFieldContent fieldContent,
+  ) {
+    FormatterValidator fieldFormaterValidator = _formatterValidators[keyString]!;
     DateTimeFieldContent resultContent =
-        fieldFormaterValidator.run(localizations, fieldContent) as DateTimeFieldContent;
+        fieldFormaterValidator.run(localizations, keyString, fieldContent) as DateTimeFieldContent;
 
     // FieldContent cached here will be used during validation of any DateTime fields contained in
     // this formatter-validator by:

@@ -10,7 +10,7 @@ abstract class FormManager extends ChangeNotifier {
   @visibleForTesting
   final ValueNotifier<String> errorMessageNotifier = ValueNotifier<String>('');
   final FormData _formData;
-  final Map<String, FormatterValidatorChain?> _formatterValidatorMap;
+  final Map<String, FormatterValidatorChain?> _formatterValidatorChainMap;
   late BricksLocalizations _localizations;
 
   // TODO make flat map for tabbed form too and implement here
@@ -27,7 +27,7 @@ abstract class FormManager extends ChangeNotifier {
 
   FormManager({required FormData formData, required FormSchema formSchema})
       : _formData = formData,
-        _formatterValidatorMap = {
+        _formatterValidatorChainMap = {
           for (final d in formSchema.descriptors) d.keyString: d.formatterValidatorChain,
         } {
     _initFormData(formSchema, _formData);
@@ -60,9 +60,10 @@ abstract class FormManager extends ChangeNotifier {
 
   // fields registration in FormManager
   // ==============================================================================
-  /// Obligatory for every field
-  ///  - guarantees access to `FormatterValidatorChain`
-  ///  - saves field's input, value, isValid and error in state preservation object: `FormData`.
+  /// Obligatory for every field - guarantees access to:
+  ///  - `FormatterValidatorChain` for the field (if there is any)
+  ///  - state preservation object: `FormData` where field's **input**, **value**, **isValid**,
+  ///    **error** will be kept over the life of the `FormBrick`.
   void registerField<T>(String keyString, Type T, bool withValidator) {
     assert(
       fieldDataMap.keys.contains(keyString),
@@ -89,14 +90,6 @@ abstract class FormManager extends ChangeNotifier {
         _setFocusedKeyString(keyString);
         _showFieldErrorMessage(keyString);
       }
-
-      /* // test this functionality: when a field losses focus and no other FormFieldBrick acquires it then focusedKeyString
-      // remains unchanged and the last error message is displayed - case: clicking a button
-      // this way on return from navigation focus will be requested by the last focused field
-      else if (errorMessageNotifier.value != '') {
-        _setFocusedKeyString(null);
-        _showFieldErrorMessage(null);
-      }*/
     });
   }
 
@@ -121,7 +114,7 @@ abstract class FormManager extends ChangeNotifier {
 
   bool isFieldDirty(String keyString) => getFieldContent(keyString).input != _fieldData(keyString).initialInput;
 
-  FormatterValidatorChain? getFormatterValidatorChain(String keyString) => _formatterValidatorMap[keyString];
+  FormatterValidatorChain? getFormatterValidatorChain(String keyString) => _formatterValidatorChainMap[keyString];
 
   void _setFocusedKeyString(String keyString) => _formData.focusedKeyString = keyString;
 
@@ -177,7 +170,7 @@ abstract class FormManager extends ChangeNotifier {
       formatterValidatorChain = getFormatterValidatorChain(keyString);
       if (formatterValidatorChain == null) continue;
 
-      fieldContent = formatterValidatorChain.runChain(_localizations, getFieldContent(keyString), keyString);
+      fieldContent = formatterValidatorChain.runChain(_localizations, keyString, getFieldContent(keyString));
       storeFieldContent(keyString, fieldContent);
     }
 

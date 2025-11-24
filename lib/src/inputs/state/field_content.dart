@@ -1,17 +1,31 @@
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/time_stamp.dart';
 
-/// Result of formatting-validation operation by `FormatterValidator`.
+/// Represents the result of a formatting and validation operation performed by a `FormatterValidator`.
 ///
-/// **input** is what the user edits and can / see in the UI.
+/// This class encapsulates:
+/// - the **raw input** entered or visible in the UI,
+/// - the **parsed value** of the desired output type,
+/// - a flag indicating whether the value is valid,
+/// - and an optional **error message** to display if invalid.
 ///
-/// **value** is the result of the **Content** parsing into a different type, only used in field types which display
-/// different type for content and for value actually yielded from the field.
-/// (Examples: `DateFieldBrick`, 'IntegerFieldBrick`, `RadioBrick`, etc.)
+/// ### Why formatting and validation are combined
+/// Formatting and validation are executed together to avoid redundant computation.
+/// If formatting fails (e.g. an incomplete or malformed date), validation is skipped,
+/// and a precise error message is returned early. If these were separate,
+/// the input would have to be parsed and verified twice.
 ///
-/// **isValid** - self-explanatory.
+/// ### Generic Parameters:
+/// - `Input`: The user-facing input type, e.g. `String`
+/// - `Value`: The parsed output value type, e.g. `int`, `DateTime`, etc.
 ///
-/// **error** is error message which will be displayed in UI either in `InputDecoration` or in form area dedicated
-/// for this purpose.
+/// ### Field Notes:
+/// - `input` – The UI-editable value (e.g. text in a `TextField`)
+/// - `value` – The parsed, typed value (only set if parsing and validation succeed)
+/// - `isValid` – Indicates whether the input was considered valid
+/// - `error` – A user-visible error message, suitable for display in `InputDecoration.errorText` or similar
+///
+/// Used across field bricks where the internal content type differs from the parsed data type,
+/// such as `DateFieldBrick`, `IntegerFieldBrick`, and `RadioBrick`.
 class FieldContent<Input, Value> {
   final Input? input;
   final Value? value;

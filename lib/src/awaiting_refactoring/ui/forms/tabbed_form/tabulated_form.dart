@@ -7,7 +7,7 @@ import 'tabulated_form_manager.dart';
 
 abstract class TabulatedForm extends AbstractForm {
   TabulatedForm({super.key, required FormData stateData, required FormSchema schema})
-      : super(formManager: TabulatedFormManager(stateData: stateData, schema: schema));
+      : super(formManager: TabulatedFormManager(formData: stateData, formSchema: schema));
 }
 
 abstract class TabulatedFormState<T extends TabulatedForm> extends AbstractFormState<T>

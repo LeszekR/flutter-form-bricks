@@ -7,8 +7,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'single_form_manager.dart';
 
 abstract class SingleForm extends AbstractForm {
-  SingleForm({super.key, required FormData stateData, required FormSchema schema})
-      : super(formManager: SingleFormManager(stateData: stateData, schema: schema));
+  SingleForm({super.key, required FormData formData, required FormSchema schema})
+      : super(formManager: SingleFormManager(formData: formData, formSchema: schema));
 
   @override
   SingleFormState createState();

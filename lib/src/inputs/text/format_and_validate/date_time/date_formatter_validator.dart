@@ -2,34 +2,30 @@ import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_utils.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/format_validate_components.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/time_stamp.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/time_stamp.dart';
 
 const dateDelimiterPattern = '( |/|-|,|;|\\.)';
 const dateDelimiter = '-';
 
-class DateFormatterValidator extends FormatterValidator<String, Date, DateTimeFormatterValidatorPayload> {
-  static DateFormatterValidator? _instance;
-
+class DateFormatterValidator extends FormatterValidator<String, Date> {
   final DateTimeUtils _dateTimeUtils;
   final CurrentDate _currentDate;
   final DateTimeLimits? _dateTimeLimits;
 
-  DateFormatterValidator._(this._dateTimeUtils, this._currentDate, this._dateTimeLimits) {}
-
-  factory DateFormatterValidator(DateTimeUtils dateTimeUtils, CurrentDate currentDate, DateTimeLimits? dateTimeLimits) {
-    return _instance ??= DateFormatterValidator._(dateTimeUtils, currentDate, dateTimeLimits);
-  }
+  DateFormatterValidator(
+    this._dateTimeUtils,
+    this._currentDate,
+    [this._dateTimeLimits,]
+  );
 
   @override
   DateFieldContent run(
     BricksLocalizations localizations,
-    DateFieldContent fieldContent, [
-    DateTimeFormatterValidatorPayload? payload,
-    String? keyString,
-  ]) {
+    String keyString,
+    DateFieldContent fieldContent,
+  ) {
     DateFieldContent parseResult;
 
     parseResult = _dateTimeUtils.cleanDateTimeString(
@@ -47,13 +43,12 @@ class DateFormatterValidator extends FormatterValidator<String, Date, DateTimeFo
     parseResult = parseDateFromString(localizations, parseResult);
     if (!parseResult.isValid!) return DateFieldContent.err(fieldContent.input, parseResult.error);
 
-    parseResult = validateDate(localizations, parseResult, payload?.dateTimeLimits);
+    parseResult = validateDate(localizations, parseResult, _dateTimeLimits);
 
     return parseResult;
   }
 
-  DateFieldContent parseDateFromString(
-      BricksLocalizations localizations, DateFieldContent dateTimeFieldContent) {
+  DateFieldContent parseDateFromString(BricksLocalizations localizations, DateFieldContent dateTimeFieldContent) {
     String text = dateTimeFieldContent.input!;
     int nDelimiters = RegExp(dateDelimiter).allMatches(text).length;
 

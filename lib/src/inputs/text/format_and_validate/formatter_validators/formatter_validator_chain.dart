@@ -1,62 +1,69 @@
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_payload.dart';
 
-abstract class FormatterValidatorChain<Input, Value, Payload extends FormatterValidatorPayload> {
-  final List<FormatterValidator<Input, Value, Payload>> steps;
+abstract class FormatterValidatorChain<Input, Value> {
+  final List<FormatterValidator<Input, Value>> steps;
 
   FormatterValidatorChain(this.steps);
 
+  /// Runs the formatting-validation chain for a given field.
+  ///
+  /// The [keyString] is required even in cases where it's not strictly needed,
+  /// in order to simplify the overall interface and improve code readability.
+  /// While it may be redundant for some `FormatterValidator` implementations,
+  /// making it optional or conditional would add unnecessary complexity.
+  ///
+  /// This is a conscious trade-off favoring clarity and maintainability over minimalism.
+  ///
+  /// Used in composite validators like `DateTimeRangeFormatterValidator`, where multiple
+  /// fields are validated as part of a group and require identification.
+  ///
+  /// Example: `DateTimeRangeFormatterValidator`
   FieldContent<Input, Value> runChain(
     BricksLocalizations localizations,
-    Input input, [
-    String? keyString,
-    Payload? payload,
-  ]);
+    String keyString,
+    Input input,
+  );
 }
 
 // TODO lock field types accepted as clients of each FormatterValidatorChain implementation
 
-abstract class FormatterValidatorChainEarlyStop<I, V, P extends FormatterValidatorPayload>
-    extends FormatterValidatorChain<I, V, P> {
+abstract class FormatterValidatorChainEarlyStop<Input, Value> extends FormatterValidatorChain<Input, Value> {
   FormatterValidatorChainEarlyStop(super.steps);
 
   @override
-  FieldContent<I, V> runChain(
+  FieldContent<Input, Value> runChain(
     BricksLocalizations localizations,
-    I inputString, [
-    String? keyString,
-    P? payload,
-  ]) {
-    FieldContent<I, V> result = FieldContent<I, V>.transient(inputString);
+    String keyString,
+    Input input,
+  ) {
+    FieldContent<Input, Value> resultFieldContent = FieldContent<Input, Value>.transient(input);
 
-    for (FormatterValidator<I, V, P> step in steps) {
-      result = step.run(localizations, result, payload, keyString);
-      if (result.isValid != null && result.isValid!) {
-        return result;
+    for (FormatterValidator<Input, Value> step in steps) {
+      resultFieldContent = step.run(localizations, keyString, resultFieldContent);
+      if (resultFieldContent.isValid ?? false) {
+        return resultFieldContent;
       }
     }
-    return result;
+    return resultFieldContent;
   }
 }
 
-abstract class FormatterValidatorChainFullRun<I, V, P extends FormatterValidatorPayload>
-    extends FormatterValidatorChain<I, V, P> {
+abstract class FormatterValidatorChainFullRun<Input, Value> extends FormatterValidatorChain<Input, Value> {
   FormatterValidatorChainFullRun(super.steps);
 
   @override
-  FieldContent<I, V> runChain(
+  FieldContent<Input, Value> runChain(
     BricksLocalizations localizations,
-    I inputString, [
-    String? keyString,
-    P? payload,
-  ]) {
-    FieldContent<I, V> result = FieldContent<I, V>.transient(inputString);
+    String keyString,
+    Input input,
+  ) {
+    FieldContent<Input, Value> resultFieldContent = FieldContent<Input, Value>.transient(input);
 
-    for (FormatterValidator<I, V, P> step in steps) {
-      result = step.run(localizations, result, payload, keyString);
+    for (FormatterValidator<Input, Value> step in steps) {
+      resultFieldContent = step.run(localizations, keyString, resultFieldContent);
     }
-    return result;
+    return resultFieldContent;
   }
 }

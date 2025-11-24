@@ -1,7 +1,6 @@
 import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/date_time_utils.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/format_validate_components.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_time/components/time_stamp.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
@@ -10,27 +9,22 @@ import 'package:intl/intl.dart';
 const timeDelimiterPattern = '( |/|-|,|\\.|:|;)';
 const timeDelimiter = ':';
 
-class TimeFormatterValidator extends FormatterValidator<String, Time, DateTimeFormatterValidatorPayload> {
-  static TimeFormatterValidator? _instance;
+class TimeFormatterValidator extends FormatterValidator<String, Time> {
   late final DateTimeUtils _dateTimeUtils;
+  late final DateTimeLimits? _dateTimeLimits;
   final nMaxDelimiters = 1;
 
-  TimeFormatterValidator._(DateTimeUtils dateTimeUtils) {
-    _dateTimeUtils = dateTimeUtils;
-  }
-
-  factory TimeFormatterValidator(DateTimeUtils dateTimeUtils) {
-    _instance ??= TimeFormatterValidator._(dateTimeUtils);
-    return _instance!;
-  }
+  TimeFormatterValidator(
+    this._dateTimeUtils,
+    [this._dateTimeLimits,]
+  );
 
   @override
   TimeFieldContent run(
     BricksLocalizations localizations,
-    TimeFieldContent fieldContent, [
-    DateTimeFormatterValidatorPayload? limits,
-    String? keyString,
-  ]) {
+    String keyString,
+    TimeFieldContent fieldContent,
+  ) {
     TimeFieldContent parseResult = _dateTimeUtils.cleanDateTimeString(
       bricksLocalizations: localizations,
       text: fieldContent.input!,
@@ -46,7 +40,7 @@ class TimeFormatterValidator extends FormatterValidator<String, Time, DateTimeFo
     parseResult = parseTimeFromString(localizations, parseResult);
     if (!parseResult.isValid!) return TimeFieldContent.err(fieldContent.input, parseResult.error);
 
-    parseResult = _validateTime(localizations, parseResult, limits?.dateTimeLimits);
+    parseResult = _validateTime(localizations, parseResult, _dateTimeLimits);
 
     return parseResult;
   }

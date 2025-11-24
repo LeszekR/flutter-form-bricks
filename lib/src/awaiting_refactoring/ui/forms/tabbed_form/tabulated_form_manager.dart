@@ -12,7 +12,7 @@ class TabulatedFormManager extends FormManager {
   GlobalKey<FormBuilderState>? _currentTabGlobalKey;
   final Map<GlobalKey<FormBuilderState>, TabData> tabsDataMap = {};
 
-  TabulatedFormManager({required super.formData, required super.schema});
+  TabulatedFormManager({required super.formData, required super.formSchema});
 
   // @override
   // void fillInitialInputValuesMap() {
@@ -71,12 +71,12 @@ class TabulatedFormManager extends FormManager {
     tabsDataMap[globalKey] = tabData;
   }
 
-  @override
-  FormBuilderfieldContent<FormBuilderField<dynamic>, dynamic>? findField(String keyString) {
-    // TODO refactor to FlutterFormBuilder pattern - ?
-    _setCurrentTab(keyString);
-    return _currentTabGlobalKey!.currentState?.fields[keyString];
-  }
+  // @override
+  // FormBuilderfieldContent<FormBuilderField<dynamic>, dynamic>? findField(String keyString) {
+  //   // TODO refactor to FlutterFormBuilder pattern - ?
+  //   _setCurrentTab(keyString);
+  //   return _currentTabGlobalKey!.currentState?.fields[keyString];
+  // }
 
   void _setCurrentTab(String keyString) {
     if (_currentTabGlobalKey?.currentState?.fields.containsKey(keyString) ?? false) {
