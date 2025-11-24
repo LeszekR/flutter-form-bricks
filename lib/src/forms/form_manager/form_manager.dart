@@ -3,9 +3,6 @@ import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 
-import '../base/form_brick.dart';
-import 'form_status.dart';
-
 abstract class FormManager extends ChangeNotifier {
   @visibleForTesting
   final ValueNotifier<String> errorMessageNotifier = ValueNotifier<String>('');
@@ -37,6 +34,9 @@ abstract class FormManager extends ChangeNotifier {
   // ==============================================================================
   void _initFormData(FormSchema formSchema, FormData formData) {
     if (formData.fieldDataMap.isNotEmpty) return;
+
+    assert(formSchema.descriptors.any((d) => d.keyString == formData.focusedKeyString),
+        'The initial focusKeyString must match one of the descriptors\' keyStrings.');
 
     for (FormFieldDescriptor d in formSchema.descriptors)
       formData.fieldDataMap[d.keyString] = FormFieldData(fieldContent: FieldContent.transient(d.initialInput));
@@ -74,8 +74,8 @@ abstract class FormManager extends ChangeNotifier {
     var fieldRuntimeType = _fieldData(keyString).initialInput.runtimeType;
     assert(
       T == fieldRuntimeType,
-      'Field value type is different from FieldData valueType ("${T.toString()}" vs. "${fieldRuntimeType}") '
-      'for keyString: "$keyString" declared in FormSchema -> FormFieldDescriptor.',
+      'Field value type is different from FieldData valueType (\'${T.toString()}\' vs. \'${fieldRuntimeType})\' '
+      'for keyString: \'$keyString\' declared in FormSchema -> FormFieldDescriptor.',
     );
 
     assert(
