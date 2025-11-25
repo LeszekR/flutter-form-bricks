@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_input_base/states_color_maker.dart';
-import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations_en.dart';
 
 import '../../string_literals/gen/bricks_localizations.dart';
 
-abstract class FormFieldBrick<T> extends StatefulWidget {
+abstract class FormFieldBrick extends StatefulWidget {
   final String keyString;
   final FormManager formManager;
   final StatesColorMaker colorMaker;
@@ -30,8 +28,8 @@ abstract class FormFieldBrick<T> extends StatefulWidget {
   }) : super(key: key ?? ValueKey(keyString));
 }
 
-abstract class FormFieldStateBrick<K extends FormFieldBrick, T> extends State<K> {
-  T getValue();
+abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends FormFieldBrick> extends State<F> {
+  V getValue();
 
   /// Object holding state of this `FormFieldBrick`. Fetched from `FormManager` prior to `build()`
   /// and updated in `setState()`;
@@ -48,7 +46,7 @@ abstract class FormFieldStateBrick<K extends FormFieldBrick, T> extends State<K>
 
   @override
   void initState() {
-    formManager.registerField(keyString, T, widget.withValidator);
+    formManager.registerField<I, V>(keyString, widget.withValidator);
 
     if (widget.withValidator) {
       focusNode = FocusNode();
@@ -76,7 +74,7 @@ abstract class FormFieldStateBrick<K extends FormFieldBrick, T> extends State<K>
   /// - return new `FieldContent` which then sets the field's input (if formatted), controls its color,
   ///   displays error if the field uses `InputDecoration` for this (error alternatively it can be displayed in
   ///   dedicated `FormBrick` area by `FormManager`.
-  void onFieldChanged(BricksLocalizations localizations, T input) {
+  void onFieldChanged(BricksLocalizations localizations, V input) {
     // Here FormManager:
     // - validates the input
     // - saves results of format-validation in FormData -> FormFieldData -> FieldContent

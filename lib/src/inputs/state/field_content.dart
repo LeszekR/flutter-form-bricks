@@ -26,9 +26,9 @@ import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/date_tim
 ///
 /// Used across field bricks where the internal content type differs from the parsed data type,
 /// such as `DateFieldBrick`, `IntegerFieldBrick`, and `RadioBrick`.
-class FieldContent<Input, Value> {
-  final Input? input;
-  final Value? value;
+class FieldContent<I extends Object, V extends Object> {
+  final I? input;
+  final V? value;
   final bool? isValid;
   final String? error;
 
@@ -38,21 +38,21 @@ class FieldContent<Input, Value> {
   /// Only to be used as **temporary result** carrying transient state of the formatted input in formatting-validating
   /// procedure (e.g. partly formatted date string).
   /// **Never** to be used as a return value of `FormatterValidator`.
-  const FieldContent.transient(Input input) : this.of(input, null, null, null);
+  const FieldContent.transient(I input) : this.of(input, null, null, null);
 
   /// Use in formatting-validating procedure when the result is valid.
-  const FieldContent.ok(Input? input, Value? value) : this.of(input, value, true, null);
+  const FieldContent.ok(I? input, V? value) : this.of(input, value, true, null);
 
   /// Use in formatting-validating procedure when the result is invalid.
-  const FieldContent.err(Input? input, String? error) : this.of(input, null, false, error);
+  const FieldContent.err(I? input, String? error) : this.of(input, null, false, error);
 
   /// Use wherever no result should be returned as a step of the multi-step format-validating procedure.
   const FieldContent.empty() : this.of(null, null, false, null);
 
   // TODO verify, refactor? - should use of named constructors vs copyWith - ?
-  FieldContent<Input, Value> copyWith({
-    Input? input,
-    Value? value,
+  FieldContent<I, V> copyWith({
+    I? input,
+    V? value,
     bool? isValid,
     String? error,
   }) {
@@ -67,7 +67,7 @@ class FieldContent<Input, Value> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is FieldContent<Input, Value> &&
+      other is FieldContent<I, V> &&
           other.input == input &&
           other.value == value &&
           other.isValid == isValid &&

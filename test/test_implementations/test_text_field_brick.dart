@@ -15,7 +15,7 @@ class TestTextFieldBrick extends TextFieldBrick {
 
 }
 
-class TestTextFieldBrickState extends TextfieldContentBrick {
+class TestTextFieldBrickState extends TextFieldStateBrick {
   @override
   Widget build(BuildContext context) {
     return super.build(context);

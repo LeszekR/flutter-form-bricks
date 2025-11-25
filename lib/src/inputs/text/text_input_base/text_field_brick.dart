@@ -13,7 +13,7 @@ import '../../../ui_params/ui_params.dart';
 import '../../base/form_field_brick.dart';
 import 'icon_button_params.dart';
 
-abstract class TextFieldBrick extends FormFieldBrick<TextEditingValue> {
+abstract class TextFieldBrick extends FormFieldBrick {
   // TextFieldBrick
   final double? width;
 
@@ -179,10 +179,10 @@ abstract class TextFieldBrick extends FormFieldBrick<TextEditingValue> {
   });
 
   @override
-  State<StatefulWidget> createState() => TextfieldContentBrick();
+  TextFieldStateBrick createState() => TextFieldStateBrick();
 }
 
-class TextfieldContentBrick extends FormFieldStateBrick<TextFieldBrick, TextEditingValue> {
+class TextFieldStateBrick extends FormFieldStateBrick<String, TextEditingValue, TextFieldBrick> {
   late final FocusNode _focusNode;
   late final TextEditingController _controller;
   Set<WidgetState>? _states;

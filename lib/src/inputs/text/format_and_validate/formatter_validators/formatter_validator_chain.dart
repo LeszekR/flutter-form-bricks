@@ -2,8 +2,8 @@ import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator.dart';
 
-abstract class FormatterValidatorChain<Input, Value> {
-  final List<FormatterValidator<Input, Value>> steps;
+abstract class FormatterValidatorChain<I extends Object, V extends Object> {
+  final List<FormatterValidator<I, V>> steps;
 
   FormatterValidatorChain(this.steps);
 
@@ -20,27 +20,28 @@ abstract class FormatterValidatorChain<Input, Value> {
   /// fields are validated as part of a group and require identification.
   ///
   /// Example: `DateTimeRangeFormatterValidator`
-  FieldContent<Input, Value> runChain(
+  FieldContent<I, V> runChain(
     BricksLocalizations localizations,
     String keyString,
-    Input input,
+    I input,
   );
 }
 
 // TODO lock field types accepted as clients of each FormatterValidatorChain implementation
 
-abstract class FormatterValidatorChainEarlyStop<Input, Value> extends FormatterValidatorChain<Input, Value> {
+abstract class FormatterValidatorChainEarlyStop<I extends Object, V extends Object>
+    extends FormatterValidatorChain<I, V> {
   FormatterValidatorChainEarlyStop(super.steps);
 
   @override
-  FieldContent<Input, Value> runChain(
+  FieldContent<I, V> runChain(
     BricksLocalizations localizations,
     String keyString,
-    Input input,
+    I input,
   ) {
-    FieldContent<Input, Value> resultFieldContent = FieldContent<Input, Value>.transient(input);
+    FieldContent<I, V> resultFieldContent = FieldContent<I, V>.transient(input);
 
-    for (FormatterValidator<Input, Value> step in steps) {
+    for (FormatterValidator<I, V> step in steps) {
       resultFieldContent = step.run(localizations, keyString, resultFieldContent);
       if (resultFieldContent.isValid ?? false) {
         return resultFieldContent;
@@ -50,18 +51,19 @@ abstract class FormatterValidatorChainEarlyStop<Input, Value> extends FormatterV
   }
 }
 
-abstract class FormatterValidatorChainFullRun<Input, Value> extends FormatterValidatorChain<Input, Value> {
+abstract class FormatterValidatorChainFullRun<I extends Object, V extends Object>
+    extends FormatterValidatorChain<I, V> {
   FormatterValidatorChainFullRun(super.steps);
 
   @override
-  FieldContent<Input, Value> runChain(
+  FieldContent<I, V> runChain(
     BricksLocalizations localizations,
     String keyString,
-    Input input,
+    I input,
   ) {
-    FieldContent<Input, Value> resultFieldContent = FieldContent<Input, Value>.transient(input);
+    FieldContent<I, V> resultFieldContent = FieldContent<I, V>.transient(input);
 
-    for (FormatterValidator<Input, Value> step in steps) {
+    for (FormatterValidator<I, V> step in steps) {
       resultFieldContent = step.run(localizations, keyString, resultFieldContent);
     }
     return resultFieldContent;

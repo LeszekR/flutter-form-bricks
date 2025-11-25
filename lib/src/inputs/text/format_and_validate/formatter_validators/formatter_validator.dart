@@ -1,10 +1,10 @@
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
 
-abstract class FormatterValidator<Input, Value> {
-  FieldContent<Input, Value> run(
+abstract class FormatterValidator<I extends Object, V extends Object> {
+  FieldContent<I, V> run(
     BricksLocalizations localizations,
     String keyString,
-    FieldContent<Input, Value> fieldContent,
+    FieldContent<I, V> fieldContent,
   );
 }

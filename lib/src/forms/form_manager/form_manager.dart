@@ -10,6 +10,8 @@ abstract class FormManager extends ChangeNotifier {
   final Map<String, FormatterValidatorChain?> _formatterValidatorChainMap;
   late BricksLocalizations _localizations;
 
+  // TODO add focusing chosen field? or leave it as finding the field and then focusing
+
   // TODO make flat map for tabbed form too and implement here
   FormStatus checkStatus();
 
@@ -38,8 +40,13 @@ abstract class FormManager extends ChangeNotifier {
     assert(formSchema.descriptors.any((d) => d.keyString == formData.focusedKeyString),
         'The initial focusKeyString must match one of the descriptors\' keyStrings.');
 
-    for (FormFieldDescriptor d in formSchema.descriptors)
-      formData.fieldDataMap[d.keyString] = FormFieldData(fieldContent: FieldContent.transient(d.initialInput));
+    for (FormFieldDescriptor d in formSchema.descriptors) {
+      formData.fieldDataMap[d.keyString] = FormFieldData(
+        inputRuntimeType: d.inputRuntimeType,
+        valueRuntimeType: d.valueRuntimeType,
+        fieldContent: FieldContent.transient(d.initialInput),
+      );
+    }
   }
 
   // TODO setState with new FormData after button 'Reset' clicked
@@ -64,17 +71,24 @@ abstract class FormManager extends ChangeNotifier {
   ///  - `FormatterValidatorChain` for the field (if there is any)
   ///  - state preservation object: `FormData` where field's **input**, **value**, **isValid**,
   ///    **error** will be kept over the life of the `FormBrick`.
-  void registerField<T>(String keyString, Type T, bool withValidator) {
+  void registerField<I, V>(String keyString, bool withValidator) {
     assert(
       fieldDataMap.keys.contains(keyString),
       'No "$keyString" found in FormData.fieldDataMap; '
       'all fields in form must be declared in FormSchema => FormFieldData.',
     );
 
-    var fieldRuntimeType = _fieldData(keyString).initialInput.runtimeType;
+    var inputRuntimeType = _fieldData(keyString).inputRuntimeType;
     assert(
-      T == fieldRuntimeType,
-      'Field value type is different from FieldData valueType (\'${T.toString()}\' vs. \'${fieldRuntimeType})\' '
+      I == inputRuntimeType,
+      'Field input type is different from FieldData inputType (\'${I.toString()}\' vs. \'${inputRuntimeType.toString()})\' '
+      'for keyString: \'$keyString\' declared in FormSchema -> FormFieldDescriptor.',
+    );
+
+    var valueRuntimeType = _fieldData(keyString).valueRuntimeType;
+    assert(
+      V == valueRuntimeType,
+      'Field value type is different from FieldData valueType (\'${V.toString()}\' vs. \'${valueRuntimeType.toString()})\' '
       'for keyString: \'$keyString\' declared in FormSchema -> FormFieldDescriptor.',
     );
 

@@ -26,7 +26,7 @@ abstract class FormBrick extends StatefulWidget {
 }
 
 /// A type alias for a map of form fields.
-typedef FormFieldBrickStateMap = Map<String, FormFieldStateBrick<FormFieldBrick, dynamic>>;
+typedef FormFieldBrickFieldsMap = Map<String, FormFieldStateBrick<FormFieldBrick, dynamic, dynamic>>;
 
 abstract class FormStateBrick<T extends FormBrick> extends State<T> {
   /// Do NOT override this method in PROD! This is ONLY FOR UI TESTS!
