@@ -40,17 +40,19 @@
 ///
 ///
 /// ## Structure and ownership of formatting and validation logic.
-///
-/// - A [FormatterValidator] 
-///   - runs an atom format-validation action like **required**, **digits-only**, **date** etc.,
+/// #### [FormatterValidator]
+///   - runs sequence of format-validation action like **required**, **digits-only**, **date** etc.,
 ///   - owns any field-specific parameters used in the formatting or validation, e.g. [DateTimeLimits] for validating
 ///     [DateField] or [TimeField] and other date-time related fields
+///  ####
+///  #### [FormatterValidatorChain]
+///   - [FormatterValidatorChainEarlyStop] stops at the first encountered error using
+///   - [FormatterValidatorChainFullRun] runs all validators to collect a complete list of errors using
+///   - The chain applies each [FormatterValidator] sequentially to perform formatting and validation.
+/// ####
+/// #### Class structure
 /// - A [FormatterValidatorChain] holds a [List] of [FormatterValidator]s, allowing any number of validators to be chained.
 /// - A [BrickField] that requires formatting and/or validation uses a [FormatterValidatorChain], but does **not** own it.
-/// - The [FormManager] **owns** a [Map] of [FormatterValidatorChain]s, where each chain is associated with a [BrickField]
+/// - A [FormManager] **owns** a [Map] of [FormatterValidatorChain]s, where each chain is associated with a [BrickField]
 ///   by its [keyString] as the map key.
-/// - The chain applies each [FormatterValidator] sequentially to perform formatting and validation.
-/// - The chain can either:
-///   - Stop at the first encountered error using [FormatterValidatorChainEarlyStop], or
-///   - Run all validators to collect a complete list of errors using [FormatterValidatorChainFullRun]
 class DocsDummy{}
