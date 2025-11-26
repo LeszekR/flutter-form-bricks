@@ -26,9 +26,7 @@ class DateFormatterValidator extends FormatterValidator<String, Date> {
     String keyString,
     DateFieldContent fieldContent,
   ) {
-    DateFieldContent parseResult;
-
-    parseResult = _dateTimeUtils.cleanDateTimeString(
+    DateTimeFieldContent parsed = _dateTimeUtils.cleanDateTimeString(
       bricksLocalizations: localizations,
       text: fieldContent.input!,
       dateTimeOrBoth: DateTimeOrBoth.date,
@@ -37,7 +35,10 @@ class DateFormatterValidator extends FormatterValidator<String, Date> {
       minNumberOfDigits: 3,
       maxNDigits: 8,
       maxNumberDelimiters: 2,
-    ) as DateFieldContent;
+    );
+
+    DateFieldContent parseResult = _makeDateFCFromDateTimeFC(parsed);
+
     if (!parseResult.isValid!) return DateFieldContent.err(fieldContent.input, parseResult.error);
 
     parseResult = parseDateFromString(localizations, parseResult);
@@ -223,5 +224,9 @@ class DateFormatterValidator extends FormatterValidator<String, Date> {
     if (errMsg.isNotEmpty) return DateFieldContent.err(dateString, errMsg);
 
     return DateFieldContent.ok(dateString, parsedDate);
+  }
+
+  DateFieldContent _makeDateFCFromDateTimeFC(DateTimeFieldContent content) {
+    return DateFieldContent.ok(content.input, Date.fromDateTime(content.value!));
   }
 }

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/src/form_fields/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/states_controller/update_once_widget_states_controller.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/state_colored_icon_button.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/text_field_bordered_box.dart';
 
@@ -15,10 +14,10 @@ import '../../base/form_field_brick.dart';
 import 'icon_button_params.dart';
 
 abstract class TextFieldBrick extends FormFieldBrick<String> {
-  // TextFieldBrick
+// TextFieldBrick
   final double? width;
 
-  // Flutter TextField
+// Flutter TextField
   final TextMagnifierConfiguration? magnifierConfiguration;
   final Object groupId;
   final TextEditingController? controller;
@@ -34,7 +33,7 @@ abstract class TextFieldBrick extends FormFieldBrick<String> {
   final TextDirection? textDirection;
   final bool autofocus;
 
-  // final MaterialStatesController? statesController;
+// final MaterialStatesController? statesController;
   final String obscuringCharacter;
   final bool obscureText;
   final bool autocorrect;
@@ -94,8 +93,8 @@ abstract class TextFieldBrick extends FormFieldBrick<String> {
 
   TextFieldBrick({
     super.key,
-    //
-    // FormFieldBrick
+//
+// FormFieldBrick
     required super.keyString,
     required super.formManager,
     required super.colorMaker,
@@ -105,11 +104,11 @@ abstract class TextFieldBrick extends FormFieldBrick<String> {
     super.statesObserver,
     super.statesNotifier,
     super.autoValidateMode = AutovalidateMode.disabled,
-    //
-    // BrickTextField
+//
+// BrickTextField
     this.width,
-    //
-    // TextField
+//
+// TextField
     this.groupId = EditableText,
     this.controller,
     this.focusNode,
@@ -126,7 +125,7 @@ abstract class TextFieldBrick extends FormFieldBrick<String> {
     this.readOnly = false,
     this.showCursor,
     this.autofocus = false,
-    // this.statesController,  => replaced with statesObserver and statesNotifier
+// this.statesController,  => replaced with statesObserver and statesNotifier
     this.obscuringCharacter = '•',
     this.obscureText = false,
     this.autocorrect = true,
@@ -193,6 +192,10 @@ class TextFieldStateBrick extends FormFieldStateBrick<String, TextEditingValue, 
   @override
   TextEditingValue getValue() => _controller.value;
 
+  void fillInitialValue(TextEditingValue? initialInput) {
+    _controller.value = initialInput ?? TextEditingValue.empty;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -201,12 +204,10 @@ class TextFieldStateBrick extends FormFieldStateBrick<String, TextEditingValue, 
     formManager.setFocusListener(_focusNode, keyString);
     if (formManager.isFocusedOnStart(keyString)) _focusNode.requestFocus();
 
-    if (widget.controller == null) {
-      _controller = TextEditingController(text: formManager.getInitialInput(keyString));
-    } else {
-      _controller = widget.controller!;
-      _controller.text = (formManager.getInitialInput(keyString) as TextEditingValue).text;
-    }
+    _controller = widget.controller ?? TextEditingController();
+    fillInitialValue(formManager.getInitialInput(keyString));
+
+    (formManager.getInitialInput(keyString));
 
     _states = widget.statesNotifier?.value;
     widget.statesNotifier?.addListener(_onStatesChanged);
@@ -248,7 +249,7 @@ class TextFieldStateBrick extends FormFieldStateBrick<String, TextEditingValue, 
     int maxLines = widget.maxLines ?? 1;
     double width = widget.width ?? uiParams.appSize.textFieldWidth;
 
-    // TODO SizedBox still not tall correctly
+// TODO SizedBox still not tall correctly
     textHeight = lineHeight * maxLines;
 
     if (widget.buttonParams == null) {
@@ -309,7 +310,7 @@ class TextFieldStateBrick extends FormFieldStateBrick<String, TextEditingValue, 
       textDirection: widget.textDirection,
       readOnly: widget.readOnly,
 
-      // Deprecated: toolbarOptions - not used
+// Deprecated: toolbarOptions - not used
 
       showCursor: widget.showCursor,
       autofocus: widget.autofocus,
@@ -359,7 +360,7 @@ class TextFieldStateBrick extends FormFieldStateBrick<String, TextEditingValue, 
       clipBehavior: widget.clipBehavior,
       restorationId: widget.restorationId,
 
-      // Deprecated: scribbleEnabled - not used
+// Deprecated: scribbleEnabled - not used
 
       stylusHandwritingEnabled: widget.stylusHandwritingEnabled,
       enableIMEPersonalizedLearning: widget.enableIMEPersonalizedLearning,
@@ -393,12 +394,12 @@ class TextFieldStateBrick extends FormFieldStateBrick<String, TextEditingValue, 
     );
   }
 
-  // TODO move helper methods to a singleton
+// TODO move helper methods to a singleton
   InputDecoration _makeInputDecoration(InputDecoration? decoration) {
     if (decoration == null) {
       return InputDecoration(
-        // isDense: true,
-        // isCollapsed: true,
+// isDense: true,
+// isCollapsed: true,
         contentPadding: EdgeInsets.zero,
         border: InputBorder.none,
         fillColor: _makeColor(),
@@ -409,33 +410,33 @@ class TextFieldStateBrick extends FormFieldStateBrick<String, TextEditingValue, 
     );
   }
 
-  // TODO move helper methods to a singleton
+// TODO move helper methods to a singleton
   Color? _makeColor() => widget.colorMaker.makeColor(context, _states);
 
   var _skipOnChanged = false;
 
   void _onChanged(value) {
-    // stop infinite call here at changing the field value to trimmed one
+// stop infinite call here at changing the field value to trimmed one
     if (_skipOnChanged) return;
 
     widget.onChanged?.call(value?.trim());
 
-    // we need formManager to validate and show error when onEditingComplete will NEVER be called.
-    // If onEditingComplete is called then formManager.onFieldChanged is called there so we skip it here
+// we need formManager to validate and show error when onEditingComplete will NEVER be called.
+// If onEditingComplete is called then formManager.onFieldChanged is called there so we skip it here
     if (widget.onEditingComplete == null || widget.onEditingComplete == () {}) {
       _skipOnChanged = true;
-      // TODO REFACTOR - formatting and validation done in FormManager, formatted value passed back here
-      // widget.formManager.onFieldChanged(keyString, value);
+// TODO REFACTOR - formatting and validation done in FormManager, formatted value passed back here
+// widget.formManager.onFieldChanged(keyString, value);
       _skipOnChanged = false;
     }
   }
 
   void _onEditingComplete() {
-    // TODO uncomment and finish
-    // _skipOnChanged = true;
-    // var value = widget.onEditingComplete?.call();
-    // _skipOnChanged = false;
-    // TODO REFACTOR - formatting and validation done in FormManager, formatted value passed back here
-    // widget.formManager.onFieldChanged(widget.keyString, value);
+// TODO uncomment and finish
+// _skipOnChanged = true;
+// var value = widget.onEditingComplete?.call();
+// _skipOnChanged = false;
+// TODO REFACTOR - formatting and validation done in FormManager, formatted value passed back here
+// widget.formManager.onFieldChanged(widget.keyString, value);
   }
 }

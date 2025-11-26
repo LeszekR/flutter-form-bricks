@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/states_color_maker.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 
 import '../../string_literals/gen/bricks_localizations.dart';
 
@@ -88,6 +88,6 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
       _fieldContent = fieldContent;
     });
   }
-  
+
   bool _hasFormatterValidator() => widget.formatterValidatorChain != null;
 }

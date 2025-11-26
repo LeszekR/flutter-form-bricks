@@ -38,7 +38,7 @@ class FieldContent<I extends Object, V extends Object> {
   /// Only to be used as **temporary result** carrying transient state of the formatted input in formatting-validating
   /// procedure (e.g. partly formatted date string).
   /// **Never** to be used as a return value of `FormatterValidator`.
-  const FieldContent.transient(I input) : this.of(input, null, null, null);
+  const FieldContent.transient(I? input) : this.of(input, null, null, null);
 
   /// Use in formatting-validating procedure when the result is valid.
   const FieldContent.ok(I? input, V? value) : this.of(input, value, true, null);

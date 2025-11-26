@@ -184,7 +184,11 @@ abstract class FormManager extends ChangeNotifier {
       formatterValidatorChain = getFormatterValidatorChain(keyString);
       if (formatterValidatorChain == null) continue;
 
-      fieldContent = formatterValidatorChain.runChain(_localizations, keyString, getFieldContent(keyString));
+      fieldContent = formatterValidatorChain.runChain(
+        _localizations,
+        keyString,
+        getFieldContent(keyString).input,
+      );
       storeFieldContent(keyString, fieldContent);
     }
 
