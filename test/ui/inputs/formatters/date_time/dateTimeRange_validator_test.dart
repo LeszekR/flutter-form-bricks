@@ -1,4 +1,4 @@
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/date_time_limits.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/form_fields/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/date_time_inputs.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';

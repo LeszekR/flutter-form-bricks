@@ -1,7 +1,10 @@
-import '../../inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
+
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 
 class FormFieldDescriptor<I, V> {
   final String keyString;
+  final Type inputRuntimeType;
+  final Type valueRuntimeType;
   final I? initialInput;
   final FormatterValidatorChain? formatterValidatorChain;
 
@@ -9,9 +12,13 @@ class FormFieldDescriptor<I, V> {
 
   // TODO guarantee validator chain adequate to field type - e.g. checkbox with date-validator throws
 
-  const FormFieldDescriptor(this.keyString, [this.initialInput, this.formatterValidatorChain]);
-
-  Type get inputRuntimeType => I;
-
-  Type get valueRuntimeType => V;
+  FormFieldDescriptor({
+    required this.keyString,
+    this.initialInput,
+    this.formatterValidatorChain,
+  })  : inputRuntimeType = I,
+        valueRuntimeType = V {
+    assert(I != dynamic, "FormFieldDescriptor<I, V>: Generic type I must not be dynamic.");
+    assert(V != dynamic, "FormFieldDescriptor<I, V>: Generic type V must not be dynamic.");
+  }
 }

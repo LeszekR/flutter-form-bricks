@@ -6,6 +6,7 @@ final String plainTextKeyString1 = 'plainTextKeyString1';
 final String plainTextKeyString2 = 'plainTextKeyString2';
 final String plainTextKeyString3 = 'plainTextKeyString3';
 
+@AutoFormSchema()
 class ExampleForm extends FormBrick {
   ExampleForm({required super.formManager});
 
@@ -18,6 +19,8 @@ class ExampleFormState extends FormStateBrick {
   Widget buildBody(BuildContext context) {
     var appSize = UiParams.of(context).appSize;
     var statesColorMaker = StatesColorMaker();
+    var dateTimeUtils = DateTimeUtils();
+    var currentDate = CurrentDate();
 
     return Center(
       child: SizedBox(
@@ -30,15 +33,18 @@ class ExampleFormState extends FormStateBrick {
               keyString: plainTextKeyString1,
               formManager: formManager,
               colorMaker: statesColorMaker,
-              withValidator: false,
               width: 150,
+              initialInput: 'Krokodyl',
+              formatterValidatorChain:
+                  DateTimeFormatterValidatorChain([DateFormatterValidator(dateTimeUtils, currentDate)]),
             ),
             appSize.spacerBoxVerticalMedium,
             PlainTextField(
               keyString: plainTextKeyString2,
               formManager: formManager,
               colorMaker: statesColorMaker,
-              withValidator: false,
+              initialInput: 'Zenon',
+              isFocusedOnInit: true,
               width: 200,
               maxLines: 3,
             ),

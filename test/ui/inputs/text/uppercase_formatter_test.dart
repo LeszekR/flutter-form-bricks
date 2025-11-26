@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatters/uppercase_formatter.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/formatters/uppercase_formatter.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
 

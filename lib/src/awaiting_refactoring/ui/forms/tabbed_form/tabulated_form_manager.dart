@@ -58,11 +58,11 @@ class TabulatedFormManager extends FormManager {
   Map<String, dynamic> collectInputs() {
     // TODO refactor to FlutterFormBuilder pattern - ?
     return {};
-    // final Map<String, dynamic> inputs = {};
+    // final Map<String, dynamic> form_fields = {};
     // tabsDataMap.entries
     //     .where((entry) => !isTabDisabled(entry.value.globalKey))
-    //     .forEach((entry) => inputs.addAll(entry.value.globalKey.currentState?.value as Map<String, dynamic>));
-    // return inputs;
+    //     .forEach((entry) => form_fields.addAll(entry.value.globalKey.currentState?.value as Map<String, dynamic>));
+    // return form_fields;
   }
 
   void addTabData(TabData tabData) {

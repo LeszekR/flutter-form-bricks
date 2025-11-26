@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_status.dart';
-import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
+import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../../../../../shelf.dart';
@@ -203,10 +203,10 @@ abstract class FormManagerOLD {
     return trimmed.isEmpty ? null : trimmed;
   }
 
-// Map<String, dynamic> _collectInputData(Map<String, dynamic> inputs) {
+// Map<String, dynamic> _collectInputData(Map<String, dynamic> form_fields) {
 //   final Map<String, dynamic> parentMap = {};
 //
-//   inputs.forEach((inputKey, value) {
+//   form_fields.forEach((inputKey, value) {
 //     if (!inputKey.contains(".")) {
 //       parentMap[inputKey] = _parseDataFromInput(value);
 //     } else {

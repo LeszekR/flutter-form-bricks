@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/inputs/base/form_field_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/base/form_field_brick.dart';
 
 class TestFormFieldBrick extends FormFieldBrick<String> {
   TestFormFieldBrick({

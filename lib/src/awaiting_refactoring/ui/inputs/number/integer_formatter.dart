@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 
-import '../../../../inputs/states_controller/formatter_helper.dart';
+import '../../../../form_fields/states_controller/formatter_helper.dart';
 
 class IntegerInputFormatter extends TextInputFormatter {
   static IntegerInputFormatter? _singleton;
