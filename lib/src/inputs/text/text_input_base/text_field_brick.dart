@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/inputs/states_controller/update_once_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_input_base/state_colored_icon_button.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_input_base/text_field_bordered_box.dart';
 
@@ -13,7 +14,7 @@ import '../../../ui_params/ui_params.dart';
 import '../../base/form_field_brick.dart';
 import 'icon_button_params.dart';
 
-abstract class TextFieldBrick extends FormFieldBrick {
+abstract class TextFieldBrick extends FormFieldBrick<String> {
   // TextFieldBrick
   final double? width;
 
@@ -98,7 +99,9 @@ abstract class TextFieldBrick extends FormFieldBrick {
     required super.keyString,
     required super.formManager,
     required super.colorMaker,
-    required super.withValidator,
+    super.initialInput,
+    super.isFocusedOnInit = false,
+    super.formatterValidatorChain = null,
     super.statesObserver,
     super.statesNotifier,
     super.autoValidateMode = AutovalidateMode.disabled,
@@ -292,7 +295,7 @@ class TextFieldStateBrick extends FormFieldStateBrick<String, TextEditingValue, 
     return TextField(
       key: Key(keyString),
       groupId: widget.groupId,
-      controller: widget.controller,
+      controller: _controller,
       focusNode: widget.focusNode,
       undoController: widget.undoController,
       decoration: _makeInputDecoration(widget.decoration),

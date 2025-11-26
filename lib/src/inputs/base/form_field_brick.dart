@@ -1,15 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/inputs/state/field_content.dart';
+import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_input_base/states_color_maker.dart';
 
 import '../../string_literals/gen/bricks_localizations.dart';
 
-abstract class FormFieldBrick extends StatefulWidget {
+abstract class FormFieldBrick<I extends Object> extends StatefulWidget {
   final String keyString;
   final FormManager formManager;
   final StatesColorMaker colorMaker;
-  final bool withValidator;
+  final I? initialInput;
+  final bool isFocusedOnInit;
+  final FormatterValidatorChain? formatterValidatorChain;
   final WidgetStatesController? statesObserver;
   final WidgetStatesController? statesNotifier;
 
@@ -21,7 +24,9 @@ abstract class FormFieldBrick extends StatefulWidget {
     required this.keyString,
     required this.formManager,
     required this.colorMaker,
-    required this.withValidator,
+    this.initialInput,
+    this.isFocusedOnInit = false,
+    this.formatterValidatorChain = null,
     this.statesObserver,
     this.statesNotifier,
     this.autoValidateMode = AutovalidateMode.disabled,
@@ -46,9 +51,9 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
 
   @override
   void initState() {
-    formManager.registerField<I, V>(keyString, widget.withValidator);
+    formManager.registerField<I, V>(keyString, _hasFormatterValidator());
 
-    if (widget.withValidator) {
+    if (_hasFormatterValidator()) {
       focusNode = FocusNode();
       formManager.setFocusListener(focusNode, keyString);
     }
@@ -58,7 +63,7 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
 
   @override
   void dispose() {
-    if (widget.withValidator) {
+    if (_hasFormatterValidator()) {
       focusNode.dispose();
     }
     super.dispose();
@@ -83,4 +88,6 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
       _fieldContent = fieldContent;
     });
   }
+  
+  bool _hasFormatterValidator() => widget.formatterValidatorChain != null;
 }

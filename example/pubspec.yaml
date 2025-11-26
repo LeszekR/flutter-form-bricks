@@ -12,3 +12,7 @@ dependencies:
     path: ../../flutter-form-bricks
   flutter_localizations:
     sdk: flutter
+dev_dependencies:
+  analyzer: 6.4.1
+  build_runner: ^2.4.13
+  source_gen: ^1.5.0

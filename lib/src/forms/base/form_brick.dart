@@ -4,6 +4,7 @@ import 'package:flutter_form_bricks/src/inputs/base/form_field_brick.dart';
 
 import '../../string_literals/gen/bricks_localizations.dart';
 import '../form_manager/form_manager.dart';
+import '../../annotations/auto_form_schema.dart';
 
 ///  Top layer of forms used by this software.
 ///  Can be used for forms that are not intended to save any data to db
@@ -79,6 +80,7 @@ abstract class FormStateBrick<T extends FormBrick> extends State<T> {
     super.didChangeDependencies();
   }
 
+  @AutoFormSchema()
   @override
   Widget build(BuildContext context) {
     // TODO make focusedKeyString actually request focus

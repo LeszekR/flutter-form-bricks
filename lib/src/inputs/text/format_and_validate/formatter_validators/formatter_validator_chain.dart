@@ -5,6 +5,7 @@ import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatte
 abstract class FormatterValidatorChain<I extends Object, V extends Object> {
   final List<FormatterValidator<I, V>> steps;
 
+  // TODO throw on any step with different I or V types
   FormatterValidatorChain(this.steps);
 
   /// Runs the formatting-validation chain for a given field.

@@ -5,10 +5,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter_form_bricks/src/inputs/text/text_input_base/text_field_brick.dart';
 
 class PlainTextField extends TextFieldBrick {
-  @override
-  TextEditingValue getValue() {
-    return controller!.value;
-  }
 
   PlainTextField({
     super.key,
@@ -17,7 +13,9 @@ class PlainTextField extends TextFieldBrick {
     required super.keyString,
     required super.formManager,
     required super.colorMaker,
-    required super.withValidator,
+    super.initialInput,
+    super.isFocusedOnInit = false,
+    super.formatterValidatorChain = null,
     super.statesObserver,
     super.statesNotifier,
     super.autoValidateMode = AutovalidateMode.disabled,

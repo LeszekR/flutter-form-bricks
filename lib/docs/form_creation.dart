@@ -3,26 +3,25 @@
 /// ## 1. FormSchema
 /// - Defines each field’s:
 ///   - `keyString` (unique field identifier)
-///   - `initialValue`
-///   - field value type
-///   - `FormatterValidatorChain`
-/// - Also defines `initialFocusKeyString`, specifying which field
+///   - `initialInput`
+///   - field input and value types (`I`, `V`)
+///   - optional `FormatterValidatorChain`
+/// - Also defines `focusedKeyString`, specifying which field
 ///   should gain focus when the form first appears.
 ///
 /// ## 2. FormManager Setup
 /// - The form widget creates a `FormManager`, providing it with a `FormSchema`
-///   and a `FormStateData`.
-/// - If `FormStateData` is meant to persist, this is the object that should be
-///   stored higher in the widget tree.
+///   and a `FormData`.
+/// - If `FormData` is meant to persist, it should be stored higher in the widget tree.
 /// - Upon initialization, `FormManager` populates its
-///   `FormStateData.fieldContentMap`:
-///   - From **FormSchema** if `FormStateData.isInitiated == false`.
-///   - From **FormStateData** itself if already initiated.
+///   `FormData.fieldDataMap`:
+///   - From **FormSchema** if `FormData` is empty.
+///   - From **FormData** itself if already populated.
 ///
 /// ## 3. Validation Initialization
 /// - After population, `FormManager` validates all field values.
 /// - Validation results (error messages) are stored in
-///   `_stateData.fieldContentDataMap`.
+///   each `FormFieldData.fieldContent.error`.
 ///
 /// ## 4. FormBrick Creation
 /// - The main `FormBrick` receives the initialized `FormManager`.
@@ -34,11 +33,11 @@
 /// - Registers itself in it.
 /// - Throws if:
 ///   - Its `keyString` does not exist in `FormSchema`.
-///   - Its value type differs from the type declared in `FormSchema`.
+///   - Its input or value type differs from the type declared in `FormSchema`.
 /// - Retrieves its initial value from `FormManager`.
 /// - Obtains its `onFieldChanged` callback from `FormManager`, which:
 ///   - Validates the new field value.
-///   - Updates both the value and validation result in
+///   - Updates both the input and validation result in
 ///     the corresponding `FormFieldData`.
 ///   - Triggers revalidation and save logic as needed.
 ///

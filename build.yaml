@@ -1,0 +1,15 @@
+targets:
+  $default:
+    builders:
+      flutter_form_bricks|auto_form_schema:
+        generate_for:
+          - lib/**.dart
+
+builders:
+  auto_form_schema:
+    import: "package:flutter_form_bricks/builders.dart"
+    builder_factories: ["autoFormSchemaBuilder"]
+    build_extensions: {".dart": [".g.dart"]}
+    auto_apply: dependents
+    build_to: source
+    runs_before: ["source_gen|combining_builder"]

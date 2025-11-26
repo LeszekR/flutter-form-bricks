@@ -15,6 +15,7 @@ export 'src/awaiting_refactoring/ui/inputs/choice/checkbox_custom.dart';
 export 'src/awaiting_refactoring/ui/inputs/choice/choice_inputs.dart';
 
 // API
+export 'src/annotations/auto_form_schema.dart';
 // INHERITED WIDGETS
 export 'src/ui_params/ui_params.dart';
 export 'src/ui_params/ui_params_data.dart';
@@ -38,6 +39,10 @@ export 'src/inputs/text/text_input_base/states_color_maker.dart';
 export 'src/inputs/text/format_and_validate/input_validator_provider.dart';
 export 'src/inputs/states_controller/formatter_helper.dart';
 export 'src/inputs/text/text_input_base/text_field_brick.dart';
+export 'src/inputs/text/format_and_validate/date_time/formatter_validator_chains/date_time_formatter_validator_chain.dart';
+export 'src/inputs/text/format_and_validate/date_time/date_formatter_validator.dart';
+export 'src/inputs/text/format_and_validate/date_time/components/date_time_utils.dart';
+export 'src/inputs/text/format_and_validate/date_time/components/current_date.dart';
 export 'src/inputs/base/form_field_brick.dart';
 export 'src/inputs/state/form_field_data.dart';
 export 'src/inputs/text/text_input_base/icon_button_params.dart';
