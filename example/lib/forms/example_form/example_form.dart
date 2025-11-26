@@ -6,7 +6,7 @@ final String plainTextKeyString1 = 'plainTextKeyString1';
 final String plainTextKeyString2 = 'plainTextKeyString2';
 final String plainTextKeyString3 = 'plainTextKeyString3';
 
-@AutoFormSchema()
+@AutoFormSchema(deepScan: true)
 class ExampleForm extends FormBrick {
   ExampleForm({required super.formManager});
 

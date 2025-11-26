@@ -1,3 +1,4 @@
+// lib/src/annotations/auto_form_schema_generator.dart
 library flutter_form_bricks.generator;
 
 import 'package:analyzer/dart/ast/ast.dart';
@@ -13,10 +14,10 @@ import 'auto_form_schema.dart';
 class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
   @override
   Future<String> generateForAnnotatedElement(
-    Element element,
-    ConstantReader annotation,
-    BuildStep buildStep,
-  ) async {
+      Element element,
+      ConstantReader annotation,
+      BuildStep buildStep,
+      ) async {
     if (element is! ClassElement) {
       throw InvalidGenerationSourceError(
         '@AutoFormSchema can only be applied to classes.',
@@ -24,66 +25,63 @@ class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
       );
     }
 
-    final deepScan = annotation.peek('deepScan')?.boolValue ?? true;
-    final overrideName = annotation.peek('name')?.stringValue;
-
     final widgetClass = element;
-    _assertIsFormBrickSubclass(widgetClass);
+    _ensureExtends(widgetClass.thisType, 'FormBrick', widgetClass);
 
     final formName = widgetClass.name;
-    final schemaClassName = overrideName ?? '${formName}Schema';
+    final schemaClassName = annotation.peek('name')?.stringValue ?? '${formName}Schema';
 
-    // Resolve State class from createState()
-    final stateClass = _resolveStateClass(widgetClass);
-    if (stateClass == null) {
+    // 1) Load ALL units in the same library as the annotated widget.
+    final lib = widgetClass.library;
+    final stateDecls = <ClassDeclaration>[];
+    print('==> lib.units: ${lib.units.toString()}, count: ${lib.units.length}');
+    for (final unitEl in lib.units) {
+      // unitEl is a CompilationUnitElement (defining unit + all parts)
+      for (final classEl in unitEl.classes) {
+        final t = classEl.thisType;
+        print('==> t.toString(): ${t.toString()}');
+        if (t is InterfaceType && _isSubtypeOf(t, 'FormStateBrick')) {
+          // 2) Get a *resolved* AST node for this class.
+          final node = await buildStep.resolver.astNodeFor(classEl, resolve: true);
+          if (node is ClassDeclaration) {
+            stateDecls.add(node);
+          }
+        }
+      }
+    }
+
+    if (stateDecls.isEmpty) {
       throw InvalidGenerationSourceError(
-        'Could not resolve State class from ${widgetClass.name}.createState().',
+        'No State class extending FormStateBrick found in the same library as ${widgetClass.name}.',
         element: widgetClass,
       );
     }
 
-    // Get AST node of the State class
-    final stateDeclNode = await buildStep.resolver.astNodeFor(stateClass, resolve: true);
-    if (stateDeclNode is! ClassDeclaration) {
-      throw InvalidGenerationSourceError(
-        'State class `${stateClass.name}` AST not found or not a ClassDeclaration.',
-        element: stateClass,
+    // 3) Scan each State class: both buildBody and build.
+    final allItems = <_FieldInfo>[];
+    for (final stateDecl in stateDecls) {
+      final methodIndex = <String, MethodDeclaration>{
+        for (final m in stateDecl.members.whereType<MethodDeclaration>()) m.name.lexeme: m,
+      };
+      final collector = _FieldCollector(
+        methodIndex: methodIndex,
+        targetMethods: const {'buildBody', 'build'},
       );
+      stateDecl.accept(collector);
+      allItems.addAll(collector.items);
     }
 
-    // Entry methods: build(), buildBody()
-    final entryMethods = <MethodDeclaration>[
-      ...stateDeclNode.members.whereType<MethodDeclaration>().where((m) => m.name.lexeme == 'build'),
-      ...stateDeclNode.members.whereType<MethodDeclaration>().where((m) => m.name.lexeme == 'buildBody'),
-    ];
-    if (entryMethods.isEmpty) {
-      throw InvalidGenerationSourceError(
-        'State class `${stateClass.name}` has no build()/buildBody() to scan.',
-        element: widgetClass,
-      );
-    }
-
-    final methodIndex = <String, MethodDeclaration>{
-      for (final m in stateDeclNode.members.whereType<MethodDeclaration>()) m.name.lexeme: m,
-    };
-
-    final collector = _FieldInstantiationCollector(deepScan: deepScan);
-    final visited = <String>{};
-    for (final m in entryMethods) {
-      _recurseVisitMethod(m, collector, methodIndex, visited);
-    }
-
-    final descriptorEntries = collector.items.map((it) {
+    // 4) Emit schema.
+    final descriptorEntries = allItems.map((it) {
       final genericI = it.inputGenericSource ?? 'Object';
       final genericV = it.valueGenericSource ?? 'Object';
-      final keyCode = it.keyStringSource ?? _quoted(it.keyStringLiteral ?? it.unknownKeyFallback);
+      final keyCode = it.keyStringSource ?? _quote(it.keyStringLiteral ?? it.unknownKeyFallback);
       final initCode = it.initialInputSource ?? 'null';
       final chainCode = it.chainSource ?? 'null';
       return 'FormFieldDescriptor<$genericI, $genericV>('
           'keyString: $keyCode, initialInput: $initCode, formatterValidatorChain: $chainCode)';
     }).join(',\n    ');
 
-    // IMPORTANT: No imports here; this is a `part of` file. Types must be visible in the parent library.
     return '''
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: unnecessary_cast
@@ -98,96 +96,120 @@ class $schemaClassName extends FormSchema {
 ''';
   }
 
-  void _assertIsFormBrickSubclass(ClassElement el) {
-    final t = el.thisType;
-    const baseName = 'FormBrick';
-    final ok = _hasSupertypeNamed(t, baseName);
+  // ---------- Utils ----------
+
+  void _ensureExtends(InterfaceType type, String name, Element on) {
+    final ok = type.element.name == name || type.allSupertypes.any((s) => s.element.name == name);
     if (!ok) {
       throw InvalidGenerationSourceError(
-        '@AutoFormSchema must annotate a class extending FormBrick.',
-        element: el,
+        '@AutoFormSchema must annotate a class extending $name.',
+        element: on,
       );
     }
   }
 
-  bool _hasSupertypeNamed(InterfaceType type, String name) {
-    if (type.element.name == name) return true;
-    for (final s in type.allSupertypes) {
-      if (s.element.name == name) return true;
+  static bool _isSubtypeOf(InterfaceType t, String base) {
+    if (t.element.name == base) return true;
+    for (final s in t.allSupertypes) {
+      if (s.element.name == base) return true;
     }
     return false;
   }
 
-  ClassElement? _resolveStateClass(ClassElement widgetClass) {
-    final createState = widgetClass.lookUpMethod('createState', widgetClass.library);
-    if (createState == null) return null;
-    final rt = createState.returnType;
-    if (rt is! InterfaceType) return null;
-    return rt.element as ClassElement;
-  }
-
-  void _recurseVisitMethod(
-    MethodDeclaration method,
-    _FieldInstantiationCollector collector,
-    Map<String, MethodDeclaration> index,
-    Set<String> visited,
-  ) {
-    final key = method.name.lexeme;
-    if (!visited.add(key)) return;
-    method.body.accept(collector);
-
-    if (!collector.deepScan) return;
-
-    for (final call in collector.pendingCalls.toList()) {
-      if (!collector.pendingCalls.remove(call)) continue;
-      final target = index[call];
-      if (target != null) {
-        _recurseVisitMethod(target, collector, index, visited);
-      }
-    }
-  }
-
-  String _quoted(String s) {
+  String _quote(String s) {
     if (s.startsWith("'") || s.startsWith('"')) return s;
     final escaped = s.replaceAll(r'\', r'\\').replaceAll("'", r"\'");
     return "'$escaped'";
   }
 }
 
-class _FieldInstantiationCollector extends RecursiveAstVisitor<void> {
-  final bool deepScan;
+// ---------- Scanner (inheritance-only; scans build & buildBody; enters all closures) ----------
 
+class _FieldCollector extends RecursiveAstVisitor<void> {
+  final Map<String, MethodDeclaration> methodIndex;
+  final Set<String> targetMethods;
+
+  final Set<String> _inlined = {}; // avoid infinite recursion
   final items = <_FieldInfo>[];
-  final pendingCalls = <String>{};
 
-  _FieldInstantiationCollector({required this.deepScan});
+  _FieldCollector({
+    required this.methodIndex,
+    required this.targetMethods,
+  });
 
   @override
+  void visitClassDeclaration(ClassDeclaration node) {
+    // Visit only target method bodies.
+    for (final m in node.members.whereType<MethodDeclaration>()) {
+      if (targetMethods.contains(m.name.lexeme)) {
+        m.body.accept(this);
+      }
+    }
+    // No super: skip other methods.
+  }
+
+  // Inline same-class helpers by exact name match, once.
+  @override
   void visitMethodInvocation(MethodInvocation node) {
-    pendingCalls.add(node.methodName.name);
+    final name = node.methodName.name;
+    final helper = methodIndex[name];
+    if (helper != null && _inlined.add(name)) {
+      helper.body.accept(this);
+    }
     super.visitMethodInvocation(node);
   }
 
+  // Enter ALL closures (covers builder: and any lambda bodies).
+  @override
+  void visitFunctionExpression(FunctionExpression node) {
+    node.body.accept(this);
+    super.visitFunctionExpression(node);
+  }
+
+  // Detect FormFieldBrick descendants only.
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
-    final t = node.staticType;
-    if (t is InterfaceType && _isFormFieldBrickSubtype(t)) {
+    print('============> visitInstanceCreationExpression: node: {$node.toString()}');
+    final type = _resolveConstructedInterfaceType(node);
+    if (type != null && _isFormFieldBrick(type)) {
       final info = _FieldInfo.fromCreation(node);
-
-      // Infer I from FormFieldBrick<I>
-      final superI = _extractIFromFormFieldBrick(t);
-      if (superI != null) info.inputGenericSource = superI;
-
-      // Conservative V
+      final i = _extractIFromFormFieldBrick(type);
+      if (i != null) info.inputGenericSource = i;
       info.valueGenericSource ??= 'Object';
       items.add(info);
     }
     super.visitInstanceCreationExpression(node);
   }
 
-  bool _isFormFieldBrickSubtype(InterfaceType t) {
-    for (final s in [t, ...t.allSupertypes]) {
-      if (s.element.name == 'FormFieldBrick') return true;
+  // ----- helpers -----
+
+  InterfaceType? _resolveConstructedInterfaceType(InstanceCreationExpression node) {
+    // 1) ctor → enclosing class
+    final ctor = node.constructorName.staticElement;
+    final enclosing = ctor?.enclosingElement;
+    if (enclosing is ClassElement) return enclosing.thisType;
+
+    // 2) expression staticType
+    final st = node.staticType;
+    if (st is InterfaceType) return st;
+
+    // 3) NamedType resolved type (compat across analyzer versions)
+    final tn = node.constructorName.type;
+    if (tn is NamedType) {
+      final resolved = tn.type;
+      if (resolved is InterfaceType) return resolved;
+      final dynamic maybeEl = (tn as dynamic).element;
+      if (maybeEl is ClassElement) return maybeEl.thisType;
+    }
+    return null;
+  }
+
+  bool _isFormFieldBrick(InterfaceType t) => _isSubtypeOf(t, 'FormFieldBrick');
+
+  static bool _isSubtypeOf(InterfaceType t, String base) {
+    if (t.element.name == base) return true;
+    for (final s in t.allSupertypes) {
+      if (s.element.name == base) return true;
     }
     return false;
   }
@@ -213,6 +235,8 @@ class _FieldInstantiationCollector extends RecursiveAstVisitor<void> {
   }
 }
 
+// ---------- DTO ----------
+
 class _FieldInfo {
   _FieldInfo();
 
@@ -229,12 +253,12 @@ class _FieldInfo {
 
   static _FieldInfo fromCreation(InstanceCreationExpression node) {
     final info = _FieldInfo();
-
     for (final arg in node.argumentList.arguments) {
       if (arg is! NamedExpression) continue;
       final name = arg.name.label.name;
       final expr = arg.expression;
 
+      // Only for descriptor payload; not used to identify the field.
       if (name == 'keyString') {
         info.keyStringSource = expr.toString();
         if (expr is StringLiteral) info.keyStringLiteral = expr.stringValue;
