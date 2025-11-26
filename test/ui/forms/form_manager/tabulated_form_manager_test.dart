@@ -101,7 +101,7 @@ void main() {
     }
   });
 
-  testWidgets('Should ignore inputs with "ignoreFieldKey" from check ', (WidgetTester tester) async {
+  testWidgets('Should ignore form_fields with "ignoreFieldKey" from check ', (WidgetTester tester) async {
     //given
     BuildContext context = await pumpAppGetContext(tester);
     formManager = TabulatedFormManager();
@@ -159,7 +159,7 @@ void main() {
     expect(result, FormStatus.noChange);
   });
 
-  testWidgets('Should have VALID status if all inputs are valid', (WidgetTester tester) async {
+  testWidgets('Should have VALID status if all form_fields are valid', (WidgetTester tester) async {
     //given
     BuildContext context = await pumpAppGetContext(tester);
     formManager = TabulatedFormManager();

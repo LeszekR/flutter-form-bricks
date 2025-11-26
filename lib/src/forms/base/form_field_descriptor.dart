@@ -1,4 +1,5 @@
-import '../../inputs/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
+
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 
 class FormFieldDescriptor<I, V> {
   final String keyString;

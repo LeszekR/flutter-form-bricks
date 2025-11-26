@@ -19,6 +19,7 @@ dependencies:
 dev_dependencies:
   analyzer: ^6.4.1
   build_runner: ^2.4.13
+  dart_style: 2.3.4
   flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter

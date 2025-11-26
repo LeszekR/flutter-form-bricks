@@ -1,3 +1,5 @@
+# build.yaml
+# File: build.yaml
 targets:
   $default:
     builders:
@@ -8,8 +10,7 @@ targets:
 builders:
   auto_form_schema:
     import: "package:flutter_form_bricks/builders.dart"
-    builder_factories: ["autoFormSchemaBuilder"]
-    build_extensions: {".dart": [".g.dart"]}
+    builder_factories: ["autoFormSchema"]
+    build_extensions: {".dart": ["_schema.g.dart"]}
     auto_apply: dependents
     build_to: source
-    runs_before: ["source_gen|combining_builder"]

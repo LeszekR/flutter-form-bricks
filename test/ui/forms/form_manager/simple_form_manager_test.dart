@@ -8,8 +8,8 @@ import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/text/text
 import 'package:flutter_form_bricks/src/forms/form_manager/form_status.dart';
 import 'package:flutter_form_bricks/src/forms/state/field_and_validator.dart';
 import 'package:flutter_form_bricks/src/forms/state/single_form_state_data.dart';
-import 'package:flutter_form_bricks/src/inputs/labelled_box/label_position.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/input_validator_provider.dart';
+import 'package:flutter_form_bricks/src/form_fields/labelled_box/label_position.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/input_validator_provider.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -268,7 +268,7 @@ void main() {
     expect(result, FormStatus.valid);
   });
 
-  testWidgets('Should show error message for invalid inputs only', (WidgetTester tester) async {
+  testWidgets('Should show error message for invalid form_fields only', (WidgetTester tester) async {
     //given
     SingleFormManager formManager = SingleFormManager();
     const keyInputInvalid = "inputThatWillBeInvalid";

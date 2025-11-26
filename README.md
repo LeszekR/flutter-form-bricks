@@ -116,7 +116,7 @@ On submit, parsed values are read from the field and passed to your domain layer
 - architecture: `LabelledContainer`, `TextFieldBox`, `BrickTextField`
   containint `StateAwareIconButton`
 - formatting validation chain
-- `FormManager` role: formatting, validation, storing state, collecting data from inputs, initial
+- `FormManager` role: formatting, validation, storing state, collecting data from form_fields, initial
   values
 
 **Visual params**
@@ -131,7 +131,7 @@ On submit, parsed values are read from the field and passed to your domain layer
 
 **Architecture**
 
-- all inputs are put inside `LabelledContainer`
+- all form_fields are put inside `LabelledContainer`
 
 `LabelledContainer` provides
 

@@ -1,226 +1,249 @@
-import 'dart:async';
+library flutter_form_bricks.generator;
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
-import 'package:flutter_form_bricks/src/annotations/auto_form_schema.dart';
 import 'package:source_gen/source_gen.dart';
+
+import 'auto_form_schema.dart';
 
 class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
   @override
-  FutureOr<String> generateForAnnotatedElement(
-      Element element,
-      ConstantReader annotation,
-      BuildStep buildStep,
-      ) async {
+  Future<String> generateForAnnotatedElement(
+    Element element,
+    ConstantReader annotation,
+    BuildStep buildStep,
+  ) async {
     if (element is! ClassElement) {
       throw InvalidGenerationSourceError(
-        'AutoFormSchema can only be used on classes.',
+        '@AutoFormSchema can only be applied to classes.',
         element: element,
       );
     }
 
-    // Get resolved AST for this class.
-    final astNode = await buildStep.resolver.astNodeFor(
-      element,
-      resolve: true,
-    );
-    if (astNode is! ClassDeclaration) {
+    final deepScan = annotation.peek('deepScan')?.boolValue ?? true;
+    final overrideName = annotation.peek('name')?.stringValue;
+
+    final widgetClass = element;
+    _assertIsFormBrickSubclass(widgetClass);
+
+    final formName = widgetClass.name;
+    final schemaClassName = overrideName ?? '${formName}Schema';
+
+    // Resolve State class from createState()
+    final stateClass = _resolveStateClass(widgetClass);
+    if (stateClass == null) {
       throw InvalidGenerationSourceError(
-        'AutoFormSchema can only be used on class declarations.',
-        element: element,
+        'Could not resolve State class from ${widgetClass.name}.createState().',
+        element: widgetClass,
       );
     }
-    final classNode = astNode;
 
-    // Find the "build" method.
-    final MethodDeclaration? buildMethod = classNode.members
-        .whereType<MethodDeclaration>()
-        .firstWhere(
-          (m) => m.name.lexeme == 'build',
-      orElse: () => throw InvalidGenerationSourceError(
-        'Class ${element.name} must declare a build method to use @AutoFormSchema.',
-        element: element,
-      ),
-    );
-
-    // Strong type info for FormFieldBrick.
-    final formFieldBrickType = _findFormFieldBrickType(element);
-
-    final collector = _FormFieldBrickCollector(
-      formFieldBrickType: formFieldBrickType,
-    );
-
-    // Recursively walk the widget tree inside build().
-    buildMethod!.body.accept(collector);
-
-    final fields = collector.fields;
-
-    final className = element.name;
-    final schemaClassName = '${className}Schema';
-
-    final buffer = StringBuffer();
-    buffer.writeln('// GENERATED CODE - DO NOT MODIFY BY HAND.');
-    buffer.writeln();
-    buffer.writeln('class $schemaClassName extends FormSchema {');
-    buffer.writeln('  $schemaClassName() : super([');
-
-    for (final f in fields) {
-      if (f.keyStringSource == null) {
-        throw InvalidGenerationSourceError(
-          'Missing required keyString argument in a FormFieldBrick '
-              'constructor inside ${element.name}.build().',
-          element: element,
-        );
-      }
-
-      buffer.write('    FormFieldDescriptor(');
-      buffer.write('keyString: ${f.keyStringSource}');
-
-      if (f.initialInputSource != null) {
-        buffer.write(', initialInput: ${f.initialInputSource}');
-      }
-      if (f.formatterChainSource != null) {
-        buffer.write(
-          ', formatterValidatorChain: ${f.formatterChainSource}',
-        );
-      }
-
-      buffer.write('),');
-      if (f.isFocusedLiteralTrue) buffer.write(' // focused');
-      buffer.writeln();
+    // Get AST node of the State class
+    final stateDeclNode = await buildStep.resolver.astNodeFor(stateClass, resolve: true);
+    if (stateDeclNode is! ClassDeclaration) {
+      throw InvalidGenerationSourceError(
+        'State class `${stateClass.name}` AST not found or not a ClassDeclaration.',
+        element: stateClass,
+      );
     }
 
-    buffer.writeln('  ]);');
-    buffer.writeln('}');
+    // Entry methods: build(), buildBody()
+    final entryMethods = <MethodDeclaration>[
+      ...stateDeclNode.members.whereType<MethodDeclaration>().where((m) => m.name.lexeme == 'build'),
+      ...stateDeclNode.members.whereType<MethodDeclaration>().where((m) => m.name.lexeme == 'buildBody'),
+    ];
+    if (entryMethods.isEmpty) {
+      throw InvalidGenerationSourceError(
+        'State class `${stateClass.name}` has no build()/buildBody() to scan.',
+        element: widgetClass,
+      );
+    }
 
-    return buffer.toString();
+    final methodIndex = <String, MethodDeclaration>{
+      for (final m in stateDeclNode.members.whereType<MethodDeclaration>()) m.name.lexeme: m,
+    };
+
+    final collector = _FieldInstantiationCollector(deepScan: deepScan);
+    final visited = <String>{};
+    for (final m in entryMethods) {
+      _recurseVisitMethod(m, collector, methodIndex, visited);
+    }
+
+    final descriptorEntries = collector.items.map((it) {
+      final genericI = it.inputGenericSource ?? 'Object';
+      final genericV = it.valueGenericSource ?? 'Object';
+      final keyCode = it.keyStringSource ?? _quoted(it.keyStringLiteral ?? it.unknownKeyFallback);
+      final initCode = it.initialInputSource ?? 'null';
+      final chainCode = it.chainSource ?? 'null';
+      return 'FormFieldDescriptor<$genericI, $genericV>('
+          'keyString: $keyCode, initialInput: $initCode, formatterValidatorChain: $chainCode)';
+    }).join(',\n    ');
+
+    // IMPORTANT: No imports here; this is a `part of` file. Types must be visible in the parent library.
+    return '''
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: unnecessary_cast
+
+/// Auto-generated schema for $formName by @AutoFormSchema.
+class $schemaClassName extends FormSchema {
+  $schemaClassName()
+      : super(<FormFieldDescriptor>[
+    $descriptorEntries
+  ]);
+}
+''';
   }
 
-  /// Strongly resolves the InterfaceType for FormFieldBrick.
-  InterfaceType? _findFormFieldBrickType(ClassElement element) {
-    final library = element.library;
-
-    // Directly in this library.
-    final direct = library.getClass('FormFieldBrick');
-    if (direct != null) {
-      return direct.thisType;
+  void _assertIsFormBrickSubclass(ClassElement el) {
+    final t = el.thisType;
+    const baseName = 'FormBrick';
+    final ok = _hasSupertypeNamed(t, baseName);
+    if (!ok) {
+      throw InvalidGenerationSourceError(
+        '@AutoFormSchema must annotate a class extending FormBrick.',
+        element: el,
+      );
     }
+  }
 
-// In imported libraries.
-    for (final imported in library.importedLibraries) {
-      final t = imported.getClass('FormFieldBrick');
-      if (t != null) return t.thisType;
+  bool _hasSupertypeNamed(InterfaceType type, String name) {
+    if (type.element.name == name) return true;
+    for (final s in type.allSupertypes) {
+      if (s.element.name == name) return true;
     }
+    return false;
+  }
 
-    // Fallback to null: visitor will still do name-based check as backup.
-    return null;
+  ClassElement? _resolveStateClass(ClassElement widgetClass) {
+    final createState = widgetClass.lookUpMethod('createState', widgetClass.library);
+    if (createState == null) return null;
+    final rt = createState.returnType;
+    if (rt is! InterfaceType) return null;
+    return rt.element as ClassElement;
+  }
+
+  void _recurseVisitMethod(
+    MethodDeclaration method,
+    _FieldInstantiationCollector collector,
+    Map<String, MethodDeclaration> index,
+    Set<String> visited,
+  ) {
+    final key = method.name.lexeme;
+    if (!visited.add(key)) return;
+    method.body.accept(collector);
+
+    if (!collector.deepScan) return;
+
+    for (final call in collector.pendingCalls.toList()) {
+      if (!collector.pendingCalls.remove(call)) continue;
+      final target = index[call];
+      if (target != null) {
+        _recurseVisitMethod(target, collector, index, visited);
+      }
+    }
+  }
+
+  String _quoted(String s) {
+    if (s.startsWith("'") || s.startsWith('"')) return s;
+    final escaped = s.replaceAll(r'\', r'\\').replaceAll("'", r"\'");
+    return "'$escaped'";
   }
 }
 
-// -----------------------------------------------------------------------------
-// Internal support classes
-// -----------------------------------------------------------------------------
+class _FieldInstantiationCollector extends RecursiveAstVisitor<void> {
+  final bool deepScan;
 
-class _DiscoveredField {
-  final String? keyStringSource;
-  final String? initialInputSource;
-  final String? formatterChainSource;
-  final bool isFocusedLiteralTrue;
+  final items = <_FieldInfo>[];
+  final pendingCalls = <String>{};
 
-  _DiscoveredField({
-    required this.keyStringSource,
-    required this.initialInputSource,
-    required this.formatterChainSource,
-    required this.isFocusedLiteralTrue,
-  });
-}
+  _FieldInstantiationCollector({required this.deepScan});
 
-class _FormFieldBrickCollector extends RecursiveAstVisitor<void> {
-  final InterfaceType? formFieldBrickType;
-  final List<_DiscoveredField> fields = [];
-
-  _FormFieldBrickCollector({
-    required this.formFieldBrickType,
-  });
+  @override
+  void visitMethodInvocation(MethodInvocation node) {
+    pendingCalls.add(node.methodName.name);
+    super.visitMethodInvocation(node);
+  }
 
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
-    if (_isFormFieldBrickInstance(node)) {
-      final args = node.argumentList;
+    final t = node.staticType;
+    if (t is InterfaceType && _isFormFieldBrickSubtype(t)) {
+      final info = _FieldInfo.fromCreation(node);
 
-      final keyExpr = _findNamedArg(args, 'keyString');
-      final initialExpr = _findNamedArg(args, 'initialInput');
-      final formatterExpr =
-      _findNamedArg(args, 'formatterValidatorChain');
-      final focusedExpr = _findNamedArg(args, 'isFocusedOnInit');
+      // Infer I from FormFieldBrick<I>
+      final superI = _extractIFromFormFieldBrick(t);
+      if (superI != null) info.inputGenericSource = superI;
 
-      final keySrc = keyExpr?.toSource();
-      final initialSrc = initialExpr?.toSource();
-      final formatterSrc = formatterExpr?.toSource();
-
-      bool isFocused = false;
-      if (focusedExpr is BooleanLiteral && focusedExpr.value == true) {
-        isFocused = true;
-      }
-
-      fields.add(
-        _DiscoveredField(
-          keyStringSource: keySrc,
-          initialInputSource: initialSrc,
-          formatterChainSource: formatterSrc,
-          isFocusedLiteralTrue: isFocused,
-        ),
-      );
+      // Conservative V
+      info.valueGenericSource ??= 'Object';
+      items.add(info);
     }
-
-    // Continue recursion into children.
     super.visitInstanceCreationExpression(node);
   }
 
-  bool _isFormFieldBrickInstance(InstanceCreationExpression node) {
-    DartType? type = node.staticType;
-
-    if (type is! InterfaceType) {
-      final t = node.constructorName.type.type;
-      if (t is InterfaceType) {
-        type = t;
-      }
-    }
-
-    if (type is! InterfaceType) return false;
-
-    // Strong typed check first.
-    if (formFieldBrickType != null) {
-      if (_isSubtypeOf(type, formFieldBrickType!)) return true;
-    }
-
-    // Fallback: name-based backup only.
-    final name = type.element.name;
-    if (name == 'FormFieldBrick' || name.endsWith('FormFieldBrick')) {
-      return true;
-    }
-
-    return false;
-  }
-
-  bool _isSubtypeOf(InterfaceType type, InterfaceType target) {
-    if (type == target) return true;
-    if (type.element == target.element) return true;
-    for (final sup in type.allSupertypes) {
-      if (sup.element == target.element) return true;
+  bool _isFormFieldBrickSubtype(InterfaceType t) {
+    for (final s in [t, ...t.allSupertypes]) {
+      if (s.element.name == 'FormFieldBrick') return true;
     }
     return false;
   }
 
-  Expression? _findNamedArg(ArgumentList args, String name) {
-    for (final a in args.arguments) {
-      if (a is NamedExpression && a.name.label.name == name) {
-        return a.expression;
+  String? _extractIFromFormFieldBrick(InterfaceType t) {
+    for (final s in [t, ...t.allSupertypes]) {
+      if (s.element.name == 'FormFieldBrick') {
+        final args = s.typeArguments;
+        if (args.isNotEmpty) {
+          final a = args.first;
+          if (a is InterfaceType) {
+            return a.getDisplayString(
+              withNullability: a.nullabilitySuffix != NullabilitySuffix.none,
+            );
+          }
+          if (a is TypeParameterType) {
+            return a.getDisplayString(withNullability: true);
+          }
+        }
       }
     }
     return null;
+  }
+}
+
+class _FieldInfo {
+  _FieldInfo();
+
+  String? inputGenericSource;
+  String? valueGenericSource;
+
+  String? keyStringSource;
+  String? initialInputSource;
+  String? chainSource;
+
+  String? keyStringLiteral;
+
+  String get unknownKeyFallback => '<unknown_key>';
+
+  static _FieldInfo fromCreation(InstanceCreationExpression node) {
+    final info = _FieldInfo();
+
+    for (final arg in node.argumentList.arguments) {
+      if (arg is! NamedExpression) continue;
+      final name = arg.name.label.name;
+      final expr = arg.expression;
+
+      if (name == 'keyString') {
+        info.keyStringSource = expr.toString();
+        if (expr is StringLiteral) info.keyStringLiteral = expr.stringValue;
+      } else if (name == 'initialInput') {
+        info.initialInputSource = expr.toString();
+      } else if (name == 'formatterValidatorChain') {
+        info.chainSource = expr.toString();
+      }
+    }
+    return info;
   }
 }

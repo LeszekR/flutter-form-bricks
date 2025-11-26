@@ -1,6 +1,6 @@
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/date_time_limits.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/date_time_utils.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/time_formatter_validator.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/form_fields/date_time/components/date_time_limits.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/form_fields/date_time/components/date_time_utils.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/form_fields/date_time/formatter_validators/time_formatter_validator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../date_time_test_data.dart';

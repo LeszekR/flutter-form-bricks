@@ -1,4 +1,4 @@
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/formatters/forbidden_whitespaces_formatter.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/formatters/forbidden_whitespaces_formatter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../test_data.dart';

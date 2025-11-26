@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_bricks/src/inputs/base/form_field_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/base/form_field_brick.dart';
 
+import '../../annotations/auto_form_schema.dart';
 import '../../string_literals/gen/bricks_localizations.dart';
 import '../form_manager/form_manager.dart';
-import '../../annotations/auto_form_schema.dart';
 
 ///  Top layer of forms used by this software.
 ///  Can be used for forms that are not intended to save any data to db
@@ -61,6 +61,8 @@ abstract class FormStateBrick<T extends FormBrick> extends State<T> {
   /// If you need to have a process after form is initiated, this is your place to go
   void postConstruct() {}
 
+  Widget buildBody(BuildContext context);
+
   @override
   void initState() {
     super.initState();
@@ -90,8 +92,6 @@ abstract class FormStateBrick<T extends FormBrick> extends State<T> {
       builder: (context, _) => buildBody(context),
     );
   }
-
-  Widget buildBody(BuildContext context);
 
   void keyBoardActions(RawKeyEvent event) {
     // TODO migrate to new flutter: https://docs.flutter.dev/release/breaking-changes/key-event-migration

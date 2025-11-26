@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_bricks/src/inputs/states_controller/double_widget_states_controller.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/text/first_upper_then_lower_case_formatter.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/text/forbidden_whitespaces_formatter.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/text/lowercase_formatter.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/text/uppercase_formatter.dart';
-import 'package:flutter_form_bricks/src/inputs/text/format_and_validate/text/vat_formatter.dart';
+import 'package:flutter_form_bricks/src/form_fields/states_controller/double_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/text/first_upper_then_lower_case_formatter.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/text/forbidden_whitespaces_formatter.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/text/lowercase_formatter.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/text/uppercase_formatter.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/text/vat_formatter.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 
 import '../../../../../shelf.dart';

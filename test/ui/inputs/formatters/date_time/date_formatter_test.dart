@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/components/date_time_utils.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/formatter_validators/date_formatter_validator.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/form_fields/date_time/components/date_time_utils.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/form_fields/date_time/formatter_validators/date_formatter_validator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 

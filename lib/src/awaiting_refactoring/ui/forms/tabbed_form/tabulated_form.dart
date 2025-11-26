@@ -48,7 +48,7 @@ abstract class TabulatedFormState<T extends TabulatedForm> extends AbstractFormS
     );
   }
 
-  //initial tab state has to be called here so the form is aware of all children inputs and able to tell us if any validation failed
+  //initial tab state has to be called here so the form is aware of all children form_fields and able to tell us if any validation failed
   @override
   void postConstruct() {
     super.postConstruct();

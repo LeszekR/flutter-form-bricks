@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 
-part 'example_form.g.dart';
-
 final GlobalKey<ExampleFormState> formKey1 = GlobalKey();
 final String plainTextKeyString1 = 'plainTextKeyString1';
 final String plainTextKeyString2 = 'plainTextKeyString2';
 final String plainTextKeyString3 = 'plainTextKeyString3';
 
+@AutoFormSchema()
 class ExampleForm extends FormBrick {
   ExampleForm({required super.formManager});
 
