@@ -24,7 +24,7 @@ abstract class FormatterValidatorChain<I extends Object, V extends Object> {
   FieldContent<I, V> runChain(
     BricksLocalizations localizations,
     String keyString,
-    I input,
+    I? input,
   );
 }
 
@@ -38,7 +38,7 @@ abstract class FormatterValidatorChainEarlyStop<I extends Object, V extends Obje
   FieldContent<I, V> runChain(
     BricksLocalizations localizations,
     String keyString,
-    I input,
+    I? input,
   ) {
     FieldContent<I, V> resultFieldContent = FieldContent<I, V>.transient(input);
 
@@ -60,7 +60,7 @@ abstract class FormatterValidatorChainFullRun<I extends Object, V extends Object
   FieldContent<I, V> runChain(
     BricksLocalizations localizations,
     String keyString,
-    I input,
+    I? input,
   ) {
     FieldContent<I, V> resultFieldContent = FieldContent<I, V>.transient(input);
 
