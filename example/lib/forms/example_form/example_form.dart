@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 
+part 'example_form.g.dart';
+
 final GlobalKey<ExampleFormState> formKey1 = GlobalKey();
 final String plainTextKeyString1 = 'plainTextKeyString1';
 final String plainTextKeyString2 = 'plainTextKeyString2';
 final String plainTextKeyString3 = 'plainTextKeyString3';
+
 
 @AutoFormSchema(deepScan: true)
 class ExampleForm extends FormBrick {
@@ -18,9 +21,6 @@ class ExampleFormState extends FormStateBrick {
   @override
   Widget buildBody(BuildContext context) {
     var appSize = UiParams.of(context).appSize;
-    var statesColorMaker = StatesColorMaker();
-    var dateTimeUtils = DateTimeUtils();
-    var currentDate = CurrentDate();
 
     return Center(
       child: SizedBox(
@@ -32,17 +32,17 @@ class ExampleFormState extends FormStateBrick {
             PlainTextField(
               keyString: plainTextKeyString1,
               formManager: formManager,
-              colorMaker: statesColorMaker,
+              colorMaker: StatesColorMaker(),
               width: 150,
               initialInput: 'Krokodyl',
               formatterValidatorChain:
-                  DateTimeFormatterValidatorChain([DateFormatterValidator(dateTimeUtils, currentDate)]),
+                  DateTimeFormatterValidatorChain([DateFormatterValidator(DateTimeUtils(), CurrentDate())]),
             ),
             appSize.spacerBoxVerticalMedium,
             PlainTextField(
               keyString: plainTextKeyString2,
               formManager: formManager,
-              colorMaker: statesColorMaker,
+              colorMaker: StatesColorMaker(),
               initialInput: 'Zenon',
               isFocusedOnInit: true,
               width: 200,

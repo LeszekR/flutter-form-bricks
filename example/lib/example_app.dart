@@ -3,7 +3,6 @@ import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks_example/forms/example_form/example_form.dart';
 import 'package:flutter_form_bricks_example/forms/example_form/example_form_data.dart';
 import 'package:flutter_form_bricks_example/forms/example_form/example_form_manager.dart';
-import 'package:flutter_form_bricks_example/forms/example_form/example_form_schema.g.dart';
 
 class ExampleApp extends StatelessWidget {
   final UiParamsData uiParamsData = UiParamsData();
