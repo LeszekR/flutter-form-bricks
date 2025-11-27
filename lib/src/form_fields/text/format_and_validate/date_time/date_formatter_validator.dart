@@ -16,9 +16,9 @@ class DateFormatterValidator extends FormatterValidator<String, Date> {
 
   DateFormatterValidator(
     this._dateTimeUtils,
-    this._currentDate,
-    [this._dateTimeLimits,]
-  );
+    this._currentDate, [
+    this._dateTimeLimits,
+  ]);
 
   @override
   DateFieldContent run(
@@ -26,7 +26,7 @@ class DateFormatterValidator extends FormatterValidator<String, Date> {
     String keyString,
     DateFieldContent fieldContent,
   ) {
-    DateTimeFieldContent parsed = _dateTimeUtils.cleanDateTimeString(
+    DateTimeFieldContent dateTimeContent = _dateTimeUtils.cleanDateTimeString(
       bricksLocalizations: localizations,
       text: fieldContent.input!,
       dateTimeOrBoth: DateTimeOrBoth.date,
@@ -36,17 +36,15 @@ class DateFormatterValidator extends FormatterValidator<String, Date> {
       maxNDigits: 8,
       maxNumberDelimiters: 2,
     );
+    if (!dateTimeContent.isValid!) return DateFieldContent.err(fieldContent.input, dateTimeContent.error);
 
-    DateFieldContent parseResult = _makeDateFCFromDateTimeFC(parsed);
+    DateFieldContent dateContent = _makeDateFCFromDateTimeFC(dateTimeContent);
+    dateContent = parseDateFromString(localizations, dateContent);
+    if (!dateContent.isValid!) return DateFieldContent.err(fieldContent.input, dateContent.error);
 
-    if (!parseResult.isValid!) return DateFieldContent.err(fieldContent.input, parseResult.error);
+    dateContent = validateDate(localizations, dateContent, _dateTimeLimits);
 
-    parseResult = parseDateFromString(localizations, parseResult);
-    if (!parseResult.isValid!) return DateFieldContent.err(fieldContent.input, parseResult.error);
-
-    parseResult = validateDate(localizations, parseResult, _dateTimeLimits);
-
-    return parseResult;
+    return dateContent;
   }
 
   DateFieldContent parseDateFromString(BricksLocalizations localizations, DateFieldContent dateTimeFieldContent) {
@@ -227,6 +225,7 @@ class DateFormatterValidator extends FormatterValidator<String, Date> {
   }
 
   DateFieldContent _makeDateFCFromDateTimeFC(DateTimeFieldContent content) {
-    return DateFieldContent.ok(content.input, Date.fromDateTime(content.value!));
+    final Date? date = content.value == null ? null : Date.fromDateTime(content.value!);
+    return DateFieldContent.ok(content.input, date);
   }
 }

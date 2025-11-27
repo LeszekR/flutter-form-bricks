@@ -11,8 +11,8 @@ abstract class FormFieldBrick<I extends Object> extends StatefulWidget {
   final FormManager formManager;
   final StatesColorMaker colorMaker;
   final I? initialInput;
-  final bool isFocusedOnInit;
-  final FormatterValidatorChain? formatterValidatorChain;
+  final bool isFocusedOnStart;
+  final FormatterValidatorChain Function()? formatterValidatorChainBuilder;
   final WidgetStatesController? statesObserver;
   final WidgetStatesController? statesNotifier;
 
@@ -25,8 +25,8 @@ abstract class FormFieldBrick<I extends Object> extends StatefulWidget {
     required this.formManager,
     required this.colorMaker,
     this.initialInput,
-    this.isFocusedOnInit = false,
-    this.formatterValidatorChain = null,
+    this.isFocusedOnStart = false,
+    this.formatterValidatorChainBuilder = null,
     this.statesObserver,
     this.statesNotifier,
     this.autoValidateMode = AutovalidateMode.disabled,
@@ -89,5 +89,5 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
     });
   }
 
-  bool _hasFormatterValidator() => widget.formatterValidatorChain != null;
+  bool _hasFormatterValidator() => widget.formatterValidatorChainBuilder != null;
 }

@@ -25,7 +25,7 @@ class TimeFormatterValidator extends FormatterValidator<String, Time> {
     String keyString,
     TimeFieldContent fieldContent,
   ) {
-    DateTimeFieldContent parsed = _dateTimeUtils.cleanDateTimeString(
+    DateTimeFieldContent dateTimeContent = _dateTimeUtils.cleanDateTimeString(
       bricksLocalizations: localizations,
       text: fieldContent.input!,
       dateTimeOrBoth: DateTimeOrBoth.time,
@@ -35,16 +35,15 @@ class TimeFormatterValidator extends FormatterValidator<String, Time> {
       maxNDigits: 4,
       maxNumberDelimiters: 1,
     );
+    if (!dateTimeContent.isValid!) return TimeFieldContent.err(fieldContent.input, dateTimeContent.error);
 
-    TimeFieldContent parseResult = _makeTimeFCFromDateTimeFC(parsed);
-    if (!parseResult.isValid!) return TimeFieldContent.err(fieldContent.input, parseResult.error);
+    TimeFieldContent timeContent = _makeTimeFCFromDateTimeFC(dateTimeContent);
+    timeContent = parseTimeFromString(localizations, timeContent);
+    if (!timeContent.isValid!) return TimeFieldContent.err(fieldContent.input, timeContent.error);
 
-    parseResult = parseTimeFromString(localizations, parseResult);
-    if (!parseResult.isValid!) return TimeFieldContent.err(fieldContent.input, parseResult.error);
+    timeContent = _validateTime(localizations, timeContent, _dateTimeLimits);
 
-    parseResult = _validateTime(localizations, parseResult, _dateTimeLimits);
-
-    return parseResult;
+    return timeContent;
   }
 
   TimeFieldContent parseTimeFromString(BricksLocalizations localizations, TimeFieldContent fieldContent) {

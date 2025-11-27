@@ -6,7 +6,8 @@ class FormFieldDescriptor<I, V> {
   final Type inputRuntimeType;
   final Type valueRuntimeType;
   final I? initialInput;
-  final FormatterValidatorChain? formatterValidatorChain;
+  final bool? isFocusedOnStart;
+  final FormatterValidatorChain Function()? formatterValidatorChainBuilder;
 
   // TODO what is valueType needed for? Redundant?
 
@@ -15,7 +16,8 @@ class FormFieldDescriptor<I, V> {
   FormFieldDescriptor({
     required this.keyString,
     this.initialInput,
-    this.formatterValidatorChain,
+    this.isFocusedOnStart,
+    this.formatterValidatorChainBuilder,
   })  : inputRuntimeType = I,
         valueRuntimeType = V {
     assert(I != dynamic, "FormFieldDescriptor<I, V>: Generic type I must not be dynamic.");

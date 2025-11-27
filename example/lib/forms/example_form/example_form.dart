@@ -8,8 +8,7 @@ final String plainTextKeyString1 = 'plainTextKeyString1';
 final String plainTextKeyString2 = 'plainTextKeyString2';
 final String plainTextKeyString3 = 'plainTextKeyString3';
 
-
-@AutoFormSchema(deepScan: true)
+@AutoFormSchema()
 class ExampleForm extends FormBrick {
   ExampleForm({required super.formManager});
 
@@ -35,8 +34,9 @@ class ExampleFormState extends FormStateBrick {
               colorMaker: StatesColorMaker(),
               width: 150,
               initialInput: 'Krokodyl',
-              formatterValidatorChain:
-                  DateTimeFormatterValidatorChain([DateFormatterValidator(DateTimeUtils(), CurrentDate())]),
+              formatterValidatorChainBuilder: () => DateTimeFormatterValidatorChain([
+                DateFormatterValidator(DateTimeUtils(), CurrentDate()),
+              ]),
             ),
             appSize.spacerBoxVerticalMedium,
             PlainTextField(
@@ -44,7 +44,7 @@ class ExampleFormState extends FormStateBrick {
               formManager: formManager,
               colorMaker: StatesColorMaker(),
               initialInput: 'Zenon',
-              isFocusedOnInit: true,
+              isFocusedOnStart: true,
               width: 200,
               maxLines: 3,
             ),

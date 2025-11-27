@@ -27,7 +27,8 @@ abstract class FormManager extends ChangeNotifier {
   FormManager({required FormData formData, required FormSchema formSchema})
       : _formData = formData,
         _formatterValidatorChainMap = {
-          for (final d in formSchema.descriptors) d.keyString: d.formatterValidatorChain,
+          for (final d in formSchema.descriptors)
+            d.keyString: d.formatterValidatorChainBuilder == null ? null : d.formatterValidatorChainBuilder!(),
         } {
     _initFormData(formSchema, _formData);
   }
@@ -37,15 +38,13 @@ abstract class FormManager extends ChangeNotifier {
   void _initFormData(FormSchema formSchema, FormData formData) {
     if (formData.fieldDataMap.isNotEmpty) return;
 
-    assert(formSchema.descriptors.any((d) => d.keyString == formData.focusedKeyString),
-        'The initial focusKeyString must match one of the descriptors\' keyStrings.');
-
     for (FormFieldDescriptor d in formSchema.descriptors) {
       formData.fieldDataMap[d.keyString] = FormFieldData(
         inputRuntimeType: d.inputRuntimeType,
         valueRuntimeType: d.valueRuntimeType,
         fieldContent: FieldContent.transient(d.initialInput),
       );
+      if (d.isFocusedOnStart ?? false) formData.focusedKeyString = d.keyString;
     }
   }
 
@@ -86,6 +85,7 @@ abstract class FormManager extends ChangeNotifier {
     );
 
     var valueRuntimeType = _fieldData(keyString).valueRuntimeType;
+    // TU PRZERWAŁEM - fix the assert
     assert(
       V == valueRuntimeType,
       'Field value type is different from FieldData valueType (\'${V.toString()}\' vs. \'${valueRuntimeType.toString()})\' '

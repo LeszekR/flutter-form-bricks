@@ -69,18 +69,35 @@ class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
       allItems.addAll(collector.items);
     }
 
-    // 4) Emit schema.
-    final descriptorEntries = allItems.map((it) {
-      final genericI = it.inputGenericSource ?? 'Object';
-      final genericV = it.valueGenericSource ?? 'Object';
+    // 4) Validate focus: exactly one field must have isFocusedOnStart == true
+    final int focusedCount = allItems.where((fieldInfo) {
+      final String? raw = fieldInfo.isFocusedOnStartSource?.trim();
+      final bool? literal = fieldInfo.isFocusedOnStartLiteralBool;
+      return literal == true || raw == 'true';
+    }).length;
 
-      final keyCode = it.keyStringSource ?? _quote(it.keyStringLiteral ?? it.unknownKeyFallback);
+    if (focusedCount != 1) {
+      throw InvalidGenerationSourceError(
+        'Exactly one field must have isFocusedOnStart: true in ${widgetClass.name}. Found $focusedCount.',
+        element: element,
+      );
+    }
 
-      final initCode = it.initialInputSource ?? 'null';
-      final chainCode = it.chainSource ?? 'null';
+    // 5) Emit schema.
+    final descriptorEntries = allItems.map((fieldInfo) {
+      final genericI = fieldInfo.inputGenericSource ?? 'Object';
+      final genericV = fieldInfo.valueGenericSource ?? 'Object';
+
+      final keyCode = fieldInfo.keyStringSource ?? _quote(fieldInfo.keyStringLiteral ?? fieldInfo.unknownKeyFallback);
+      final initCode = fieldInfo.initialInputSource ?? 'null';
+      final focusedCode = fieldInfo.isFocusedOnStartSource ?? 'null';
+      final chainCode = fieldInfo.formatValidChainBuilderSource ?? 'null';
 
       return 'FormFieldDescriptor<$genericI, $genericV>('
-          'keyString: $keyCode, initialInput: $initCode, formatterValidatorChain: $chainCode)';
+          'keyString: $keyCode, \n'
+          'initialInput: $initCode, \n'
+          'isFocusedOnStart:  $focusedCode, \n'
+          'formatterValidatorChainBuilder: $chainCode,)';
     }).join(',\n    ');
 
     return '''
@@ -90,7 +107,7 @@ class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
 class $schemaClassName extends FormSchema {
   $schemaClassName()
       : super(<FormFieldDescriptor>[
-    $descriptorEntries
+    $descriptorEntries,
   ]);
 }
 ''';
@@ -242,9 +259,11 @@ class _FieldInfo {
 
   String? keyStringSource;
   String? initialInputSource;
-  String? chainSource;
+  String? isFocusedOnStartSource;
+  String? formatValidChainBuilderSource;
 
   String? keyStringLiteral;
+  bool? isFocusedOnStartLiteralBool;
 
   String get unknownKeyFallback => '<unknown_key>';
 
@@ -261,8 +280,11 @@ class _FieldInfo {
         if (expression is StringLiteral) info.keyStringLiteral = expression.stringValue;
       } else if (name == 'initialInput') {
         info.initialInputSource = expression.toString();
-      } else if (name == 'formatterValidatorChain') {
-        info.chainSource = expression.toString();
+      } else if (name == 'isFocusedOnStart') {
+        info.isFocusedOnStartSource = expression.toString();
+        if (expression is BooleanLiteral) info.isFocusedOnStartLiteralBool = expression.value;
+      } else if (name == 'formatterValidatorChainBuilder') {
+        info.formatValidChainBuilderSource = expression.toString();
       }
     }
     return info;

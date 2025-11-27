@@ -43,16 +43,16 @@ class DateTimeUtils {
 
     // remove forbidden chars
     // replace all delimiter-type elements and groups with single '-'
-    String result = text;
-    result = result.trim();
-    result = result.replaceAll(RegExp('$stringDelimiterPattern+'), stringDelimiter);
-    result = result.replaceAll(RegExp('$stringDelimiter+'), stringDelimiter);
-    result = result.replaceAll(RegExp(' '), ''); // in case space was removed from delimiter pattern above
-    result = result.replaceFirst(RegExp('^$stringDelimiter'), '');
-    result = result.replaceFirst(RegExp('$stringDelimiter\$'), '');
+    String textClean = text;
+    textClean = textClean.trim();
+    textClean = textClean.replaceAll(RegExp('$stringDelimiterPattern+'), stringDelimiter);
+    textClean = textClean.replaceAll(RegExp('$stringDelimiter+'), stringDelimiter);
+    textClean = textClean.replaceAll(RegExp(' '), ''); // in case space was removed from delimiter pattern above
+    textClean = textClean.replaceFirst(RegExp('^$stringDelimiter'), '');
+    textClean = textClean.replaceFirst(RegExp('$stringDelimiter\$'), '');
 
     // too many groups of digits
-    var nDelimiters = RegExp(stringDelimiter).allMatches(result).length;
+    var nDelimiters = RegExp(stringDelimiter).allMatches(textClean).length;
     if (nDelimiters > maxNumberDelimiters)
       return DateTimeFieldContent.err(text, erMsgTooManyDelimiters(bricksLocalizations, dateTimeOrBoth));
 
@@ -63,19 +63,19 @@ class DateTimeUtils {
     if (nDigits > maxNDigits && nDelimiters == 0)
       return DateTimeFieldContent.err(text, errMsgTooManyDigits(bricksLocalizations, dateTimeOrBoth));
 
-    return DateTimeFieldContent.ok(result, null);
+    return DateTimeFieldContent.ok(textClean, null);
   }
 
 
-  String removeBadChars(String text, String stringDelimiterPattern) {
-    var textClean = '', nextChar = '';
-    var regExp = RegExp('[0-9]|$stringDelimiterPattern');
-    for (int i = 0; i < text.length; i++) {
-      nextChar = text.substring(i, i + 1);
-      if (regExp.hasMatch(nextChar)) textClean = textClean + nextChar;
-    }
-    return textClean;
-  }
+  // String removeBadChars(String text, String stringDelimiterPattern) {
+  //   var textClean = '', nextChar = '';
+  //   var regExp = RegExp('[0-9]|$stringDelimiterPattern');
+  //   for (int i = 0; i < text.length; i++) {
+  //     nextChar = text.substring(i, i + 1);
+  //     if (regExp.hasMatch(nextChar)) textClean = textClean + nextChar;
+  //   }
+  //   return textClean;
+  // }
 
   @visibleForTesting
   String errMsgForbiddenChars(BricksLocalizations localizations, DateTimeOrBoth eDateTime) {

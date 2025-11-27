@@ -8,6 +8,7 @@ import '../form_manager/form_manager.dart';
 
 ///  Top layer of forms used by this software.
 ///  Can be used for forms that are not intended to save any data to db
+@AutoFormSchema()
 abstract class FormBrick extends StatefulWidget {
   final String _errorTextKeyString = "error_text";
   final FormManager _formManager;

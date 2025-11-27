@@ -12,11 +12,8 @@ library flutter_form_bricks.annotations;
 /// recursively traverses `build()` and helper methods (e.g., `buildBody(...)`)
 /// to find widget constructions whose root supertype is `FormFieldBrick`.
 class AutoFormSchema {
-  /// When true, method calls inside `build()`/`buildBody()` are recursively analyzed.
-  final bool deepScan;
-
   /// Optional override for the output schema class name. If null, `<FormName>Schema` is used.
   final String? name;
 
-  const AutoFormSchema({this.deepScan = true, this.name});
+  const AutoFormSchema({this.name});
 }
