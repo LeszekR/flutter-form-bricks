@@ -14,10 +14,10 @@ import 'auto_form_schema.dart';
 class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
   @override
   Future<String> generateForAnnotatedElement(
-      Element element,
-      ConstantReader annotation,
-      BuildStep buildStep,
-      ) async {
+    Element element,
+    ConstantReader annotation,
+    BuildStep buildStep,
+  ) async {
     if (element is! ClassElement) {
       throw InvalidGenerationSourceError(
         '@AutoFormSchema can only be applied to classes.',
@@ -33,24 +33,22 @@ class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
 
     // 1) Load ALL units in the same library as the annotated widget.
     final lib = widgetClass.library;
-    final stateDecls = <ClassDeclaration>[];
-    print('==> lib.units: ${lib.units.toString()}, count: ${lib.units.length}');
-    for (final unitEl in lib.units) {
-      // unitEl is a CompilationUnitElement (defining unit + all parts)
-      for (final classEl in unitEl.classes) {
-        final t = classEl.thisType;
-        print('==> t.toString(): ${t.toString()}');
-        if (t is InterfaceType && _isSubtypeOf(t, 'FormStateBrick')) {
+    final stateDeclarations = <ClassDeclaration>[];
+    for (final unitElement in lib.units) {
+      // unitElement is a CompilationUnitElement (defining unit + all parts)
+      for (final classElement in unitElement.classes) {
+        final t = classElement.thisType;
+        if (_isSubtypeOf(t, 'FormStateBrick')) {
           // 2) Get a *resolved* AST node for this class.
-          final node = await buildStep.resolver.astNodeFor(classEl, resolve: true);
+          final node = await buildStep.resolver.astNodeFor(classElement, resolve: true);
           if (node is ClassDeclaration) {
-            stateDecls.add(node);
+            stateDeclarations.add(node);
           }
         }
       }
     }
 
-    if (stateDecls.isEmpty) {
+    if (stateDeclarations.isEmpty) {
       throw InvalidGenerationSourceError(
         'No State class extending FormStateBrick found in the same library as ${widgetClass.name}.',
         element: widgetClass,
@@ -59,15 +57,15 @@ class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
 
     // 3) Scan each State class: both buildBody and build.
     final allItems = <_FieldInfo>[];
-    for (final stateDecl in stateDecls) {
+    for (final stateDeclaration in stateDeclarations) {
       final methodIndex = <String, MethodDeclaration>{
-        for (final m in stateDecl.members.whereType<MethodDeclaration>()) m.name.lexeme: m,
+        for (final method in stateDeclaration.members.whereType<MethodDeclaration>()) method.name.lexeme: method,
       };
       final collector = _FieldCollector(
         methodIndex: methodIndex,
         targetMethods: const {'buildBody', 'build'},
       );
-      stateDecl.accept(collector);
+      stateDeclaration.accept(collector);
       allItems.addAll(collector.items);
     }
 
@@ -75,18 +73,20 @@ class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
     final descriptorEntries = allItems.map((it) {
       final genericI = it.inputGenericSource ?? 'Object';
       final genericV = it.valueGenericSource ?? 'Object';
+
       final keyCode = it.keyStringSource ?? _quote(it.keyStringLiteral ?? it.unknownKeyFallback);
+
       final initCode = it.initialInputSource ?? 'null';
       final chainCode = it.chainSource ?? 'null';
+
       return 'FormFieldDescriptor<$genericI, $genericV>('
           'keyString: $keyCode, initialInput: $initCode, formatterValidatorChain: $chainCode)';
     }).join(',\n    ');
 
     return '''
-// GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unnecessary_cast
-
+// // GENERATED CODE - DO NOT MODIFY BY HAND
 /// Auto-generated schema for $formName by @AutoFormSchema.
+
 class $schemaClassName extends FormSchema {
   $schemaClassName()
       : super(<FormFieldDescriptor>[
@@ -108,9 +108,9 @@ class $schemaClassName extends FormSchema {
     }
   }
 
-  static bool _isSubtypeOf(InterfaceType t, String base) {
-    if (t.element.name == base) return true;
-    for (final s in t.allSupertypes) {
+  static bool _isSubtypeOf(InterfaceType interfaceType, String base) {
+    if (interfaceType.element.name == base) return true;
+    for (final s in interfaceType.allSupertypes) {
       if (s.element.name == base) return true;
     }
     return false;
@@ -169,7 +169,6 @@ class _FieldCollector extends RecursiveAstVisitor<void> {
   // Detect FormFieldBrick descendants only.
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
-    print('============> visitInstanceCreationExpression: node: {$node.toString()}');
     final type = _resolveConstructedInterfaceType(node);
     if (type != null && _isFormFieldBrick(type)) {
       final info = _FieldInfo.fromCreation(node);
@@ -184,23 +183,21 @@ class _FieldCollector extends RecursiveAstVisitor<void> {
   // ----- helpers -----
 
   InterfaceType? _resolveConstructedInterfaceType(InstanceCreationExpression node) {
-    // 1) ctor → enclosing class
-    final ctor = node.constructorName.staticElement;
-    final enclosing = ctor?.enclosingElement;
+    // 1) constructor → enclosing class
+    final constructor = node.constructorName.staticElement;
+    final enclosing = constructor?.enclosingElement;
     if (enclosing is ClassElement) return enclosing.thisType;
 
     // 2) expression staticType
-    final st = node.staticType;
-    if (st is InterfaceType) return st;
+    final staticType = node.staticType;
+    if (staticType is InterfaceType) return staticType;
 
     // 3) NamedType resolved type (compat across analyzer versions)
     final tn = node.constructorName.type;
-    if (tn is NamedType) {
-      final resolved = tn.type;
-      if (resolved is InterfaceType) return resolved;
-      final dynamic maybeEl = (tn as dynamic).element;
-      if (maybeEl is ClassElement) return maybeEl.thisType;
-    }
+    final resolved = tn.type;
+    if (resolved is InterfaceType) return resolved;
+    final dynamic maybeElement = (tn as dynamic).element;
+    if (maybeElement is ClassElement) return maybeElement.thisType;
     return null;
   }
 
@@ -208,25 +205,25 @@ class _FieldCollector extends RecursiveAstVisitor<void> {
 
   static bool _isSubtypeOf(InterfaceType t, String base) {
     if (t.element.name == base) return true;
-    for (final s in t.allSupertypes) {
-      if (s.element.name == base) return true;
+    for (final superType in t.allSupertypes) {
+      if (superType.element.name == base) return true;
     }
     return false;
   }
 
   String? _extractIFromFormFieldBrick(InterfaceType t) {
-    for (final s in [t, ...t.allSupertypes]) {
-      if (s.element.name == 'FormFieldBrick') {
-        final args = s.typeArguments;
+    for (final superType in [t, ...t.allSupertypes]) {
+      if (superType.element.name == 'FormFieldBrick') {
+        final args = superType.typeArguments;
         if (args.isNotEmpty) {
-          final a = args.first;
-          if (a is InterfaceType) {
-            return a.getDisplayString(
-              withNullability: a.nullabilitySuffix != NullabilitySuffix.none,
+          final argFirst = args.first;
+          if (argFirst is InterfaceType) {
+            return argFirst.getDisplayString(
+              withNullability: argFirst.nullabilitySuffix != NullabilitySuffix.none,
             );
           }
-          if (a is TypeParameterType) {
-            return a.getDisplayString(withNullability: true);
+          if (argFirst is TypeParameterType) {
+            return argFirst.getDisplayString(withNullability: true);
           }
         }
       }
@@ -256,16 +253,16 @@ class _FieldInfo {
     for (final arg in node.argumentList.arguments) {
       if (arg is! NamedExpression) continue;
       final name = arg.name.label.name;
-      final expr = arg.expression;
+      final expression = arg.expression;
 
       // Only for descriptor payload; not used to identify the field.
       if (name == 'keyString') {
-        info.keyStringSource = expr.toString();
-        if (expr is StringLiteral) info.keyStringLiteral = expr.stringValue;
+        info.keyStringSource = expression.toString();
+        if (expression is StringLiteral) info.keyStringLiteral = expression.stringValue;
       } else if (name == 'initialInput') {
-        info.initialInputSource = expr.toString();
+        info.initialInputSource = expression.toString();
       } else if (name == 'formatterValidatorChain') {
-        info.chainSource = expr.toString();
+        info.chainSource = expression.toString();
       }
     }
     return info;

@@ -1,5 +1,14 @@
 # Flutter Form Bricks
 
+## How to run
+Before running call from terminal
+
+Apart from fetching dependencies this will also build localizations necessary for the app to work
+`flutter pub get`
+
+This will build any [FormSchema]s delegated to be generated with [@AutoFormSchema] annotation
+'dart run build_runner build -d`
+
 ## Localizations
 
 Since the lib contains a collection of standard UI messages and names it is localized. Follow flutter_localizations usage rules to add lnaguages by adding

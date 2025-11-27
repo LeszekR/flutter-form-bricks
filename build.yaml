@@ -11,6 +11,7 @@ builders:
   auto_form_schema:
     import: "package:flutter_form_bricks/builders.dart"
     builder_factories: ["autoFormSchema"]
-    build_extensions: {".dart": ["_schema.g.dart"]}
+    build_extensions: {}  # handled by PartBuilder
+#    build_extensions: {".dart": ["_schema.g.dart"]}
     auto_apply: dependents
     build_to: source
