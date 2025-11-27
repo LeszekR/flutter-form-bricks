@@ -225,7 +225,6 @@ class DateFormatterValidator extends FormatterValidator<String, Date> {
   }
 
   DateFieldContent _makeDateFCFromDateTimeFC(DateTimeFieldContent content) {
-    final Date? date = content.value == null ? null : Date.fromDateTime(content.value!);
-    return DateFieldContent.ok(content.input, date);
+    return DateFieldContent.ok(content.input, Date.fromDateTime(content.value!));
   }
 }
