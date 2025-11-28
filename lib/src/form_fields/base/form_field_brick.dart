@@ -6,8 +6,9 @@ import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 
 import '../../string_literals/gen/bricks_localizations.dart';
 
-abstract class FormFieldBrick<I extends Object> extends StatefulWidget {
+abstract class FormFieldBrick<I extends Object, V extends Object> extends StatefulWidget {
   final String keyString;
+  // TU PRZERWAŁEM - set inputRuntimeTyupe, valueRuntimeType -> to be checked in descriptor/manager/what else
   final FormManager formManager;
   final StatesColorMaker colorMaker;
   final I? initialInput;
@@ -36,11 +37,13 @@ abstract class FormFieldBrick<I extends Object> extends StatefulWidget {
 abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends FormFieldBrick> extends State<F> {
   V getValue();
 
+  Set<WidgetState>? _states;
+
   /// Object holding state of this `FormFieldBrick`. Fetched from `FormManager` prior to `build()`
   /// and updated in `setState()`;
   late FieldContent _fieldContent;
 
-  late final FocusNode focusNode;
+  late final FocusNode _focusNode;
 
   FormManager get formManager => widget.formManager;
 
@@ -49,24 +52,36 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   /// Controls the field's color and is passed to `InputDecoration` it the field shows its error this way.
   String? _error;
 
+  @mustCallSuper
   @override
   void initState() {
     formManager.registerField<I, V>(keyString, _hasFormatterValidator());
 
-    if (_hasFormatterValidator()) {
-      focusNode = FocusNode();
-      formManager.setFocusListener(focusNode, keyString);
-    }
+    _focusNode = FocusNode();
+    formManager.setFocusListener(_focusNode, keyString);
+
     _fieldContent = formManager.getFieldContent(keyString);
+
+    _states = widget.statesNotifier?.value;
+    widget.statesNotifier?.addListener(_onStatesChanged);
+
+    if (formManager.isFocusedOnStart(keyString)) _focusNode.requestFocus();
+
     super.initState();
   }
 
+  @mustCallSuper
   @override
   void dispose() {
-    if (_hasFormatterValidator()) {
-      focusNode.dispose();
-    }
+    widget.statesNotifier?.removeListener(_onStatesChanged);
+    _focusNode.dispose();
     super.dispose();
+  }
+
+  void _onStatesChanged() {
+    setState(() {
+      _states = widget.statesNotifier?.value;
+    });
   }
 
   /// **Must be called** either in `onChanged` or `onEditingComplete`. If not called there neither of the below
@@ -90,4 +105,7 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   }
 
   bool _hasFormatterValidator() => widget.formatterValidatorChainBuilder != null;
+
+// TODO move helper methods to a singleton
+  Color? makeColor() => widget.colorMaker.makeColor(context, _states);
 }

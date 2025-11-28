@@ -185,46 +185,27 @@ abstract class TextFieldBrick extends FormFieldBrick<String> {
 }
 
 class TextFieldStateBrick extends FormFieldStateBrick<String, TextEditingValue, TextFieldBrick> {
-  late final FocusNode _focusNode;
   late final TextEditingController _controller;
-  Set<WidgetState>? _states;
 
   @override
   TextEditingValue getValue() => _controller.value;
-
-  void fillInitialValue(TextEditingValue? initialInput) {
-    _controller.value = initialInput ?? TextEditingValue.empty;
-  }
 
   @override
   void initState() {
     super.initState();
 
-    _focusNode = widget.focusNode ?? FocusNode();
-    formManager.setFocusListener(_focusNode, keyString);
-    if (formManager.isFocusedOnStart(keyString)) _focusNode.requestFocus();
-
     _controller = widget.controller ?? TextEditingController();
-    fillInitialValue(formManager.getInitialInput(keyString));
-
-    (formManager.getInitialInput(keyString));
-
-    _states = widget.statesNotifier?.value;
-    widget.statesNotifier?.addListener(_onStatesChanged);
+    _fillInitialValue(formManager.getInitialInput(keyString));
   }
 
   @override
   void dispose() {
-    widget.statesNotifier?.removeListener(_onStatesChanged);
-    _focusNode.dispose();
     _controller.dispose();
     super.dispose();
   }
 
-  void _onStatesChanged() {
-    setState(() {
-      _states = widget.statesNotifier?.value;
-    });
+  void _fillInitialValue(TextEditingValue? initialInput) {
+    _controller.value = initialInput ?? TextEditingValue.empty;
   }
 
   @override
@@ -394,24 +375,22 @@ class TextFieldStateBrick extends FormFieldStateBrick<String, TextEditingValue, 
     );
   }
 
-// TODO move helper methods to a singleton
+  // TODO move helper methods to a singleton
+  // TODO move this to FormFieldBrick?
   InputDecoration _makeInputDecoration(InputDecoration? decoration) {
     if (decoration == null) {
       return InputDecoration(
-// isDense: true,
-// isCollapsed: true,
+        // isDense: true,
+        // isCollapsed: true,
         contentPadding: EdgeInsets.zero,
         border: InputBorder.none,
-        fillColor: _makeColor(),
+        fillColor: makeColor(),
       );
     }
     return decoration.copyWith(
-      fillColor: _makeColor(),
+      fillColor: makeColor(),
     );
   }
-
-// TODO move helper methods to a singleton
-  Color? _makeColor() => widget.colorMaker.makeColor(context, _states);
 
   var _skipOnChanged = false;
 

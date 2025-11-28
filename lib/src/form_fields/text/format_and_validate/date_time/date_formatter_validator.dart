@@ -38,30 +38,30 @@ class DateFormatterValidator extends FormatterValidator<String, Date> {
     );
     if (!dateTimeContent.isValid!) return DateFieldContent.err(fieldContent.input, dateTimeContent.error);
 
-    DateFieldContent dateContent = _makeDateFCFromDateTimeFC(dateTimeContent);
-    dateContent = parseDateFromString(localizations, dateContent);
+    DateFieldContent dateContent = parseDateFromString(localizations, dateTimeContent);
     if (!dateContent.isValid!) return DateFieldContent.err(fieldContent.input, dateContent.error);
 
     dateContent = validateDate(localizations, dateContent, _dateTimeLimits);
 
+    // dateContent = _makeDateFCFromDateTimeFC(dateTimeContent);
     return dateContent;
   }
 
-  DateFieldContent parseDateFromString(BricksLocalizations localizations, DateFieldContent dateTimeFieldContent) {
-    String text = dateTimeFieldContent.input!;
-    int nDelimiters = RegExp(dateDelimiter).allMatches(text).length;
+  DateFieldContent parseDateFromString(BricksLocalizations localizations, DateTimeFieldContent dateTimeFieldContent) {
+    String dateTimeText = dateTimeFieldContent.input!;
+    int nDelimiters = RegExp(dateDelimiter).allMatches(dateTimeText).length;
 
-    DateFieldContent parseResult;
+    DateFieldContent dateContent;
 
     if (nDelimiters == 0) {
-      parseResult = makeDateStringNoDelimiters(text);
+      dateContent = makeDateStringNoDelimiters(dateTimeText);
     } else {
-      parseResult = makeDateStringWithDelimiters(localizations, text, nDelimiters);
+      dateContent = makeDateStringWithDelimiters(localizations, dateTimeText, nDelimiters);
     }
 
-    if (!parseResult.isValid!) return parseResult;
+    if (!dateContent.isValid!) return dateContent;
 
-    return addYear(parseResult, nDelimiters);
+    return addYear(dateContent, nDelimiters);
   }
 
   DateFieldContent makeDateStringNoDelimiters(String text) {

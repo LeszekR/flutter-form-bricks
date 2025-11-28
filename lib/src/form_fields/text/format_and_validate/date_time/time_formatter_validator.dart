@@ -37,16 +37,16 @@ class TimeFormatterValidator extends FormatterValidator<String, Time> {
     );
     if (!dateTimeContent.isValid!) return TimeFieldContent.err(fieldContent.input, dateTimeContent.error);
 
-    TimeFieldContent timeContent = _makeTimeFCFromDateTimeFC(dateTimeContent);
-    timeContent = parseTimeFromString(localizations, timeContent);
+    TimeFieldContent timeContent = _parseTimeFromString(localizations, dateTimeContent);
     if (!timeContent.isValid!) return TimeFieldContent.err(fieldContent.input, timeContent.error);
 
     timeContent = _validateTime(localizations, timeContent, _dateTimeLimits);
 
+    // TimeFieldContent timeContent = _makeTimeFCFromDateTimeFC(dateTimeContent);
     return timeContent;
   }
 
-  TimeFieldContent parseTimeFromString(BricksLocalizations localizations, TimeFieldContent fieldContent) {
+  TimeFieldContent _parseTimeFromString(BricksLocalizations localizations, DateTimeFieldContent fieldContent) {
     String inputString = fieldContent.input!;
     int nDelimiters = RegExp(timeDelimiter).allMatches(inputString).length;
 
