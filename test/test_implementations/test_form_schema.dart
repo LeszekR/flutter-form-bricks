@@ -5,34 +5,32 @@ import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/for
 import 'test_constants.dart';
 
 class TestFormSchema extends FormSchema {
-  TestFormSchema({required String keyString})
+  TestFormSchema()
       : super(
           [
-            FormFieldDescriptor<String>(
-              keyString,
-              initialStringValue1,
+            FormFieldDescriptor<String, TextEditingValue>(
+              keyString: keyString1,
+              initialInput: initialStringValue1,
             )
           ],
-          keyString1,
         );
 
   TestFormSchema.forText({
     required String keyString,
-    required TextEditingValue? initialValue,
+    required String? initialValue,
     FormatterValidatorChain? formatterValidatorChain,
   }) : super(
           [
-            FormFieldDescriptor<TextEditingValue>(
-              keyString,
-              initialInputinitialValue ?? TextEditingValue(text: initialStringValue1),
-              formatterValidatorChain,
+            FormFieldDescriptor<String, TextEditingValue>(
+              keyString: keyString,
+              initialInput: initialValue ?? initialStringValue1,
+              formatterValidatorChainBuilder: formatterValidatorChain == null ? null : () =>  formatterValidatorChain,
             )
           ],
-          keyString1,
         );
 
   TestFormSchema.of({
     required String keyString,
     required List<FormFieldDescriptor> descriptors,
-  }) : super(descriptors, keyString);
+  }) : super(descriptors);
 }

@@ -10,7 +10,7 @@ class TestFormManager extends FormManager {
   TestFormManager({required FormSchema schema})
       : super(
           formData: TestFormStateData(),
-          schema: schema
+          formSchema: schema
         );
 
   @override

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/form_fields/state/text_editing_value_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/text_field_brick.dart';
 
 class TestTextFieldBrick extends TextFieldBrick {

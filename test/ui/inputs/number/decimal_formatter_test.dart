@@ -19,10 +19,10 @@ void main() {
       TestData("100ABCD,123 123", "1 00A BCD,123 123"),
     ];
 
-    for (param in testParameters) {
-      testWidgets('"${param.inputString}" -> "${param.expected}"', (WidgetTester tester) async {
+    for (TestData param in testParameters) {
+      testWidgets('"${param.input}" -> "${param.expected}"', (WidgetTester tester) async {
         //given
-        final TextEditingValue newInput = TextEditingValue(text: param.inputString);
+        final TextEditingValue newInput = TextEditingValue(text: param.input);
 
         //when
         final result = DoubleInputFormatter().formatEditUpdate(initial, newInput);

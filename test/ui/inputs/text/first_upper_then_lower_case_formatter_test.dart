@@ -19,11 +19,11 @@ void main() {
       TestData("a b cd", "A B Cd"),
     ];
 
-    for (param in testParameters) {
-      testWidgets('Formatter should turn "${param.inputString}" into: "${param.expected}"', (WidgetTester tester) async {
+    for (TestData param in testParameters) {
+      testWidgets('Formatter should turn "${param.input}" into: "${param.expected}"', (WidgetTester tester) async {
         //given
         const TextEditingValue initial = TextEditingValue(text: "");
-        final TextEditingValue newInput = TextEditingValue(text: param.inputString);
+        final TextEditingValue newInput = TextEditingValue(text: param.input);
 
         //when
         final result = FirstUpperThenLowerCaseFormatter().formatEditUpdate(initial, newInput);

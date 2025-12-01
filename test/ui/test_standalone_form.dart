@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/base/form_utils.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form.dart';
-import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
+import 'package:flutter_form_bricks/shelf.dart';
 
-class TestSingleForm extends SingleForm {
+import '../test_implementations/test_form_manager.dart';
+import '../test_implementations/test_form_schema.dart';
+import '../test_implementations/test_form_state_data.dart';
+
+class TestSingleForm extends FormBrick {
   final Widget Function(BuildContext context, FormManager formManager) widgetMaker;
 
-  TestSingleForm({super.key, required this.widgetMaker});
+  TestSingleForm({super.key, required this.widgetMaker})
+      : super(formManager: TestFormManager(schema: TestFormSchema()));
 
   @override
   TestSingleFormState createState() => TestSingleFormState();
 }
 
-class TestSingleFormState extends SingleFormState<TestSingleForm> {
+class TestSingleFormState extends FormStateBrick<TestSingleForm> {
   /// Do NOT override this method in PROD! This is ONLY FOR UI TESTS!
   /// Flutter builds UI differently in prod and test. Due to that TestSingleForm crashes on control panel vertical
   /// overflow without this correction, This param introduces correction of control panel height
@@ -20,26 +23,14 @@ class TestSingleFormState extends SingleFormState<TestSingleForm> {
   int testControlsHeightCorrection() => 13;
 
   @override
-  List<Widget> createBody(BuildContext context) {
-    return [
-      FormUtils.horizontalFormGroup(
-        context: context,
-        height: 300,
-        children: [widget.widgetMaker(context, formManager)],
-      )
-    ];
+  Widget buildBody(BuildContext context) {
+    return FormUtils.horizontalFormGroup(
+      context: context,
+      height: 300,
+      children: [widget.widgetMaker(context, formManager)],
+    );
   }
 
   @override
-  String provideLabel() => "Test Single Form";
-
-  @override
-  void deleteEntity() {
-    // TODO: remove from abstract
-  }
-
-  @override
-  void submitData() {
-    // TODO: remove from abstract
-  }
+  void submitData() {}
 }

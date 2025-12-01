@@ -19,8 +19,8 @@ void main() {
       TestData(false, false),
     ];
 
-    for (param in testParameters) {
-      testWidgets('If required is "${param.inputString}" then validation result should be: "${param.expected}"',
+    for (TestData param in testParameters) {
+      testWidgets('If required is "${param.input}" then validation result should be: "${param.expected}"',
           (WidgetTester tester) async {
         BuildContext context = await pumpAppGetContext(tester);
 

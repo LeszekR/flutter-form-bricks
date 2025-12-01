@@ -5,18 +5,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart' show FormatterHelper, BricksLocalizations;
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/text/text_inputs.dart';
-import 'package:flutter_form_bricks/src/forms/form_manager/form_status.dart';
-import 'package:flutter_form_bricks/src/forms/state/field_and_validator.dart';
-import 'package:flutter_form_bricks/src/forms/state/single_form_state_data.dart';
 import 'package:flutter_form_bricks/src/form_fields/labelled_box/label_position.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/input_validator_provider.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_status.dart';
+import 'package:flutter_form_bricks/src/forms/state/form_data.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../test_implementations/test_form_manager.dart';
+import '../../../test_implementations/test_form_schema.dart';
+import '../../../test_implementations/test_form_state_data.dart';
 import '../../test_utils.dart';
 
 void main() {
-  var formStateData = SingleFormStateData(formKeyString,_schema );
+  FormData formStateData = TestFormStateData();
 
   testWidgets("Should test trimming spaces in only lowercase text field", (WidgetTester tester) async {
     //given
@@ -24,7 +26,7 @@ void main() {
 
     const String LOWERCASE_KEY = "2 lowercase text";
 
-    final formManager = SingleFormManager();
+    final formManager = TestFormManager(schema: TestFormSchema());
     final focusNode = formManager.getFocusNode(LOWERCASE_KEY);
     final controller = formManager.getTextEditingController(LOWERCASE_KEY);
 

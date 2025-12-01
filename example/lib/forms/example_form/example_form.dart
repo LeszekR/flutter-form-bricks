@@ -82,21 +82,6 @@ class ExampleFormState extends FormStateBrick {
   }
 
   @override
-  void deleteEntity() {
-    // TODO: implement deleteEntity
-  }
-
-  @override
-  // TODO: implement isValid
-  bool get isValid => throw UnimplementedError();
-
-  @override
-  String provideLabel() {
-    // TODO: implement provideLabel
-    throw UnimplementedError();
-  }
-
-  @override
   void submitData() {
     // TODO: implement submitData
   }

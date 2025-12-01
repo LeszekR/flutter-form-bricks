@@ -10,7 +10,7 @@ import '../form_manager/form_manager.dart';
 ///  Can be used for forms that are not intended to save any data to db
 @AutoFormSchema()
 abstract class FormBrick extends StatefulWidget {
-  final String _errorTextKeyString = "error_text";
+  final String _errorTextKeyString = 'error_text_area';
   final FormManager _formManager;
 
   FormBrick({super.key, required FormManager formManager}) : _formManager = formManager;
@@ -50,12 +50,7 @@ abstract class FormStateBrick<T extends FormBrick> extends State<T> {
 
   // TODO implement in implementations of this class mimcking FlutterFormBuilder
   // TODO move to FormManager?
-  bool get isValid;
-
-  String provideLabel();
-
-  // TODO remove from this abstraction
-  void deleteEntity();
+  // bool get isValid;
 
   void submitData();
 

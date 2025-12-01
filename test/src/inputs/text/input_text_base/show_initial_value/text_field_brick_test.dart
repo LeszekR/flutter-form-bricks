@@ -50,9 +50,7 @@ void _testControllerIniitalValue({
   required String expectedText,
 }) {
   testWidgets(description, (tester) async {
-    final schema = TestFormSchema(
-      keyString: keyString1,
-    );
+    final schema = TestFormSchema();
 
     await tester.pumpWidget(
       UiParams(

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/form_fields/base/form_field_brick.dart';
+import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
-class TestFormFieldBrick extends FormFieldBrick<String> {
+class TestFormFieldBrick extends FormFieldBrick<String, String> {
   TestFormFieldBrick({
     super.key,
     required super.keyString,
@@ -10,19 +11,19 @@ class TestFormFieldBrick extends FormFieldBrick<String> {
   });
 
   @override
-  State<FormFieldBrick<String>> createState() => TestFormFieldBrickState();
+  TestFormFieldBrickState createState() => TestFormFieldBrickState();
 }
 
-class TestFormFieldBrickState extends FormFieldStateBrick<TestFormFieldBrick, String?> {
-  String? value;
+class TestFormFieldBrickState extends FormFieldStateBrick<String, String, TestFormFieldBrick> {
+  String value = '';
 
-  void changeValue(String newValue) {
+  void changeValue(BricksLocalizations localizations, String newValue) {
     value = newValue;
-    onFieldChanged(newValue, );
+    onFieldChanged(localizations, newValue, );
   }
 
   @override
-  String? getValue() => value;
+  String getValue() => value;
 
   @override
   Widget build(BuildContext context) {

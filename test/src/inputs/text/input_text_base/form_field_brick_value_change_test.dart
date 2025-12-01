@@ -28,31 +28,35 @@ Future<void> _runValueChangeTest(
 
   final formatterValidatorChain = TestFormatterValidatorChain(testCase.error);
   List<FormFieldDescriptor> descriptors = [
-    FormFieldDescriptor<String>(
-      keyString,
-      initialInputtestCase.initialValue,
-      formatterValidatorChain,
+    FormFieldDescriptor<String, String>(
+      keyString:  keyString,
+      initialInput:  testCase.initialValue,
+      formatterValidatorChainBuilder: () =>  formatterValidatorChain,
     )
   ];
-
   final schema = TestFormSchema.of(
     keyString: keyString,
     descriptors: descriptors,
   );
   final formManager = TestFormManager(schema: schema);
   final globalKey = GlobalKey<TestFormFieldBrickState>();
+  BricksLocalizations? localizations;
 
   await tester.pumpWidget(
     UiParams(
       data: UiParamsData(),
       child: MaterialApp(
-        home: Scaffold(
-          body: TestFormFieldBrick(
-            key: globalKey,
-            keyString: keyString,
-            formManager: formManager,
-            colorMaker: TestColorMaker(),
-          ),
+        localizationsDelegates: BricksLocalizations.localizationsDelegates,
+        home: Builder(
+          builder: (context) {
+            localizations = BricksLocalizations.of(context);
+            return TestFormFieldBrick(
+              key: globalKey,
+              keyString: keyString,
+              formManager: formManager,
+              colorMaker: TestColorMaker(),
+            );
+          },
         ),
       ),
     ),
@@ -76,7 +80,7 @@ Future<void> _runValueChangeTest(
   // --- Simulate user input change ---
   // await tester.enterText(fieldFinder, testCase.newValue);
   // await tester.pumpAndSettle();
-  state.changeValue(testCase.newValue);
+  state.changeValue(localizations!, testCase.newValue);
 
   // TODO can I assume that validation error ALWAYS shows errorText? Then FormFieldData.isValid is redundant
   // --- Verify final FormManager state ---
