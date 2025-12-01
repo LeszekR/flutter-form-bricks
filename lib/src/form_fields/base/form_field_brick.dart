@@ -8,7 +8,7 @@ import '../../string_literals/gen/bricks_localizations.dart';
 
 abstract class FormFieldBrick<I extends Object, V extends Object> extends StatefulWidget {
   final String keyString;
-  // TU PRZERWAŁEM - set inputRuntimeTyupe, valueRuntimeType -> to be checked in descriptor/manager/what else
+
   final FormManager formManager;
   final StatesColorMaker colorMaker;
   final I? initialInput;
@@ -31,10 +31,11 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
     this.statesObserver,
     this.statesNotifier,
     this.autoValidateMode = AutovalidateMode.disabled,
-  }) : super(key: key ?? ValueKey(keyString));
+  })  : super(key: key ?? ValueKey(keyString));
 }
 
-abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends FormFieldBrick> extends State<F> {
+abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends FormFieldBrick<I, V>>
+    extends State<F> {
   V getValue();
 
   Set<WidgetState>? _states;
@@ -106,6 +107,5 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
 
   bool _hasFormatterValidator() => widget.formatterValidatorChainBuilder != null;
 
-// TODO move helper methods to a singleton
   Color? makeColor() => widget.colorMaker.makeColor(context, _states);
 }

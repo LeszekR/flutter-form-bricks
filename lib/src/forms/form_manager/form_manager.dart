@@ -70,7 +70,7 @@ abstract class FormManager extends ChangeNotifier {
   ///  - `FormatterValidatorChain` for the field (if there is any)
   ///  - state preservation object: `FormData` where field's **input**, **value**, **isValid**,
   ///    **error** will be kept over the life of the `FormBrick`.
-  void registerField<I, V>(String keyString, bool withValidator) {
+  void registerField<I extends Object, V extends Object>(String keyString, bool withValidator) {
     assert(
       fieldDataMap.keys.contains(keyString),
       'No "$keyString" found in FormData.fieldDataMap; '
@@ -85,7 +85,6 @@ abstract class FormManager extends ChangeNotifier {
     );
 
     var valueRuntimeType = _fieldData(keyString).valueRuntimeType;
-    // TU PRZERWAŁEM - fix the assert
     assert(
       V == valueRuntimeType,
       'Field value type is different from FieldData valueType (\'${V.toString()}\' vs. \'${valueRuntimeType.toString()})\' '

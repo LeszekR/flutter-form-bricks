@@ -99,7 +99,6 @@ class DateTimeUtils {
       return localizations.dateStringErrorTooManyDigits;
     }
     return localizations.timeStringErrorTooManyDigits;
-    // TODO what about date-time field?
   }
 
   @visibleForTesting

@@ -98,6 +98,7 @@ abstract class TextFieldBrick extends FormFieldBrick<String, TextEditingValue> {
     required super.keyString,
     required super.formManager,
     required super.colorMaker,
+
     super.initialInput,
     super.isFocusedOnStart = false,
     super.formatterValidatorChainBuilder = null,

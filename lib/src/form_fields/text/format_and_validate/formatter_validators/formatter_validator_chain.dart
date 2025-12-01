@@ -5,8 +5,21 @@ import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/for
 abstract class FormatterValidatorChain<I extends Object, V extends Object> {
   final List<FormatterValidator<I, V>> steps;
 
-  // TODO throw on any step with different I or V types
-  FormatterValidatorChain(this.steps);
+  FormatterValidatorChain(List<FormatterValidator<I, V>> steps) : steps = List.unmodifiable(_validated(steps));
+
+  static List<FormatterValidator<I, V>> _validated<I extends Object, V extends Object>(
+    List<FormatterValidator<I, V>> steps,
+  ) {
+    if (steps.isEmpty) throw ArgumentError('FormatterValidatorChain steps must not be empty.');
+
+    final seen = <Type>{};
+    for (final s in steps) {
+      if (s.inputType != I) throw ArgumentError('FormatterValidator inputType ${s.inputType} != $I.');
+      if (s.valueType != V) throw ArgumentError('FormatterValidator valueType ${s.valueType} != $V.');
+      if (!seen.add(s.runtimeType)) throw ArgumentError('Duplicate FormatterValidator kind: ${s.runtimeType}.');
+    }
+    return steps;
+  }
 
   /// Runs the formatting-validation chain for a given field.
   ///

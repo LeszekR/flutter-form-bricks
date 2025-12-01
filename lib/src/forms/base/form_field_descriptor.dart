@@ -1,15 +1,13 @@
 
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 
-class FormFieldDescriptor<I, V> {
+class FormFieldDescriptor<I extends Object, V extends Object> {
   final String keyString;
   final Type inputRuntimeType;
   final Type valueRuntimeType;
   final I? initialInput;
   final bool? isFocusedOnStart;
   final FormatterValidatorChain Function()? formatterValidatorChainBuilder;
-
-  // TODO what is valueType needed for? Redundant?
 
   // TODO guarantee validator chain adequate to field type - e.g. checkbox with date-validator throws
 
