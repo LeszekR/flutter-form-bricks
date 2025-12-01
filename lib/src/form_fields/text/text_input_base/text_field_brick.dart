@@ -13,7 +13,7 @@ import '../../../ui_params/ui_params.dart';
 import '../../base/form_field_brick.dart';
 import 'icon_button_params.dart';
 
-abstract class TextFieldBrick extends FormFieldBrick<String> {
+abstract class TextFieldBrick extends FormFieldBrick<String, TextEditingValue> {
 // TextFieldBrick
   final double? width;
 
