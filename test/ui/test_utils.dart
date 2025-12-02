@@ -5,6 +5,7 @@ import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/tabbed_for
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../test_implementations/test_form_manager.dart';
 import '../test_implementations/test_single_form.dart';
 import 'inputs/text/constants.dart';
 
@@ -67,7 +68,7 @@ Future<BuildContext> pumpAppGetContext(WidgetTester tester) async {
   return context;
 }
 
-prepareSimpleForm(WidgetTester tester, SingleFormManager formManager, Widget input) async {
+prepareSimpleForm(WidgetTester tester, Widget input) async {
   Widget widgetToTest = TestSingleForm(widgetBuilder: (context) => input);
   await prepareWidget(tester, (context) => widgetToTest);
   // formManager.fillInitialInputValuesMap();
@@ -83,11 +84,11 @@ prepareTabulatedForm(WidgetTester tester, TabulatedFormManager formManager, List
   await prepareWidget(tester, (context) => Row(children: tabs));
 }
 
-Widget makeRequired(
+Widget makeRequiredTextField(
   BuildContext context,
   String keyString,
   String label,
-  SingleFormManager formManager, {
+  TestFormManager formManager, {
   bool? withTextEditingController,
   String? initialValue,
 }) {
@@ -103,11 +104,11 @@ Widget makeRequired(
   );
 }
 
-Widget makeRequiredMin3Chars(
+Widget makeRequiredMin3CharsTextField(
   BuildContext context,
   String keyString,
   String label,
-  SingleFormManager formManager, {
+  TestFormManager  formManager, {
   bool? withTextEditingController,
   String? initialValue,
 }) {
@@ -132,8 +133,8 @@ prepareDataForTrimmingSpacesTests(
   await prepareLocalizations(tester);
   final BuildContext context = tester.element(find.byType(Scaffold));
 
-  final controller = await _getTextEditingController(tester, keyString);
-  final focusNode = await _getFocusNode(tester, keyString);
+  final controller = await getTextEditingController(tester, keyString);
+  final focusNode = await getFocusNode(tester, keyString);
 
   focusNode.addListener(() {
     if (!focusNode.hasFocus) {
@@ -150,7 +151,7 @@ prepareDataForTrimmingSpacesTests(
       formManager: formManager,
       label: 'Bulk text');
 
-  await prepareSimpleForm(tester, formManager, input);
+  await prepareSimpleForm(tester, input);
 }
 
 Future<void> enterTextAndUnfocusWidget(
@@ -174,7 +175,6 @@ prepareDataForFocusLosingTests(
   final BuildContext context = tester.element(find.byType(Scaffold));
   await prepareSimpleForm(
       tester,
-      formManager,
       Column(
         children: [
           buildTextInputForTest(context, keyString, formManager),
@@ -245,8 +245,8 @@ Widget buildTextInputForTest(BuildContext context, String keyString, SingleFormM
 Future<void> performAndCheckInputActions(
     WidgetTester tester, SingleFormManager formManager, String keyString, Map<String, Function> inputs) async {
   for (var method in inputs.entries) {
-    final focusNode = await _getFocusNode(tester, keyString);
-    final controller = await _getTextEditingController(tester, keyString);
+    final focusNode = await getFocusNode(tester, keyString);
+    final controller = await getTextEditingController(tester, keyString);
     controller.clear();
     await tester.pump();
 
@@ -266,11 +266,11 @@ Future<void> performAndCheckInputActions(
   }
 }
 
-Future<FocusNode> _getFocusNode(WidgetTester tester, String keyString) async {
+Future<FocusNode> getFocusNode(WidgetTester tester, String keyString) async {
   return (await tester.state(find.byKey(ValueKey(keyString))) as FormFieldStateBrick).focusNode;
 }
 
-Future<TextEditingController> _getTextEditingController(WidgetTester tester, String keyString) async {
+Future<TextEditingController> getTextEditingController(WidgetTester tester, String keyString) async {
   return (await tester.state(find.byKey(ValueKey(keyString))) as TextFieldStateBrick).controller;
 }
 

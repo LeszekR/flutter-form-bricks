@@ -31,7 +31,7 @@ void main() {
             formManager: formManager,
             label: 'Vat input');
 
-        await prepareSimpleForm(tester, formManager, input);
+        await prepareSimpleForm(tester, input);
 
         await tester.enterText(find.byKey(const Key(textVatFieldKey)), param.input);
         await tester.pump();

@@ -4,6 +4,7 @@ import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/form_manag
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../test_implementations/test_form_manager.dart';
 import '../test_data.dart';
 import '../test_utils.dart';
 
@@ -20,12 +21,12 @@ void main() {
       TestData("123,145", "123,145"),
     ];
 
-    for (params in testParameters) {
-      testWidgets('should complain about ${params.inputString}', (WidgetTester tester) async {
+    for (TestData params in testParameters) {
+      testWidgets('should complain about ${params.input}', (WidgetTester tester) async {
         final BuildContext context = await pumpAppGetContext(tester);
 
         //given
-        var formManager = SingleFormManager();
+        TestFormManager formManager = TestFormManager.testDefault();
         final input = await NumberInputs.textDouble(
           context: context,
           formManager: formManager,
@@ -33,10 +34,10 @@ void main() {
           label: "label",
           labelPosition: LabelPosition.topLeft,
         );
-        await prepareSimpleForm(tester, formManager, input);
+        await prepareSimpleForm(tester, input);
 
         //when
-        await tester.enterText(find.byKey(const Key(key)), params.inputString);
+        await tester.enterText(find.byKey(const Key(key)), params.input);
         await tester.pump();
 
         //then
@@ -67,7 +68,7 @@ void main() {
       formManager: SingleFormManager(),
     );
 
-    await prepareSimpleForm(tester, formManager, input);
+    await prepareSimpleForm(tester, input);
 
     //when
     await tester.enterText(find.byKey(const Key(key)), '21');

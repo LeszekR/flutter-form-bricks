@@ -95,7 +95,7 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   /// - return new `FieldContent` which then sets the field's input (if formatted), controls its color,
   ///   displays error if the field uses `InputDecoration` for this (error alternatively it can be displayed in
   ///   dedicated `FormBrick` area by `FormManager`.
-  void onFieldChanged(BricksLocalizations localizations, V input) {
+  void onFieldChanged(BricksLocalizations localizations, I input) {
     // Here FormManager:
     // - validates the input
     // - saves results of format-validation in FormData -> FormFieldData -> FieldContent

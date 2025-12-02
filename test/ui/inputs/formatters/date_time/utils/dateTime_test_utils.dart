@@ -51,7 +51,7 @@ Future<void> testAllCasesInTextField(
 ) async {
   final BuildContext context = await pumpAppGetContext(tester);
   Widget textField = makeTextField(context);
-  await prepareSimpleForm(tester, formManager, textField);
+  await prepareSimpleForm(tester, textField);
   await testDateTimeExcelStyleInput(testCases, tester, formManager.formKey, testAction)
       .then((value) => expect(value, true));
 }

@@ -216,7 +216,7 @@ Future<void> prepareIntegerFieldInForm(WidgetTester tester, FormFieldValidator<S
       labelPosition: LabelPosition.topLeft,
       validator: validator,
       formManager: formManager);
-  await prepareSimpleForm(tester, formManager, input);
+  await prepareSimpleForm(tester, input);
 }
 
 Future<void> prepareTextSimpleInForm(WidgetTester tester, FormFieldValidator<String> Function() validatorMaker,
@@ -232,5 +232,5 @@ Future<void> prepareTextSimpleInForm(WidgetTester tester, FormFieldValidator<Str
       labelPosition: LabelPosition.topLeft,
       validator: validator,
       formManager: formManager);
-  await prepareSimpleForm(tester, formManager, input);
+  await prepareSimpleForm(tester, input);
 }
