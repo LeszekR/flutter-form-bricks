@@ -44,7 +44,7 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   /// and updated in `setState()`;
   late FieldContent _fieldContent;
 
-  late final FocusNode _focusNode;
+  late final FocusNode focusNode;
 
   FormManager get formManager => widget.formManager;
 
@@ -58,15 +58,15 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   void initState() {
     formManager.registerField<I, V>(keyString, _hasFormatterValidator());
 
-    _focusNode = FocusNode();
-    formManager.setFocusListener(_focusNode, keyString);
+    focusNode = FocusNode();
+    formManager.setFocusListener(focusNode, keyString);
 
     _fieldContent = formManager.getFieldContent(keyString);
 
     _states = widget.statesNotifier?.value;
     widget.statesNotifier?.addListener(_onStatesChanged);
 
-    if (formManager.isFocusedOnStart(keyString)) _focusNode.requestFocus();
+    if (formManager.isFocusedOnStart(keyString)) focusNode.requestFocus();
 
     super.initState();
   }
@@ -75,7 +75,7 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   @override
   void dispose() {
     widget.statesNotifier?.removeListener(_onStatesChanged);
-    _focusNode.dispose();
+    focusNode.dispose();
     super.dispose();
   }
 

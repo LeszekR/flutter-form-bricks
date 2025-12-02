@@ -186,27 +186,27 @@ abstract class TextFieldBrick extends FormFieldBrick<String, TextEditingValue> {
 }
 
 class TextFieldStateBrick extends FormFieldStateBrick<String, TextEditingValue, TextFieldBrick> {
-  late final TextEditingController _controller;
+  late final TextEditingController controller;
 
   @override
-  TextEditingValue getValue() => _controller.value;
+  TextEditingValue getValue() => controller.value;
 
   @override
   void initState() {
     super.initState();
 
-    _controller = widget.controller ?? TextEditingController();
+    controller = widget.controller ?? TextEditingController();
     _fillInitialValue(formManager.getInitialInput(keyString));
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    controller.dispose();
     super.dispose();
   }
 
   void _fillInitialValue(TextEditingValue? initialInput) {
-    _controller.value = initialInput ?? TextEditingValue.empty;
+    controller.value = initialInput ?? TextEditingValue.empty;
   }
 
   @override
@@ -278,7 +278,7 @@ class TextFieldStateBrick extends FormFieldStateBrick<String, TextEditingValue, 
     return TextField(
       key: Key(keyString),
       groupId: widget.groupId,
-      controller: _controller,
+      controller: controller,
       focusNode: widget.focusNode,
       undoController: widget.undoController,
       decoration: _makeInputDecoration(widget.decoration),

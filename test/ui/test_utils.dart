@@ -4,8 +4,8 @@ import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_for
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/tabbed_form/tabulated_form_manager.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_form_bricks/src/forms/state/single_form_state_data.dart';
 
+import '../test_implementations/test_single_form.dart';
 import 'inputs/text/constants.dart';
 
 const String keyRequired = "key_required";
@@ -13,17 +13,20 @@ const String labelRequired = "label_required";
 const String label3Chars = 'Input with min. 3 chars';
 const String key3Chars = 'input_3_chars';
 
-loadGlobalConfigurationForTests() async {
+void loadGlobalConfigurationForTests() async {
   WidgetsFlutterBinding.ensureInitialized();
 }
 
-prepareWidget(WidgetTester tester, [Widget? Function(BuildContext)? widgetMaker, String language = "pl"]) async {
-  var uiParamsData = UiParamsData();
+Future<void> prepareWidget(
+  WidgetTester tester, [
+  Widget? Function(BuildContext)? widgetMaker,
+  String language = "pl",
+]) async {
   await tester.pumpWidget(
     UiParams(
-      data: uiParamsData,
+      data: UiParamsData(),
       child: MaterialApp(
-        theme: uiParamsData.appTheme.themeData,
+        theme: UiParamsData().appTheme.themeData,
         localizationsDelegates: BricksLocalizations.localizationsDelegates,
         supportedLocales: BricksLocalizations.supportedLocales,
         locale: Locale(language),
@@ -39,16 +42,35 @@ prepareWidget(WidgetTester tester, [Widget? Function(BuildContext)? widgetMaker,
   await tester.pumpAndSettle();
 }
 
+Future<BricksLocalizations> prepareLocalizations(WidgetTester tester) async {
+  BricksLocalizations? localizations;
+  await tester.pumpWidget(
+    MaterialApp(
+      localizationsDelegates: BricksLocalizations.localizationsDelegates,
+      supportedLocales: BricksLocalizations.supportedLocales,
+      locale: Locale('pl'),
+      home: Builder(
+        builder: (BuildContext context) {
+          localizations = BricksLocalizations.of(context);
+          return SizedBox();
+        },
+      ),
+    ),
+  );
+  await tester.pump();
+  return localizations!;
+}
+
 Future<BuildContext> pumpAppGetContext(WidgetTester tester) async {
-  await prepareWidget(tester);
+  await prepareLocalizations(tester);
   final BuildContext context = tester.element(find.byType(Scaffold));
   return context;
 }
 
 prepareSimpleForm(WidgetTester tester, SingleFormManager formManager, Widget input) async {
-  Widget widgetToTest = Scaffold(body: FormBuilder(key: formManager.formKey, child: input));
+  Widget widgetToTest = TestSingleForm(widgetBuilder: (context) => input);
   await prepareWidget(tester, (context) => widgetToTest);
-  formManager.fillInitialInputValuesMap();
+  // formManager.fillInitialInputValuesMap();
 }
 
 prepareTabulatedForm(WidgetTester tester, TabulatedFormManager formManager, List<TabData> tabsData) async {
@@ -59,7 +81,6 @@ prepareTabulatedForm(WidgetTester tester, TabulatedFormManager formManager, List
           ))
       .toList();
   await prepareWidget(tester, (context) => Row(children: tabs));
-  formManager.fillInitialInputValuesMap();
 }
 
 Widget makeRequired(
@@ -108,11 +129,11 @@ prepareDataForTrimmingSpacesTests(
   SingleFormManager formManager,
   String keyString,
 ) async {
-  await prepareWidget(tester);
+  await prepareLocalizations(tester);
   final BuildContext context = tester.element(find.byType(Scaffold));
 
-  final controller = formManager.getTextEditingController(keyString, defaultValue: null);
-  var focusNode = formManager.getFocusNode(keyString);
+  final controller = await _getTextEditingController(tester, keyString);
+  final focusNode = await _getFocusNode(tester, keyString);
 
   focusNode.addListener(() {
     if (!focusNode.hasFocus) {
@@ -139,7 +160,7 @@ Future<void> enterTextAndUnfocusWidget(
   String enteredText,
 ) async {
   await tester.enterText(find.byKey(Key(keyString)), enteredText);
-  formManager.getFocusNode(keyString).unfocus();
+  (await tester.state(find.byKey(ValueKey(keyString))) as FormFieldStateBrick).focusNode.unfocus();
   await tester.pump();
 }
 
@@ -149,7 +170,7 @@ prepareDataForFocusLosingTests(
   SingleFormManager formManager,
   String keyString,
 ) async {
-  await prepareWidget(tester);
+  await prepareLocalizations(tester);
   final BuildContext context = tester.element(find.byType(Scaffold));
   await prepareSimpleForm(
       tester,
@@ -224,13 +245,14 @@ Widget buildTextInputForTest(BuildContext context, String keyString, SingleFormM
 Future<void> performAndCheckInputActions(
     WidgetTester tester, SingleFormManager formManager, String keyString, Map<String, Function> inputs) async {
   for (var method in inputs.entries) {
-    formManager.getTextEditingController(keyString).clear();
+    final focusNode = await _getFocusNode(tester, keyString);
+    final controller = await _getTextEditingController(tester, keyString);
+    controller.clear();
     await tester.pump();
 
     await tester.enterText(find.byKey(Key(keyString)), "text example");
     await tester.pump();
 
-    var focusNode = formManager.getFocusNode(keyString);
     expect(focusNode.hasFocus, true);
 
     await method.value();
@@ -244,9 +266,12 @@ Future<void> performAndCheckInputActions(
   }
 }
 
-SingleFormManager makeSingleFormManager() {
-  var stateData = SingleFormStateData();
+Future<FocusNode> _getFocusNode(WidgetTester tester, String keyString) async {
+  return (await tester.state(find.byKey(ValueKey(keyString))) as FormFieldStateBrick).focusNode;
+}
 
+Future<TextEditingController> _getTextEditingController(WidgetTester tester, String keyString) async {
+  return (await tester.state(find.byKey(ValueKey(keyString))) as TextFieldStateBrick).controller;
 }
 
 // class TestTabulatedForm extends TabulatedForm {

@@ -206,7 +206,7 @@ void main() {
 
 Future<void> prepareIntegerFieldInForm(WidgetTester tester, FormFieldValidator<String> Function() validatorMaker,
     SingleFormManager formManager) async {
-  await prepareWidget(tester);
+  await prepareLocalizations(tester);
   final BuildContext context = tester.element(find.byType(Scaffold));
   final validator = validatorMaker();
   final input = NumberInputs.textInteger(
@@ -221,7 +221,7 @@ Future<void> prepareIntegerFieldInForm(WidgetTester tester, FormFieldValidator<S
 
 Future<void> prepareTextSimpleInForm(WidgetTester tester, FormFieldValidator<String> Function() validatorMaker,
     SingleFormManager formManager) async {
-  await prepareWidget(tester);
+  await prepareLocalizations(tester);
   final BuildContext context = tester.element(find.byType(Scaffold));
 
   final validator = validatorMaker();

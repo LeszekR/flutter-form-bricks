@@ -233,7 +233,7 @@ void main() {
   testWidgets('Should have INVALID status if input is invalid', (WidgetTester tester) async {
     //given
     SingleFormManager formManager = SingleFormManager();
-    await prepareWidget(tester);
+    await prepareLocalizations(tester);
     final BuildContext context = tester.element(find.byType(Scaffold));
 
     var inputThatRequires3Chars = makeRequiredMin3Chars(context, key3Chars, label3Chars, formManager);
@@ -253,7 +253,7 @@ void main() {
   testWidgets('Should have VALID status if input is valid', (WidgetTester tester) async {
     //given
     SingleFormManager formManager = SingleFormManager();
-    await prepareWidget(tester);
+    await prepareLocalizations(tester);
     final BuildContext context = tester.element(find.byType(Scaffold));
 
     var inputThatRequires3Chars = makeRequiredMin3Chars(context, key3Chars, label3Chars, formManager);
@@ -275,7 +275,7 @@ void main() {
     SingleFormManager formManager = SingleFormManager();
     const keyInputInvalid = "inputThatWillBeInvalid";
     const keyInputValid = "inputThatWillBeValid";
-    await prepareWidget(tester);
+    await prepareLocalizations(tester);
     final BuildContext context = tester.element(find.byType(Scaffold));
 
     var inputThatWillBeInvalid =
@@ -305,7 +305,7 @@ void main() {
   // testWidgets('Should clear all error messages once form is valid', (WidgetTester tester) async {
   //   //given
   //   SingleFormManager formManager = SingleFormManager();
-  //   await prepareWidget(tester);
+  //   await prepareLocalizations(tester);
   //  final BuildContext context = tester.element(find.byType(Scaffold));
   //   var inputThatRequires3Chars = makeRequiredMin3Chars(key3Chars, label3Chars, formManager);
   //   await prepareSimpleForm(tester, formManager, inputThatRequires3Chars);
@@ -329,7 +329,7 @@ void main() {
   testWidgets('Should reset form', (WidgetTester tester) async {
     //given
     SingleFormManager formManager = SingleFormManager();
-    await prepareWidget(tester);
+    await prepareLocalizations(tester);
     final BuildContext context = tester.element(find.byType(Scaffold));
 
     var inputThatRequires3Chars =
@@ -358,7 +358,7 @@ void main() {
   testWidgets('Should collect data from form and trim string values if needed', (WidgetTester tester) async {
     //given
     SingleFormManager formManager = SingleFormManager();
-    await prepareWidget(tester);
+    await prepareLocalizations(tester);
     final BuildContext context = tester.element(find.byType(Scaffold));
 
     var inputThatRequires3Chars = makeRequiredMin3Chars(context, key3Chars, label3Chars, formManager);

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../ui/test_standalone_form.dart';
+import 'test_single_form.dart';
 
 GlobalKey<TestSingleFormState> testFormGlobalKey = GlobalKey();
 
