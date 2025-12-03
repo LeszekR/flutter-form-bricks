@@ -105,9 +105,6 @@ Future<void> _runValueChangeTest(
   );
   await tester.pumpAndSettle();
 
-  // final fieldFinder = find.byType(TextField);
-  // expect(fieldFinder, findsOneWidget);
-  // final controller = tester.widget<TextField>(fieldFinder).controller!;
   final fieldFinder = find.byKey(globalKey);
   expect(fieldFinder, findsOneWidget);
   final state = globalKey.currentState!;
@@ -120,13 +117,9 @@ Future<void> _runValueChangeTest(
   expect(formManager.getFieldError(fieldKeyString), null);
 
   // --- Simulate user input change ---
-  // await tester.enterText(fieldFinder, testCase.newValue);
-  // await tester.pumpAndSettle();
   state.changeValue(localizations!, testCase.newInput);
 
-  // TODO can I assume that validation error ALWAYS shows errorText? Then FormFieldData.isValid is redundant
   // --- Verify final FormManager state ---
-  // TU PRZERWAŁEM - make MockFormatterValidatorChain actually run its FormatterValidator and create value for the field
   expect(formManager.getFieldValue(fieldKeyString), TextEditingValue(text: testCase.newInput));
   expect(formManager.isFieldDirty(fieldKeyString), true);
   expect(formManager.isFieldValidating(fieldKeyString), false);
