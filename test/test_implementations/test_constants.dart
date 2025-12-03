@@ -4,16 +4,19 @@ import 'test_single_form.dart';
 
 GlobalKey<TestSingleFormState> testFormGlobalKey = GlobalKey();
 
-String keyString1 = 'keyString1';
-String keyString2 = 'keyString2';
-String keyString3 = 'keyString3';
-String keyString4 = 'keyString4';
+String formKeyString1 = 'formKeyString1';
+String formKeyString2 = 'formKeyString2'; 
 
-String initialStringValue1 = 'initialStringValue1';
-String initialStringValue2 = 'initialStringValue2';
-String initialStringValue3 = 'initialStringValue3';
-String initialStringValue4 = 'initialStringValue4';
+String fieldKeyString1 = 'fieldKeyString1';
+String fieldKeyString2 = 'fieldKeyString2';
+String fieldKString3 = 'fieldKeyString3';
+String fieldKString4 = 'fieldKeyString4';
 
-String newStringValue1 = 'newStringValue1';
+String initialStringInput1 = 'initialStringValue1';
+String initialStringInput2 = 'initialStringValue2';
+String initialStringInput3 = 'initialStringValue3';
+String initialStringInput4 = 'initialStringValue4';
+
+String newStringInput1 = 'newStringValue1';
 
 String mockError1 = 'mockError1';

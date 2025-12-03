@@ -9,21 +9,21 @@ class TestFormSchema extends FormSchema {
       : super(
           [
             FormFieldDescriptor<String, TextEditingValue>(
-              keyString: keyString1,
-              initialInput: initialStringValue1,
+              keyString: fieldKeyString1,
+              initialInput: initialStringInput1,
             )
           ],
         );
 
   TestFormSchema.forText({
     required String keyString,
-    required String? initialValue,
+    required String? initialInput,
     FormatterValidatorChain? formatterValidatorChain,
   }) : super(
           [
             FormFieldDescriptor<String, TextEditingValue>(
               keyString: keyString,
-              initialInput: initialValue ?? initialStringValue1,
+              initialInput: initialInput ?? initialStringInput1,
               formatterValidatorChainBuilder: formatterValidatorChain == null ? null : () =>  formatterValidatorChain,
             )
           ],

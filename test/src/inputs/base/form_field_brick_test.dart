@@ -13,15 +13,15 @@ void main() {
   group('FormFieldBrick basic build behavior', () {
     _testKeyStringInTheSchema(
       description: 'builds quietly when keyString matches schema',
-      schemaKeyString: keyString1,
-      fieldKeyString: keyString1,
+      schemaKeyString: fieldKeyString1,
+      fieldKeyString: fieldKeyString1,
       expectThrows: false,
     );
 
     _testKeyStringInTheSchema(
       description: 'detects mismatch when keyString not in schema (no test failure)',
-      schemaKeyString: keyString1,
-      fieldKeyString: keyString2,
+      schemaKeyString: fieldKeyString1,
+      fieldKeyString: fieldKeyString2,
       expectThrows: true,
     );
   });
@@ -38,7 +38,7 @@ void _testKeyStringInTheSchema({
     (tester) async {
       final schema = TestFormSchema.forText(
         keyString: schemaKeyString,
-        initialValue: null,
+        initialInput: null,
       );
 
       bool didThrow = false;
@@ -47,7 +47,7 @@ void _testKeyStringInTheSchema({
         UiParams(
           data: UiParamsData(),
           child: MaterialApp(
-            home: TestFormFieldBrick(
+            home: TestPlainTextFormFieldBrick(
               key: GlobalKey(),
               keyString: fieldKeyString,
               formManager: TestFormManager(schema: schema),
@@ -64,7 +64,7 @@ void _testKeyStringInTheSchema({
         expect(err, anyOf(isA<AssertionError>(), isA<FlutterError>()));
       } else {
         expect(err, isNull);
-        expect(find.byType(TestFormFieldBrick), findsOneWidget);
+        expect(find.byType(TestPlainTextFormFieldBrick), findsOneWidget);
       }
     },
   );

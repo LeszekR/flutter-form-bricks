@@ -43,6 +43,7 @@ abstract class FormManager extends ChangeNotifier {
         inputRuntimeType: d.inputRuntimeType,
         valueRuntimeType: d.valueRuntimeType,
         fieldContent: FieldContent.transient(d.initialInput),
+        initialInput: d.initialInput,
       );
       if (d.isFocusedOnStart ?? false) formData.focusedKeyString = d.keyString;
     }
@@ -123,7 +124,7 @@ abstract class FormManager extends ChangeNotifier {
   void setFieldValidating(String keyString, bool isValidating) =>
       _updateFieldData(keyString, isValidating: isValidating);
 
-  bool isFieldValid(String keyString) => getFieldContent(keyString).error == null;
+  bool isFieldValid(String keyString) => getFieldContent(keyString).isValid ?? false;
 
   bool isFieldDirty(String keyString) => getFieldContent(keyString).input != _fieldData(keyString).initialInput;
 

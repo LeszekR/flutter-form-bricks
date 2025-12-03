@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/form_fields/base/form_field_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/text_field_brick.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
-class TestFormFieldBrick extends FormFieldBrick<String, TextEditingValue> {
-  TestFormFieldBrick({
+class TestPlainTextFormFieldBrick extends TextFieldBrick {
+  TestPlainTextFormFieldBrick({
     super.key,
     required super.keyString,
     required super.formManager,
     required super.colorMaker,
+    super.initialInput,
+    super.isFocusedOnStart,
+    super.formatterValidatorChainBuilder,
   });
 
   @override
   TestFormFieldBrickState createState() => TestFormFieldBrickState();
 }
 
-class TestFormFieldBrickState extends FormFieldStateBrick<String, TextEditingValue, TestFormFieldBrick> {
+class TestFormFieldBrickState extends TextFieldStateBrick {
   TextEditingValue value = TextEditingValue(text: '');
 
   void changeValue(BricksLocalizations localizations, String newInput) {

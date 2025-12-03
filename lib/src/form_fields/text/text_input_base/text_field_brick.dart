@@ -196,7 +196,7 @@ class TextFieldStateBrick extends FormFieldStateBrick<String, TextEditingValue, 
     super.initState();
 
     controller = widget.controller ?? TextEditingController();
-    _fillInitialValue(formManager.getInitialInput(keyString));
+    _fillInitialInput(formManager.getInitialInput(keyString));
   }
 
   @override
@@ -205,8 +205,8 @@ class TextFieldStateBrick extends FormFieldStateBrick<String, TextEditingValue, 
     super.dispose();
   }
 
-  void _fillInitialValue(TextEditingValue? initialInput) {
-    controller.value = initialInput ?? TextEditingValue.empty;
+  void _fillInitialInput(String? initialInput) {
+    controller.value = initialInput == null ? TextEditingValue.empty : TextEditingValue(text: initialInput);
   }
 
   @override

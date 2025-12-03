@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 
+import '../../../../test_implementations/mock_formatter_validator_chain.dart';
 import '../../../../test_implementations/test_color_maker.dart';
+import '../../../../test_implementations/test_constants.dart';
 import '../../../../test_implementations/test_form_field_brick.dart';
 import '../../../../test_implementations/test_form_manager.dart';
 import '../../../../test_implementations/test_form_schema.dart';
-import '../../../../test_implementations/test_formatter_validator_chain.dart';
-import '../../../../test_implementations/test_constants.dart';
 
 void main() {
   group('FormFieldBrick value change → validation flow', () {
@@ -24,21 +23,20 @@ Future<void> _runValueChangeTest(
   WidgetTester tester,
   ValueChangeTestCase testCase,
 ) async {
-  var keyString = keyString1;
+  var fieldKeyString = fieldKeyString1;
 
-  final formatterValidatorChain = TestFormatterValidatorChain(testCase.error);
-  List<FormFieldDescriptor> descriptors = [
-    FormFieldDescriptor<String, String>(
-      keyString:  keyString,
-      initialInput:  testCase.initialValue,
-      formatterValidatorChainBuilder: () =>  formatterValidatorChain,
-    )
-  ];
-  final schema = TestFormSchema.of(
-    keyString: keyString,
-    descriptors: descriptors,
-  );
-  final formManager = TestFormManager(schema: schema);
+  final formManager = TestFormManager(
+      schema: TestFormSchema.of(
+    keyString: formKeyString1,
+    descriptors: [
+      FormFieldDescriptor<String, TextEditingValue>(
+        keyString: fieldKeyString,
+        initialInput: testCase.initialInput,
+        formatterValidatorChainBuilder: () => MockFormatterValidatorChain(testCase.error),
+      )
+    ],
+  ));
+
   final globalKey = GlobalKey<TestFormFieldBrickState>();
   BricksLocalizations? localizations;
 
@@ -50,11 +48,12 @@ Future<void> _runValueChangeTest(
         home: Builder(
           builder: (context) {
             localizations = BricksLocalizations.of(context);
-            return TestFormFieldBrick(
+            return TestPlainTextFormFieldBrick(
               key: globalKey,
-              keyString: keyString,
+              keyString: fieldKeyString,
               formManager: formManager,
               colorMaker: TestColorMaker(),
+              formatterValidatorChainBuilder: () => MockFormatterValidatorChain(testCase.error),
             );
           },
         ),
@@ -71,11 +70,11 @@ Future<void> _runValueChangeTest(
   final state = globalKey.currentState!;
 
   // --- Verify initial FormManager state ---
-  expect(formManager.getFieldValue(keyString), testCase.initialValue);
-  expect(formManager.isFieldDirty(keyString), false);
-  expect(formManager.isFieldValidating(keyString), false);
-  expect(formManager.isFieldValid(keyString), true);
-  expect(formManager.getFieldError(keyString), null);
+  expect(formManager.getFieldValue(fieldKeyString), testCase.initialInput);
+  expect(formManager.isFieldDirty(fieldKeyString), false);
+  expect(formManager.isFieldValidating(fieldKeyString), false);
+  expect(formManager.isFieldValid(fieldKeyString), false);
+  expect(formManager.getFieldError(fieldKeyString), null);
 
   // --- Simulate user input change ---
   // await tester.enterText(fieldFinder, testCase.newValue);
@@ -84,11 +83,11 @@ Future<void> _runValueChangeTest(
 
   // TODO can I assume that validation error ALWAYS shows errorText? Then FormFieldData.isValid is redundant
   // --- Verify final FormManager state ---
-  expect(formManager.getFieldValue(keyString), testCase.newValue);
-  expect(formManager.isFieldDirty(keyString), true);
-  expect(formManager.isFieldValidating(keyString), false);
-  expect(formManager.isFieldValid(keyString), testCase.error == null);
-  expect(formManager.getFieldError(keyString), testCase.error);
+  expect(formManager.getFieldValue(fieldKeyString), testCase.newValue);
+  expect(formManager.isFieldDirty(fieldKeyString), true);
+  expect(formManager.isFieldValidating(fieldKeyString), false);
+  expect(formManager.isFieldValid(fieldKeyString), testCase.error == null);
+  expect(formManager.getFieldError(fieldKeyString), testCase.error);
 
   // --- Verify TextField controller sync ---
   expect(state.value, testCase.newValue);
@@ -100,50 +99,50 @@ Future<void> _runValueChangeTest(
 final List<ValueChangeTestCase> _cases = [
   ValueChangeTestCase(
     description: 'initial empty → new → validator error',
-    initialValue: null,
-    newValue: newStringValue1,
+    initialInput: null,
+    newValue: newStringInput1,
     error: mockError1,
   ),
   ValueChangeTestCase(
     description: 'initial empty → new → validator ok',
-    initialValue: null,
-    newValue: newStringValue1,
+    initialInput: null,
+    newValue: newStringInput1,
     error: null,
   ),
   ValueChangeTestCase(
     description: 'initial filled → empty → validator error',
-    initialValue: initialStringValue1,
+    initialInput: initialStringInput1,
     newValue: '',
     error: mockError1,
   ),
   ValueChangeTestCase(
     description: 'initial filled → empty → validator ok',
-    initialValue: initialStringValue1,
+    initialInput: initialStringInput1,
     newValue: '',
     error: null,
   ),
   ValueChangeTestCase(
       description: 'initial filled → new → validator error',
-      initialValue: initialStringValue1,
-      newValue: newStringValue1,
+      initialInput: initialStringInput1,
+      newValue: newStringInput1,
       error: mockError1),
   ValueChangeTestCase(
     description: 'initial filled → new → validator ok',
-    initialValue: initialStringValue1,
-    newValue: newStringValue1,
+    initialInput: initialStringInput1,
+    newValue: newStringInput1,
     error: null,
   ),
 ];
 
 class ValueChangeTestCase {
   final String description;
-  final String? initialValue;
+  final String? initialInput;
   final String newValue;
   final String? error;
 
   const ValueChangeTestCase({
     required this.description,
-    required this.initialValue,
+    required this.initialInput,
     required this.newValue,
     required this.error,
   });

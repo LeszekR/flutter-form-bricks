@@ -22,8 +22,8 @@ void main() {
     _testControllerIniitalValue(
       description: 'controller provided, initialValue not null → shows value',
       controller: TextEditingController(),
-      initialValue: TextEditingValue(text: initialStringValue1),
-      expectedText: initialStringValue1,
+      initialValue: TextEditingValue(text: initialStringInput1),
+      expectedText: initialStringInput1,
     );
 
     _testControllerIniitalValue(
@@ -36,8 +36,8 @@ void main() {
     _testControllerIniitalValue(
       description: 'controller internal, initialValue not null → shows value',
       controller: null,
-      initialValue: TextEditingValue(text: initialStringValue1),
-      expectedText: initialStringValue1,
+      initialValue: TextEditingValue(text: initialStringInput1),
+      expectedText: initialStringInput1,
     );
   });
 }
@@ -57,7 +57,7 @@ void _testControllerIniitalValue({
         data: UiParamsData(), // Required by bricks for styling/context.
         child: MaterialApp(
           home: TestTextFieldBrick(
-            keyString: keyString1,
+            keyString: fieldKeyString1,
             controller: controller,
             formManager: TestFormManager(schema: schema),
             colorMaker: TestColorMaker(),
