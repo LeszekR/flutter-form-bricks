@@ -33,15 +33,16 @@ void _testKeyStringInTheSchema({
   required String fieldKeyString,
   required bool expectThrows,
 }) {
-  testWidgets(description, (tester) async {
-    final schema = TestFormSchema.forText(
-      keyString: schemaKeyString,
-      initialValue: null,
-    );
+  testWidgets(
+    description,
+    (tester) async {
+      final schema = TestFormSchema.forText(
+        keyString: schemaKeyString,
+        initialValue: null,
+      );
 
-    bool didThrow = false;
+      bool didThrow = false;
 
-    try {
       await tester.pumpWidget(
         UiParams(
           data: UiParamsData(),
@@ -55,17 +56,16 @@ void _testKeyStringInTheSchema({
           ),
         ),
       );
-    } on AssertionError catch (_) {
-      didThrow = true;
-    } on Error catch (_) {
-      didThrow = true;
-    }
+      await tester.pump(); // allow post-frame errors
 
-    if (expectThrows) {
-      expect(didThrow, isTrue, reason: 'Expected widget to throw assertion');
-    } else {
-      expect(didThrow, isFalse, reason: 'Widget unexpectedly threw');
-      expect(find.byType(TestFormFieldBrick), findsOneWidget);
-    }
-  });
+      final err = tester.takeException();
+      if (expectThrows) {
+        expect(err, isNotNull);
+        expect(err, anyOf(isA<AssertionError>(), isA<FlutterError>()));
+      } else {
+        expect(err, isNull);
+        expect(find.byType(TestFormFieldBrick), findsOneWidget);
+      }
+    },
+  );
 }
