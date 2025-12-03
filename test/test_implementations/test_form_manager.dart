@@ -12,7 +12,7 @@ class TestFormManager extends FormManager {
           formSchema: schema
         );
 
-  TestFormManager.testDefault() : super(formData: TestFormStateData(), formSchema: TestFormSchema());
+  TestFormManager.testDefault() : super(formData: TestFormStateData(), formSchema: TestFormSchema.autoDefault());
 
   @override
   FormStatus checkStatus() {

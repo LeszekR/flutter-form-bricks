@@ -12,10 +12,10 @@ String fieldKeyString2 = 'fieldKeyString2';
 String fieldKString3 = 'fieldKeyString3';
 String fieldKString4 = 'fieldKeyString4';
 
-String initialStringInput1 = 'initialStringValue1';
-String initialStringInput2 = 'initialStringValue2';
-String initialStringInput3 = 'initialStringValue3';
-String initialStringInput4 = 'initialStringValue4';
+String stringInput1 = 'initialStringValue1';
+String stringInput2 = 'initialStringValue2';
+String stringInput3 = 'initialStringValue3';
+String stringInput4 = 'initialStringValue4';
 
 String newStringInput1 = 'newStringValue1';
 

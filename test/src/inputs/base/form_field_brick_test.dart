@@ -36,8 +36,8 @@ void _testKeyStringInTheSchema({
   testWidgets(
     description,
     (tester) async {
-      final schema = TestFormSchema.forText(
-        keyString: schemaKeyString,
+      final schema = TestFormSchema.withSingleTextField(
+        fieldKeyString: schemaKeyString,
         initialInput: null,
       );
 

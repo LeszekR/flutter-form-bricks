@@ -4,22 +4,35 @@ import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 
 import 'mock_formatter_validator.dart';
+import 'test_constants.dart';
 
 /// Mocked [FormatterValidatorChain] that returns a fixed validation result.
 /// For use in all value-change tests to simulate both valid and invalid responses.
-class MockFormatterValidatorChain extends FormatterValidatorChain<String, TextEditingValue> {
+class MockFormatterValidatorChain extends FormatterValidatorChainFullRun<String, TextEditingValue> {
+  final bool shouldRunChain;
+  final String? mockInput;
   final String? mockError;
 
-  /// This is a mock necessary for the constructor. It will NOT run since this [MockFormatterValidator]
-  /// really is only a placeholder while this [MockFormatterValidatorChain] is the actual mock which returns
-  /// [FieldContent] build with the passed `mockError`.
-  MockTextFormatterValidator mockFormatterValidator = MockTextFormatterValidator(null);
-
-  MockFormatterValidatorChain([this.mockError]) : super([MockTextFormatterValidator(mockError)]);
+  MockFormatterValidatorChain({
+    required this.shouldRunChain,
+    this.mockInput,
+    this.mockError,
+  }) : super([MockTextFormatterValidator(mockInput: mockInput, mockError: mockError)]);
 
   @override
-  FieldContent<String, TextEditingValue> runChain(BricksLocalizations localizations, String keyString,
-      String? inputValue) {
-    return TextFieldContent.of('ala', TextEditingValue(text: 'ala'), mockError == null ? true : false, mockError);
+  FieldContent<String, TextEditingValue> runChain(
+    BricksLocalizations localizations,
+    String keyString,
+    String? inputValue,
+  ) {
+    if (shouldRunChain) {
+      return super.runChain(localizations, keyString, inputValue);
+    }
+    return TextFieldContent.of(
+      stringInput1,
+      TextEditingValue(text: stringInput1),
+      mockError == null,
+      mockError,
+    );
   }
 }

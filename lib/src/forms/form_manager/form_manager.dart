@@ -94,8 +94,11 @@ abstract class FormManager extends ChangeNotifier {
 
     assert(
         withValidator == (getFormatterValidatorChain(keyString) != null),
-        'No "$keyString" found in formatterValidatorsMap while the field declares "withValidator == true"; '
-        'there must be one FormatterValidatorChain in the map for every such field.');
+        withValidator
+            ? 'No "$keyString" found in formatterValidatorsMap while the field declares "withValidator == true"; '
+                'there must be one FormatterValidatorChain in the map for every such field.'
+            : 'Found "$keyString" in formatterValidatorsMap while the field declares "withValidator == false"; '
+                'there must be no FormatterValidatorChain in the map for every such field.');
   }
 
   void setFocusListener(FocusNode focusNode, String keyString) {

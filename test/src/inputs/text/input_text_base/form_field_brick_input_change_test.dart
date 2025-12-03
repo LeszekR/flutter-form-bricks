@@ -19,23 +19,66 @@ void main() {
   });
 }
 
+final List<ValueChangeTestCase> _cases = [
+  ValueChangeTestCase(
+    description: 'initial empty → new → validator error',
+    initialInput: null,
+    newInput: newStringInput1,
+    error: mockError1,
+  ),
+  ValueChangeTestCase(
+    description: 'initial empty → new → validator ok',
+    initialInput: null,
+    newInput: newStringInput1,
+    error: '',
+  ),
+  ValueChangeTestCase(
+    description: 'initial filled → empty → validator error',
+    initialInput: stringInput1,
+    newInput: '',
+    error: mockError1,
+  ),
+  ValueChangeTestCase(
+    description: 'initial filled → empty → validator ok',
+    initialInput: stringInput1,
+    newInput: '',
+    error: '',
+  ),
+  ValueChangeTestCase(
+    description: 'initial filled → new → validator error',
+    initialInput: stringInput1,
+    newInput: newStringInput1,
+    error: mockError1,
+  ),
+  ValueChangeTestCase(
+    description: 'initial filled → new → validator ok',
+    initialInput: stringInput1,
+    newInput: newStringInput1,
+    error: '',
+  ),
+];
+
 Future<void> _runValueChangeTest(
   WidgetTester tester,
   ValueChangeTestCase testCase,
 ) async {
-  var fieldKeyString = fieldKeyString1;
+  final fieldKeyString = fieldKeyString1;
+
+  final formatterValidatorChainBuilder = () => MockFormatterValidatorChain(
+        shouldRunChain: true,
+        mockInput: testCase.newInput,
+        mockError: testCase.error,
+      );
 
   final formManager = TestFormManager(
-      schema: TestFormSchema.of(
-    keyString: formKeyString1,
-    descriptors: [
+    schema: TestFormSchema.fromDescriptors([
       FormFieldDescriptor<String, TextEditingValue>(
         keyString: fieldKeyString,
         initialInput: testCase.initialInput,
-        formatterValidatorChainBuilder: () => MockFormatterValidatorChain(testCase.error),
+        formatterValidatorChainBuilder: formatterValidatorChainBuilder,
       )
-    ],
-  ));
+    ]),
+  );
 
   final globalKey = GlobalKey<TestFormFieldBrickState>();
   BricksLocalizations? localizations;
@@ -53,7 +96,7 @@ Future<void> _runValueChangeTest(
               keyString: fieldKeyString,
               formManager: formManager,
               colorMaker: TestColorMaker(),
-              formatterValidatorChainBuilder: () => MockFormatterValidatorChain(testCase.error),
+              formatterValidatorChainBuilder: formatterValidatorChainBuilder,
             );
           },
         ),
@@ -70,7 +113,7 @@ Future<void> _runValueChangeTest(
   final state = globalKey.currentState!;
 
   // --- Verify initial FormManager state ---
-  expect(formManager.getFieldValue(fieldKeyString), testCase.initialInput);
+  expect(formManager.getFieldValue(fieldKeyString), null);
   expect(formManager.isFieldDirty(fieldKeyString), false);
   expect(formManager.isFieldValidating(fieldKeyString), false);
   expect(formManager.isFieldValid(fieldKeyString), false);
@@ -79,71 +122,34 @@ Future<void> _runValueChangeTest(
   // --- Simulate user input change ---
   // await tester.enterText(fieldFinder, testCase.newValue);
   // await tester.pumpAndSettle();
-  state.changeValue(localizations!, testCase.newValue);
+  state.changeValue(localizations!, testCase.newInput);
 
   // TODO can I assume that validation error ALWAYS shows errorText? Then FormFieldData.isValid is redundant
   // --- Verify final FormManager state ---
-  expect(formManager.getFieldValue(fieldKeyString), testCase.newValue);
+  // TU PRZERWAŁEM - make MockFormatterValidatorChain actually run its FormatterValidator and create value for the field
+  expect(formManager.getFieldValue(fieldKeyString), TextEditingValue(text: testCase.newInput));
   expect(formManager.isFieldDirty(fieldKeyString), true);
   expect(formManager.isFieldValidating(fieldKeyString), false);
   expect(formManager.isFieldValid(fieldKeyString), testCase.error == null);
   expect(formManager.getFieldError(fieldKeyString), testCase.error);
 
   // --- Verify TextField controller sync ---
-  expect(state.value, testCase.newValue);
+  expect(state.value, TextEditingValue(text: testCase.newInput));
 
   // --- Verify error notifier propagation ---
   expect(formManager.errorMessageNotifier.value, testCase.error);
 }
 
-final List<ValueChangeTestCase> _cases = [
-  ValueChangeTestCase(
-    description: 'initial empty → new → validator error',
-    initialInput: null,
-    newValue: newStringInput1,
-    error: mockError1,
-  ),
-  ValueChangeTestCase(
-    description: 'initial empty → new → validator ok',
-    initialInput: null,
-    newValue: newStringInput1,
-    error: null,
-  ),
-  ValueChangeTestCase(
-    description: 'initial filled → empty → validator error',
-    initialInput: initialStringInput1,
-    newValue: '',
-    error: mockError1,
-  ),
-  ValueChangeTestCase(
-    description: 'initial filled → empty → validator ok',
-    initialInput: initialStringInput1,
-    newValue: '',
-    error: null,
-  ),
-  ValueChangeTestCase(
-      description: 'initial filled → new → validator error',
-      initialInput: initialStringInput1,
-      newValue: newStringInput1,
-      error: mockError1),
-  ValueChangeTestCase(
-    description: 'initial filled → new → validator ok',
-    initialInput: initialStringInput1,
-    newValue: newStringInput1,
-    error: null,
-  ),
-];
-
 class ValueChangeTestCase {
   final String description;
   final String? initialInput;
-  final String newValue;
+  final String newInput;
   final String? error;
 
   const ValueChangeTestCase({
     required this.description,
     required this.initialInput,
-    required this.newValue,
+    required this.newInput,
     required this.error,
   });
 }

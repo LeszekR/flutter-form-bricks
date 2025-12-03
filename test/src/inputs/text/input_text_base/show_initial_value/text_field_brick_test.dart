@@ -22,8 +22,8 @@ void main() {
     _testControllerIniitalValue(
       description: 'controller provided, initialValue not null → shows value',
       controller: TextEditingController(),
-      initialValue: TextEditingValue(text: initialStringInput1),
-      expectedText: initialStringInput1,
+      initialValue: TextEditingValue(text: stringInput1),
+      expectedText: stringInput1,
     );
 
     _testControllerIniitalValue(
@@ -36,8 +36,8 @@ void main() {
     _testControllerIniitalValue(
       description: 'controller internal, initialValue not null → shows value',
       controller: null,
-      initialValue: TextEditingValue(text: initialStringInput1),
-      expectedText: initialStringInput1,
+      initialValue: TextEditingValue(text: stringInput1),
+      expectedText: stringInput1,
     );
   });
 }

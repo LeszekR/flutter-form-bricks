@@ -58,6 +58,7 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   void initState() {
     formManager.registerField<I, V>(keyString, _hasFormatterValidator());
 
+
     focusNode = FocusNode();
     formManager.setFocusListener(focusNode, keyString);
 
