@@ -51,7 +51,7 @@ void main() {
 
     for (maxLength in testParameters) {
       testWidgets(
-          'If max length is "${maxLength.inputString}" and user input length is "${inputText.length}" then validation result should be: "${maxLength.expected}"',
+          'If max length is "${maxLength.inputString}" and user input length is "${inputText.length}" then validation result should be: "${maxLength.expectedValue}"',
           (WidgetTester tester) async {
         BuildContext context = await pumpAppGetContext(tester);
 
@@ -67,7 +67,7 @@ void main() {
         final bool isValid = formManager.formKey.currentState!.validate();
 
         //then
-        expect(isValid, maxLength.expected);
+        expect(isValid, maxLength.expectedValue);
       });
     }
   });
@@ -83,7 +83,7 @@ void main() {
 
     for (minLength in testParameters) {
       testWidgets(
-          'If min length is "${minLength.inputString}" and user input length is "${inputText.length}" then validation result should be: "${minLength.expected}"',
+          'If min length is "${minLength.inputString}" and user input length is "${inputText.length}" then validation result should be: "${minLength.expectedValue}"',
           (WidgetTester tester) async {
         BuildContext context = await pumpAppGetContext(tester);
 
@@ -99,7 +99,7 @@ void main() {
         final bool isValid = formManager.formKey.currentState!.validate();
 
         //then
-        expect(isValid, minLength.expected);
+        expect(isValid, minLength.expectedValue);
       });
     }
   });
@@ -115,7 +115,7 @@ void main() {
 
     for (validationValue in testParameters) {
       testWidgets(
-          'If max value is "${validationValue.inputString}" and user input is "$inputContent" then validation result should be: "${validationValue.expected}"',
+          'If max value is "${validationValue.inputString}" and user input is "$inputContent" then validation result should be: "${validationValue.expectedValue}"',
           (WidgetTester tester) async {
         BuildContext context = await pumpAppGetContext(tester);
 
@@ -131,7 +131,7 @@ void main() {
         final bool isValid = formManager.formKey.currentState!.validate();
 
         //then
-        expect(isValid, validationValue.expected);
+        expect(isValid, validationValue.expectedValue);
       });
     }
   });
@@ -147,7 +147,7 @@ void main() {
 
     for (validationValue in testParameters) {
       testWidgets(
-          'If min value is "${validationValue.inputString}" and user input is "$inputContent" then validation result should be: "${validationValue.expected}"',
+          'If min value is "${validationValue.inputString}" and user input is "$inputContent" then validation result should be: "${validationValue.expectedValue}"',
           (WidgetTester tester) async {
         BuildContext context = await pumpAppGetContext(tester);
 
@@ -163,7 +163,7 @@ void main() {
         final bool isValid = formManager.formKey.currentState!.validate();
 
         //then
-        expect(isValid, validationValue.expected);
+        expect(isValid, validationValue.expectedValue);
       });
     }
   });
@@ -181,7 +181,7 @@ void main() {
 
     for (testParam in testParameters) {
       testWidgets(
-          'If user input is "${testParam.inputString}" then email regex validation result should be: "${testParam.expected}"',
+          'If user input is "${testParam.inputString}" then email regex validation result should be: "${testParam.expectedValue}"',
           (WidgetTester tester) async {
         BuildContext context = await pumpAppGetContext(tester);
         BricksLocalizations localizations = await getLocalizations();
@@ -198,7 +198,7 @@ void main() {
         final bool isValid = formManager.formKey.currentState!.validate();
 
         //then
-        expect(isValid, testParam.expected);
+        expect(isValid, testParam.expectedValue);
       });
     }
   });

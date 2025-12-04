@@ -38,7 +38,7 @@ void main() {
 
         final result =
             (find.byKey(const Key(textVatFieldKey)).evaluate().first.widget as FormBuilderTextField).controller!.text;
-        expect(result, param.expected);
+        expect(result, param.expectedValue);
       });
     }
   });
