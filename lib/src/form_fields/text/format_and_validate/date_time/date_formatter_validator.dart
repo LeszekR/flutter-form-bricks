@@ -6,10 +6,11 @@ import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/dat
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/formatter_validators/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
-const dateDelimiterPattern = '( |/|-|,|;|\\.)';
-const dateDelimiter = '-';
 
 class DateFormatterValidator extends FormatterValidator<String, Date> {
+  final dateDelimiterPattern = '( |/|-|,|;|\\.|=)';
+  final dateDelimiter = '-';
+
   final DateTimeUtils _dateTimeUtils;
   final CurrentDate _currentDate;
   final DateTimeLimits? _dateTimeLimits;
@@ -36,10 +37,10 @@ class DateFormatterValidator extends FormatterValidator<String, Date> {
       maxNDigits: 8,
       maxNumberDelimiters: 2,
     );
-    if (!dateTimeContent.isValid!) return DateFieldContent.err(fieldContent.input, dateTimeContent.error);
+    if (!isValid(dateTimeContent)) return DateFieldContent.err(fieldContent.input, dateTimeContent.error);
 
     DateFieldContent dateContent = parseDateFromString(localizations, dateTimeContent);
-    if (!dateContent.isValid!) return DateFieldContent.err(fieldContent.input, dateContent.error);
+    if (!isValid(dateContent)) return DateFieldContent.err(fieldContent.input, dateContent.error);
 
     dateContent = validateDate(localizations, dateContent, _dateTimeLimits);
 
@@ -59,7 +60,7 @@ class DateFormatterValidator extends FormatterValidator<String, Date> {
       dateContent = makeDateStringWithDelimiters(localizations, dateTimeText, nDelimiters);
     }
 
-    if (!dateContent.isValid!) return dateContent;
+    if (!isValid(dateContent)) return dateContent;
 
     return addYear(dateContent, nDelimiters);
   }
@@ -227,4 +228,7 @@ class DateFormatterValidator extends FormatterValidator<String, Date> {
   DateFieldContent _makeDateFCFromDateTimeFC(DateTimeFieldContent content) {
     return DateFieldContent.ok(content.input, Date.fromDateTime(content.value!));
   }
+
+  /// [FieldContent.transient] has `isValid=null` but should be accepted as valid to be processed further
+  bool isValid(FieldContent dateContent) => dateContent.isValid ?? true;
 }

@@ -5,7 +5,6 @@ import 'package:mockito/mockito.dart';
 
 import '../../../../mocks.mocks.dart';
 import '../../../tools/date_time_test_data.dart';
-import 'utils/a_test_dateTime_formatter.dart';
 import 'utils/dateTime_formatter_test_utils.dart';
 import 'utils/dateTime_test_utils.dart';
 
@@ -63,7 +62,7 @@ void main() {
       // --------------------------------------------
       DateTimeTestCase("3123", "2024-31-23", false, local.dateErrorMonthOver12),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateFormatter);
     expect(passedOk, true);
   });
 
@@ -72,12 +71,12 @@ void main() {
     var dateTimeLimits = DateTimeLimits();
 
     var testCases = [
-      DateTimeTestCase("00=12", "00=12", false, local.dateStringErrorBadChars),
+      DateTimeTestCase("00^12", "00^12", false, local.dateStringErrorBadChars),
       DateTimeTestCase("01\\12", "01\\12", false, local.dateStringErrorBadChars),
       DateTimeTestCase("01*2", "01*2", false, local.dateStringErrorBadChars),
       DateTimeTestCase("01+23", "01+23", false, local.dateStringErrorBadChars),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateFormatter);
     expect(passedOk, true);
   });
 
@@ -86,15 +85,15 @@ void main() {
     var dateTimeLimits = DateTimeLimits(minDateTime: DateTime(2015));
 
     var testCases = [
-      DateTimeTestCase("123", "2024-01-23", true, ''),
-      DateTimeTestCase("0123", "2024-01-23", true, ''),
-      DateTimeTestCase("01231", "2020-12-31", true, ''),
-      DateTimeTestCase("31231", "2023-12-31", true, ''),
-      DateTimeTestCase("211231", "2021-12-31", true, ''),
-      DateTimeTestCase("0211231", "2021-12-31", true, ''),
-      DateTimeTestCase("20211231", "2021-12-31", true, ''),
+      DateTimeTestCase("123", "2024-01-23", true, null),
+      DateTimeTestCase("0123", "2024-01-23", true, null),
+      DateTimeTestCase("01231", "2020-12-31", true, null),
+      DateTimeTestCase("31231", "2023-12-31", true, null),
+      DateTimeTestCase("211231", "2021-12-31", true, null),
+      DateTimeTestCase("0211231", "2021-12-31", true, null),
+      DateTimeTestCase("20211231", "2021-12-31", true, null),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateFormatter);
     expect(passedOk, true);
   });
 
@@ -103,11 +102,11 @@ void main() {
     var dateTimeLimits = DateTimeLimits();
 
     var testCases = [
-      DateTimeTestCase("2;2", "2024-02-02", true, ''),
-      DateTimeTestCase("4/01,23", "2024-01-23", true, ''),
-      DateTimeTestCase("24;1-23", "2024-01-23", true, ''),
+      DateTimeTestCase("2;2", "2024-02-02", true, null),
+      DateTimeTestCase("4/01,23", "2024-01-23", true, null),
+      DateTimeTestCase("24;1-23", "2024-01-23", true, null),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateFormatter);
     expect(passedOk, true);
   });
 
@@ -117,20 +116,20 @@ void main() {
 
     var p = '=';
     var testCases = [
-      DateTimeTestCase("2${p}2", "2024-02-02", true, ''),
-      DateTimeTestCase("04${p}8", "2024-04-08", true, ''),
-      DateTimeTestCase("1${p}12", "2024-01-12", true, ''),
-      DateTimeTestCase("01${p}12", "2024-01-12", true, ''),
-      DateTimeTestCase("01${p}2", "2024-01-02", true, ''),
-      DateTimeTestCase("01${p}23", "2024-01-23", true, ''),
-      DateTimeTestCase("4${p}01${p}23", "2024-01-23", true, ''),
-      DateTimeTestCase("24${p}1${p}23", "2024-01-23", true, ''),
+      DateTimeTestCase("2${p}2", "2024-02-02", true, null),
+      DateTimeTestCase("04${p}8", "2024-04-08", true, null),
+      DateTimeTestCase("1${p}12", "2024-01-12", true, null),
+      DateTimeTestCase("01${p}12", "2024-01-12", true, null),
+      DateTimeTestCase("01${p}2", "2024-01-02", true, null),
+      DateTimeTestCase("01${p}23", "2024-01-23", true, null),
+      DateTimeTestCase("4${p}01${p}23", "2024-01-23", true, null),
+      DateTimeTestCase("24${p}1${p}23", "2024-01-23", true, null),
     ];
-    var passedOk = testDateTimeFormatter(
+    var passedOk = runDateTimeFormatterTest(
       local,
       testCases,
       dateFormatter,
-      delimitersPattern: dateDelimiterPattern,
+      delimitersPattern: dateFormatter.dateDelimiterPattern,
       placeholder: p,
     );
     expect(passedOk, true);
@@ -174,7 +173,7 @@ void main() {
       DateTimeTestCase("001231", "2000-12-31", false, local.dateErrorTooFarBack(yearMaxBack)),
       DateTimeTestCase("301231", "2030-12-31", false, local.dateErrorTooFarForward(yearMaxForward)),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateFormatter);
     expect(passedOk, true);
   });
 
@@ -216,7 +215,7 @@ void main() {
       DateTimeTestCase("19001216", "1900-12-16", false, local.dateErrorTooFarBack(yearMaxBack)),
       DateTimeTestCase("39001216", "3900-12-16", false, local.dateErrorTooFarForward(yearMaxForward)),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateFormatter);
     expect(passedOk, true);
   });
 
@@ -267,7 +266,7 @@ void main() {
               '\n' +
               local.dateErrorTooManyDaysInMonth),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateFormatter);
     expect(passedOk, true);
   });
 }

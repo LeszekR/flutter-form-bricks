@@ -15,18 +15,18 @@ import 'utils/dateTimeRange_test_utils.dart';
 void main() {
   var rangeId = "rng";
   
-  var dummyDatTimRngFormatValid = DateTimeRangeFormatterValidator(
-    'f',
-    TestFormManager.testDefault(),
-    DateTimeUtils(),
-    CurrentDate(),
-    DateTimeRangeLimits(DateTimeLimits(), DateTimeLimits(), 1, 1),
-  );
+  // var dummyDatTimRngFormatValid = DateTimeRangeFormatterValidator(
+  //   'f',
+  //   TestFormManager.testDefault(),
+  //   DateTimeUtils(),
+  //   CurrentDate(),
+  //   DateTimeRangeLimits(DateTimeLimits(), DateTimeLimits(), 1, 1),
+  // );
   var keyStrings = [
-    (dummyDatTimRngFormatValid.rangeDateStartKeyString(rangeId)),
-    (dummyDatTimRngFormatValid.rangeTimeStartKeyString(rangeId)),
-    (dummyDatTimRngFormatValid.rangeDateEndKeyString(rangeId)),
-    (dummyDatTimRngFormatValid.rangeTimeEndKeyString(rangeId)),
+    (DateTimeRangeFormatterValidator.rangeDateStartKeyString(rangeId)),
+    (DateTimeRangeFormatterValidator.rangeTimeStartKeyString(rangeId)),
+    (DateTimeRangeFormatterValidator.rangeDateEndKeyString(rangeId)),
+    (DateTimeRangeFormatterValidator.rangeTimeEndKeyString(rangeId)),
   ];
 
   final dateTimeLimits = DateTimeLimits(minDateTime: DateTime(2014), maxDateTime: DateTime(2026));

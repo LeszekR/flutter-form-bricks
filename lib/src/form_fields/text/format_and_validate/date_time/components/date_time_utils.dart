@@ -63,7 +63,7 @@ class DateTimeUtils {
     if (nDigits > maxNDigits && nDelimiters == 0)
       return DateTimeFieldContent.err(text, errMsgTooManyDigits(bricksLocalizations, dateTimeOrBoth));
 
-    return DateTimeFieldContent.ok(textClean, null);
+    return DateTimeFieldContent.transient(textClean);
   }
 
 

@@ -30,7 +30,7 @@ void main() {
       DateTimeTestCase('22-03-03-15-33', '22-03-03-15-33', false, local.datetimeStringErrorNoSpace),
       DateTimeTestCase('22 03 03 15/30', '22 03 03 15/30', false, local.datetimeStringErrorTooManySpaces),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -53,7 +53,7 @@ void main() {
       DateTimeTestCase('00;2;5 8;8', '2000-02-05 08:08', false, local.dateErrorTooFarBack(yearMaxBack)),
       DateTimeTestCase('50-11-5 6;15', '2050-11-05 06:15', false, local.dateErrorTooFarForward(yearMaxForward)),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -71,7 +71,7 @@ void main() {
       DateTimeTestCase('22-3-3 18:66', '2022-03-03 18:66', false, local.timeErrorTooBigMinute),
       DateTimeTestCase('22-3-3 25-15', '2022-03-03 25:15', false, local.timeErrorTooBigHour),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -96,7 +96,7 @@ void main() {
       DateTimeTestCase(
           '5x-6 30/5', '5x-6 30:05', false, local.dateStringErrorBadChars + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -121,7 +121,7 @@ void main() {
       DateTimeTestCase(
           '18 25-13', '18 25:13', false, local.dateStringErrorTooFewDigits + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -146,7 +146,7 @@ void main() {
       DateTimeTestCase('222233555 29:08', '222233555 29:08', false,
           local.dateStringErrorTooManyDigits + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -171,7 +171,7 @@ void main() {
       DateTimeTestCase('24-12-3-05 29:08', '24-12-3-05 29:08', false,
           local.dateStringErrorTooManyDelimiters + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -196,7 +196,7 @@ void main() {
       DateTimeTestCase('2/5;233 29:08', '2/5;233 29:08', false,
           local.dateStringErrorTooManyDigitsDay + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -221,7 +221,7 @@ void main() {
       DateTimeTestCase('2025-120-9 29:08', '2025-120-9 29:08', false,
           local.dateStringErrorTooManyDigitsMonth + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -246,7 +246,7 @@ void main() {
       DateTimeTestCase('21025-2-9 29:08', '21025-2-9 29:08', false,
           local.dateStringErrorTooManyDigitsYear + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -268,7 +268,7 @@ void main() {
           '5/00 22:81', '2024-05-00 22:81', false, local.dateErrorDay0 + '\n' + local.timeErrorTooBigMinute),
       DateTimeTestCase('5/00 29:08', '2024-05-00 29:08', false, local.dateErrorDay0 + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -293,7 +293,7 @@ void main() {
       DateTimeTestCase(
           '022/0/08 29:08', '2022-00-08 29:08', false, local.dateErrorMonth0 + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -318,7 +318,7 @@ void main() {
       DateTimeTestCase('5-9-61 29:08', '2025-09-61 29:08', false,
           local.dateErrorTooManyDaysInMonth + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -343,7 +343,7 @@ void main() {
       DateTimeTestCase(
           '1519 29:08', '2024-15-19 29:08', false, local.dateErrorMonthOver12 + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -369,7 +369,7 @@ void main() {
       DateTimeTestCase('006/10/13 29:08', '2006-10-13 29:08', false,
           local.dateErrorTooFarBack(yearMaxBack) + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -395,7 +395,7 @@ void main() {
       DateTimeTestCase('36/10/13 29:08', '2036-10-13 29:08', false,
           local.dateErrorTooFarForward(yearMaxForward) + '\n' + local.timeErrorTooBigHour),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -472,7 +472,7 @@ void main() {
               local.timeStringErrorTooManyDigitsMinutes),
       DateTimeTestCase("5588 55  15615", "5588 55 15615", false, local.datetimeStringErrorTooManySpaces),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 
@@ -491,7 +491,7 @@ void main() {
       // DateTimeTestCase('..', '..', true, ''),
       // DateTimeTestCase('..', '..', true, ''),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, dateTimeFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 }

@@ -6,10 +6,11 @@ import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/for
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:intl/intl.dart';
 
-const timeDelimiterPattern = '( |/|-|,|\\.|:|;)';
-const timeDelimiter = ':';
 
 class TimeFormatterValidator extends FormatterValidator<String, Time> {
+  final timeDelimiterPattern = '( |/|-|,|\\.|:|;)';
+  final timeDelimiter = ':';
+
   late final DateTimeUtils _dateTimeUtils;
   late final DateTimeLimits? _dateTimeLimits;
   final nMaxDelimiters = 1;

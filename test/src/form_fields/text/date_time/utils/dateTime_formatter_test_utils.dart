@@ -9,7 +9,7 @@ import '../../../../tools/date_time_test_data.dart';
 import 'a_test_dateTime_formatter.dart';
 import 'dateTime_test_utils.dart';
 
-bool testDateTimeFormatter(
+bool runDateTimeFormatterTest(
   BricksLocalizations localizations,
   List<DateTimeTestCase> testCases,
   ATestDateTimeFormatter testDateTimeFormatter, {
@@ -58,7 +58,8 @@ bool assertSingleCaseDateTimeFormatter(
   String? errors;
   String input = (placeholder == null) ? testCase.input : (testCase.input.replaceAll(RegExp(placeholder), delimiter!));
 
-  DateTimeFieldContent result = testDateTimeFormatter.makeDateTime(localizations, input, testCase.input);
+  print(testCase.input);
+  FieldContent result = testDateTimeFormatter.makeDateTime(localizations, input, testCase.input);
 
   var actual = (placeholder == null)
       ? testCase.expectedValueText
@@ -80,37 +81,41 @@ List<String> extractDelimitersList(String delimitersPattern) {
   return delimitersList;
 }
 
-class TestDateFormatter implements ATestDateFormatter {
+class TestDateFormatter implements ATestDateTimeFormatter {
   final DateFormatterValidator dateFormatter;
 
   TestDateFormatter(this.dateFormatter);
 
   @override
-  DateFieldContent makeDate(
+  FieldContent makeDateTime(
     BricksLocalizations localizations,
     String fieldKeyString,
     String inputString,
   ) {
     return dateFormatter.run(localizations, fieldKeyString, DateFieldContent.transient(inputString));
   }
+
+  String get dateDelimiterPattern => dateFormatter.dateDelimiterPattern;
 }
 
-class TestTimeFormatter implements ATestTimeFormatter {
+class TestTimeFormatter implements ATestDateTimeFormatter {
   final TimeFormatterValidator timeFormatter;
 
   TestTimeFormatter(this.timeFormatter);
 
   @override
-  TimeFieldContent makeTime(
+  FieldContent makeDateTime(
     BricksLocalizations localizations,
     String fieldKeyString,
     String inputString,
   ) {
     return timeFormatter.run(localizations, fieldKeyString, TimeFieldContent.transient(inputString));
   }
+
+  String get timeDelimiterPattern => timeFormatter.timeDelimiterPattern;
 }
 
-class TestDateTimeFormatter /*implements ATestDateTimeFormatter*/ {
+class TestDateTimeFormatter implements ATestDateTimeFormatter {
   final DateTimeFormatterValidator dateTimeFormatter;
 
   TestDateTimeFormatter(this.dateTimeFormatter);

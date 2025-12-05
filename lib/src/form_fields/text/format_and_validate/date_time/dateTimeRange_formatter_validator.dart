@@ -292,19 +292,19 @@ class DateTimeRangeFormatterValidator extends FormatterValidator<String, DateTim
     return _formManager.getFieldValue(keyString);
   }
 
-  String makeRangeKeyStringStart(String rangeKeyString) => "${rangeKeyString}_start";
+  static String makeRangeKeyStringStart(String rangeKeyString) => "${rangeKeyString}_start";
 
-  String makeRangeKeyStringEnd(String rangeKeyString) => "${rangeKeyString}_end";
+  static String makeRangeKeyStringEnd(String rangeKeyString) => "${rangeKeyString}_end";
 
-  String makeDateKeyString(String rangePartKeyString) => "${rangePartKeyString}_date";
+  static String makeDateKeyString(String rangePartKeyString) => "${rangePartKeyString}_date";
 
-  String makeTimeKeyString(String rangePartKeyString) => "${rangePartKeyString}_time";
+  static String makeTimeKeyString(String rangePartKeyString) => "${rangePartKeyString}_time";
 
-  String rangeDateStartKeyString(String rangeKeyString) => makeDateKeyString(makeRangeKeyStringStart(rangeKeyString));
+  static String rangeDateStartKeyString(String rangeKeyString) => makeDateKeyString(makeRangeKeyStringStart(rangeKeyString));
 
-  String rangeTimeStartKeyString(String rangeKeyString) => makeTimeKeyString(makeRangeKeyStringStart(rangeKeyString));
+  static String rangeTimeStartKeyString(String rangeKeyString) => makeTimeKeyString(makeRangeKeyStringStart(rangeKeyString));
 
-  String rangeDateEndKeyString(String rangeKeyString) => makeDateKeyString(makeRangeKeyStringEnd(rangeKeyString));
+  static String rangeDateEndKeyString(String rangeKeyString) => makeDateKeyString(makeRangeKeyStringEnd(rangeKeyString));
 
-  String rangeTimeEndKeyString(String rangeKeyString) => makeTimeKeyString(makeRangeKeyStringEnd(rangeKeyString));
+  static String rangeTimeEndKeyString(String rangeKeyString) => makeTimeKeyString(makeRangeKeyStringEnd(rangeKeyString));
 }

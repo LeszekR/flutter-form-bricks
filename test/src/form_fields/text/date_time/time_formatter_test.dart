@@ -22,7 +22,7 @@ void main() {
       DateTimeTestCase("15+2", "15+2", false, local.timeStringErrorBadChars),
       DateTimeTestCase("00)12", "00)12", false, local.timeStringErrorBadChars),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, timeFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, timeFormatter);
     expect(passedOk, true);
   });
 
@@ -48,7 +48,7 @@ void main() {
       // ---------------------------------------------
       DateTimeTestCase("1--;23:05", "1--;23:05", false, local.timeStringErrorTooManyDelimiters),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, timeFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, timeFormatter);
     expect(passedOk, true);
   });
 
@@ -75,11 +75,11 @@ void main() {
       DateTimeTestCase("000 12 ", "000 12 ", false, local.timeStringErrorTooManyDigitsHours),
       DateTimeTestCase(" 000  12", " 000  12", false, local.timeStringErrorTooManyDigitsHours),
     ];
-    var passedOk = testDateTimeFormatter(
+    var passedOk = runDateTimeFormatterTest(
       local,
       testCases,
       timeFormatter,
-      delimitersPattern: TimeFormatterValidator.timeDelimiterPattern,
+      delimitersPattern: timeFormatter.timeDelimiterPattern,
       placeholder: p,
     );
     expect(passedOk, true);
@@ -92,11 +92,11 @@ void main() {
       DateTimeTestCase("1,23${p}5", "1,23${p}5", false, local.timeStringErrorTooManyDelimiters),
       DateTimeTestCase("0-8${p}8:8", "0-8${p}8:8", false, local.timeStringErrorTooManyDelimiters),
     ];
-    var passedOk = testDateTimeFormatter(
+    var passedOk = runDateTimeFormatterTest(
       local,
       testCases,
       timeFormatter,
-      delimitersPattern: TimeFormatterValidator.timeDelimiterPattern,
+      delimitersPattern: timeFormatter.timeDelimiterPattern,
       placeholder: p,
     );
     expect(passedOk, true);
@@ -121,7 +121,7 @@ void main() {
       DateTimeTestCase("0////1", "00:01", true, ''),
       DateTimeTestCase("0 12  ", "00:12", true, ''),
     ];
-    testDateTimeFormatter(local, testCases, timeFormatter);
+    runDateTimeFormatterTest(local, testCases, timeFormatter);
   });
 
   testWidgets('creates formatted time string from digits only input', (WidgetTester tester) async {
@@ -133,7 +133,7 @@ void main() {
       DateTimeTestCase("0201", "02:01", true, ''),
       DateTimeTestCase("0000", "00:00", true, ''),
     ];
-    testDateTimeFormatter(local, testCases, timeFormatter);
+    runDateTimeFormatterTest(local, testCases, timeFormatter);
   });
 
   testWidgets('shows error on invalid time', (WidgetTester tester) async {
@@ -143,7 +143,7 @@ void main() {
       DateTimeTestCase("1865", "18:65", false, local.timeErrorTooBigMinute),
       DateTimeTestCase("2500", "25:00", false, local.timeErrorTooBigHour),
     ];
-    var passedOk = testDateTimeFormatter(local, testCases, timeFormatter);
+    var passedOk = runDateTimeFormatterTest(local, testCases, timeFormatter);
     expect(passedOk, true);
   });
 }

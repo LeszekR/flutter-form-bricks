@@ -1,11 +1,8 @@
-import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
-
 class DateTimeTestCase {
-  final String   input;
+  final String input;
   final String expectedValueText;
   final bool expectedIsValid;
-  final String expectedError;
+  final String? expectedError;
 
   DateTimeTestCase(this.input, this.expectedValueText, this.expectedIsValid, this.expectedError);
 }
