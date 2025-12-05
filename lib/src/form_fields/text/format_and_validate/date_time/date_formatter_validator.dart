@@ -1,11 +1,10 @@
 import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_utils.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/time_stamp.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/formatter_validators/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
-
 
 class DateFormatterValidator extends FormatterValidator<String, Date> {
   final dateDelimiterPattern = '( |/|-|,|;|\\.|=)';
@@ -229,6 +228,7 @@ class DateFormatterValidator extends FormatterValidator<String, Date> {
     return DateFieldContent.ok(content.input, Date.fromDateTime(content.value!));
   }
 
-  /// [FieldContent.transient] has `isValid=null` but should be accepted as valid to be processed further
-  bool isValid(FieldContent dateContent) => dateContent.isValid ?? true;
+  bool isValid(FieldContent dateContent) {
+    return _dateTimeUtils.isValid(dateContent);
+  }
 }

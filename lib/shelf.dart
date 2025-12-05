@@ -42,7 +42,7 @@ export 'src/form_fields/states_controller/formatter_helper.dart';
 export 'src/form_fields/text/text_input_base/text_field_brick.dart';
 export 'src/form_fields/text/format_and_validate/date_time/formatter_validator_chains/date_time_formatter_validator_chain.dart';
 export 'src/form_fields/text/format_and_validate/date_time/date_formatter_validator.dart';
-export 'src/form_fields/text/format_and_validate/date_time/components/date_time_utils.dart';
+export 'src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
 export 'src/form_fields/text/format_and_validate/date_time/components/current_date.dart';
 export 'src/form_fields/state/form_field_data.dart';
 export 'src/form_fields/text/text_input_base/icon_button_params.dart';

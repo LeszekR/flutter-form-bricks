@@ -1,5 +1,5 @@
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_utils.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/dateTime_formatter_validator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -10,16 +10,16 @@ import 'utils/dateTime_formatter_test_utils.dart';
 import 'utils/dateTime_test_utils.dart';
 
 void main() {
-  final dateTimeInputUtils = DateTimeUtils();
+  final dateTimeUtils = DateTimeUtils();
   final mockCurrentDate = MockCurrentDate();
   when(mockCurrentDate.getDateNow()).thenReturn(DateTime.parse('2024-02-01 22:11'));
 
   final DateTimeLimits dateTimeLimits = DateTimeLimits(minDateTime: DateTime(2014), maxDateTime: DateTime(2026));
-  final String yearMaxBack = dateTimeLimits.minDateTime!.year.toString();
-  final String yearMaxForward = dateTimeLimits.maxDateTime!.year.toString();
+  final String yearMaxBack = dateTimeUtils.formatDate(dateTimeLimits.minDateTime!, 'yyyy-MM-dd');
+  final String yearMaxForward = dateTimeUtils.formatDate(dateTimeLimits.maxDateTime!, 'yyyy-MM-dd');
 
   TestDateTimeFormatter dateTimeFormatter =
-      TestDateTimeFormatter(DateTimeFormatterValidator(dateTimeInputUtils, mockCurrentDate, dateTimeLimits));
+      TestDateTimeFormatter(DateTimeFormatterValidator(dateTimeUtils, mockCurrentDate, dateTimeLimits));
 
   testWidgets('refuses to format excel-style invalid input', (WidgetTester tester) async {
     final local = await getLocalizations();
@@ -407,8 +407,6 @@ void main() {
         "39/18/00 000-111",
         "2039-18-00 000-111",
         false,
-        local.dateErrorTooFarForward(yearMaxForward) +
-            '\n' +
             local.dateErrorMonthOver12 +
             '\n' +
             local.dateErrorDay0 +
@@ -421,8 +419,6 @@ void main() {
           "01-0-80 5x60",
           "2001-00-80 5x60",
           false,
-          local.dateErrorTooFarBack(yearMaxBack) +
-              '\n' +
               local.dateErrorMonth0 +
               '\n' +
               local.dateErrorTooManyDaysInMonth +
@@ -432,8 +428,6 @@ void main() {
           "  01-0-00 12561",
           "2001-00-00 12561",
           false,
-          local.dateErrorTooFarBack(yearMaxBack) +
-              '\n' +
               local.dateErrorMonth0 +
               '\n' +
               local.dateErrorDay0 +
@@ -443,8 +437,6 @@ void main() {
           "01-0-31 5  ",
           "2001-00-31 5",
           false,
-          local.dateErrorTooFarBack(yearMaxBack) +
-              '\n' +
               local.dateErrorMonth0 +
               '\n' +
               local.timeStringErrorTooFewDigits),
@@ -461,8 +453,6 @@ void main() {
           "0000/0/0   156;5699 ",
           "0000-00-00 156;5699",
           false,
-          local.dateErrorTooFarBack(yearMaxBack) +
-              '\n' +
               local.dateErrorMonth0 +
               '\n' +
               local.dateErrorDay0 +
@@ -480,11 +470,11 @@ void main() {
     final local = await getLocalizations();
 
     var testCases = [
-      DateTimeTestCase('615 000', '2024-06-15 00:00', true, ''),
-      DateTimeTestCase('0615 0-0', '2024-06-15 00:00', true, ''),
-      DateTimeTestCase('3;12;18   6-30', '2023-12-18 06:30', true, ''),
-      DateTimeTestCase('20150530 0615', '2015-05-30 06:15', true, ''),
-      DateTimeTestCase('  18///11;18  6-3 ', '2018-11-18 06:03', true, ''),
+      DateTimeTestCase('615 000', '2024-06-15 00:00', true, null),
+      DateTimeTestCase('0615 0-0', '2024-06-15 00:00', true, null),
+      DateTimeTestCase('3;12;18   6-30', '2023-12-18 06:30', true, null),
+      DateTimeTestCase('20150530 0615', '2015-05-30 06:15', true, null),
+      DateTimeTestCase('  18///11;18  6-3 ', '2018-11-18 06:03', true, null),
       // DateTimeTestCase('..', '..', true, ''),
       // DateTimeTestCase('..', '..', true, ''),
       // DateTimeTestCase('..', '..', true, ''),

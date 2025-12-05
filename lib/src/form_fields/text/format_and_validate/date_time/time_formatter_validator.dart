@@ -1,11 +1,10 @@
 import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/time_stamp.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/formatter_validators/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:intl/intl.dart';
-
 
 class TimeFormatterValidator extends FormatterValidator<String, Time> {
   final timeDelimiterPattern = '( |/|-|,|\\.|:|;)';
@@ -16,9 +15,9 @@ class TimeFormatterValidator extends FormatterValidator<String, Time> {
   final nMaxDelimiters = 1;
 
   TimeFormatterValidator(
-    this._dateTimeUtils,
-    [this._dateTimeLimits,]
-  );
+    this._dateTimeUtils, [
+    this._dateTimeLimits,
+  ]);
 
   @override
   TimeFieldContent run(
@@ -36,10 +35,10 @@ class TimeFormatterValidator extends FormatterValidator<String, Time> {
       maxNDigits: 4,
       maxNumberDelimiters: 1,
     );
-    if (!dateTimeContent.isValid!) return TimeFieldContent.err(fieldContent.input, dateTimeContent.error);
+    if (!isValid(dateTimeContent)) return TimeFieldContent.err(fieldContent.input, dateTimeContent.error);
 
     TimeFieldContent timeContent = _parseTimeFromString(localizations, dateTimeContent);
-    if (!timeContent.isValid!) return TimeFieldContent.err(fieldContent.input, timeContent.error);
+    if (!isValid(timeContent)) return TimeFieldContent.err(fieldContent.input, timeContent.error);
 
     timeContent = _validateTime(localizations, timeContent, _dateTimeLimits);
 
@@ -109,8 +108,7 @@ class TimeFormatterValidator extends FormatterValidator<String, Time> {
     if (errMinutes.isNotEmpty) errMsg = _dateTimeUtils.addErrMsg(errMsg, connector, errMinutes);
     if (errMsg.isNotEmpty) return TimeFieldContent.err(timeString, errMsg);
 
-    Time parsedTime = Time.fromString(timeString);
-    return TimeFieldContent.ok(timeString, parsedTime);
+    return TimeFieldContent.transient(timeString);
   }
 
   DateTime parseTime(String timeString) {
@@ -124,13 +122,19 @@ class TimeFormatterValidator extends FormatterValidator<String, Time> {
     TimeFieldContent fieldContent,
     DateTimeLimits? dateTimeLimits,
   ) {
+    TimeFieldContent resultContent;
     String timeString = fieldContent.input!;
 
-    TimeFieldContent resultContent = _validateHourMinuteNumbers(localizations, timeString);
-    if (!resultContent.isValid!) return resultContent;
+    resultContent = _validateHourMinuteNumbers(localizations, timeString);
+    if (!isValid(resultContent)) return resultContent;
 
-    if (dateTimeLimits == null) return resultContent;
-    return _validateTimeLimits(localizations, resultContent, dateTimeLimits, timeString);
+    Time parsedTime = Time.fromString(timeString);
+    resultContent = TimeFieldContent.ok(resultContent.input, parsedTime);
+
+    if (dateTimeLimits != null)
+      resultContent = _validateTimeLimits(localizations, resultContent, dateTimeLimits, timeString);
+
+    return resultContent;
   }
 
   TimeFieldContent _validateHourMinuteNumbers(BricksLocalizations localizations, String timeString) {
@@ -149,10 +153,9 @@ class TimeFormatterValidator extends FormatterValidator<String, Time> {
 
     if (errHours.isNotEmpty) errMsg = _dateTimeUtils.addErrMsg(errMsg, errConnector, errHours);
     if (errMinutes.isNotEmpty) errMsg = _dateTimeUtils.addErrMsg(errMsg, errConnector, errMinutes);
-    if (errMsg.isNotEmpty) return TimeFieldContent.err(timeString, errMsg);
 
-    Time parsedTime = Time.fromString(timeString);
-    return TimeFieldContent.ok(timeString, parsedTime);
+    if (errMsg.isNotEmpty) return TimeFieldContent.err(timeString, errMsg);
+    return TimeFieldContent.transient(timeString);
   }
 
   FieldContent<String, Time> _validateTimeLimits(
@@ -191,5 +194,9 @@ class TimeFormatterValidator extends FormatterValidator<String, Time> {
 
   TimeFieldContent _makeTimeFCFromDateTimeFC(DateTimeFieldContent content) {
     return TimeFieldContent.ok(content.input, Time.fromDateTime(content.value!));
+  }
+
+  bool isValid(FieldContent dateContent) {
+    return _dateTimeUtils.isValid(dateContent);
   }
 }

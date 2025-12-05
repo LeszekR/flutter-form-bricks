@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/time_stamp.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:intl/intl.dart';
 
@@ -65,7 +64,6 @@ class DateTimeUtils {
 
     return DateTimeFieldContent.transient(textClean);
   }
-
 
   // String removeBadChars(String text, String stringDelimiterPattern) {
   //   var textClean = '', nextChar = '';
@@ -153,5 +151,10 @@ class DateTimeUtils {
     int hourMinutes = timeSource.hour * 60;
     int minutes = timeSource.minute;
     return hourMinutes + minutes;
+  }
+
+  /// [FieldContent.transient] has `isValid=null` but should be accepted as valid to be processed further
+  bool isValid(FieldContent dateContent) {
+    return dateContent.isValid ?? true;
   }
 }
