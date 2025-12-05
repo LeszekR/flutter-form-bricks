@@ -1,7 +1,6 @@
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/dateTime_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/time_formatter_validator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -15,16 +14,13 @@ void main() {
   final mockCurrentDate = MockCurrentDate();
   when(mockCurrentDate.getDateNow()).thenReturn(DateTime.parse('2024-02-01 22:11'));
 
-  var dateFormatter = DateFormatterValidator(dateTimeUtils, mockCurrentDate);
-  var timeFormatter = TimeFormatterValidator(dateTimeUtils);
   DateTimeLimits dateTimeLimits = DateTimeLimits(minDateTime: DateTime(2014), maxDateTime: DateTime(2026));
+  final String dateMaxBack = dateTimeUtils.formatDate(dateTimeLimits.minDateTime!, 'yyyy-MM-dd');
+  final String dateMaxForward = dateTimeUtils.formatDate(dateTimeLimits.maxDateTime!, 'yyyy-MM-dd');
+
   TestDateTimeFormatter dateTimeFormatter = TestDateTimeFormatter(
-    // ATestDateTimeFormatter dateTimeFormatter = TestDateTimeFormatter(
     DateTimeFormatterValidator(dateTimeUtils, mockCurrentDate, dateTimeLimits),
   );
-
-  final String yearMaxBack = dateTimeLimits.minDateTime!.year.toString();
-  final String yearMaxForward = dateTimeLimits.maxDateTime!.year.toString();
 
   testWidgets('refuses to format excel-style invalid input', (WidgetTester tester) async {
     final local = await getLocalizations();
@@ -53,8 +49,8 @@ void main() {
           '050 2:::15', '2024-00-50 02:15', false, local.dateErrorMonth0 + '\n' + local.dateErrorTooManyDaysInMonth),
       DateTimeTestCase('4--31 1515', '2024-04-31 15:15', false, local.dateErrorTooManyDaysInMonth),
       DateTimeTestCase('5-15-2 8,8', '2025-15-02 08:08', false, local.dateErrorMonthOver12),
-      DateTimeTestCase('00;2;5 8;8', '2000-02-05 08:08', false, local.dateErrorTooFarBack(yearMaxBack)),
-      DateTimeTestCase('50-11-5 6;15', '2050-11-05 06:15', false, local.dateErrorTooFarForward(yearMaxForward)),
+      DateTimeTestCase('00;2;5 8;8', '2000-02-05 08:08', false, local.dateErrorTooFarBack(dateMaxBack)),
+      DateTimeTestCase('50-11-5 6;15', '2050-11-05 06:15', false, local.dateErrorTooFarForward(dateMaxForward)),
     ];
     var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
@@ -81,16 +77,22 @@ void main() {
     final local = await getLocalizations();
     var testCases = [
       DateTimeTestCase(
-          '5x-6 18)10', '5x-6 18)10', false, local.dateStringErrorBadChars + '\n' + local.timeStringErrorBadChars),
+          '5x-6 18)10', '5x-6 18)10', false,
+          local.dateStringErrorBadChars + '\n' + local.timeStringErrorBadChars),
       DateTimeTestCase(
-          '5x-6 11', '5x-6 11', false, local.dateStringErrorBadChars + '\n' + local.timeStringErrorTooFewDigits),
+          '5x-6 11', '5x-6 11', false,
+          local.dateStringErrorBadChars + '\n' + local.timeStringErrorTooFewDigits),
       DateTimeTestCase(
-          '5x-6 12335', '5x-6 12335', false, local.dateStringErrorBadChars + '\n' + local.timeStringErrorTooManyDigits),
-      DateTimeTestCase('5x-6 15:13:1', '5x-6 15:13:1', false,
+          '5x-6 12335', '5x-6 12335', false,
+          local.dateStringErrorBadChars + '\n' + local.timeStringErrorTooManyDigits),
+      DateTimeTestCase(
+          '5x-6 15:13:1', '5x-6 15:13:1', false,
           local.dateStringErrorBadChars + '\n' + local.timeStringErrorTooManyDelimiters),
-      DateTimeTestCase('5x-6 15-309', '5x-6 15-309', false,
+      DateTimeTestCase(
+          '5x-6 15-309', '5x-6 15-309', false,
           local.dateStringErrorBadChars + '\n' + local.timeStringErrorTooManyDigitsMinutes),
-      DateTimeTestCase('5x-6 122:9', '5x-6 122:9', false,
+      DateTimeTestCase(
+          '5x-6 122:9', '5x-6 122:9', false,
           local.dateStringErrorBadChars + '\n' + local.timeStringErrorTooManyDigitsHours),
       DateTimeTestCase(
           '5x-6 9-81', '5x-6 09:81', false, local.dateStringErrorBadChars + '\n' + local.timeErrorTooBigMinute),
@@ -105,21 +107,29 @@ void main() {
     final local = await getLocalizations();
     var testCases = [
       DateTimeTestCase(
-          '18 9x8', '18 9x8', false, local.dateStringErrorTooFewDigits + '\n' + local.timeStringErrorBadChars),
+          '18 9x8', '18 9x8', false,
+          local.dateStringErrorTooFewDigits + '\n' + local.timeStringErrorBadChars),
       DateTimeTestCase(
-          '18 -9', '18 -9', false, local.dateStringErrorTooFewDigits + '\n' + local.timeStringErrorTooFewDigits),
+          '18 -9', '18 -9', false,
+          local.dateStringErrorTooFewDigits + '\n' + local.timeStringErrorTooFewDigits),
       DateTimeTestCase(
-          '18 12330', '18 12330', false, local.dateStringErrorTooFewDigits + '\n' + local.timeStringErrorTooManyDigits),
-      DateTimeTestCase('18 09-12-04', '18 09-12-04', false,
+          '18 12330', '18 12330', false,
+          local.dateStringErrorTooFewDigits + '\n' + local.timeStringErrorTooManyDigits),
+      DateTimeTestCase(
+          '18 09-12-04', '18 09-12-04', false,
           local.dateStringErrorTooFewDigits + '\n' + local.timeStringErrorTooManyDelimiters),
-      DateTimeTestCase('18 24;111', '18 24;111', false,
+      DateTimeTestCase(
+          '18 24;111', '18 24;111', false,
           local.dateStringErrorTooFewDigits + '\n' + local.timeStringErrorTooManyDigitsMinutes),
-      DateTimeTestCase('18 180:19', '18 180:19', false,
+      DateTimeTestCase(
+          '18 180:19', '18 180:19', false,
           local.dateStringErrorTooFewDigits + '\n' + local.timeStringErrorTooManyDigitsHours),
       DateTimeTestCase(
-          '18 23:70', '18 23:70', false, local.dateStringErrorTooFewDigits + '\n' + local.timeErrorTooBigMinute),
+          '18 23:70', '18 23:70', false,
+          local.dateStringErrorTooFewDigits + '\n' + local.timeErrorTooBigMinute),
       DateTimeTestCase(
-          '18 25-13', '18 25:13', false, local.dateStringErrorTooFewDigits + '\n' + local.timeErrorTooBigHour),
+          '18 25-13', '18 25:13', false,
+          local.dateStringErrorTooFewDigits + '\n' + local.timeErrorTooBigHour),
     ];
     var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
@@ -343,21 +353,21 @@ void main() {
     final local = await getLocalizations();
     var testCases = [
       DateTimeTestCase('006/10/13 9x8', '2006-10-13 9x8', false,
-          local.dateErrorTooFarBack(yearMaxBack) + '\n' + local.timeStringErrorBadChars),
+          local.dateErrorTooFarBack(dateMaxBack) + '\n' + local.timeStringErrorBadChars),
       DateTimeTestCase('006/10/13 8', '2006-10-13 8', false,
-          local.dateErrorTooFarBack(yearMaxBack) + '\n' + local.timeStringErrorTooFewDigits),
+          local.dateErrorTooFarBack(dateMaxBack) + '\n' + local.timeStringErrorTooFewDigits),
       DateTimeTestCase('006/10/13 55580', '2006-10-13 55580', false,
-          local.dateErrorTooFarBack(yearMaxBack) + '\n' + local.timeStringErrorTooManyDigits),
+          local.dateErrorTooFarBack(dateMaxBack) + '\n' + local.timeStringErrorTooManyDigits),
       DateTimeTestCase('006/10/13 5-5-5', '2006-10-13 5-5-5', false,
-          local.dateErrorTooFarBack(yearMaxBack) + '\n' + local.timeStringErrorTooManyDelimiters),
+          local.dateErrorTooFarBack(dateMaxBack) + '\n' + local.timeStringErrorTooManyDelimiters),
       DateTimeTestCase('006/10/13 5-120', '2006-10-13 5-120', false,
-          local.dateErrorTooFarBack(yearMaxBack) + '\n' + local.timeStringErrorTooManyDigitsMinutes),
+          local.dateErrorTooFarBack(dateMaxBack) + '\n' + local.timeStringErrorTooManyDigitsMinutes),
       DateTimeTestCase('006/10/13 1220;08', '2006-10-13 1220;08', false,
-          local.dateErrorTooFarBack(yearMaxBack) + '\n' + local.timeStringErrorTooManyDigitsHours),
+          local.dateErrorTooFarBack(dateMaxBack) + '\n' + local.timeStringErrorTooManyDigitsHours),
       DateTimeTestCase('006/10/13 22:81', '2006-10-13 22:81', false,
-          local.dateErrorTooFarBack(yearMaxBack) + '\n' + local.timeErrorTooBigMinute),
+          local.dateErrorTooFarBack(dateMaxBack) + '\n' + local.timeErrorTooBigMinute),
       DateTimeTestCase('006/10/13 29:08', '2006-10-13 29:08', false,
-          local.dateErrorTooFarBack(yearMaxBack) + '\n' + local.timeErrorTooBigHour),
+          local.dateErrorTooFarBack(dateMaxBack) + '\n' + local.timeErrorTooBigHour),
     ];
     var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
@@ -368,21 +378,21 @@ void main() {
 
     var testCases = [
       DateTimeTestCase('36/10/13 9x8', '2036-10-13 9x8', false,
-          local.dateErrorTooFarForward(yearMaxForward) + '\n' + local.timeStringErrorBadChars),
+          local.dateErrorTooFarForward(dateMaxForward) + '\n' + local.timeStringErrorBadChars),
       DateTimeTestCase('36/10/13 8', '2036-10-13 8', false,
-          local.dateErrorTooFarForward(yearMaxForward) + '\n' + local.timeStringErrorTooFewDigits),
+          local.dateErrorTooFarForward(dateMaxForward) + '\n' + local.timeStringErrorTooFewDigits),
       DateTimeTestCase('36/10/13 55580', '2036-10-13 55580', false,
-          local.dateErrorTooFarForward(yearMaxForward) + '\n' + local.timeStringErrorTooManyDigits),
+          local.dateErrorTooFarForward(dateMaxForward) + '\n' + local.timeStringErrorTooManyDigits),
       DateTimeTestCase('36/10/13 5-5-5', '2036-10-13 5-5-5', false,
-          local.dateErrorTooFarForward(yearMaxForward) + '\n' + local.timeStringErrorTooManyDelimiters),
+          local.dateErrorTooFarForward(dateMaxForward) + '\n' + local.timeStringErrorTooManyDelimiters),
       DateTimeTestCase('36/10/13 5-120', '2036-10-13 5-120', false,
-          local.dateErrorTooFarForward(yearMaxForward) + '\n' + local.timeStringErrorTooManyDigitsMinutes),
+          local.dateErrorTooFarForward(dateMaxForward) + '\n' + local.timeStringErrorTooManyDigitsMinutes),
       DateTimeTestCase('36/10/13 1220;08', '2036-10-13 1220;08', false,
-          local.dateErrorTooFarForward(yearMaxForward) + '\n' + local.timeStringErrorTooManyDigitsHours),
+          local.dateErrorTooFarForward(dateMaxForward) + '\n' + local.timeStringErrorTooManyDigitsHours),
       DateTimeTestCase('36/10/13 22:81', '2036-10-13 22:81', false,
-          local.dateErrorTooFarForward(yearMaxForward) + '\n' + local.timeErrorTooBigMinute),
+          local.dateErrorTooFarForward(dateMaxForward) + '\n' + local.timeErrorTooBigMinute),
       DateTimeTestCase('36/10/13 29:08', '2036-10-13 29:08', false,
-          local.dateErrorTooFarForward(yearMaxForward) + '\n' + local.timeErrorTooBigHour),
+          local.dateErrorTooFarForward(dateMaxForward) + '\n' + local.timeErrorTooBigHour),
     ];
     var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
@@ -396,8 +406,6 @@ void main() {
         "39/18/00 000-111",
         "2039-18-00 000-111",
         false,
-        local.dateErrorTooFarForward(yearMaxForward) +
-            '\n' +
             local.dateErrorMonthOver12 +
             '\n' +
             local.dateErrorDay0 +
@@ -410,8 +418,6 @@ void main() {
           "01-0-80 5x60",
           "2001-00-80 5x60",
           false,
-          local.dateErrorTooFarBack(yearMaxBack) +
-              '\n' +
               local.dateErrorMonth0 +
               '\n' +
               local.dateErrorTooManyDaysInMonth +
@@ -421,8 +427,6 @@ void main() {
           "  01-0-00 12561",
           "2001-00-00 12561",
           false,
-          local.dateErrorTooFarBack(yearMaxBack) +
-              '\n' +
               local.dateErrorMonth0 +
               '\n' +
               local.dateErrorDay0 +
@@ -432,8 +436,6 @@ void main() {
           "01-0-31 5  ",
           "2001-00-31 5",
           false,
-          local.dateErrorTooFarBack(yearMaxBack) +
-              '\n' +
               local.dateErrorMonth0 +
               '\n' +
               local.timeStringErrorTooFewDigits),
@@ -450,8 +452,6 @@ void main() {
           "0000/0/0   156;5699 ",
           "0000-00-00 156;5699",
           false,
-          local.dateErrorTooFarBack(yearMaxBack) +
-              '\n' +
               local.dateErrorMonth0 +
               '\n' +
               local.dateErrorDay0 +
@@ -468,16 +468,16 @@ void main() {
   testWidgets('makes date-time from valid string', (WidgetTester tester) async {
     final local = await getLocalizations();
     var testCases = [
-      DateTimeTestCase('615 000', '2024-06-15 00:00', true, ''),
-      DateTimeTestCase('0615 0-0', '2024-06-15 00:00', true, ''),
-      DateTimeTestCase('3;12;18   6-30', '2023-12-18 06:30', true, ''),
-      DateTimeTestCase('20150530 0615', '2015-05-30 06:15', true, ''),
-      DateTimeTestCase('  18///11;18  6-3 ', '2018-11-18 06:03', true, ''),
-      // DateTimeTestCase(dateTimeLimits,'..', '..', true, ''),
-      // DateTimeTestCase(dateTimeLimits,'..', '..', true, ''),
-      // DateTimeTestCase(dateTimeLimits,'..', '..', true, ''),
-      // DateTimeTestCase(dateTimeLimits,'..', '..', true, ''),
-      // DateTimeTestCase(dateTimeLimits,'..', '..', true, ''),
+      DateTimeTestCase('615 000', '2024-06-15 00:00', true, null),
+      DateTimeTestCase('0615 0-0', '2024-06-15 00:00', true, null),
+      DateTimeTestCase('3;12;18   6-30', '2023-12-18 06:30', true, null),
+      DateTimeTestCase('20150530 0615', '2015-05-30 06:15', true, null),
+      DateTimeTestCase('  18///11;18  6-3 ', '2018-11-18 06:03', true, null),
+      // DateTimeTestCase(dateTimeLimits,'..', '..', true, null),
+      // DateTimeTestCase(dateTimeLimits,'..', '..', true, null),
+      // DateTimeTestCase(dateTimeLimits,'..', '..', true, null),
+      // DateTimeTestCase(dateTimeLimits,'..', '..', true, null),
+      // DateTimeTestCase(dateTimeLimits,'..', '..', true, null),
     ];
     var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
