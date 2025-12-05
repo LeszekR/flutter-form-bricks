@@ -8,7 +8,7 @@ import '../test_implementations/test_form_manager.dart';
 class TestSingleForm extends FormBrick {
   final Widget Function(BuildContext context, FormManager formManager) widgetBuilder;
 
-  TestSingleForm({required this.widgetBuilder}) : super(formManager: TestFormManager.testDefault());
+  TestSingleForm({super.key, required this.widgetBuilder}) : super(formManager: TestFormManager.testDefault());
 
   @override
   TestSingleFormState createState() => TestSingleFormState();

@@ -58,8 +58,8 @@ bool assertSingleCaseDateTimeFormatter(
   String? errors;
   String input = (placeholder == null) ? testCase.input : (testCase.input.replaceAll(RegExp(placeholder), delimiter!));
 
-  print(testCase.input);
-  FieldContent result = testDateTimeFormatter.makeDateTime(localizations, input, testCase.input);
+  // print(testCase.input);
+  FieldContent result = testDateTimeFormatter.makeDateTime(localizations, input, input);
 
   var actual = (placeholder == null)
       ? testCase.expectedValueText

@@ -52,7 +52,7 @@ void main() {
       RangeTestData(['2024-05-11', '', '2024-05-12', '19:15'], expectedValues, errMsg),
     ];
     TestSingleForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, dateTimeRangeSpan);
-    bool passedOk = await testDateTimeRangeValidator(tester, form, keyStrings, testCases);
+    bool passedOk = await runDateTimeRangeValidatorTest(tester, form, keyStrings, testCases);
     expect(passedOk, true);
   });
 
@@ -77,7 +77,7 @@ void main() {
       RangeTestData(['', '', '2024-05-12', '19:15'], expectedValues, errMsg),
     ];
     TestSingleForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, dateTimeRangeSpan);
-    bool passedOk = await testDateTimeRangeValidator(tester, form, keyStrings, testCases);
+    bool passedOk = await runDateTimeRangeValidatorTest(tester, form, keyStrings, testCases);
     expect(passedOk, true);
   });
 
@@ -88,7 +88,7 @@ void main() {
       RangeTestData(['2024-05-11', '', '', '17:15'], [null, errMsg, errMsg, errMsg], errMsg),
     ];
     TestSingleForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, dateTimeRangeSpan);
-    bool passedOk = await testDateTimeRangeValidator(tester, form, keyStrings, testCases);
+    bool passedOk = await runDateTimeRangeValidatorTest(tester, form, keyStrings, testCases);
     expect(passedOk, true);
   });
 
@@ -107,7 +107,7 @@ void main() {
       RangeTestData(['2024-05-11', '', '2024-03-12', '19:15'], expectedValues, errMsg),
     ];
     TestSingleForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, dateTimeRangeSpan);
-    bool passedOk = await testDateTimeRangeValidator(tester, form, keyStrings, testCases);
+    bool passedOk = await runDateTimeRangeValidatorTest(tester, form, keyStrings, testCases);
     expect(passedOk, true);
   });
 
@@ -132,7 +132,7 @@ void main() {
       RangeTestData([startDateTx, '00:00', endDateTx, '00:10'], expectedValues, errMsg),
     ];
     TestSingleForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, dateTimeRangeSpan);
-    bool passedOk = await testDateTimeRangeValidator(tester, form, keyStrings, testCases);
+    bool passedOk = await runDateTimeRangeValidatorTest(tester, form, keyStrings, testCases);
     expect(passedOk, true);
   });
 
@@ -149,7 +149,7 @@ void main() {
       RangeTestData([dateTx, timeTx, dateTx, timeTx], expectedValues, errMsg),
     ];
     TestSingleForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, dateTimeRangeSpan);
-    bool passedOk = await testDateTimeRangeValidator(tester, form, keyStrings, testCases);
+    bool passedOk = await runDateTimeRangeValidatorTest(tester, form, keyStrings, testCases);
     expect(passedOk, true);
   });
 
@@ -161,7 +161,7 @@ void main() {
       RangeTestData(['2024-05-11', '18:03', '', '17:15'], [null, errMsg, errMsg, errMsg], errMsg),
     ];
     TestSingleForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, dateTimeRangeSpan);
-    bool passedOk = await testDateTimeRangeValidator(tester, form, keyStrings, testCases);
+    bool passedOk = await runDateTimeRangeValidatorTest(tester, form, keyStrings, testCases);
     expect(passedOk, true);
   });
 
@@ -173,7 +173,7 @@ void main() {
       RangeTestData(['2024-05-11', '18:03', '2024-05-11', '17:15'], [null, errMsg, null, errMsg], errMsg),
     ];
     TestSingleForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, dateTimeRangeSpan);
-    bool passedOk = await testDateTimeRangeValidator(tester, form, keyStrings, testCases);
+    bool passedOk = await runDateTimeRangeValidatorTest(tester, form, keyStrings, testCases);
     expect(passedOk, true);
   });
 
@@ -195,7 +195,7 @@ void main() {
       RangeTestData([dateTx, startTimeTx, '', endTimeTx], [null, errMsg, errMsg, errMsg], errMsg),
     ];
     TestSingleForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, dateTimeRangeSpan);
-    bool passedOk = await testDateTimeRangeValidator(tester, form, keyStrings, testCases);
+    bool passedOk = await runDateTimeRangeValidatorTest(tester, form, keyStrings, testCases);
     expect(passedOk, true);
   });
 
@@ -216,7 +216,7 @@ void main() {
       RangeTestData([dateTx, startTimeTx, dateTx, endTimeTx], [null, errMsg, null, errMsg], errMsg),
     ];
     TestSingleForm form = await prepDateTimeRangeTest(tester, rangeId, dateTimeLimits, dateTimeRangeSpan);
-    bool passedOk = await testDateTimeRangeValidator(tester, form, keyStrings, testCases);
+    bool passedOk = await runDateTimeRangeValidatorTest(tester, form, keyStrings, testCases);
     expect(passedOk, true);
   });
 

@@ -83,6 +83,7 @@ abstract class FormStateBrick<T extends FormBrick> extends State<T> {
   Widget build(BuildContext context) {
     // TODO make focusedKeyString actually request focus
     return AnimatedBuilder(
+      key: widget.formKey,
       animation: formManager,
       // TODO - check this for correctness
       builder: (context, _) => buildBody(context),

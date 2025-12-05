@@ -53,51 +53,60 @@ void main() {
   });
 
   testWidgets('refuses to format excel-style time when too many element digits', (WidgetTester tester) async {
-    var p = '=';
+    var placeholder = '=';
     final local = await getLocalizations();
     var testCases = [
-      DateTimeTestCase("1${p}235", "1${p}235", false, local.timeStringErrorTooManyDigitsMinutes),
-      DateTimeTestCase("1${p}66235", "1${p}66235", false, local.timeStringErrorTooManyDigitsMinutes),
+      DateTimeTestCase("1${placeholder}235", "1${placeholder}235", false,
+          local.timeStringErrorTooManyDigitsMinutes),
+      DateTimeTestCase("1${placeholder}66235", "1${placeholder}66235", false,
+          local.timeStringErrorTooManyDigitsMinutes),
       // -------------------------------------------------
-      DateTimeTestCase("123${p}5", "123${p}5", false, local.timeStringErrorTooManyDigitsHours),
-      DateTimeTestCase("100${p}235", "100${p}235", false,
+      DateTimeTestCase("123${placeholder}5", "123${placeholder}5", false,
+          local.timeStringErrorTooManyDigitsHours),
+      DateTimeTestCase("100${placeholder}235", "100${placeholder}235", false,
           local.timeStringErrorTooManyDigitsHours + '\n' + local.timeStringErrorTooManyDigitsMinutes),
-      DateTimeTestCase("123888${p}3335", "123888${p}3335", false,
+      DateTimeTestCase("123888${placeholder}3335", "123888${placeholder}3335", false,
           local.timeStringErrorTooManyDigitsHours + '\n' + local.timeStringErrorTooManyDigitsMinutes),
       // -------------------------------------------------
-      DateTimeTestCase("1${p}61", "01:61", false, local.timeErrorTooBigMinute),
-      DateTimeTestCase("25${p}5", "25:05", false, local.timeErrorTooBigHour),
+      DateTimeTestCase("1${placeholder}61", "01:61", false,
+          local.timeErrorTooBigMinute),
+      DateTimeTestCase("25${placeholder}5", "25:05", false,
+          local.timeErrorTooBigHour),
       // -------------------------------------------------
-      DateTimeTestCase("0991${p}66235", "0991${p}66235", false,
+      DateTimeTestCase("0991${placeholder}66235", "0991${placeholder}66235", false,
           local.timeStringErrorTooManyDigitsHours + '\n' + local.timeStringErrorTooManyDigitsMinutes),
-      DateTimeTestCase("000${p}12", "000${p}12", false, local.timeStringErrorTooManyDigitsHours),
-      DateTimeTestCase("000${p}12 ", "000${p}12 ", false, local.timeStringErrorTooManyDigitsHours),
-      DateTimeTestCase("000 12 ", "000 12 ", false, local.timeStringErrorTooManyDigitsHours),
-      DateTimeTestCase(" 000  12", " 000  12", false, local.timeStringErrorTooManyDigitsHours),
+      DateTimeTestCase("000${placeholder}12", "000${placeholder}12", false,
+          local.timeStringErrorTooManyDigitsHours),
+      DateTimeTestCase("000${placeholder}12 ", "000${placeholder}12 ", false,
+          local.timeStringErrorTooManyDigitsHours),
+      DateTimeTestCase("000 12 ", "000 12 ", false,
+          local.timeStringErrorTooManyDigitsHours),
+      DateTimeTestCase(" 000  12", " 000  12", false,
+          local.timeStringErrorTooManyDigitsHours),
     ];
     var passedOk = runDateTimeFormatterTest(
       local,
       testCases,
       timeFormatter,
       delimitersPattern: timeFormatter.timeDelimiterPattern,
-      placeholder: p,
+      placeholder: placeholder,
     );
     expect(passedOk, true);
   });
 
   testWidgets('refuses to format excel-style time when too many delimiters', (WidgetTester tester) async {
-    var p = '=';
+    var placeholder = '=';
     final local = await getLocalizations();
     var testCases = [
-      DateTimeTestCase("1,23${p}5", "1,23${p}5", false, local.timeStringErrorTooManyDelimiters),
-      DateTimeTestCase("0-8${p}8:8", "0-8${p}8:8", false, local.timeStringErrorTooManyDelimiters),
+      DateTimeTestCase("1,23${placeholder}5", "1,23${placeholder}5", false, local.timeStringErrorTooManyDelimiters),
+      DateTimeTestCase("0-8${placeholder}8:8", "0-8${placeholder}8:8", false, local.timeStringErrorTooManyDelimiters),
     ];
     var passedOk = runDateTimeFormatterTest(
       local,
       testCases,
       timeFormatter,
       delimitersPattern: timeFormatter.timeDelimiterPattern,
-      placeholder: p,
+      placeholder: placeholder,
     );
     expect(passedOk, true);
   });
