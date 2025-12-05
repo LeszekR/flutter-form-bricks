@@ -10,7 +10,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../../test_implementations/test_form_manager.dart';
 import '../../test_implementations/test_single_form.dart';
-import 'constants.dart';
 import 'test_constants.dart';
 
 const String keyRequired = "key_required";
@@ -73,7 +72,7 @@ Future<BuildContext> pumpAppGetContext(WidgetTester tester) async {
 }
 
 prepareSimpleForm(WidgetTester tester, Widget input) async {
-  Widget widgetToTest = TestSingleForm(widgetBuilder: (context) => input);
+  Widget widgetToTest = TestSingleForm(widgetBuilder: (context, formManager) => input);
   await prepareWidget(tester, (context) => widgetToTest);
   // formManager.fillInitialInputValuesMap();
 }

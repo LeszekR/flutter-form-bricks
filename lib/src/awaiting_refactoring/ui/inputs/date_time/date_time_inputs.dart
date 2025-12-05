@@ -54,8 +54,8 @@ class DateTimeInputs {
     final uiParams = UiParams.of(context);
     final appSize = uiParams.appSize;
 
-    var dateKeyString = makeDateKeyString(keyString);
-    var timeKeyString = makeTimeKeyString(keyString);
+    var dateKeyString = DateTimeRangeFormatterValidator.makeDateKeyString(keyString);
+    var timeKeyString = DateTimeRangeFormatterValidator.makeTimeKeyString(keyString);
 
     FormFieldValidator<String>? rangeDateValidator;
 //     if (rangeController != null) {
@@ -277,7 +277,7 @@ class DateTimeInputs {
     required CurrentDate currentDate,
     required FormManager formManager,
     DateTimeLimits? dateTimeLimits,
-    DateTimeRangeSpan? dateTimeSpanLimits,
+    DateTimeRangeSpan? dateTimeRangeSpan,
     DateTimeRangeInitialSet? initialSet,
     DateTimeRangeRequiredFields? requiredFields,
     bool readonly = false,
@@ -291,28 +291,28 @@ class DateTimeInputs {
     final rangeStart = dateTimeSeparateFields(
       context: context,
       localizations: localizations,
-      keyString: makeRangeKeyStringStart(rangeId),
+      keyString: DateTimeRangeFormatterValidator.makeRangeKeyStringStart(rangeId),
       label: "$label ${localizations.start}",
       labelPosition: labelPosition,
       formManager: formManager,
       dateTimeLimits: dateTimeLimits,
       initialSet: initialSet == null ? null : initialSet.start,
       requiredFields: requiredFields == null ? null : requiredFields.start,
-      rangeSpan: dateTimeSpanLimits,
+      rangeSpan: dateTimeRangeSpan,
       currentDate: currentDate,
       // rangeController: rangeController,
     );
     final rangeEnd = dateTimeSeparateFields(
       context: context,
       localizations: localizations,
-      keyString: makeRangeKeyStringEnd(rangeId),
+      keyString: DateTimeRangeFormatterValidator.makeRangeKeyStringEnd(rangeId),
       label: "$label ${localizations.end}",
       labelPosition: labelPosition,
       formManager: formManager,
       dateTimeLimits: dateTimeLimits,
       initialSet: initialSet == null ? null : initialSet.end,
       requiredFields: requiredFields == null ? null : requiredFields.end,
-      rangeSpan: dateTimeSpanLimits,
+      rangeSpan: dateTimeRangeSpan,
       currentDate: currentDate,
       // rangeController: rangeController,
     );

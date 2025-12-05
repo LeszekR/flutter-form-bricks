@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_range_span.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/date_time_inputs.dart';
 import 'package:flutter_form_bricks/src/form_fields/labelled_box/label_position.dart';
+import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
+import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations_en.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../../../test_implementations/test_form_manager.dart';
 import '../../../../../test_implementations/test_single_form.dart';
+import '../../../../tools/test_utils.dart';
 import 'dateTime_test_utils.dart';
 
 class RangeTestData {
@@ -21,8 +27,7 @@ Future<TestSingleForm> prepDateTimeRangeTest(
   WidgetTester tester,
   String rangeId,
   DateTimeLimits dateTimeLimits,
-  int maxRangeSpanDays,
-  int minRangeSpanMinutes,
+  DateTimeRangeSpan dateTimeRangeSpan,
 ) async {
   // do not remove this - default Flutter test screen can be to narrow for default width of dateTimeRange
   await tester.binding.setSurfaceSize(Size(1000, 1000));
@@ -32,18 +37,16 @@ Future<TestSingleForm> prepDateTimeRangeTest(
   await prepareWidget(
     tester,
     (context) => TestSingleForm(
-      key: globalKey,
-      widgetMaker: (BuildContext context, FormManager formManager) => Expanded(
+      widgetBuilder: (context, formManager) => Expanded(
         child: DateTimeInputs.dateTimeRange(
+          localizations: BricksLocalizations.of(context),
           context: context,
           rangeId: rangeId,
+          formManager: formManager,
           label: "Deadline range",
           labelPosition: LabelPosition.topLeft,
           currentDate: CurrentDate(),
-          dateTimeLimits: dateTimeLimits,
-          formManager: formManager,
-          maxRangeSpanDays: maxRangeSpanDays,
-          minRangeSpanMinutes: minRangeSpanMinutes,
+          dateTimeLimits: dateTimeRangeSpan: dateTimeRangeSpan,
         ),
       ),
     ),
@@ -62,8 +65,9 @@ Future<bool> testDateTimeRangeValidator(
   String? actual, expected;
   bool passedOk = true;
   String dateStart, timeStart, dateEnd, timeEnd;
-  var formManager = form.formManager as SingleFormManager;
-  var errorFieldFinder = find.byKey(Key(form.errorKeyString));
+  final formState = tester.state<TestSingleFormState>(find.byType(TestSingleForm));
+  final TestFormManager formManager = formState.formManager;
+  final errorFieldFinder = find.byKey(Key(form.errorKeyString));
   Text errorField;
 
   for (var testCase in testCases) {

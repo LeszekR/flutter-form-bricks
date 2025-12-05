@@ -1,75 +1,78 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
-
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/form_fields/date_time/components/date_time_limits.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/date_time_inputs.dart';
-import 'package:flutter_form_bricks/src/form_fields/labelled_box/label_position.dart';
+import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
-import '../../../date_time_test_data.dart';
+import '../../../../test_implementations/test_form_manager.dart';
+import '../../../tools/date_time_test_data.dart';
 import 'utils/dateTime_test_utils.dart';
 
 void main() {
-  const timeName = 'time_input_test';
+  const timeFieldKeyString = 'time_input_test';
 
-  DateTimeLimits datTimLim = DateTimeLimits(minDateTime: DateTime(2014), maxDateTime: DateTime(2026));
-  int yearMaxBack = datTimLim.minDateTime!.year;
-  int yearMaxForward = datTimLim.maxDateTime!.year;
+  DateTimeLimits dateTimeLimits = DateTimeLimits(minDateTime: DateTime(2014), maxDateTime: DateTime(2026));
+  final String yearMaxBack = dateTimeLimits.minDateTime!.year.toString();
+  final String yearMaxForward = dateTimeLimits.maxDateTime!.year.toString();
 
   testWidgets('TIME - should refuse to parse when bad character', (WidgetTester tester) async {
-    final List<DateTimeTestData> testCases = [
-      DateTimeTestData(datTimLim, "01*01", "01*01", false, ''),
-      DateTimeTestData(datTimLim, "20+", "20+", false, ''),
-      DateTimeTestData(datTimLim, "20ABCD", "20ABCD", false, ''),
-      DateTimeTestData(datTimLim, "20>20", "20>20", false, ''),
-      DateTimeTestData(datTimLim, "20_20", "20_20", false, ''),
-      DateTimeTestData(datTimLim, "20-a", "20-a", false, ''),
-      DateTimeTestData(datTimLim, "20-@", "20-@", false, ''),
+    final List<DateTimeTestCase> testCases = [
+      DateTimeTestCase("01*01", "01*01", false, ''),
+      DateTimeTestCase("20+", "20+", false, ''),
+      DateTimeTestCase("20ABCD", "20ABCD", false, ''),
+      DateTimeTestCase("20>20", "20>20", false, ''),
+      DateTimeTestCase("20_20", "20_20", false, ''),
+      DateTimeTestCase("20-a", "20-a", false, ''),
+      DateTimeTestCase("20-@", "20-@", false, ''),
     ];
-    var formManager = SingleFormManager();
-    testAction<String>(String text) => verifyTime(formManager.formKey.currentState!.fields[timeName]?.valueParsed);
-    makeWidgetFunction(BuildContext context) => makeTextFieldTime(context, timeName, formManager);
+    final formManager = TestFormManager.testDefault();
+    // var formManager = SingleFormManager();
+    testAction<String>(String text) => (formManager.getFieldValue(timeFieldKeyString) as TextEditingValue).text;
+    // testAction<String>(String text) => formManager.formKey.currentState!.fields[dateName]?.valueParsed;
+    makeWidgetFunction(BuildContext context) => makeTextFieldTime(context, timeFieldKeyString, formManager);
     await testAllCasesInTextField(tester, makeWidgetFunction, formManager, testCases, testAction);
   });
 
   testWidgets('TIME - Should refuse to parse when bad string', (WidgetTester tester) async {
-    final List<DateTimeTestData> testCases = [
-      DateTimeTestData(datTimLim, "25:14", "25:14", false, ''),
-      DateTimeTestData(datTimLim, "00:70", "00:70", false, ''),
-      DateTimeTestData(datTimLim, "23:539", "23:539", false, ''),
-      DateTimeTestData(datTimLim, "225:14", "25:14 ", false, ''),
-      DateTimeTestData(datTimLim, " 03330:70", "00:70", false, ''),
-      DateTimeTestData(datTimLim, "2315 :539", "23:539", false, ''),
+    final List<DateTimeTestCase> testCases = [
+      DateTimeTestCase("25:14", "25:14", false, ''),
+      DateTimeTestCase("00:70", "00:70", false, ''),
+      DateTimeTestCase("23:539", "23:539", false, ''),
+      DateTimeTestCase("225:14", "25:14 ", false, ''),
+      DateTimeTestCase(" 03330:70", "00:70", false, ''),
+      DateTimeTestCase("2315 :539", "23:539", false, ''),
     ];
-    var formManager = SingleFormManager();
-    testAction<String>(String text) => verifyTime(formManager.formKey.currentState!.fields[timeName]?.valueParsed);
-    makeWidgetFunction(BuildContext context) => makeTextFieldTime(context, timeName, formManager);
+    final formManager = TestFormManager.testDefault();
+    // var formManager = SingleFormManager();
+    testAction<String>(String text) => (formManager.getFieldValue(timeFieldKeyString) as TextEditingValue).text;
+    // testAction<String>(String text) => formManager.formKey.currentState!.fields[dateName]?.valueParsed;
+    makeWidgetFunction(BuildContext context) => makeTextFieldTime(context, timeFieldKeyString, formManager);
     await testAllCasesInTextField(tester, makeWidgetFunction, formManager, testCases, testAction);
   });
 
   testWidgets('TIME - Should validate time', (WidgetTester tester) async {
-    final List<DateTimeTestData> testCases = [
-      DateTimeTestData(datTimLim, "01 01", "01:01", true, ''),
-      DateTimeTestData(datTimLim, "21:14", "21:14", true, ''),
-      DateTimeTestData(datTimLim, "00:00", "00:00", true, ''),
-      DateTimeTestData(datTimLim, "23:59", "23:59", true, ''),
+    final List<DateTimeTestCase> testCases = [
+      DateTimeTestCase("01 01", "01:01", true, ''),
+      DateTimeTestCase("21:14", "21:14", true, ''),
+      DateTimeTestCase("00:00", "00:00", true, ''),
+      DateTimeTestCase("23:59", "23:59", true, ''),
       // --------------------------------------------
-      DateTimeTestData(datTimLim, "1:14", "01:14", true, ''),
-      DateTimeTestData(datTimLim, "0/0", "00:00", true, ''),
-      DateTimeTestData(datTimLim, "2359", "23:59", true, ''),
+      DateTimeTestCase("1:14", "01:14", true, ''),
+      DateTimeTestCase("0/0", "00:00", true, ''),
+      DateTimeTestCase("2359", "23:59", true, ''),
     ];
-    var formManager = SingleFormManager();
-    testAction<String>(String text) => verifyTime(formManager.formKey.currentState!.fields[timeName]?.valueParsed);
-    makeWidgetFunction(BuildContext context) => makeTextFieldTime(context, timeName, formManager);
+    final formManager = TestFormManager.testDefault();
+    // var formManager = SingleFormManager();
+    testAction<String>(String text) => (formManager.getFieldValue(timeFieldKeyString) as TextEditingValue).text;
+    // testAction<String>(String text) => formManager.formKey.currentState!.fields[dateName]?.valueParsed;
+    makeWidgetFunction(BuildContext context) => makeTextFieldTime(context, timeFieldKeyString, formManager);
     await testAllCasesInTextField(tester, makeWidgetFunction, formManager, testCases, testAction);
   });
 }
 
 Widget makeTextFieldTime(BuildContext context, String timeName, FormManager formManager) {
   return DateTimeInputs.time(
+    localizations: BricksLocalizations.of(context),
     context: context,
     keyString: timeName,
     label: timeName,

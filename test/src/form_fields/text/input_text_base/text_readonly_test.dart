@@ -4,6 +4,7 @@ import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_for
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../../test_implementations/test_form_manager.dart';
 import '../../../tools/test_utils.dart';
 
 void main() {
@@ -19,7 +20,7 @@ void main() {
         label: 'Test Input',
         autovalidateMode: AutovalidateMode.onUserInteraction,
         labelPosition: LabelPosition.topLeft,
-        formManager: SingleFormManager(),
+        formManager: TestFormManager.testDefault(),
         readonly: true,
       ),
     );
@@ -43,7 +44,7 @@ void main() {
         label: 'Test Input',
         autovalidateMode: AutovalidateMode.onUserInteraction,
         labelPosition: LabelPosition.topLeft,
-        formManager: SingleFormManager(),
+        formManager: TestFormManager.testDefault(),
         readonly: false,
       ),
     );

@@ -10,7 +10,7 @@ abstract class ATestDateTimeFormatter {
 }
 
 abstract class ATestDateFormatter {
-  DateFieldContent makeDateTime(
+  DateFieldContent makeDate(
     BricksLocalizations localizations,
     String fieldKeyString,
     String inputString,
@@ -18,7 +18,7 @@ abstract class ATestDateFormatter {
 }
 
 abstract class ATestTimeFormatter {
-  TimeFieldContent makeDateTime(
+  TimeFieldContent makeTime(
     BricksLocalizations localizations,
     String fieldKeyString,
     String inputString,

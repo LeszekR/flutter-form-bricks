@@ -11,7 +11,7 @@ import 'dateTime_test_utils.dart';
 
 bool testDateTimeFormatter(
   BricksLocalizations localizations,
-  List<DateTimeTestData> testCases,
+  List<DateTimeTestCase> testCases,
   ATestDateTimeFormatter testDateTimeFormatter, {
   String? delimitersPattern,
   String? placeholder,
@@ -22,7 +22,7 @@ bool testDateTimeFormatter(
   bool passedOk = true;
 
   if (delimitersPattern == null) {
-    for (DateTimeTestData testCase in testCases) {
+    for (DateTimeTestCase testCase in testCases) {
       passedOk &= assertSingleCaseDateTimeFormatter(
         localizations,
         testCase,
@@ -30,7 +30,7 @@ bool testDateTimeFormatter(
       );
     }
   } else {
-    for (DateTimeTestData testCase in testCases) {
+    for (DateTimeTestCase testCase in testCases) {
       for (String delimiter in extractDelimitersList(delimitersPattern)) {
         passedOk &= assertSingleCaseDateTimeFormatter(
           localizations,
@@ -47,7 +47,7 @@ bool testDateTimeFormatter(
 
 bool assertSingleCaseDateTimeFormatter(
   BricksLocalizations localizations,
-  DateTimeTestData testCase,
+  DateTimeTestCase testCase,
   ATestDateTimeFormatter testDateTimeFormatter, {
   String? delimiter,
   String? placeholder,
@@ -55,15 +55,16 @@ bool assertSingleCaseDateTimeFormatter(
   assert((delimiter == null) == (placeholder == null),
       "Both must be either null or not-null: delimitersList and placeholder");
 
-  String input = (placeholder == null) ? testCase.input : (testCase.input.replaceAll(RegExp(placeholder), delimiter));
-  DateTimeFieldContent result = testDateTimeFormatter.makeDateTime(localizations, input, testCase.input);
   String? errors;
+  String input = (placeholder == null) ? testCase.input : (testCase.input.replaceAll(RegExp(placeholder), delimiter!));
+
+  DateTimeFieldContent result = testDateTimeFormatter.makeDateTime(localizations, input, testCase.input);
 
   var actual = (placeholder == null)
-      ? testCase.expectedValue
-      : (testCase.expectedValue.replaceAll(RegExp(placeholder), delimiter));
+      ? testCase.expectedValueText
+      : (testCase.expectedValueText.replaceAll(RegExp(placeholder), delimiter!));
   errors = tryExpect(input, result.input, actual, errors, 'parsedString');
-  errors = tryExpect(input, result.error, testCase.expectedErrorMessage, errors, 'errorMessage');
+  errors = tryExpect(input, result.error, testCase.expectedError, errors, 'errorMessage');
   errors = tryExpect(input, result.isValid, testCase.expectedIsValid, errors, 'isStringValid');
 
   if (errors != null) debugPrint("test failed: input $input $errors");
@@ -85,7 +86,7 @@ class TestDateFormatter implements ATestDateFormatter {
   TestDateFormatter(this.dateFormatter);
 
   @override
-  DateFieldContent makeDateTime(
+  DateFieldContent makeDate(
     BricksLocalizations localizations,
     String fieldKeyString,
     String inputString,
@@ -100,7 +101,7 @@ class TestTimeFormatter implements ATestTimeFormatter {
   TestTimeFormatter(this.timeFormatter);
 
   @override
-  TimeFieldContent makeDateTime(
+  TimeFieldContent makeTime(
     BricksLocalizations localizations,
     String fieldKeyString,
     String inputString,
@@ -109,12 +110,12 @@ class TestTimeFormatter implements ATestTimeFormatter {
   }
 }
 
-class TestDateTimeFormatter implements ATestDateTimeFormatter {
+class TestDateTimeFormatter /*implements ATestDateTimeFormatter*/ {
   final DateTimeFormatterValidator dateTimeFormatter;
 
   TestDateTimeFormatter(this.dateTimeFormatter);
 
-  @override
+  /*@override*/
   DateTimeFieldContent makeDateTime(
     BricksLocalizations localizations,
     String fieldKeyString,

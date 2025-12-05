@@ -8,6 +8,7 @@ import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../../../test_implementations/test_form_manager.dart';
 import '../../../../tools/date_time_test_data.dart';
 import '../../../../tools/test_utils.dart';
 import 'a_test_dateTime_formatter.dart';
@@ -15,14 +16,14 @@ import 'a_test_dateTime_formatter.dart';
 Future<BricksLocalizations> getLocalizations() => BricksLocalizations.delegate.load(Locale('en'));
 
 Future<bool> testDateTimeExcelStyleInput(
-  List<DateTimeTestData> testCases,
+  List<DateTimeTestCase> testCases,
   tester,
   formKey,
   dynamic Function<String>(String text) testAction,
 ) async {
   bool passedOk = true;
 
-  for (DateTimeTestData testCase in testCases) {
+  for (DateTimeTestCase testCase in testCases) {
     //when
     var textInput = testCase.input;
     await tester.enterText(find.byType(FormBuilderTextField), textInput);
@@ -33,8 +34,8 @@ Future<bool> testDateTimeExcelStyleInput(
     //then
     final dynamic actual = testAction.call(textInput);
 
-    passedOk &= (actual == testCase.expectedValue) == (testCase.expectedIsValid);
-    if (!passedOk) debugPrint(makErrorString(testCase.input, testCase.input, actual, testCase.expectedValue));
+    passedOk &= (actual == testCase.expectedValueText) == (testCase.expectedIsValid);
+    if (!passedOk) debugPrint(makErrorString(testCase.input, testCase.input, actual, testCase.expectedValueText));
   }
   return Future.value(passedOk);
 }
@@ -44,8 +45,8 @@ typedef MakeWidgetFunction = Widget Function(BuildContext context);
 Future<void> testAllCasesInTextField(
   WidgetTester tester,
   MakeWidgetFunction makeTextField,
-  SingleFormManager formManager,
-  List<DateTimeTestData> testCases,
+  TestFormManager formManager,
+  List<DateTimeTestCase> testCases,
   Function<String>(String text) testAction,
 ) async {
   final BuildContext context = await pumpAppGetContext(tester);

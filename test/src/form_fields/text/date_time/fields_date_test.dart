@@ -1,81 +1,84 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
-
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../../mocks.mocks.dart';
-import '../../../date_time_test_data.dart';
+import '../../../../test_implementations/test_form_manager.dart';
+import '../../../tools/date_time_test_data.dart';
 import 'utils/dateTime_test_utils.dart';
 
 void main() {
-  const dateName = 'date_input_test';
+  const dateFieldKeyString = 'date_input_test';
 
   final today = DateTime.now();
   final todayAsString = Date.dateFormat.format(today);
   final mockCurrentDate = MockCurrentDate();
   when(mockCurrentDate.getDateNow()).thenReturn(today);
 
-  var datTimLim = DateTimeLimits(minDateTime: DateTime(2014), maxDateTime: DateTime(2026));
-  var yearMaxBack = datTimLim.minDateTime!.year;
-  var yearMaxForward = datTimLim.maxDateTime!.year;
+  var dateTimeLimits = DateTimeLimits(minDateTime: DateTime(2014), maxDateTime: DateTime(2026));
+  final String yearMaxBack = dateTimeLimits.minDateTime!.year.toString();
+  final String yearMaxForward = dateTimeLimits.maxDateTime!.year.toString();
 
   testWidgets('DATE - refuses to parse with invalid characters', (WidgetTester tester) async {
-    final List<DateTimeTestData> testCases = [
-      DateTimeTestData(datTimLim, "01 01", "${today.year}-01-01", true, ''),
-      DateTimeTestData(datTimLim, "20/20", "${today.year}-20-20", true, ''),
-      DateTimeTestData(datTimLim, "20-20", "${today.year}-20-20", true, ''),
-      DateTimeTestData(datTimLim, "20", "20", true, ''),
-      DateTimeTestData(datTimLim, "20ABCD", "20ABCD", true, ''),
-      DateTimeTestData(datTimLim, "20-a", "20-a", true, ''),
-      DateTimeTestData(datTimLim, "20-@", "20-@", true, ''),
+    final List<DateTimeTestCase> testCases = [
+      DateTimeTestCase("01 01", "${today.year}-01-01", true, ''),
+      DateTimeTestCase("20/20", "${today.year}-20-20", true, ''),
+      DateTimeTestCase("20-20", "${today.year}-20-20", true, ''),
+      DateTimeTestCase("20", "20", true, ''),
+      DateTimeTestCase("20ABCD", "20ABCD", true, ''),
+      DateTimeTestCase("20-a", "20-a", true, ''),
+      DateTimeTestCase("20-@", "20-@", true, ''),
       // -----------------------
-      DateTimeTestData(datTimLim, todayAsString.replaceAll("-", " "), todayAsString, true, ''),
-      DateTimeTestData(datTimLim, todayAsString, todayAsString, true, ''),
+      DateTimeTestCase(todayAsString.replaceAll("-", " "), todayAsString, true, ''),
+      DateTimeTestCase(todayAsString, todayAsString, true, ''),
       // -----------------------
-      DateTimeTestData(datTimLim, "20ABCD", "20", false, ''),
-      DateTimeTestData(datTimLim, "20-a", "20-", false, ''),
-      DateTimeTestData(datTimLim, "20-@", "20-", false, ''),
+      DateTimeTestCase("20ABCD", "20", false, ''),
+      DateTimeTestCase("20-a", "20-", false, ''),
+      DateTimeTestCase("20-@", "20-", false, ''),
     ];
-    var formManager = SingleFormManager();
-    testAction<String>(String text) => formManager.formKey.currentState!.fields[dateName]?.valueParsed;
-    makeWidgetFunction(context) => makeTextFieldDate(context, dateName, formManager, mockCurrentDate, datTimLim);
+    final formManager = TestFormManager.testDefault();
+    testAction<String>(String text) => (formManager.getFieldValue(dateFieldKeyString) as TextEditingValue).text;
+    // testAction<String>(String text) => formManager.formKey.currentState!.fields[dateFieldKeyString]?.valueParsed;
+    makeWidgetFunction(context) => makeTextFieldDate(context, dateFieldKeyString, formManager, mockCurrentDate, dateTimeLimits);
     await testAllCasesInTextField(tester, makeWidgetFunction, formManager, testCases, testAction);
   });
 
   testWidgets('DATE - Should validate dates', (WidgetTester tester) async {
-    final List<DateTimeTestData> testCases = [
-      DateTimeTestData(datTimLim, "01 01", "${today.year}-01-01", true, ''),
-      DateTimeTestData(datTimLim, "20/20", "${today.year}-20-20", false, ''),
-      DateTimeTestData(datTimLim, "20-20", "${today.year}-20-20", false, ''),
-      DateTimeTestData(datTimLim, "20", "20", false, ''),
-      DateTimeTestData(datTimLim, "20ABCD", "20ABCD", false, ''),
-      DateTimeTestData(datTimLim, "20-a", "20-a", false, ''),
-      DateTimeTestData(datTimLim, "20-@", "20-@", false, ''),
+    final List<DateTimeTestCase> testCases = [
+      DateTimeTestCase("01 01", "${today.year}-01-01", true, ''),
+      DateTimeTestCase("20/20", "${today.year}-20-20", false, ''),
+      DateTimeTestCase("20-20", "${today.year}-20-20", false, ''),
+      DateTimeTestCase("20", "20", false, ''),
+      DateTimeTestCase("20ABCD", "20ABCD", false, ''),
+      DateTimeTestCase("20-a", "20-a", false, ''),
+      DateTimeTestCase("20-@", "20-@", false, ''),
     ];
-    var formManager = SingleFormManager();
-    testAction<String>(text) => verifyDate(formManager.formKey.currentState!.fields[dateName]?.valueParsed);
-    makeWidgetFunction(context) => makeTextFieldDate(context, dateName, formManager, mockCurrentDate, datTimLim);
+    final formManager = TestFormManager.testDefault();
+    // var formManager = SingleFormManager();
+    testAction<String>(String text) => (formManager.getFieldValue(dateFieldKeyString) as TextEditingValue).text;
+    // testAction<String>(String text) => formManager.formKey.currentState!.fields[dateFieldKeyString]?.valueParsed;
+    makeWidgetFunction(context) => makeTextFieldDate(context, dateFieldKeyString, formManager, mockCurrentDate, dateTimeLimits);
     await testAllCasesInTextField(tester, makeWidgetFunction, formManager, testCases, testAction);
   });
 
   testWidgets('DATE - Should perform quick date formatting', (WidgetTester tester) async {
-    final List<DateTimeTestData> testCases = [
-      DateTimeTestData(datTimLim, "01 01", "${today.year}-01-01", true, ''),
-      DateTimeTestData(datTimLim, "1 1", "${today.year}-01-01", true, ''),
-      DateTimeTestData(datTimLim, "1/15", "${today.year}-01-15", true, ''),
-      DateTimeTestData(datTimLim, "${today.year} 01 01", "${today.year}-01-01", true, ''),
-      DateTimeTestData(datTimLim, "${today.year}-5-05", "${today.year}-05-05", true, ''),
-      DateTimeTestData(datTimLim, "30/12-4", "2030-12-04", true, ''),
-      DateTimeTestData(datTimLim, "0101", "${today.year}-01-01", true, ''),
+    final List<DateTimeTestCase> testCases = [
+      DateTimeTestCase("01 01", "${today.year}-01-01", true, ''),
+      DateTimeTestCase("1 1", "${today.year}-01-01", true, ''),
+      DateTimeTestCase("1/15", "${today.year}-01-15", true, ''),
+      DateTimeTestCase("${today.year} 01 01", "${today.year}-01-01", true, ''),
+      DateTimeTestCase("${today.year}-5-05", "${today.year}-05-05", true, ''),
+      DateTimeTestCase("30/12-4", "2030-12-04", true, ''),
+      DateTimeTestCase("0101", "${today.year}-01-01", true, ''),
     ];
-    var formManager = SingleFormManager();
-    testAction<String>(String text) => formManager.formKey.currentState!.fields[dateName]?.valueParsed;
-    makeWidgetFunction(context) => makeTextFieldDate(context, dateName, formManager, mockCurrentDate, datTimLim);
-    // makeWidgetFunction() => makeTextFieldDate(dateName, formManager);
+    final formManager = TestFormManager.testDefault();
+    // var formManager = SingleFormManager();
+    testAction<String>(String text) => (formManager.getFieldValue(dateFieldKeyString) as TextEditingValue).text;
+    // testAction<String>(String text) => formManager.formKey.currentState!.fields[dateFieldKeyString]?.valueParsed;
+    makeWidgetFunction(context) => makeTextFieldDate(context, dateFieldKeyString, formManager, mockCurrentDate, dateTimeLimits);
+    // makeWidgetFunction() => makeTextFieldDate(dateFieldKeyString, formManager);
     await testAllCasesInTextField(tester, makeWidgetFunction, formManager, testCases, testAction);
   });
 }
@@ -88,6 +91,7 @@ Widget makeTextFieldDate(
   DateTimeLimits dateTimeLimits,
 ) {
   return DateTimeInputs.date(
+    localizations: BricksLocalizations.of(context),
     context: context,
     keyString: dateName,
     label: dateName,
