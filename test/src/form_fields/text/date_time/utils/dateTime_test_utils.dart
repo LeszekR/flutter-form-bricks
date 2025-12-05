@@ -1,9 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
-import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/dateTime_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/time_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,7 +6,6 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../../../test_implementations/test_form_manager.dart';
 import '../../../../tools/date_time_test_data.dart';
 import '../../../../tools/test_utils.dart';
-import 'a_test_dateTime_formatter.dart';
 
 Future<BricksLocalizations> getLocalizations() => BricksLocalizations.delegate.load(Locale('en'));
 
@@ -44,13 +38,13 @@ typedef MakeWidgetFunction = Widget Function(BuildContext context);
 
 Future<void> testAllCasesInTextField(
   WidgetTester tester,
-  MakeWidgetFunction makeTextField,
+  MakeWidgetFunction widgetMaker,
   TestFormManager formManager,
   List<DateTimeTestCase> testCases,
   Function<String>(String text) testAction,
 ) async {
-  final BuildContext context = await pumpAppGetContext(tester);
-  Widget textField = makeTextField(context);
+  // TU PRZERWAŁEM - simplify this duplicated prepareWidget call here
+  Widget textField = (await prepareWidget(tester, widgetMaker))!;
   await prepareSimpleForm(tester, textField);
   await testDateTimeExcelStyleInput(testCases, tester, formManager.formKey, testAction)
       .then((value) => expect(value, true));
@@ -75,4 +69,3 @@ String makErrorString(String testCaseTitle, String input, dynamic actual, dynami
 String addEndLines(String errorMessage) {
   return errorMessage.replaceAll(RegExp('\n'), '\n\t\t\t\t  ');
 }
-

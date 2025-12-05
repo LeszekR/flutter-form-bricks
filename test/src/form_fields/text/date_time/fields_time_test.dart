@@ -70,7 +70,11 @@ void main() {
   });
 }
 
-Widget makeTextFieldTime(BuildContext context, String timeName, FormManager formManager) {
+Widget makeTextFieldTime(
+  BuildContext context,
+  String timeName,
+  FormManager formManager,
+) {
   return DateTimeInputs.time(
     localizations: BricksLocalizations.of(context),
     context: context,

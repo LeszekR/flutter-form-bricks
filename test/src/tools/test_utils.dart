@@ -21,11 +21,12 @@ void loadGlobalConfigurationForTests() async {
   WidgetsFlutterBinding.ensureInitialized();
 }
 
-Future<void> prepareWidget(
+Future<Widget?> prepareWidget(
   WidgetTester tester, [
   Widget? Function(BuildContext)? widgetMaker,
   String language = "pl",
 ]) async {
+  Widget? widget;
   await tester.pumpWidget(
     UiParams(
       data: UiParamsData(),
@@ -36,14 +37,15 @@ Future<void> prepareWidget(
         locale: Locale(language),
         home: Builder(
           builder: (BuildContext context) {
-            return Scaffold(body: widgetMaker == null ? null : widgetMaker(context));
+            widget = widgetMaker == null ? null : widgetMaker(context);
+            return Scaffold(body: widget);
           },
         ),
       ),
     ),
   );
-
   await tester.pumpAndSettle();
+  return widget;
 }
 
 Future<BricksLocalizations> prepareLocalizations(WidgetTester tester) async {
@@ -53,11 +55,13 @@ Future<BricksLocalizations> prepareLocalizations(WidgetTester tester) async {
       localizationsDelegates: BricksLocalizations.localizationsDelegates,
       supportedLocales: BricksLocalizations.supportedLocales,
       locale: Locale('pl'),
-      home: Builder(
-        builder: (BuildContext context) {
-          localizations = BricksLocalizations.of(context);
-          return SizedBox();
-        },
+      home: Scaffold(
+        body: Builder(
+          builder: (BuildContext context) {
+            localizations = BricksLocalizations.of(context);
+            return SizedBox();
+          },
+        ),
       ),
     ),
   );
@@ -111,7 +115,7 @@ Widget makeRequiredMin3CharsTextField(
   BuildContext context,
   String keyString,
   String label,
-  TestFormManager  formManager, {
+  TestFormManager formManager, {
   bool? withTextEditingController,
   String? initialValue,
 }) {
