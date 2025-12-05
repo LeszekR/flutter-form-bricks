@@ -206,13 +206,13 @@ class DateFormatterValidator extends FormatterValidator<String, Date> {
         DateTime? minDate = dateLimits.minDateTime;
         if (minDate != null) {
           if (parsedDate.dateTime.compareTo(minDate) < 0) {
-            errLimit = localizations.dateErrorTooFarBack(_dateTimeUtils.formatDate(minDate, "yMd"));
+            errLimit = localizations.dateErrorTooFarBack(_dateTimeUtils.formatDate(minDate, 'yyyy-MM-dd'));
           }
         }
         DateTime? maxDate = dateLimits.maxDateTime;
         if (maxDate != null) {
           if (parsedDate.dateTime.compareTo(maxDate) > 0) {
-            errLimit = localizations.dateErrorTooFarForward(_dateTimeUtils.formatDate(maxDate, "yMd"));
+            errLimit = localizations.dateErrorTooFarForward(_dateTimeUtils.formatDate(maxDate, 'yyyy-MM-dd'));
           }
         }
       }
