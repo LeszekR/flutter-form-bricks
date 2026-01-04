@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../../test_implementations/test_form_manager.dart';
+import '../../../../../test_implementations/test_single_form.dart';
 import '../../../../tools/date_time_test_data.dart';
 import '../../../../tools/test_utils.dart';
 
@@ -34,18 +35,15 @@ Future<bool> testDateTimeExcelStyleInput(
   return Future.value(passedOk);
 }
 
-typedef MakeWidgetFunction = Widget Function(BuildContext context);
-
 Future<void> testAllCasesInTextField(
   WidgetTester tester,
-  MakeWidgetFunction widgetMaker,
+  TestWidgetBuilder widgetBuilder,
   TestFormManager formManager,
   List<DateTimeTestCase> testCases,
   Function<String>(String text) testAction,
 ) async {
   // TU PRZERWAŁEM - simplify this duplicated prepareWidget call here
-  Widget textField = (await prepareWidget(tester, widgetMaker))!;
-  await prepareSimpleForm(tester, textField);
+  await prepareTestSingleForm(tester, widgetBuilder);
   await testDateTimeExcelStyleInput(testCases, tester, formManager.formKey, testAction)
       .then((value) => expect(value, true));
 }

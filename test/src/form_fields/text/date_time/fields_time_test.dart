@@ -12,8 +12,6 @@ void main() {
   const timeFieldKeyString = 'time_input_test';
 
   DateTimeLimits dateTimeLimits = DateTimeLimits(minDateTime: DateTime(2014), maxDateTime: DateTime(2026));
-  final String yearMaxBack = dateTimeLimits.minDateTime!.year.toString();
-  final String yearMaxForward = dateTimeLimits.maxDateTime!.year.toString();
 
   testWidgets('TIME - should refuse to parse when bad character', (WidgetTester tester) async {
     final List<DateTimeTestCase> testCases = [
@@ -26,10 +24,8 @@ void main() {
       DateTimeTestCase("20-@", "20-@", false, ''),
     ];
     final formManager = TestFormManager.testDefault();
-    // var formManager = SingleFormManager();
     testAction<String>(String text) => (formManager.getFieldValue(timeFieldKeyString) as TextEditingValue).text;
-    // testAction<String>(String text) => formManager.formKey.currentState!.fields[dateName]?.valueParsed;
-    makeWidgetFunction(BuildContext context) => makeTextFieldTime(context, timeFieldKeyString, formManager);
+    makeWidgetFunction(context, formManager) => makeTextFieldTime(context, timeFieldKeyString, formManager);
     await testAllCasesInTextField(tester, makeWidgetFunction, formManager, testCases, testAction);
   });
 
@@ -43,10 +39,8 @@ void main() {
       DateTimeTestCase("2315 :539", "23:539", false, ''),
     ];
     final formManager = TestFormManager.testDefault();
-    // var formManager = SingleFormManager();
     testAction<String>(String text) => (formManager.getFieldValue(timeFieldKeyString) as TextEditingValue).text;
-    // testAction<String>(String text) => formManager.formKey.currentState!.fields[dateName]?.valueParsed;
-    makeWidgetFunction(BuildContext context) => makeTextFieldTime(context, timeFieldKeyString, formManager);
+    makeWidgetFunction(context, formManager) => makeTextFieldTime(context, timeFieldKeyString, formManager);
     await testAllCasesInTextField(tester, makeWidgetFunction, formManager, testCases, testAction);
   });
 
@@ -62,10 +56,8 @@ void main() {
       DateTimeTestCase("2359", "23:59", true, ''),
     ];
     final formManager = TestFormManager.testDefault();
-    // var formManager = SingleFormManager();
     testAction<String>(String text) => (formManager.getFieldValue(timeFieldKeyString) as TextEditingValue).text;
-    // testAction<String>(String text) => formManager.formKey.currentState!.fields[dateName]?.valueParsed;
-    makeWidgetFunction(BuildContext context) => makeTextFieldTime(context, timeFieldKeyString, formManager);
+    makeWidgetFunction(context, formManager) => makeTextFieldTime(context, timeFieldKeyString, formManager);
     await testAllCasesInTextField(tester, makeWidgetFunction, formManager, testCases, testAction);
   });
 }

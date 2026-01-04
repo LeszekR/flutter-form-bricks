@@ -41,7 +41,8 @@ void main() {
     final formManager = TestFormManager.testDefault();
     testAction<String>(String text) => (formManager.getFieldValue(dateFieldKeyString) as TextEditingValue).text;
     // testAction<String>(String text) => formManager.formKey.currentState!.fields[dateFieldKeyString]?.valueParsed;
-    makeWidgetFunction(context) => makeTextFieldDate(context, dateFieldKeyString, formManager, mockCurrentDate, dateTimeLimits);
+    makeWidgetFunction(context, formManager) =>
+        makeTextFieldDate(context, formManager, dateFieldKeyString, mockCurrentDate, dateTimeLimits);
     await testAllCasesInTextField(tester, makeWidgetFunction, formManager, testCases, testAction);
   });
 
@@ -59,7 +60,8 @@ void main() {
     // var formManager = SingleFormManager();
     testAction<String>(String text) => (formManager.getFieldValue(dateFieldKeyString) as TextEditingValue).text;
     // testAction<String>(String text) => formManager.formKey.currentState!.fields[dateFieldKeyString]?.valueParsed;
-    makeWidgetFunction(context) => makeTextFieldDate(context, dateFieldKeyString, formManager, mockCurrentDate, dateTimeLimits);
+    makeWidgetFunction(context, formManager) =>
+        makeTextFieldDate(context, formManager, dateFieldKeyString, mockCurrentDate, dateTimeLimits);
     await testAllCasesInTextField(tester, makeWidgetFunction, formManager, testCases, testAction);
   });
 
@@ -74,19 +76,17 @@ void main() {
       DateTimeTestCase("0101", "${today.year}-01-01", true, ''),
     ];
     final formManager = TestFormManager.testDefault();
-    // var formManager = SingleFormManager();
     testAction<String>(String text) => (formManager.getFieldValue(dateFieldKeyString) as TextEditingValue).text;
-    // testAction<String>(String text) => formManager.formKey.currentState!.fields[dateFieldKeyString]?.valueParsed;
-    makeWidgetFunction(context) => makeTextFieldDate(context, dateFieldKeyString, formManager, mockCurrentDate, dateTimeLimits);
-    // makeWidgetFunction() => makeTextFieldDate(dateFieldKeyString, formManager);
+    makeWidgetFunction(context, formManager) =>
+        makeTextFieldDate(context, formManager, dateFieldKeyString, mockCurrentDate, dateTimeLimits);
     await testAllCasesInTextField(tester, makeWidgetFunction, formManager, testCases, testAction);
   });
 }
 
 Widget makeTextFieldDate(
   BuildContext context,
-  String dateName,
   FormManager formManager,
+  String dateName,
   CurrentDate currentDate,
   DateTimeLimits dateTimeLimits,
 ) {

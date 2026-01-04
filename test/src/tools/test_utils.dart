@@ -75,13 +75,12 @@ Future<BuildContext> pumpAppGetContext(WidgetTester tester) async {
   return context;
 }
 
-prepareSimpleForm(WidgetTester tester, Widget input) async {
-  Widget widgetToTest = TestSingleForm(widgetBuilder: (context, formManager) => input);
+Future<void> prepareTestSingleForm(WidgetTester tester, TestWidgetBuilder inputBuilder) async {
+  Widget widgetToTest = TestSingleForm(widgetBuilder: inputBuilder);
   await prepareWidget(tester, (context) => widgetToTest);
-  // formManager.fillInitialInputValuesMap();
 }
 
-prepareTabulatedForm(WidgetTester tester, TabulatedFormManager formManager, List<TabData> tabsData) async {
+Future<void> prepareTabulatedForm(WidgetTester tester, TabulatedFormManager formManager, List<TabData> tabsData) async {
   final List<FormBuilder> tabs = tabsData
       .map((tabData) => FormBuilder(
             key: tabData.globalKey,
@@ -131,7 +130,7 @@ Widget makeRequiredMin3CharsTextField(
   );
 }
 
-prepareDataForTrimmingSpacesTests(
+Future<void> prepareDataForTrimmingSpacesTests(
   BuildContext context,
   WidgetTester tester,
   SingleFormManager formManager,
@@ -158,7 +157,7 @@ prepareDataForTrimmingSpacesTests(
       formManager: formManager,
       label: 'Bulk text_formatter_validators');
 
-  await prepareSimpleForm(tester, input);
+  await prepareTestSingleForm(tester, (context, formManager) => input);
 }
 
 Future<void> enterTextAndUnfocusWidget(
@@ -172,7 +171,7 @@ Future<void> enterTextAndUnfocusWidget(
   await tester.pump();
 }
 
-prepareDataForFocusLosingTests(
+Future<void> prepareDataForFocusLosingTests(
   BuildContext context,
   WidgetTester tester,
   SingleFormManager formManager,
@@ -180,21 +179,21 @@ prepareDataForFocusLosingTests(
 ) async {
   await prepareLocalizations(tester);
   final BuildContext context = tester.element(find.byType(Scaffold));
-  await prepareSimpleForm(
+  await prepareTestSingleForm(
       tester,
-      Column(
-        children: [
-          buildTextInputForTest(context, keyString, formManager),
-          const SizedBox(key: Key("Sized box"), height: 30),
-          Container(
-            width: double.infinity,
-            height: 50,
-            color: Colors.transparent,
-            key: const Key('outside_click_area'),
-          ),
-          ElevatedButton(key: const Key("Dummy button"), onPressed: () {}, child: const Text('Dummy button'))
-        ],
-      ));
+      (context, manager) => Column(
+            children: [
+              buildTextInputForTest(context, keyString, formManager),
+              const SizedBox(key: Key("Sized box"), height: 30),
+              Container(
+                width: double.infinity,
+                height: 50,
+                color: Colors.transparent,
+                key: const Key('outside_click_area'),
+              ),
+              ElevatedButton(key: const Key("Dummy button"), onPressed: () {}, child: const Text('Dummy button'))
+            ],
+          ));
 }
 
 Widget buildTextInputForTest(BuildContext context, String keyString, SingleFormManager formManager) {
@@ -297,44 +296,3 @@ Map<String, Future<void> Function()> getInputs(WidgetTester tester) {
     }
   };
 }
-// class TestTabulatedForm extends TabulatedForm {
-//   final List<TabData> _tabsData;
-//
-//   get tabsData => _tabsData;
-//
-//   TestTabulatedForm(List<TabData> tabsData, {super.key}) : _tabsData = tabsData;
-//
-//   @override
-//   TestTabulatedFormState createState() => TestTabulatedFormState();
-// }
-//
-// class TestTabulatedFormState extends TabulatedFormState<TestTabulatedForm> {
-//   @override
-//   List<TabData> makeTabsData() {
-//     return (widget as TestTabulatedForm).tabsData;
-//   }
-//
-//   @override
-//   Entity? getEntity() => null; //TODO implement
-//
-//   @override
-//   String provideLabel() => "Przykład Tabulated Form";
-//
-//   @override
-//   void deleteEntity() => debugPrint("delete triggered.");
-//
-//   @override
-//   EntityService<Entity> getService() => throw UnimplementedError();
-//
-//   @override
-//   void removeEntityFromState() {}
-//
-//   @override
-//   void upsertEntityInState(Map<String, dynamic> responseBody) {}
-//
-//   @override
-//   void submitData() {
-//     final Map<String, dynamic> formData = formManager.collectInputData();
-//     debugPrint("save triggered. Data: $formData");
-//   }
-// }

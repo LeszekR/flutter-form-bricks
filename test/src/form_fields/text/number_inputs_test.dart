@@ -34,7 +34,7 @@ void main() {
           label: "label",
           labelPosition: LabelPosition.topLeft,
         );
-        await prepareSimpleForm(tester, input);
+        await prepareTestSingleForm(tester, input);
 
         //when
         await tester.enterText(find.byKey(const Key(key)), params.input);
@@ -68,7 +68,7 @@ void main() {
       formManager: SingleFormManager(),
     );
 
-    await prepareSimpleForm(tester, input);
+    await prepareTestSingleForm(tester, input);
 
     //when
     await tester.enterText(find.byKey(const Key(key)), '21');
