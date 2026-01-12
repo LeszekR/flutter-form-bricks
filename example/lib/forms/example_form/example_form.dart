@@ -28,15 +28,13 @@ class ExampleFormState extends FormStateBrick {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            PlainTextField(
+            DateField(
               keyString: plainTextKeyString1,
               formManager: formManager,
               colorMaker: StatesColorMaker(),
               width: 150,
               initialInput: 'Krokodyl',
-              formatterValidatorChainBuilder: () => DateTimeFormatterValidatorChain([
-                DateFormatterValidator(DateTimeUtils(), CurrentDate()),
-              ]),
+              // defaultFormatterValidatorListMaker: null,
             ),
             appSize.spacerBoxVerticalMedium,
             PlainTextField(

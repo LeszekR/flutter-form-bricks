@@ -1,7 +1,8 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/form_fields/base/formatter_validator_base/formatter_validator.dart';
+import 'package:flutter_form_bricks/src/form_fields/base/formatter_validator_base/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
 
 abstract class FormManager extends ChangeNotifier {
   @visibleForTesting
@@ -28,10 +29,11 @@ abstract class FormManager extends ChangeNotifier {
       : _formData = formData,
         _formatterValidatorChainMap = {
           for (final d in formSchema.descriptors)
-            d.keyString: d.formatterValidatorChainBuilder == null ? null : d.formatterValidatorChainBuilder!(),
+            d.keyString: FormFieldDescriptor.makeFormatterValidatorChain(d),
         } {
     _initFormData(formSchema, _formData);
   }
+
 
   // form reset
   // ==============================================================================

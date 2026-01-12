@@ -10,6 +10,7 @@ import '../../../tools/test_utils.dart';
 void main() {
   const String keyString = "first_uppercase_text_single 2";
 
+  // TU PRZERWAŁEM - refactor all text fields to Bricks and then fix the tests here
   group('Should always format first uppercase', () {
     final List<TestData> testParameters = [
       TestData("Adam Test", "Adam Test"),

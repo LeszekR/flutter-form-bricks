@@ -83,6 +83,17 @@ class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
       );
     }
 
+    String? _defaultMakerForValueType(String? valueGenericSource) {
+      switch (valueGenericSource) {
+        case 'Date':
+          return 'formatterValidatorDefaults.date';
+      // extend here for other specialized value types:
+      // case 'TimeOfDay': return 'formatterValidatorDefaults.time';
+      // case 'DateTime':  return 'formatterValidatorDefaults.dateTime';
+      }
+      return null;
+    }
+
     // 5) Emit schema.
     final descriptorEntries = allItems.map((fieldInfo) {
       final genericI = fieldInfo.inputGenericSource ?? 'Object';
@@ -91,13 +102,18 @@ class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
       final keyCode = fieldInfo.keyStringSource ?? _quote(fieldInfo.keyStringLiteral ?? fieldInfo.unknownKeyFallback);
       final initCode = fieldInfo.initialInputSource ?? 'null';
       final focusedCode = fieldInfo.isFocusedOnStartSource ?? 'null';
-      final chainCode = fieldInfo.formatValidChainBuilderSource ?? 'null';
+      // final defaultFormValid = fieldInfo.defaultFormatterValidatorListMaker ?? 'null';
+      // final addFormValid = fieldInfo.addFormatterValidatorListMaker ?? 'null';
+      final defaultMakerFromType = _defaultMakerForValueType(fieldInfo.valueGenericSource);
+      final defaultFormValid = fieldInfo.defaultFormatterValidatorListMaker ?? defaultMakerFromType ?? 'null';
+      final addFormValid = fieldInfo.addFormatterValidatorListMaker ?? 'null';
 
       return 'FormFieldDescriptor<$genericI, $genericV>('
           'keyString: $keyCode, \n'
           'initialInput: $initCode, \n'
           'isFocusedOnStart:  $focusedCode, \n'
-          'formatterValidatorChainBuilder: $chainCode,)';
+          'defaultFormatterValidatorListMaker: $defaultFormValid, \n'
+          'addFormatterValidatorListMaker: $addFormValid,)';
     }).join(',\n    ');
 
     return '''
@@ -189,9 +205,10 @@ class _FieldCollector extends RecursiveAstVisitor<void> {
     final type = _resolveConstructedInterfaceType(node);
     if (type != null && _isFormFieldBrick(type)) {
       final info = _FieldInfo.fromCreation(node);
-      final i = _extractIFromFormFieldBrick(type);
-      if (i != null) info.inputGenericSource = i;
-      info.valueGenericSource ??= 'Object';
+
+      final iv = _extractIVFromFormFieldBrick(type);
+      if (iv.$1 != null) info.inputGenericSource = iv.$1; // I
+      if (iv.$2 != null) info.valueGenericSource = iv.$2; // V
       items.add(info);
     }
     super.visitInstanceCreationExpression(node);
@@ -228,24 +245,42 @@ class _FieldCollector extends RecursiveAstVisitor<void> {
     return false;
   }
 
-  String? _extractIFromFormFieldBrick(InterfaceType t) {
-    for (final superType in [t, ...t.allSupertypes]) {
-      if (superType.element.name == 'FormFieldBrick') {
-        final args = superType.typeArguments;
-        if (args.isNotEmpty) {
-          final argFirst = args.first;
-          if (argFirst is InterfaceType) {
-            return argFirst.getDisplayString(
-              withNullability: argFirst.nullabilitySuffix != NullabilitySuffix.none,
+
+  /// Returns (I, V) from the nearest `FormFieldBrick<I, V>` supertype.
+  /// Each item may be null if it can't be resolved.
+  (String?, String?) _extractIVFromFormFieldBrick(InterfaceType t) {
+    // Search the type and all its supertypes for FormFieldBrick<I, V>
+    for (final s in <InterfaceType>[t, ...t.allSupertypes]) {
+      if (s.element.name == 'FormFieldBrick') {
+        final args = s.typeArguments;
+        if (args.length >= 2) {
+          final iArg = args[0];
+          final vArg = args[1];
+
+          String? iSrc;
+          String? vSrc;
+
+          if (iArg is InterfaceType) {
+            iSrc = iArg.getDisplayString(
+              withNullability: iArg.nullabilitySuffix != NullabilitySuffix.none,
             );
+          } else if (iArg is TypeParameterType) {
+            iSrc = iArg.getDisplayString(withNullability: true);
           }
-          if (argFirst is TypeParameterType) {
-            return argFirst.getDisplayString(withNullability: true);
+
+          if (vArg is InterfaceType) {
+            vSrc = vArg.getDisplayString(
+              withNullability: vArg.nullabilitySuffix != NullabilitySuffix.none,
+            );
+          } else if (vArg is TypeParameterType) {
+            vSrc = vArg.getDisplayString(withNullability: true);
           }
+
+          return (iSrc, vSrc);
         }
       }
     }
-    return null;
+    return (null, null);
   }
 }
 
@@ -260,7 +295,8 @@ class _FieldInfo {
   String? keyStringSource;
   String? initialInputSource;
   String? isFocusedOnStartSource;
-  String? formatValidChainBuilderSource;
+  String? defaultFormatterValidatorListMaker;
+  String? addFormatterValidatorListMaker;
 
   String? keyStringLiteral;
   bool? isFocusedOnStartLiteralBool;
@@ -283,8 +319,10 @@ class _FieldInfo {
       } else if (name == 'isFocusedOnStart') {
         info.isFocusedOnStartSource = expression.toString();
         if (expression is BooleanLiteral) info.isFocusedOnStartLiteralBool = expression.value;
-      } else if (name == 'formatterValidatorChainBuilder') {
-        info.formatValidChainBuilderSource = expression.toString();
+      } else if (name == 'defaultFormatterValidatorListMaker') {
+        info.defaultFormatterValidatorListMaker = expression.toString();
+      } else if (name == 'addFormatterValidatorListMaker') {
+        info.addFormatterValidatorListMaker = expression.toString();
       }
     }
     return info;

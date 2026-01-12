@@ -1,6 +1,6 @@
 import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/form_fields/base/formatter_validator_base/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/formatter_validators/formatter_validator.dart';
 
 abstract class FormatterValidatorChain<I extends Object, V extends Object> {
   final List<FormatterValidator<I, V>> steps;
@@ -65,7 +65,7 @@ abstract class FormatterValidatorChainEarlyStop<I extends Object, V extends Obje
   }
 }
 
-abstract class FormatterValidatorChainFullRun<I extends Object, V extends Object>
+/*abstract*/ class FormatterValidatorChainFullRun<I extends Object, V extends Object>
     extends FormatterValidatorChain<I, V> {
   FormatterValidatorChainFullRun(super.steps);
 
@@ -83,3 +83,16 @@ abstract class FormatterValidatorChainFullRun<I extends Object, V extends Object
     return resultFieldContent;
   }
 }
+
+//
+// enum FormatterValidatorChainType { earlyStop, fullRun }
+//
+// class FormatterValidatorChainDescriptor<I extends Object, V extends Object> {
+//   final FormatterValidatorChainType type;
+//   final List<FormatterValidator<I, V>> Function() stepsMaker;
+//
+//   const FormatterValidatorChainDescriptor({
+//     required this.type,
+//     required this.stepsMaker,
+//   });
+// }

@@ -23,7 +23,7 @@ class ExampleApp extends StatelessWidget {
         // localizationsDelegates: [
         //   GlobalMaterialLocalizations.delegate,
         //   GlobalWidgetsLocalizations.delegate,
-        //   GlobalCupertinoLocalizations.delegate,
+        //   GlobalmaterialLocalizations.delegate,
         // ],
         supportedLocales: [
           Locale('en'),

@@ -1,10 +1,9 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/formatter_validators/formatter_validator_chain.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/formatter_validator_defaults.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/states_color_maker.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
-
-import '../../string_literals/gen/bricks_localizations.dart';
+import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 abstract class FormFieldBrick<I extends Object, V extends Object> extends StatefulWidget {
   final String keyString;
@@ -13,7 +12,11 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
   final StatesColorMaker colorMaker;
   final I? initialInput;
   final bool isFocusedOnStart;
-  final FormatterValidatorChain Function()? formatterValidatorChainBuilder;
+  final bool isRequired;
+  final FormatterValidatorListMaker? defaultFormatterValidatorListMaker;
+  final FormatterValidatorListMaker? addFormatterValidatorListMaker;
+
+  // final FormatterValidatorChainDescriptor? formatterValidatorChainDescriptor;
   final WidgetStatesController? statesObserver;
   final WidgetStatesController? statesNotifier;
 
@@ -27,17 +30,18 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
     required this.colorMaker,
     this.initialInput,
     this.isFocusedOnStart = false,
-    this.formatterValidatorChainBuilder = null,
+    this.isRequired = false,
+    this.defaultFormatterValidatorListMaker = null,
+    this.addFormatterValidatorListMaker = null,
+    // this.formatterValidatorChainDescriptor = null,
     this.statesObserver,
     this.statesNotifier,
     this.autoValidateMode = AutovalidateMode.disabled,
-  })  : super(key: key ?? ValueKey(keyString));
+  }) : super(key: key ?? ValueKey(keyString));
 }
 
 abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends FormFieldBrick<I, V>>
     extends State<F> {
-  V getValue();
-
   Set<WidgetState>? _states;
 
   /// Object holding state of this `FormFieldBrick`. Fetched from `FormManager` prior to `build()`
@@ -57,7 +61,6 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   @override
   void initState() {
     formManager.registerField<I, V>(keyString, _hasFormatterValidator());
-
 
     focusNode = FocusNode();
     formManager.setFocusListener(focusNode, keyString);
@@ -106,7 +109,10 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
     });
   }
 
-  bool _hasFormatterValidator() => widget.formatterValidatorChainBuilder != null;
+  bool _hasFormatterValidator() =>
+      widget.defaultFormatterValidatorListMaker != null || widget.addFormatterValidatorListMaker != null;
+
+  // bool _hasFormatterValidator() => widget.formatterValidatorChainDescriptor != null;
 
   Color? makeColor() => widget.colorMaker.makeColor(context, _states);
 }

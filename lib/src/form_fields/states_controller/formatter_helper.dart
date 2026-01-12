@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class FormatterHelper {
   static final _regexToPutSpaceBetweenChars = RegExp(r'(.{3})(?!$)');

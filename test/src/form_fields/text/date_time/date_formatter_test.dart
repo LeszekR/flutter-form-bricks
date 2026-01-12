@@ -20,13 +20,10 @@ void main() {
     maxDateTime: DateTime(2024, 12, 31),
   );
   TestDateFormatter dateFormatterWithLimits =
-  TestDateFormatter(DateFormatterValidator(dateTimeInputUtils, mockCurrentDate, dateTimeLimits));
+      TestDateFormatter(DateFormatterValidator(dateTimeInputUtils, mockCurrentDate, dateTimeLimits));
 
   final String dateMaxBack = dateTimeUtils.formatDate(dateTimeLimits.minDateTime!, 'yyyy-MM-dd');
   final String dateMaxForward = dateTimeUtils.formatDate(dateTimeLimits.maxDateTime!, 'yyyy-MM-dd');
-  // final String dateMaxBack = dateTimeLimits.minDateTime!.year.toString().toString();
-  // final String dateMaxForward = dateTimeLimits.maxDateTime!.year.toString().toString();
-
 
   testWidgets('refuses to format excel-style invalid input', (WidgetTester tester) async {
     final local = await getLocalizations();
@@ -222,45 +219,38 @@ void main() {
 
     var testCases = [
       DateTimeTestCase(
-          '39/18/00',
-          '2039-18-00',
-          false,
-              local.dateErrorMonthOver12 +'\n' +
-              local.dateErrorDay0,),
+        '39/18/00',
+        '2039-18-00',
+        false,
+        local.dateErrorMonthOver12 + '\n' + local.dateErrorDay0,
+      ),
       DateTimeTestCase(
-          '01-0-80',
-          '2001-00-80',
-          false,
-              local.dateErrorMonth0 +'\n' +
-              local.dateErrorTooManyDaysInMonth,),
-      DateTimeTestCase('01-0-00',
-          '2001-00-00',
-          false,
-              local.dateErrorMonth0 + '\n' +
-              local.dateErrorDay0,),
+        '01-0-80',
+        '2001-00-80',
+        false,
+        local.dateErrorMonth0 + '\n' + local.dateErrorTooManyDaysInMonth,
+      ),
       DateTimeTestCase(
-          '01-0-31',
-          '2001-00-31',
-          false,
-              local.dateErrorMonth0,),
+        '01-0-00',
+        '2001-00-00',
+        false,
+        local.dateErrorMonth0 + '\n' + local.dateErrorDay0,
+      ),
       DateTimeTestCase(
-          '268855',
-          '2026-88-55',
-          false,
-              local.dateErrorMonthOver12 + '\n' +
-              local.dateErrorTooManyDaysInMonth),
+        '01-0-31',
+        '2001-00-31',
+        false,
+        local.dateErrorMonth0,
+      ),
       DateTimeTestCase(
-          '0000 0 0',
-          '0000-00-00',
-          false,
-              local.dateErrorMonth0 + '\n' +
-              local.dateErrorDay0),
+          '268855', '2026-88-55', false, local.dateErrorMonthOver12 + '\n' + local.dateErrorTooManyDaysInMonth),
+      DateTimeTestCase('0000 0 0', '0000-00-00', false, local.dateErrorMonth0 + '\n' + local.dateErrorDay0),
       DateTimeTestCase(
-          '558855',
-          '2055-88-55',
-          false,
-              local.dateErrorMonthOver12 + '\n' +
-              local.dateErrorTooManyDaysInMonth,),
+        '558855',
+        '2055-88-55',
+        false,
+        local.dateErrorMonthOver12 + '\n' + local.dateErrorTooManyDaysInMonth,
+      ),
     ];
     var passedOk = runDateTimeFormatterTest(local, testCases, dateFormatterWithLimits);
     expect(passedOk, true);

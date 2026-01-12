@@ -78,7 +78,7 @@ class TextInputs {
       inputWidth: inputWidth,
       initialValue: initialValue,
       readonly: readonly,
-      inputFormatters: _mergeWithDefault(inputFormatter: LowercaseFormatter()),
+      inputFormatters: null, //_mergeWithDefault(inputFormatter: LowercaseFormatter()),
       validator: validator,
       onChanged: onChanged,
       linkedFields: linkedFields,

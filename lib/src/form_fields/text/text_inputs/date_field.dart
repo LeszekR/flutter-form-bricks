@@ -1,12 +1,13 @@
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/time_stamp.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/formatter_validator_defaults.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/text_field_brick.dart';
 
-class PlainTextField extends TextFieldBrick<TextEditingValue> {
-
-  PlainTextField({
+class DateField extends TextFieldBrick<Date> {
+  DateField({
     super.key,
     //
     // FormFieldBrick
@@ -16,7 +17,7 @@ class PlainTextField extends TextFieldBrick<TextEditingValue> {
     super.initialInput,
     super.isFocusedOnStart = false,
     super.isRequired = false,
-    super.defaultFormatterValidatorListMaker = null,
+    super.addFormatterValidatorListMaker = null,
     super.statesObserver,
     super.statesNotifier,
     super.autoValidateMode = AutovalidateMode.disabled,
@@ -94,10 +95,10 @@ class PlainTextField extends TextFieldBrick<TextEditingValue> {
     super.magnifierConfiguration,
     super.buttonParams,
     super.hintLocales,
-  });
+  }) : super(defaultFormatterValidatorListMaker: () => formatterValidatorDefaults.date());
 
   @override
-  PlainTextFieldStateBrick createState() => PlainTextFieldStateBrick();
+  State<StatefulWidget> createState() => DateFieldStateBrick();
 }
 
-class PlainTextFieldStateBrick extends TextFieldStateBrick<TextEditingValue> {}
+class DateFieldStateBrick extends TextFieldStateBrick<Date> {}

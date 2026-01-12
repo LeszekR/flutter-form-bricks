@@ -13,7 +13,7 @@ import '../../../ui_params/ui_params.dart';
 import '../../base/form_field_brick.dart';
 import 'icon_button_params.dart';
 
-abstract class TextFieldBrick extends FormFieldBrick<String, TextEditingValue> {
+abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<String, V> {
 // TextFieldBrick
   final double? width;
 
@@ -98,10 +98,11 @@ abstract class TextFieldBrick extends FormFieldBrick<String, TextEditingValue> {
     required super.keyString,
     required super.formManager,
     required super.colorMaker,
-
     super.initialInput,
     super.isFocusedOnStart = false,
-    super.formatterValidatorChainBuilder = null,
+    super.isRequired = false,
+    super.defaultFormatterValidatorListMaker = null,
+    super.addFormatterValidatorListMaker = null,
     super.statesObserver,
     super.statesNotifier,
     super.autoValidateMode = AutovalidateMode.disabled,
@@ -181,15 +182,15 @@ abstract class TextFieldBrick extends FormFieldBrick<String, TextEditingValue> {
     this.hintLocales,
   });
 
-  @override
-  TextFieldStateBrick createState() => TextFieldStateBrick();
+  // @override
+  // TextFieldStateBrick createState() => TextFieldStateBrick<V>();
 }
 
-class TextFieldStateBrick extends FormFieldStateBrick<String, TextEditingValue, TextFieldBrick> {
+abstract class TextFieldStateBrick<V extends Object> extends FormFieldStateBrick<String, V, TextFieldBrick<V>> {
   late final TextEditingController controller;
 
-  @override
-  TextEditingValue getValue() => controller.value;
+  // @override
+  // V getValue() => controller.value;
 
   @override
   void initState() {

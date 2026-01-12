@@ -78,7 +78,7 @@ abstract class BricksLocalizations {
   /// delegates.
   ///
   /// Returns a list of localizations delegates containing this delegate along with
-  /// GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate,
+  /// GlobalMaterialLocalizations.delegate, GlobalmaterialLocalizations.delegate,
   /// and GlobalWidgetsLocalizations.delegate.
   ///
   /// Additional delegates can be added by appending to this list in
