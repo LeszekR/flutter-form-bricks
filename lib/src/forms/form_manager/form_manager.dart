@@ -29,7 +29,7 @@ abstract class FormManager extends ChangeNotifier {
       : _formData = formData,
         _formatterValidatorChainMap = {
           for (final d in formSchema.descriptors)
-            d.keyString: FormFieldDescriptor.makeFormatterValidatorChain(d),
+            d.keyString: d.buildChain(),
         } {
     _initFormData(formSchema, _formData);
   }

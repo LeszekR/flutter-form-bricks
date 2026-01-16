@@ -16,6 +16,9 @@ class UiParamsData {
   final AppStyle appStyle;
   final BricksThemeData appTheme;
 
+  ThemeData get themeData => appTheme.themeData;
+
+
   const UiParamsData._(
     this.appColor,
     this.appSize,

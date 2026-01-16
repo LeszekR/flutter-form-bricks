@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks_example/forms/example_form/example_form_manager.dart';
 
 part 'example_form.g.dart';
 
@@ -10,7 +11,7 @@ final String plainTextKeyString3 = 'plainTextKeyString3';
 
 @AutoFormSchema()
 class ExampleForm extends FormBrick {
-  ExampleForm({required super.formManager});
+  ExampleForm() : super(formManager: ExampleFormManager());
 
   @override
   FormStateBrick<FormBrick> createState() => ExampleFormState();
@@ -23,7 +24,7 @@ class ExampleFormState extends FormStateBrick {
 
     return Center(
       child: SizedBox(
-        // width: 200,
+        width: 400,
         height: 300,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

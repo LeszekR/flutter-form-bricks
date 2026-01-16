@@ -2,38 +2,53 @@ import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/base/formatter_validator_base/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
 
+/// A pipeline of formatting/validation steps executed for a single field.
+///
+/// Each step is a [`FormatterValidator<I, V>`] that takes the current
+/// [`FieldContent<I, V>`], can **format** the input, and/or **validate** it,
+/// and returns a new `FieldContent`.
+///
+/// Construction guarantees:
+/// - Non-empty list of steps.
+/// - All steps have the same generic types `I` and `V`.
+/// - No duplicate validator *types* (by `runtimeType`) in the chain.
+///
+/// See also: [FormatterValidatorChainEarlyStop], [FormatterValidatorChainFullRun].
 abstract class FormatterValidatorChain<I extends Object, V extends Object> {
+  /// Validators executed in order.
   final List<FormatterValidator<I, V>> steps;
 
-  FormatterValidatorChain(List<FormatterValidator<I, V>> steps) : steps = List.unmodifiable(_validated(steps));
+  /// Creates an immutable, validated chain.
+  FormatterValidatorChain(List<FormatterValidator<I, V>> steps) : steps = List.unmodifiable(_validated<I, V>(steps));
 
   static List<FormatterValidator<I, V>> _validated<I extends Object, V extends Object>(
     List<FormatterValidator<I, V>> steps,
   ) {
-    if (steps.isEmpty) throw ArgumentError('FormatterValidatorChain steps must not be empty.');
-
+    if (steps.isEmpty) {
+      throw ArgumentError('FormatterValidatorChain steps must not be empty.');
+    }
     final seen = <Type>{};
     for (final s in steps) {
-      if (s.inputType != I) throw ArgumentError('FormatterValidator inputType ${s.inputType} != $I.');
-      if (s.valueType != V) throw ArgumentError('FormatterValidator valueType ${s.valueType} != $V.');
-      if (!seen.add(s.runtimeType)) throw ArgumentError('Duplicate FormatterValidator kind: ${s.runtimeType}.');
+      if (s.inputType != I) {
+        throw ArgumentError('FormatterValidator inputType conflict: ${s.inputType} != $I.');
+      }
+      if (s.valueType != V) {
+        throw ArgumentError('FormatterValidator valueType conflict:  ${s.valueType} != $V.');
+      }
+      if (!seen.add(s.runtimeType)) {
+        throw ArgumentError('Duplicate FormatterValidator kind: ${s.runtimeType}.');
+      }
     }
     return steps;
   }
 
-  /// Runs the formatting-validation chain for a given field.
+  /// Runs the chain for a given field.
   ///
-  /// The [keyString] is required even in cases where it's not strictly needed,
-  /// in order to simplify the overall interface and improve code readability.
-  /// While it may be redundant for some `FormatterValidator` implementations,
-  /// making it optional or conditional would add unnecessary complexity.
+  /// The [keyString] is always required to keep the API uniform and to aid
+  /// composite validators that act on multiple fields and need identification.
   ///
-  /// This is a conscious trade-off favoring clarity and maintainability over minimalism.
-  ///
-  /// Used in composite validators like `DateTimeRangeFormatterValidator`, where multiple
-  /// fields are validated as part of a group and require identification.
-  ///
-  /// Example: `DateTimeRangeFormatterValidator`
+  /// Returns the final [`FieldContent<I, V>`] after the chain execution policy
+  /// (see subclasses for details).
   FieldContent<I, V> runChain(
     BricksLocalizations localizations,
     String keyString,
@@ -41,10 +56,17 @@ abstract class FormatterValidatorChain<I extends Object, V extends Object> {
   );
 }
 
-// TODO lock field types accepted as clients of each FormatterValidatorChain implementation
-
-abstract class FormatterValidatorChainEarlyStop<I extends Object, V extends Object>
-    extends FormatterValidatorChain<I, V> {
+/// A chain policy that **stops early** as soon as the running result turns **invalid**.
+///
+/// Execution:
+/// 1) Start with a transient `FieldContent(input)`.
+/// 2) For each step, call `run(...)`.
+/// 3) If `result.isValid == false` after a step, **return immediately**.
+/// 4) Otherwise continue until steps are exhausted.
+///
+/// Use this when any single successful validator fails to accept
+/// the current value (e.g., “first-error-blocks” semantics).
+class FormatterValidatorChainEarlyStop<I extends Object, V extends Object> extends FormatterValidatorChain<I, V> {
   FormatterValidatorChainEarlyStop(super.steps);
 
   @override
@@ -53,11 +75,11 @@ abstract class FormatterValidatorChainEarlyStop<I extends Object, V extends Obje
     String keyString,
     I? input,
   ) {
-    FieldContent<I, V> resultFieldContent = FieldContent<I, V>.transient(input);
-
-    for (FormatterValidator<I, V> step in steps) {
+    var resultFieldContent = FieldContent<I, V>.transient(input);
+    for (final step in steps) {
       resultFieldContent = step.run(localizations, keyString, resultFieldContent);
-      if (resultFieldContent.isValid ?? false) {
+      // TODO test early stop on invalid field content
+      if (!(resultFieldContent.isValid ?? true)) {
         return resultFieldContent;
       }
     }
@@ -65,8 +87,16 @@ abstract class FormatterValidatorChainEarlyStop<I extends Object, V extends Obje
   }
 }
 
-/*abstract*/ class FormatterValidatorChainFullRun<I extends Object, V extends Object>
-    extends FormatterValidatorChain<I, V> {
+/// A chain policy that **always runs all steps** and returns the final result.
+///
+/// Execution:
+/// 1) Start with a transient `FieldContent(input)`.
+/// 2) Run every validator in order, feeding the output to the next.
+/// 3) Return the **last** `FieldContent`.
+///
+/// Use this when each validator contributes formatting/validation and you want
+/// the **accumulated** effect regardless of intermediate validity.
+class FormatterValidatorChainFullRun<I extends Object, V extends Object> extends FormatterValidatorChain<I, V> {
   FormatterValidatorChainFullRun(super.steps);
 
   @override
@@ -75,24 +105,10 @@ abstract class FormatterValidatorChainEarlyStop<I extends Object, V extends Obje
     String keyString,
     I? input,
   ) {
-    FieldContent<I, V> resultFieldContent = FieldContent<I, V>.transient(input);
-
-    for (FormatterValidator<I, V> step in steps) {
+    var resultFieldContent = FieldContent<I, V>.transient(input);
+    for (final step in steps) {
       resultFieldContent = step.run(localizations, keyString, resultFieldContent);
     }
     return resultFieldContent;
   }
 }
-
-//
-// enum FormatterValidatorChainType { earlyStop, fullRun }
-//
-// class FormatterValidatorChainDescriptor<I extends Object, V extends Object> {
-//   final FormatterValidatorChainType type;
-//   final List<FormatterValidator<I, V>> Function() stepsMaker;
-//
-//   const FormatterValidatorChainDescriptor({
-//     required this.type,
-//     required this.stepsMaker,
-//   });
-// }

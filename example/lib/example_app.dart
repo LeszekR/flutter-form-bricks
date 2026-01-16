@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks_example/forms/example_form/example_form.dart';
-import 'package:flutter_form_bricks_example/forms/example_form/example_form_data.dart';
-import 'package:flutter_form_bricks_example/forms/example_form/example_form_manager.dart';
+
+final ValueNotifier<Locale> _localeNotifier = ValueNotifier(const Locale('en'));
 
 class ExampleApp extends StatelessWidget {
   final UiParamsData uiParamsData = UiParamsData();
@@ -11,28 +11,25 @@ class ExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var formData = ExampleFormData();
-    var formSchema = ExampleFormSchema();
-    var formManager = ExampleFormManager(formData: formData, formSchema: formSchema);
     return UiParams(
       data: uiParamsData,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: uiParamsData.appTheme.themeData,
-        localizationsDelegates: BricksLocalizations.localizationsDelegates,
-        // localizationsDelegates: [
-        //   GlobalMaterialLocalizations.delegate,
-        //   GlobalWidgetsLocalizations.delegate,
-        //   GlobalmaterialLocalizations.delegate,
-        // ],
-        supportedLocales: [
-          Locale('en'),
-          Locale('pl'),
-        ],
-        home: Scaffold(
-          body: ExampleForm(formManager: formManager),
-        ),
-      ),
+      child: AnimatedBuilder(
+          animation: _localeNotifier,
+          builder: (_, __) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              theme: uiParamsData.themeData,
+              localizationsDelegates: BricksLocalizations.localizationsDelegates,
+              locale: _localeNotifier.value,
+              supportedLocales: [
+                Locale('en'),
+                Locale('pl'),
+              ],
+              home: Scaffold(
+                body: ExampleForm(),
+              ),
+            );
+          }),
     );
   }
 }

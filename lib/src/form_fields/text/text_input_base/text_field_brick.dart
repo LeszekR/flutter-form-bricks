@@ -182,8 +182,8 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<String, V
     this.hintLocales,
   });
 
-  // @override
-  // TextFieldStateBrick createState() => TextFieldStateBrick<V>();
+// @override
+// TextFieldStateBrick createState() => TextFieldStateBrick<V>();
 }
 
 abstract class TextFieldStateBrick<V extends Object> extends FormFieldStateBrick<String, V, TextFieldBrick<V>> {
