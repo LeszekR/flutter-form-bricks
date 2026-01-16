@@ -15,8 +15,9 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
   final bool isRequired;
   final FormatterValidatorListMaker? defaultFormatterValidatorListMaker;
   final FormatterValidatorListMaker? addFormatterValidatorListMaker;
+  final bool validatorsFullRun;
+  final bool runDefaultValidatorsFirst;
 
-  // final FormatterValidatorChainDescriptor? formatterValidatorChainDescriptor;
   final WidgetStatesController? statesObserver;
   final WidgetStatesController? statesNotifier;
 
@@ -33,7 +34,8 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
     this.isRequired = false,
     this.defaultFormatterValidatorListMaker = null,
     this.addFormatterValidatorListMaker = null,
-    // this.formatterValidatorChainDescriptor = null,
+    this.validatorsFullRun = true,
+    this.runDefaultValidatorsFirst = true,
     this.statesObserver,
     this.statesNotifier,
     this.autoValidateMode = AutovalidateMode.disabled,

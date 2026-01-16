@@ -10,6 +10,8 @@ class FormFieldDescriptor<I extends Object, V extends Object> {
   final bool? isFocusedOnStart;
   final FormatterValidatorListMaker<I, V>? defaultFormatterValidatorListMaker;
   final FormatterValidatorListMaker<I, V>? addFormatterValidatorListMaker;
+  final bool validatorsFullRun;
+  final bool runDefaultValidatorsFirst;
 
   // TODO guarantee validator chain adequate to field type - e.g. checkbox with date-validator throws
 
@@ -19,26 +21,29 @@ class FormFieldDescriptor<I extends Object, V extends Object> {
     this.isFocusedOnStart,
     this.defaultFormatterValidatorListMaker,
     this.addFormatterValidatorListMaker,
+    // TU PRZERWAŁEM - add pulling the two below by AutoSchemaGenerator into FormFieldDescriptor
+    this.validatorsFullRun = true,
+    this.runDefaultValidatorsFirst = true,
   })  : assert(I != dynamic, "FormFieldDescriptor<I, V>: Generic type I must not be dynamic."),
         assert(V != dynamic, "FormFieldDescriptor<I, V>: Generic type V must not be dynamic.");
 
-  FormatterValidatorChain<I, V>? buildChain({bool fullRun = true, bool runDefaultsFirst = true}) =>
-      _buildFormatterValidatorChainForDescriptor<I, V>(this, fullRun, runDefaultsFirst);
+  FormatterValidatorChain<I, V>? buildChain() =>
+      _buildFormatterValidatorChainForDescriptor<I, V>(this, validatorsFullRun, runDefaultValidatorsFirst);
 }
 
 /// Builds a [`FormatterValidatorChain`] for a descriptor by combining its default and additional validators.
 ///
 /// Chain policy:
-/// - When [fullRun] is `true` (default), returns a [FormatterValidatorChainFullRun]:
+/// - When [validatorsFullRun] is `true` (default), returns a [FormatterValidatorChainFullRun]:
 ///   runs **all** validators in order and returns the final `FieldContent`.
-/// - When [fullRun] is `false`, returns a [FormatterValidatorChainEarlyStop]:
+/// - When [validatorsFullRun] is `false`, returns a [FormatterValidatorChainEarlyStop]:
 ///   runs validators until the running result becomes **invalid**, then stops early,
 ///   or runs to the end if no invalid result is encountered.
 ///
 /// Combination rules:
 /// - If both defaults and additions exist:
-///   - When [defaultsFirst] is `true` (default): **defaults → additions**
-///   - When [defaultsFirst] is `false`: **additions → defaults**
+///   - When [runDefaultValidatorsFirst] is `true` (default): **defaults → additions**
+///   - When [runDefaultValidatorsFirst] is `false`: **additions → defaults**
 /// - If only one list exists, that list is used as-is.
 /// - If neither exists, returns `null`.
 ///
@@ -48,15 +53,15 @@ class FormFieldDescriptor<I extends Object, V extends Object> {
 /// See also: [FormatterValidatorChain], [FormatterValidatorChainFullRun], [FormatterValidatorChainEarlyStop].
 FormatterValidatorChain<I, V>? _buildFormatterValidatorChainForDescriptor<I extends Object, V extends Object>(
   FormFieldDescriptor<I, V> d,
-  bool fullRun,
-  bool defaultsFirst,
+  bool validatorsFullRun,
+  bool runDefaultValidatorsFirst,
 ) {
   List<FormatterValidator<I, V>>? formatterValidatorList = null;
   final List<FormatterValidator<I, V>>? defaults = d.defaultFormatterValidatorListMaker?.call();
   final List<FormatterValidator<I, V>>? additions = d.addFormatterValidatorListMaker?.call();
 
   if (defaults != null && additions != null) {
-    if (defaultsFirst) {
+    if (runDefaultValidatorsFirst) {
       defaults.addAll(additions);
       formatterValidatorList = defaults;
     } else {
@@ -73,7 +78,7 @@ FormatterValidatorChain<I, V>? _buildFormatterValidatorChainForDescriptor<I exte
 
   if (formatterValidatorList == null) {
     return null;
-  } else if (fullRun) {
+  } else if (validatorsFullRun) {
     return FormatterValidatorChainFullRun<I, V>(formatterValidatorList);
   } else {
     return FormatterValidatorChainEarlyStop<I, V>(formatterValidatorList);

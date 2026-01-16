@@ -93,12 +93,10 @@
 ///     super.initialInput,
 ///     super.isFocusedOnStart = false,
 ///     super.isRequired = false,
-///     // Use your defaults:
-///     super.defaultFormatterValidatorListMaker = formatterValidatorDefaults.phone,
 ///     // App can still add extras:
 ///     super.addFormatterValidatorListMaker,
 ///     // plus any TextField props…
-///   });
+///   }) : super(defaultFormatterValidatorListMaker: formatterValidatorDefaults.phone); // Use your defaults here
 ///
 ///   @override
 ///   State<StatefulWidget> createState() => _PhoneFieldState();
