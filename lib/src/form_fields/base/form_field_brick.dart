@@ -19,8 +19,8 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
   final bool isRequired;
   final bool runDefaultValidatorsFirst;
   final bool validatorsFullRun;
-  final FormatterValidatorListMaker? defaultFormatterValidatorListMaker;
-  final FormatterValidatorListMaker? addFormatterValidatorListMaker;
+  final FormatterValidatorListMaker<I, V>? defaultFormatterValidatorListMaker;
+  final FormatterValidatorListMaker<I, V>? addFormatterValidatorListMaker;
 
   final WidgetStatesController? statesObserver;
   final WidgetStatesController? statesNotifier;
@@ -32,7 +32,7 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
     Key? key,
     required this.keyString,
     required this.formManager,
-    required this.colorMaker,
+    StatesColorMaker? colorMaker,
     this.initialInput,
     this.isFocusedOnStart = false,
     this.isRequired = defaultIsRequired,
@@ -43,7 +43,8 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
     this.statesObserver,
     this.statesNotifier,
     this.autoValidateMode = AutovalidateMode.disabled,
-  }) : super(key: key ?? ValueKey(keyString));
+  })  : this.colorMaker = colorMaker ?? StatesColorMaker(),
+        super(key: key ?? ValueKey(keyString));
 }
 
 abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends FormFieldBrick<I, V>>

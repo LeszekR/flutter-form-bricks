@@ -5,9 +5,9 @@ import 'package:flutter_form_bricks_example/forms/example_form/example_form_mana
 part 'example_form.g.dart';
 
 final GlobalKey<ExampleFormState> formKey1 = GlobalKey();
-final String plainTextKeyString1 = 'plainTextKeyString1';
+final String dateKeyString1 = 'plainTextKeyString1';
 final String plainTextKeyString2 = 'plainTextKeyString2';
-final String plainTextKeyString3 = 'plainTextKeyString3';
+final String lowerCaseKeyString3 = 'plainTextKeyString3';
 
 @AutoFormSchema()
 class ExampleForm extends FormBrick {
@@ -30,9 +30,8 @@ class ExampleFormState extends FormStateBrick {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             DateField(
-              keyString: plainTextKeyString1,
+              keyString: dateKeyString1,
               formManager: formManager,
-              colorMaker: StatesColorMaker(),
               width: 150,
               initialInput: 'Krokodyl',
               // defaultFormatterValidatorListMaker: null,
@@ -41,25 +40,17 @@ class ExampleFormState extends FormStateBrick {
             PlainTextField(
               keyString: plainTextKeyString2,
               formManager: formManager,
-              colorMaker: StatesColorMaker(),
               initialInput: 'Zenon',
               isFocusedOnStart: true,
               width: 200,
               maxLines: 3,
             ),
-            // appSize.spacerBoxVerticalMedium,
-            // BrickTextField(
-            //   keyString: 'test_text_input_3',
-            //   formManager: formManager,
-            //   colorMaker: StatesColorMaker(),
-            //   width: 150,
-            //   buttonParams: IconButtonParams(
-            //     iconData: Icons.arrow_drop_down,
-            //     tooltip: 'podpowiedź niesłuszna',
-            //     onPressed: () {},
-            //     autofocus: false,
-            //   ),
-            // ),
+            appSize.spacerBoxVerticalMedium,
+            LowerCaseTextField(
+              keyString: lowerCaseKeyString3,
+              formManager: formManager,
+              width: 250,
+            ),
             // BrickTheme.of(context).sizes.spacerBoxVerticalMedium,
             // BrickTextField(
             //   keyString: 'test_text_input_4',

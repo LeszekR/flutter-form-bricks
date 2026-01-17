@@ -1,21 +1,25 @@
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/text/lowercase_formatter.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/formatter_validator_defaults.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/states_color_maker.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/text_field_brick.dart';
 
-class LowerCaseTextField extends TextFieldBrick {
+class LowerCaseTextField extends TextFieldBrick<TextEditingValue> {
   LowerCaseTextField({
     super.key,
     //
     // FormFieldBrick
     required super.keyString,
     required super.formManager,
-    required super.colorMaker,
+    StatesColorMaker? colorMaker,
     super.initialInput,
-    super.isFocusedOnStart = false,
-    super.addFormatterValidatorListMaker = null,
+    super.isFocusedOnStart,
+    super.isRequired,
+    super.runDefaultValidatorsFirst,
+    super.validatorsFullRun,
+    super.addFormatterValidatorListMaker,
     super.statesObserver,
     super.statesNotifier,
     super.autoValidateMode = AutovalidateMode.disabled,
@@ -93,10 +97,10 @@ class LowerCaseTextField extends TextFieldBrick {
     super.magnifierConfiguration,
     super.buttonParams,
     super.hintLocales,
-  }) : super(defaultFormatterValidatorListMaker: () => [LowercaseFormatter()]);
+  }) : super(defaultFormatterValidatorListMaker: () => formatterValidatorDefaults.lowerCase());
 
   @override
   LowerCaseFieldStateBrick createState() => LowerCaseFieldStateBrick();
 }
 
-class LowerCaseFieldStateBrick extends TextFieldStateBrick<TextEditingValue> {}
+class LowerCaseFieldStateBrick extends TextFieldStateBrick<TextEditingValue, LowerCaseTextField> {}

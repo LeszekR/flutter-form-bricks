@@ -8,7 +8,7 @@ class TestPlainTextFormFieldBrick extends TextFieldBrick {
     super.key,
     required super.keyString,
     required super.formManager,
-    required super.colorMaker,
+    StatesColorMaker? colorMaker,
     super.initialInput,
     super.isFocusedOnStart,
     super.formatterValidatorChainBuilder,

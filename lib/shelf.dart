@@ -32,6 +32,7 @@ export 'src/form_fields/text/text_input_base/icon_button_params.dart';
 export 'src/form_fields/text/text_input_base/states_color_maker.dart';
 export 'src/form_fields/text/text_input_base/text_field_brick.dart';
 export 'src/form_fields/text/text_inputs/date_field.dart';
+export 'src/form_fields/text/text_inputs/lowercase_text_field.dart';
 export 'src/form_fields/text/text_inputs/plain_text_field.dart';
 // FORMS
 export 'src/forms/base/form_brick.dart';

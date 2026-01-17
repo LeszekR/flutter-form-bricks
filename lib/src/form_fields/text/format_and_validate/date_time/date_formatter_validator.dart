@@ -6,6 +6,8 @@ import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/dat
 import 'package:flutter_form_bricks/src/form_fields/base/formatter_validator_base/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
+DateFormatterValidator dateFormatterValidator = DateFormatterValidator(DateTimeUtils(), CurrentDate());
+
 class DateFormatterValidator extends FormatterValidator<String, Date> {
   final dateDelimiterPattern = '( |/|-|,|;|\\.|=)';
   final dateDelimiter = '-';

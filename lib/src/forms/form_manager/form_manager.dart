@@ -66,6 +66,7 @@ abstract class FormManager extends ChangeNotifier {
 
   // fields registration in FormManager
   // ==============================================================================
+  String _forgotToRunBuild = ' (Did you forget to run \'dart run build-runner build\'?)';
   /// Obligatory for every field - guarantees access to:
   ///  - `FormatterValidatorChain` for the field (if there is any)
   ///  - state preservation object: `FormData` where field's **input**, **value**, **isValid**,
@@ -74,21 +75,21 @@ abstract class FormManager extends ChangeNotifier {
     assert(
       fieldDataMap.keys.contains(keyString),
       'No "$keyString" found in FormData.fieldDataMap; '
-      'all fields in form must be declared in FormSchema => FormFieldData.',
+      'all fields in form must be declared in FormSchema => FormFieldData.$_forgotToRunBuild',
     );
 
     var inputRuntimeType = _fieldData(keyString).inputRuntimeType;
     assert(
       I == inputRuntimeType,
       'Field input type is different from FieldData inputType (\'${I.toString()}\' vs. \'${inputRuntimeType.toString()})\' '
-      'for keyString: \'$keyString\' declared in FormSchema -> FormFieldDescriptor.',
+      'for keyString: \'$keyString\' declared in FormSchema -> FormFieldDescriptor.$_forgotToRunBuild',
     );
 
     var valueRuntimeType = _fieldData(keyString).valueRuntimeType;
     assert(
       V == valueRuntimeType,
       'Field value type is different from FieldData valueType (\'${V.toString()}\' vs. \'${valueRuntimeType.toString()})\' '
-      'for keyString: \'$keyString\' declared in FormSchema -> FormFieldDescriptor.',
+      'for keyString: \'$keyString\' declared in FormSchema -> FormFieldDescriptor.$_forgotToRunBuild',
     );
 
     assert(

@@ -4,13 +4,14 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_form_bricks/src/form_fields/base/form_field_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/states_controller/update_once_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/state_colored_icon_button.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/states_color_maker.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/text_field_bordered_box.dart';
+import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
-import '../../../ui_params/ui_params.dart';
-import '../../base/form_field_brick.dart';
 import 'icon_button_params.dart';
 
 abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<String, V> {
@@ -97,7 +98,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<String, V
     // FormFieldBrick
     required super.keyString,
     required super.formManager,
-    required super.colorMaker,
+    StatesColorMaker? colorMaker,
     super.initialInput,
     super.isFocusedOnStart,
     super.isRequired,
@@ -184,11 +185,12 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<String, V
     this.hintLocales,
   });
 
-  // @override
-  // TextFieldStateBrick createState() => TextFieldStateBrick<V>();
+// @override
+// TextFieldStateBrick createState() => TextFieldStateBrick<V>();
 }
 
-abstract class TextFieldStateBrick<V extends Object> extends FormFieldStateBrick<String, V, TextFieldBrick<V>> {
+abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>>
+    extends FormFieldStateBrick<String, V, B> {
   late final TextEditingController controller;
 
   @override

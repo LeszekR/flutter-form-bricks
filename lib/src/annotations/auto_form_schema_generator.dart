@@ -1,3 +1,5 @@
+// lib/flutter_form_bricks.generator/auto_form_schema_generator.dart
+
 library flutter_form_bricks.generator;
 
 import 'package:analyzer/dart/ast/ast.dart';
@@ -8,15 +10,16 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
+import '../form_fields/text/text_input_base/formatter_validator_defaults.dart';
 import 'auto_form_schema.dart';
 
 class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
   @override
   Future<String> generateForAnnotatedElement(
-    Element element,
-    ConstantReader annotation,
-    BuildStep buildStep,
-  ) async {
+      Element element,
+      ConstantReader annotation,
+      BuildStep buildStep,
+      ) async {
     if (element is! ClassElement) {
       throw InvalidGenerationSourceError(
         '@AutoFormSchema can only be applied to classes.',
@@ -30,15 +33,12 @@ class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
     final formName = widgetClass.name;
     final schemaClassName = annotation.peek('name')?.stringValue ?? '${formName}Schema';
 
-    // 1) Load ALL units in the same library as the annotated widget.
     final lib = widgetClass.library;
     final classDeclarationList = <ClassDeclaration>[];
     for (final unitElement in lib.units) {
-      // unitElement is a CompilationUnitElement (defining unit + all parts)
       for (final classElement in unitElement.classes) {
         final t = classElement.thisType;
         if (_isSubtypeOf(t, 'FormStateBrick')) {
-          // 2) Get a *resolved* AST node for this class.
           final node = await buildStep.resolver.astNodeFor(classElement, resolve: true);
           if (node is ClassDeclaration) {
             classDeclarationList.add(node);
@@ -54,11 +54,11 @@ class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
       );
     }
 
-    // 3) Scan each State class: both buildBody and build.
     final allItems = <_FieldInfo>[];
     for (final classDeclaration in classDeclarationList) {
       final methodIndexMap = <String, MethodDeclaration>{
-        for (final method in classDeclaration.members.whereType<MethodDeclaration>()) method.name.lexeme: method,
+        for (final method in classDeclaration.members.whereType<MethodDeclaration>())
+          method.name.lexeme: method,
       };
       final collector = _FieldCollector(
         methodIndexMap: methodIndexMap,
@@ -68,7 +68,6 @@ class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
       allItems.addAll(collector.items);
     }
 
-    // 4) Validate focus: exactly one field must have isFocusedOnStart == true
     final int focusedCount = allItems.where((fieldInfo) {
       final String? raw = fieldInfo.isFocusedOnStartSource?.trim();
       final bool? literal = fieldInfo.isFocusedOnStartLiteralBool;
@@ -82,39 +81,27 @@ class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
       );
     }
 
-    // TODO refactor so future users do not have to refactor this annotation, only have to add valueGenericSources in FormatterValidatorDefaults
-    String? _defaultMakerForValueType(String? valueGenericSource) {
-      switch (valueGenericSource) {
-        case 'Date':
-          return 'formatterValidatorDefaults.date';
-        // extend here for other specialized value types:
-        // case 'TimeOfDay': return 'formatterValidatorDefaults.time';
-        // case 'DateTime':  return 'formatterValidatorDefaults.dateTime';
-      }
-      return null;
-    }
-
-    // 5) Emit schema.
     final descriptorEntries = allItems.map((fieldInfo) {
       final genericI = fieldInfo.inputGenericSource ?? 'Object';
       final genericV = fieldInfo.valueGenericSource ?? 'Object';
 
-      final keyCode = fieldInfo.keyStringSource ?? _quote(fieldInfo.keyStringLiteral ?? fieldInfo.unknownKeyFallback);
+      final keyCode = fieldInfo.keyStringSource ??
+          _quote(fieldInfo.keyStringLiteral ?? fieldInfo.unknownKeyFallback);
 
-      final initCode = fieldInfo.initialInputSource; // nullable => omit when absent
-      final focusedCode = fieldInfo.isFocusedOnStartSource; // nullable => omit when absent
+      final initCode = fieldInfo.initialInputSource;
+      final focusedCode = fieldInfo.isFocusedOnStartSource;
 
       final requiredCode = fieldInfo.isRequiredSource;
       final fullRunCode = fieldInfo.validatorsFullRunSource;
       final defaultFirstCode = fieldInfo.runDefaultValidatorsFirstSource;
 
-      final defaultMakerFromType = _defaultMakerForValueType(fieldInfo.valueGenericSource);
-      final defaultFormValid = fieldInfo.defaultFormatterValidatorListMaker ?? defaultMakerFromType;
+      final defaultMakerFromFieldClass = defaultFormValidListMakerForFieldClassName(fieldInfo.fieldClassName);
+      final defaultFormValid = fieldInfo.defaultFormatterValidatorListMaker ?? defaultMakerFromFieldClass;
       final addFormValid = fieldInfo.addFormatterValidatorListMaker;
 
       return 'FormFieldDescriptor<$genericI, $genericV>('
-          'keyString: $keyCode, \n'
-          'initialInput: $initCode, \n'
+          'keyString: $keyCode,\n'
+          '${_makeParamIfNotNull('initialInput', initCode)}'
           '${_makeParamIfNotNull('isFocusedOnStart', focusedCode)}'
           '${_makeParamIfNotNull('isRequired', requiredCode)}'
           '${_makeParamIfNotNull('validatorsFullRun', fullRunCode)}'
@@ -137,7 +124,6 @@ class $schemaClassName extends FormSchema {
 ''';
   }
 
-  // ---------- Utils ----------
   String _makeParamIfNotNull(String name, String? valueSource) {
     if (valueSource == null) return '';
     final v = valueSource.trim();
@@ -170,13 +156,13 @@ class $schemaClassName extends FormSchema {
   }
 }
 
-// ---------- Scanner (inheritance-only; scans build & buildBody; enters all closures) ----------
+// ---------- Scanner ----------
 
 class _FieldCollector extends RecursiveAstVisitor<void> {
   final Map<String, MethodDeclaration> methodIndexMap;
   final Set<String> targetMethodsSet;
 
-  final Set<String> _inlined = {}; // avoid infinite recursion
+  final Set<String> _inlined = {};
   final items = <_FieldInfo>[];
 
   _FieldCollector({
@@ -186,16 +172,13 @@ class _FieldCollector extends RecursiveAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    // Visit only target method bodies.
     for (final m in node.members.whereType<MethodDeclaration>()) {
       if (targetMethodsSet.contains(m.name.lexeme)) {
         m.body.accept(this);
       }
     }
-    // No super: skip other methods.
   }
 
-  // Inline same-class helpers by exact name match, once.
   @override
   void visitMethodInvocation(MethodInvocation node) {
     final name = node.methodName.name;
@@ -206,46 +189,42 @@ class _FieldCollector extends RecursiveAstVisitor<void> {
     super.visitMethodInvocation(node);
   }
 
-  // Enter ALL closures (covers builder: and any lambda bodies).
   @override
   void visitFunctionExpression(FunctionExpression node) {
     node.body.accept(this);
     super.visitFunctionExpression(node);
   }
 
-  // Detect FormFieldBrick descendants only.
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
     final type = _resolveConstructedInterfaceType(node);
     if (type != null && _isFormFieldBrick(type)) {
       final info = _FieldInfo.fromCreation(node);
+      info.fieldClassName = type.element.name; // <-- NEW: capture actual widget class name (e.g. DateField)
 
       final iv = _extractIVFromFormFieldBrick(type);
-      if (iv.$1 != null) info.inputGenericSource = iv.$1; // I
-      if (iv.$2 != null) info.valueGenericSource = iv.$2; // V
+      if (iv.$1 != null) info.inputGenericSource = iv.$1;
+      if (iv.$2 != null) info.valueGenericSource = iv.$2;
       items.add(info);
     }
     super.visitInstanceCreationExpression(node);
   }
 
-  // ----- helpers -----
-
   InterfaceType? _resolveConstructedInterfaceType(InstanceCreationExpression node) {
-    // 1) constructor → enclosing class
     final constructor = node.constructorName.staticElement;
     final enclosing = constructor?.enclosingElement;
     if (enclosing is ClassElement) return enclosing.thisType;
 
-    // 2) expression staticType
     final staticType = node.staticType;
     if (staticType is InterfaceType) return staticType;
 
-    // 3) NamedType resolved type (compat across analyzer versions)
     final tn = node.constructorName.type;
     final resolved = tn.type;
     if (resolved is InterfaceType) return resolved;
+
     final dynamic maybeElement = (tn as dynamic).element;
     if (maybeElement is ClassElement) return maybeElement.thisType;
+
     return null;
   }
 
@@ -259,10 +238,7 @@ class _FieldCollector extends RecursiveAstVisitor<void> {
     return false;
   }
 
-  /// Returns (I, V) from the nearest `FormFieldBrick<I, V>` supertype.
-  /// Each item may be null if it can't be resolved.
   (String?, String?) _extractIVFromFormFieldBrick(InterfaceType t) {
-    // Search the type and all its supertypes for FormFieldBrick<I, V>
     for (final s in <InterfaceType>[t, ...t.allSupertypes]) {
       if (s.element.name == 'FormFieldBrick') {
         final args = s.typeArguments;
@@ -302,6 +278,8 @@ class _FieldCollector extends RecursiveAstVisitor<void> {
 class _FieldInfo {
   _FieldInfo();
 
+  String? fieldClassName; // <-- NEW
+
   String? inputGenericSource;
   String? valueGenericSource;
 
@@ -329,7 +307,6 @@ class _FieldInfo {
       final name = arg.name.label.name;
       final expression = arg.expression;
 
-      // Only for descriptor payload; not used to identify the field.
       if (name == 'keyString') {
         info.keyStringSource = expression.toString();
         if (expression is StringLiteral) info.keyStringLiteral = expression.stringValue;

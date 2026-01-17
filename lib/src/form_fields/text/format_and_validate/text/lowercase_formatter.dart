@@ -3,15 +3,12 @@ import 'package:flutter_form_bricks/src/form_fields/base/formatter_validator_bas
 import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
+LowercaseFormatter lowercaseFormatter = LowercaseFormatter();
+
 class LowercaseFormatter extends FormatterValidator<String, TextEditingValue> {
-  static LowercaseFormatter? _singleton;
+  final _upperCase = RegExp(r'[A-Z]');
 
-  factory LowercaseFormatter() {
-    _singleton ??= LowercaseFormatter._();
-    return _singleton!;
-  }
-
-  LowercaseFormatter._();
+  LowercaseFormatter();
 
   @override
   TextFieldContent run(
@@ -20,10 +17,10 @@ class LowercaseFormatter extends FormatterValidator<String, TextEditingValue> {
     FieldContent<String, TextEditingValue> fieldContent,
   ) {
     if (fieldContent.input == null) return fieldContent;
-
-    // if (!fieldContent.input!.contains(_upperCase)) return fieldContent;
+    if (!fieldContent.input!.contains(_upperCase)) return fieldContent;
 
     final String lowerCaseInput = fieldContent.input!.toLowerCase();
+
     return TextFieldContent.ok(
         lowerCaseInput,
         TextEditingValue(

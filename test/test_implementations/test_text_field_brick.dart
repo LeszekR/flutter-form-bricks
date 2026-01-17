@@ -6,7 +6,7 @@ class TestTextFieldBrick extends TextFieldBrick {
     super.controller,
     required super.keyString,
     required super.formManager,
-    required super.colorMaker,
+    StatesColorMaker? colorMaker,
   });
 
   @override
