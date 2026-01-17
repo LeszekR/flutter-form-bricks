@@ -13,10 +13,10 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
   final I? initialInput;
   final bool isFocusedOnStart;
   final bool isRequired;
-  final FormatterValidatorListMaker? defaultFormatterValidatorListMaker;
-  final FormatterValidatorListMaker? addFormatterValidatorListMaker;
   final bool validatorsFullRun;
   final bool runDefaultValidatorsFirst;
+  final FormatterValidatorListMaker? defaultFormatterValidatorListMaker;
+  final FormatterValidatorListMaker? addFormatterValidatorListMaker;
 
   final WidgetStatesController? statesObserver;
   final WidgetStatesController? statesNotifier;
@@ -32,10 +32,10 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
     this.initialInput,
     this.isFocusedOnStart = false,
     this.isRequired = false,
-    this.defaultFormatterValidatorListMaker = null,
-    this.addFormatterValidatorListMaker = null,
     this.validatorsFullRun = true,
     this.runDefaultValidatorsFirst = true,
+    this.defaultFormatterValidatorListMaker = null,
+    this.addFormatterValidatorListMaker = null,
     this.statesObserver,
     this.statesNotifier,
     this.autoValidateMode = AutovalidateMode.disabled,

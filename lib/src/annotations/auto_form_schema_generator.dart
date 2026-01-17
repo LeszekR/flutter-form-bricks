@@ -83,13 +83,14 @@ class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
       );
     }
 
+    // TODO refactor so future users do not have to refactor this annotation, only have to add valueGenericSources in FormatterValidatorDefaults
     String? _defaultMakerForValueType(String? valueGenericSource) {
       switch (valueGenericSource) {
         case 'Date':
           return 'formatterValidatorDefaults.date';
-      // extend here for other specialized value types:
-      // case 'TimeOfDay': return 'formatterValidatorDefaults.time';
-      // case 'DateTime':  return 'formatterValidatorDefaults.dateTime';
+        // extend here for other specialized value types:
+        // case 'TimeOfDay': return 'formatterValidatorDefaults.time';
+        // case 'DateTime':  return 'formatterValidatorDefaults.dateTime';
       }
       return null;
     }
@@ -102,8 +103,9 @@ class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
       final keyCode = fieldInfo.keyStringSource ?? _quote(fieldInfo.keyStringLiteral ?? fieldInfo.unknownKeyFallback);
       final initCode = fieldInfo.initialInputSource ?? 'null';
       final focusedCode = fieldInfo.isFocusedOnStartSource ?? 'null';
-      // final defaultFormValid = fieldInfo.defaultFormatterValidatorListMaker ?? 'null';
-      // final addFormValid = fieldInfo.addFormatterValidatorListMaker ?? 'null';
+      final requiredCode = fieldInfo.isRequiredSource ?? 'null';
+      final fullRunCode = fieldInfo.validatorsFullRunSource ?? 'null';
+      final defaultFirstCode = fieldInfo.runDefaultValidatorsFirstSource ?? 'null';
       final defaultMakerFromType = _defaultMakerForValueType(fieldInfo.valueGenericSource);
       final defaultFormValid = fieldInfo.defaultFormatterValidatorListMaker ?? defaultMakerFromType ?? 'null';
       final addFormValid = fieldInfo.addFormatterValidatorListMaker ?? 'null';
@@ -111,9 +113,13 @@ class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
       return 'FormFieldDescriptor<$genericI, $genericV>('
           'keyString: $keyCode, \n'
           'initialInput: $initCode, \n'
-          'isFocusedOnStart:  $focusedCode, \n'
-          'defaultFormatterValidatorListMaker: $defaultFormValid, \n'
-          'addFormatterValidatorListMaker: $addFormValid,)';
+          '${_makeParamIfNotNull('isFocusedOnStart', focusedCode)}'
+          '${_makeParamIfNotNull('isRequired', requiredCode)}'
+          '${_makeParamIfNotNull('validatorsFullRun', fullRunCode)}'
+          '${_makeParamIfNotNull('runDefaultValidatorsFirst', defaultFirstCode)}'
+          '${_makeParamIfNotNull('defaultFormatterValidatorListMaker', defaultFormValid)}'
+          '${_makeParamIfNotNull('addFormatterValidatorListMaker', addFormValid)}'
+      ')';
     }).join(',\n    ');
 
     return '''
@@ -130,6 +136,7 @@ class $schemaClassName extends FormSchema {
   }
 
   // ---------- Utils ----------
+  String _makeParamIfNotNull(String name, String value) => value == 'null' ? '' : '$name: $value,';
 
   void _ensureExtends(InterfaceType type, String name, Element on) {
     final ok = type.element.name == name || type.allSupertypes.any((s) => s.element.name == name);
@@ -245,7 +252,6 @@ class _FieldCollector extends RecursiveAstVisitor<void> {
     return false;
   }
 
-
   /// Returns (I, V) from the nearest `FormFieldBrick<I, V>` supertype.
   /// Each item may be null if it can't be resolved.
   (String?, String?) _extractIVFromFormFieldBrick(InterfaceType t) {
@@ -295,11 +301,17 @@ class _FieldInfo {
   String? keyStringSource;
   String? initialInputSource;
   String? isFocusedOnStartSource;
+  String? isRequiredSource;
+  String? validatorsFullRunSource;
+  String? runDefaultValidatorsFirstSource;
   String? defaultFormatterValidatorListMaker;
   String? addFormatterValidatorListMaker;
 
   String? keyStringLiteral;
   bool? isFocusedOnStartLiteralBool;
+  bool? isRequiredLiteralBool;
+  bool? runDefaultValidatorsFirstLiteralBool;
+  bool? validatorsFullRunLiteralBool;
 
   String get unknownKeyFallback => '<unknown_key>';
 
@@ -319,6 +331,15 @@ class _FieldInfo {
       } else if (name == 'isFocusedOnStart') {
         info.isFocusedOnStartSource = expression.toString();
         if (expression is BooleanLiteral) info.isFocusedOnStartLiteralBool = expression.value;
+      } else if (name == 'isRequired') {
+        info.isRequiredSource = expression.toString();
+        if (expression is BooleanLiteral) info.isRequiredLiteralBool = expression.value;
+      } else if (name == 'runDefaultValidatorsFirst') {
+        info.runDefaultValidatorsFirstSource = expression.toString();
+        if (expression is BooleanLiteral) info.runDefaultValidatorsFirstLiteralBool = expression.value;
+      } else if (name == 'validatorsFullRun') {
+        info.validatorsFullRunSource = expression.toString();
+        if (expression is BooleanLiteral) info.validatorsFullRunLiteralBool = expression.value;
       } else if (name == 'defaultFormatterValidatorListMaker') {
         info.defaultFormatterValidatorListMaker = expression.toString();
       } else if (name == 'addFormatterValidatorListMaker') {

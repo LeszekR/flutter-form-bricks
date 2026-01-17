@@ -8,10 +8,11 @@ class FormFieldDescriptor<I extends Object, V extends Object> {
   final Type valueRuntimeType = V;
   final I? initialInput;
   final bool? isFocusedOnStart;
+  final bool? isRequired;
+  final bool? validatorsFullRun;
+  final bool? runDefaultValidatorsFirst;
   final FormatterValidatorListMaker<I, V>? defaultFormatterValidatorListMaker;
   final FormatterValidatorListMaker<I, V>? addFormatterValidatorListMaker;
-  final bool validatorsFullRun;
-  final bool runDefaultValidatorsFirst;
 
   // TODO guarantee validator chain adequate to field type - e.g. checkbox with date-validator throws
 
@@ -19,15 +20,16 @@ class FormFieldDescriptor<I extends Object, V extends Object> {
     required this.keyString,
     this.initialInput,
     this.isFocusedOnStart,
-    this.defaultFormatterValidatorListMaker,
-    this.addFormatterValidatorListMaker,
-    // TU PRZERWAŁEM - add pulling the two below by AutoSchemaGenerator into FormFieldDescriptor
+    this.isRequired,
     this.validatorsFullRun = true,
     this.runDefaultValidatorsFirst = true,
+    this.defaultFormatterValidatorListMaker,
+    this.addFormatterValidatorListMaker,
   })  : assert(I != dynamic, "FormFieldDescriptor<I, V>: Generic type I must not be dynamic."),
         assert(V != dynamic, "FormFieldDescriptor<I, V>: Generic type V must not be dynamic.");
 
   FormatterValidatorChain<I, V>? buildChain() =>
+    // TU PRZERWAŁEM - support nulls here
       _buildFormatterValidatorChainForDescriptor<I, V>(this, validatorsFullRun, runDefaultValidatorsFirst);
 }
 
