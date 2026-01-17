@@ -1,4 +1,3 @@
-// lib/src/annotations/auto_form_schema_generator.dart
 library flutter_form_bricks.generator;
 
 import 'package:analyzer/dart/ast/ast.dart';
@@ -33,7 +32,7 @@ class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
 
     // 1) Load ALL units in the same library as the annotated widget.
     final lib = widgetClass.library;
-    final stateDeclarations = <ClassDeclaration>[];
+    final classDeclarationList = <ClassDeclaration>[];
     for (final unitElement in lib.units) {
       // unitElement is a CompilationUnitElement (defining unit + all parts)
       for (final classElement in unitElement.classes) {
@@ -42,13 +41,13 @@ class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
           // 2) Get a *resolved* AST node for this class.
           final node = await buildStep.resolver.astNodeFor(classElement, resolve: true);
           if (node is ClassDeclaration) {
-            stateDeclarations.add(node);
+            classDeclarationList.add(node);
           }
         }
       }
     }
 
-    if (stateDeclarations.isEmpty) {
+    if (classDeclarationList.isEmpty) {
       throw InvalidGenerationSourceError(
         'No State class extending FormStateBrick found in the same library as ${widgetClass.name}.',
         element: widgetClass,
@@ -57,15 +56,15 @@ class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
 
     // 3) Scan each State class: both buildBody and build.
     final allItems = <_FieldInfo>[];
-    for (final stateDeclaration in stateDeclarations) {
-      final methodIndex = <String, MethodDeclaration>{
-        for (final method in stateDeclaration.members.whereType<MethodDeclaration>()) method.name.lexeme: method,
+    for (final classDeclaration in classDeclarationList) {
+      final methodIndexMap = <String, MethodDeclaration>{
+        for (final method in classDeclaration.members.whereType<MethodDeclaration>()) method.name.lexeme: method,
       };
       final collector = _FieldCollector(
-        methodIndex: methodIndex,
-        targetMethods: const {'buildBody', 'build'},
+        methodIndexMap: methodIndexMap,
+        targetMethodsSet: const {'buildBody', 'build'},
       );
-      stateDeclaration.accept(collector);
+      classDeclaration.accept(collector);
       allItems.addAll(collector.items);
     }
 
@@ -101,14 +100,17 @@ class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
       final genericV = fieldInfo.valueGenericSource ?? 'Object';
 
       final keyCode = fieldInfo.keyStringSource ?? _quote(fieldInfo.keyStringLiteral ?? fieldInfo.unknownKeyFallback);
-      final initCode = fieldInfo.initialInputSource ?? 'null';
-      final focusedCode = fieldInfo.isFocusedOnStartSource ?? 'null';
-      final requiredCode = fieldInfo.isRequiredSource ?? 'null';
-      final fullRunCode = fieldInfo.validatorsFullRunSource ?? 'null';
-      final defaultFirstCode = fieldInfo.runDefaultValidatorsFirstSource ?? 'null';
+
+      final initCode = fieldInfo.initialInputSource; // nullable => omit when absent
+      final focusedCode = fieldInfo.isFocusedOnStartSource; // nullable => omit when absent
+
+      final requiredCode = fieldInfo.isRequiredSource;
+      final fullRunCode = fieldInfo.validatorsFullRunSource;
+      final defaultFirstCode = fieldInfo.runDefaultValidatorsFirstSource;
+
       final defaultMakerFromType = _defaultMakerForValueType(fieldInfo.valueGenericSource);
-      final defaultFormValid = fieldInfo.defaultFormatterValidatorListMaker ?? defaultMakerFromType ?? 'null';
-      final addFormValid = fieldInfo.addFormatterValidatorListMaker ?? 'null';
+      final defaultFormValid = fieldInfo.defaultFormatterValidatorListMaker ?? defaultMakerFromType;
+      final addFormValid = fieldInfo.addFormatterValidatorListMaker;
 
       return 'FormFieldDescriptor<$genericI, $genericV>('
           'keyString: $keyCode, \n'
@@ -119,7 +121,7 @@ class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
           '${_makeParamIfNotNull('runDefaultValidatorsFirst', defaultFirstCode)}'
           '${_makeParamIfNotNull('defaultFormatterValidatorListMaker', defaultFormValid)}'
           '${_makeParamIfNotNull('addFormatterValidatorListMaker', addFormValid)}'
-      ')';
+          ')';
     }).join(',\n    ');
 
     return '''
@@ -136,7 +138,12 @@ class $schemaClassName extends FormSchema {
   }
 
   // ---------- Utils ----------
-  String _makeParamIfNotNull(String name, String value) => value == 'null' ? '' : '$name: $value,';
+  String _makeParamIfNotNull(String name, String? valueSource) {
+    if (valueSource == null) return '';
+    final v = valueSource.trim();
+    if (v == 'null') return '';
+    return '$name: $v,\n';
+  }
 
   void _ensureExtends(InterfaceType type, String name, Element on) {
     final ok = type.element.name == name || type.allSupertypes.any((s) => s.element.name == name);
@@ -166,22 +173,22 @@ class $schemaClassName extends FormSchema {
 // ---------- Scanner (inheritance-only; scans build & buildBody; enters all closures) ----------
 
 class _FieldCollector extends RecursiveAstVisitor<void> {
-  final Map<String, MethodDeclaration> methodIndex;
-  final Set<String> targetMethods;
+  final Map<String, MethodDeclaration> methodIndexMap;
+  final Set<String> targetMethodsSet;
 
   final Set<String> _inlined = {}; // avoid infinite recursion
   final items = <_FieldInfo>[];
 
   _FieldCollector({
-    required this.methodIndex,
-    required this.targetMethods,
+    required this.methodIndexMap,
+    required this.targetMethodsSet,
   });
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
     // Visit only target method bodies.
     for (final m in node.members.whereType<MethodDeclaration>()) {
-      if (targetMethods.contains(m.name.lexeme)) {
+      if (targetMethodsSet.contains(m.name.lexeme)) {
         m.body.accept(this);
       }
     }
@@ -192,7 +199,7 @@ class _FieldCollector extends RecursiveAstVisitor<void> {
   @override
   void visitMethodInvocation(MethodInvocation node) {
     final name = node.methodName.name;
-    final helper = methodIndex[name];
+    final helper = methodIndexMap[name];
     if (helper != null && _inlined.add(name)) {
       helper.body.accept(this);
     }

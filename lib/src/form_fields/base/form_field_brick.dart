@@ -6,6 +6,10 @@ import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 abstract class FormFieldBrick<I extends Object, V extends Object> extends StatefulWidget {
+  static const bool defaultIsRequired = false;
+  static const bool defaultRunDefaultValidatorsFirst = true;
+  static const bool defaultValidatorsFullRun = true;
+
   final String keyString;
 
   final FormManager formManager;
@@ -13,8 +17,8 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
   final I? initialInput;
   final bool isFocusedOnStart;
   final bool isRequired;
-  final bool validatorsFullRun;
   final bool runDefaultValidatorsFirst;
+  final bool validatorsFullRun;
   final FormatterValidatorListMaker? defaultFormatterValidatorListMaker;
   final FormatterValidatorListMaker? addFormatterValidatorListMaker;
 
@@ -31,9 +35,9 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
     required this.colorMaker,
     this.initialInput,
     this.isFocusedOnStart = false,
-    this.isRequired = false,
-    this.validatorsFullRun = true,
-    this.runDefaultValidatorsFirst = true,
+    this.isRequired = defaultIsRequired,
+    this.runDefaultValidatorsFirst = defaultRunDefaultValidatorsFirst,
+    this.validatorsFullRun = defaultValidatorsFullRun,
     this.defaultFormatterValidatorListMaker = null,
     this.addFormatterValidatorListMaker = null,
     this.statesObserver,

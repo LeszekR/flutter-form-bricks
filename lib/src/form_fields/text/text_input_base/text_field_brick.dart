@@ -14,10 +14,10 @@ import '../../base/form_field_brick.dart';
 import 'icon_button_params.dart';
 
 abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<String, V> {
-// TextFieldBrick
+  // TextFieldBrick
   final double? width;
 
-// Flutter TextField
+  // Flutter TextField
   final TextMagnifierConfiguration? magnifierConfiguration;
   final Object groupId;
   final TextEditingController? controller;
@@ -33,7 +33,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<String, V
   final TextDirection? textDirection;
   final bool autofocus;
 
-// final MaterialStatesController? statesController;
+  // final MaterialStatesController? statesController;
   final String obscuringCharacter;
   final bool obscureText;
   final bool autocorrect;
@@ -93,24 +93,26 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<String, V
 
   TextFieldBrick({
     super.key,
-//
-// FormFieldBrick
+    //
+    // FormFieldBrick
     required super.keyString,
     required super.formManager,
     required super.colorMaker,
     super.initialInput,
-    super.isFocusedOnStart = false,
-    super.isRequired = false,
-    super.defaultFormatterValidatorListMaker = null,
-    super.addFormatterValidatorListMaker = null,
+    super.isFocusedOnStart,
+    super.isRequired,
+    super.runDefaultValidatorsFirst,
+    super.validatorsFullRun,
+    super.defaultFormatterValidatorListMaker,
+    super.addFormatterValidatorListMaker,
     super.statesObserver,
     super.statesNotifier,
     super.autoValidateMode = AutovalidateMode.disabled,
-//
-// BrickTextField
+    //
+    // BrickTextField
     this.width,
-//
-// TextField
+    //
+    // TextField
     this.groupId = EditableText,
     this.controller,
     this.focusNode,
@@ -127,7 +129,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<String, V
     this.readOnly = false,
     this.showCursor,
     this.autofocus = false,
-// this.statesController,  => replaced with statesObserver and statesNotifier
+    // this.statesController,  => replaced with statesObserver and statesNotifier
     this.obscuringCharacter = '•',
     this.obscureText = false,
     this.autocorrect = true,
@@ -182,15 +184,12 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<String, V
     this.hintLocales,
   });
 
-// @override
-// TextFieldStateBrick createState() => TextFieldStateBrick<V>();
+  // @override
+  // TextFieldStateBrick createState() => TextFieldStateBrick<V>();
 }
 
 abstract class TextFieldStateBrick<V extends Object> extends FormFieldStateBrick<String, V, TextFieldBrick<V>> {
   late final TextEditingController controller;
-
-  // @override
-  // V getValue() => controller.value;
 
   @override
   void initState() {
