@@ -26,7 +26,7 @@ formManager.validateField(keyString);
 
 Inside `FormManager`:
 
-- The appropriate FVC is retrieved from `FormSchema`.
+- The appropriate `FormatterValidatorChain` is retrieved from `FormSchema`.
 - Validation runs for the specified field value.
 - The result (`ValidationResult`) is recorded in `FormFieldData`.
 - A `ChangeNotifier` update triggers the global validation display area.
