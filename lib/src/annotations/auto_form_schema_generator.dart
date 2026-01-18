@@ -1,5 +1,3 @@
-// lib/flutter_form_bricks.generator/auto_form_schema_generator.dart
-
 library flutter_form_bricks.generator;
 
 import 'package:analyzer/dart/ast/ast.dart';
@@ -8,9 +6,10 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/formatter_validator_defaults_for_generator.dart'
+    show defaultFormValidListMakerForFieldClassName;
 import 'package:source_gen/source_gen.dart';
 
-import '../form_fields/text/text_input_base/formatter_validator_defaults.dart';
 import 'auto_form_schema.dart';
 
 class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
