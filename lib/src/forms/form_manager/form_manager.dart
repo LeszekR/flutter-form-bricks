@@ -67,6 +67,7 @@ abstract class FormManager extends ChangeNotifier {
   // fields registration in FormManager
   // ==============================================================================
   String _forgotToRunBuild = ' (Did you forget to run \'dart run build-runner build\'?)';
+
   /// Obligatory for every field - guarantees access to:
   ///  - `FormatterValidatorChain` for the field (if there is any)
   ///  - state preservation object: `FormData` where field's **input**, **value**, **isValid**,
@@ -131,7 +132,8 @@ abstract class FormManager extends ChangeNotifier {
 
   bool isFieldDirty(String keyString) => getFieldContent(keyString).input != _fieldData(keyString).initialInput;
 
-  FormatterValidatorChain? getFormatterValidatorChain(String keyString) => _formatterValidatorChainMap[keyString];
+  FormatterValidatorChain<I, V>? getFormatterValidatorChain<I extends Object, V extends Object>(String keyString) =>
+      (_formatterValidatorChainMap[keyString] as FormatterValidatorChain<I, V>?);
 
   void _setFocusedKeyString(String keyString) => _formData.focusedKeyString = keyString;
 
@@ -150,18 +152,20 @@ abstract class FormManager extends ChangeNotifier {
 
   // validation
   // ==============================================================================
-  FieldContent onFieldChanged(BricksLocalizations localizations, String keyString, dynamic input) {
-    FieldContent fieldContent = formatAndValidateQuietly(localizations, keyString, input);
+  FieldContent<I, V> onFieldChanged<I extends Object, V extends Object>(
+      BricksLocalizations localizations, String keyString, dynamic input) {
+    FieldContent<I, V> fieldContent = formatAndValidateQuietly<I, V>(localizations, keyString, input);
     _showFieldErrorMessage(keyString);
     return fieldContent;
   }
 
-  FieldContent formatAndValidateQuietly(BricksLocalizations localizations, String keyString, dynamic input) {
-    FieldContent fieldContent;
-    FormatterValidatorChain? formatterValidatorChain = getFormatterValidatorChain(keyString);
+  FieldContent<I, V> formatAndValidateQuietly<I extends Object, V extends Object>(
+      BricksLocalizations localizations, String keyString, dynamic input) {
+    FieldContent<I, V> fieldContent;
+    FormatterValidatorChain<I, V>? formatterValidatorChain = getFormatterValidatorChain<I, V>(keyString);
 
     if (formatterValidatorChain != null) {
-      fieldContent = formatterValidatorChain.runChain(localizations, input, keyString);
+      fieldContent = formatterValidatorChain.runChain(localizations, keyString, input);
     } else {
       fieldContent = FieldContent.ok(input, input);
     }

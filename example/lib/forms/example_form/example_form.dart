@@ -5,9 +5,9 @@ import 'package:flutter_form_bricks_example/forms/example_form/example_form_mana
 part 'example_form.g.dart';
 
 final GlobalKey<ExampleFormState> formKey1 = GlobalKey();
-final String dateKeyString1 = 'plainTextKeyString1';
-final String plainTextKeyString2 = 'plainTextKeyString2';
-final String lowerCaseKeyString3 = 'plainTextKeyString3';
+final String dateKeyString1 = 'dateKeyString1';
+final String plainTextKeyString2 = 'plainKeyString1';
+final String lowerCaseKeyString3 = 'lowerCaseKeyString1';
 
 @AutoFormSchema()
 class ExampleForm extends FormBrick {

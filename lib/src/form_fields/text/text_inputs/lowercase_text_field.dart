@@ -97,7 +97,9 @@ class LowerCaseTextField extends TextFieldBrick<TextEditingValue> {
     super.magnifierConfiguration,
     super.buttonParams,
     super.hintLocales,
-  }) : super(defaultFormatterValidatorListMaker: () => formatterValidatorDefaults.lowerCase());
+  }) : super(
+            validateMode: TextFieldValidateMode.onChange,
+            defaultFormatterValidatorListMaker: () => formatterValidatorDefaults.lowerCase());
 
   @override
   LowerCaseFieldStateBrick createState() => LowerCaseFieldStateBrick();

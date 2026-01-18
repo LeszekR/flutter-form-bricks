@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/formatter_validator_defaults.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/states_color_maker.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
@@ -21,9 +20,9 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
   final bool validatorsFullRun;
   final FormatterValidatorListMaker<I, V>? defaultFormatterValidatorListMaker;
   final FormatterValidatorListMaker<I, V>? addFormatterValidatorListMaker;
-
   final WidgetStatesController? statesObserver;
   final WidgetStatesController? statesNotifier;
+  final ValueChanged<I>? onChanged;
 
   // TODO implement identical functionality as in flutter_form_builder using onChange, onEditingComplete, onSave
   final AutovalidateMode autoValidateMode;
@@ -31,6 +30,7 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
   FormFieldBrick({
     Key? key,
     required this.keyString,
+    // TODO add field label, required if has validator so FormManager shows error for named field
     required this.formManager,
     StatesColorMaker? colorMaker,
     this.initialInput,
@@ -42,6 +42,7 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
     this.addFormatterValidatorListMaker = null,
     this.statesObserver,
     this.statesNotifier,
+    this.onChanged,
     this.autoValidateMode = AutovalidateMode.disabled,
   })  : this.colorMaker = colorMaker ?? StatesColorMaker(),
         super(key: key ?? ValueKey(keyString));
@@ -53,7 +54,7 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
 
   /// Object holding state of this `FormFieldBrick`. Fetched from `FormManager` prior to `build()`
   /// and updated in `setState()`;
-  late FieldContent _fieldContent;
+  late I? _input;
 
   late final FocusNode focusNode;
 
@@ -72,7 +73,8 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
     focusNode = FocusNode();
     formManager.setFocusListener(focusNode, keyString);
 
-    _fieldContent = formManager.getFieldContent(keyString);
+    _input = formManager.getFieldContent(keyString).input as I?;
+    // _input = formManager.getFieldContent<I, V>(keyString).input;
 
     _states = widget.statesNotifier?.value;
     widget.statesNotifier?.addListener(_onStatesChanged);
@@ -105,21 +107,17 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   /// - register both new value and error in `FormManager` -> `FormStateBrick` -> `FieldContent`
   /// - return new `FieldContent` which then sets the field's input (if formatted), controls its color,
   ///   displays error if the field uses `InputDecoration` for this (error alternatively it can be displayed in
-  ///   dedicated `FormBrick` area by `FormManager`.
-  void onFieldChanged(BricksLocalizations localizations, I input) {
+  ///   dedicated `FormBrick` area by `FormManager`).
+  @mustCallSuper
+  I? onInputChanged(I? input) {
     // Here FormManager:
     // - validates the input
     // - saves results of format-validation in FormData -> FormFieldData -> FieldContent
-    FieldContent fieldContent = formManager.onFieldChanged(localizations, keyString, input);
-    setState(() {
-      _fieldContent = fieldContent;
-    });
+    return formManager.onFieldChanged<I, V>(BricksLocalizations.of(context), keyString, input).input;
   }
 
   bool _hasFormatterValidator() =>
       widget.defaultFormatterValidatorListMaker != null || widget.addFormatterValidatorListMaker != null;
-
-  // bool _hasFormatterValidator() => widget.formatterValidatorChainDescriptor != null;
 
   Color? makeColor() => widget.colorMaker.makeColor(context, _states);
 }

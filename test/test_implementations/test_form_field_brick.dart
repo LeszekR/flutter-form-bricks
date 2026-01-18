@@ -23,7 +23,7 @@ class TestFormFieldBrickState extends TextFieldStateBrick {
 
   void changeValue(BricksLocalizations localizations, String newInput) {
     value = TextEditingValue(text: newInput);
-    onFieldChanged(localizations, newInput, );
+    onInputChanged(localizations, newInput, );
   }
 
   @override

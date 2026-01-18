@@ -98,8 +98,10 @@ class DateField extends TextFieldBrick<Date> {
     super.magnifierConfiguration,
     super.buttonParams,
     super.hintLocales,
-  // }) : super(defaultFormatterValidatorListMaker: () => getDefaultFormatterValidator<String, Date>('DateField'));
-  }) : super(defaultFormatterValidatorListMaker: () => formatterValidatorDefaults.date());
+    // }) : super(defaultFormatterValidatorListMaker: () => getDefaultFormatterValidator<String, Date>('DateField'));
+  }) : super(
+            validateMode: TextFieldValidateMode.onEditingComplete,
+            defaultFormatterValidatorListMaker: () => formatterValidatorDefaults.date());
 
   @override
   State<StatefulWidget> createState() => DateFieldStateBrick();

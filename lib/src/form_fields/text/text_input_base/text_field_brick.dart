@@ -4,19 +4,18 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_bricks/src/form_fields/base/form_field_brick.dart';
+import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/states_controller/update_once_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/state_colored_icon_button.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/states_color_maker.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/text_field_bordered_box.dart';
-import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
-import 'icon_button_params.dart';
+enum TextFieldValidateMode { onChange, onEditingComplete }
 
 abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<String, V> {
   // TextFieldBrick
   final double? width;
+  final TextFieldValidateMode? validateMode;
 
   // Flutter TextField
   final TextMagnifierConfiguration? magnifierConfiguration;
@@ -49,7 +48,6 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<String, V
   static const int noMaxLength = -1;
   final int? maxLength;
   final MaxLengthEnforcement? maxLengthEnforcement;
-  final ValueChanged<String>? onChanged;
   final VoidCallback? onEditingComplete;
   final ValueChanged<String>? onSubmitted;
   final AppPrivateCommandCallback? onAppPrivateCommand;
@@ -110,8 +108,9 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<String, V
     super.statesNotifier,
     super.autoValidateMode = AutovalidateMode.disabled,
     //
-    // BrickTextField
+    // TextFieldBrick
     this.width,
+    this.validateMode,
     //
     // TextField
     this.groupId = EditableText,
@@ -142,7 +141,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<String, V
     this.expands = false,
     this.maxLength,
     this.maxLengthEnforcement,
-    this.onChanged,
+    super.onChanged,
     this.onEditingComplete,
     this.onSubmitted,
     this.onAppPrivateCommand,
@@ -183,10 +182,12 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<String, V
     this.magnifierConfiguration,
     this.buttonParams,
     this.hintLocales,
-  });
-
-// @override
-// TextFieldStateBrick createState() => TextFieldStateBrick<V>();
+  }) : assert(
+            (validateMode == null) ==
+                (defaultFormatterValidatorListMaker == null && addFormatterValidatorListMaker == null),
+            'TextFieldBrick\'s \'validateMode\' must be null when '
+            '\'defaultFormatterValidatorListMaker\' and \'addFormatterValidatorListMaker\' are null,'
+            'and must be non-null when any of those is non-null');
 }
 
 abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>>
@@ -310,8 +311,8 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       expands: widget.expands,
       maxLength: widget.maxLength,
       maxLengthEnforcement: widget.maxLengthEnforcement,
-      onChanged: widget.onChanged,
-      onEditingComplete: widget.onEditingComplete,
+      onChanged: onInputChanged,
+      onEditingComplete: _onEditingComplete,
       onSubmitted: widget.onSubmitted,
       onAppPrivateCommand: widget.onAppPrivateCommand,
       inputFormatters: widget.inputFormatters,
@@ -397,28 +398,48 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   var _skipOnChanged = false;
 
-  void _onChanged(value) {
-// stop infinite call here at changing the field value to trimmed one
-    if (_skipOnChanged) return;
+  @mustCallSuper
+  @override
+  String? onInputChanged(String? input) {
+    // No FormatterValidatorChain for this TextFieldBrick
+    if (widget.validateMode == null) return null;
 
-    widget.onChanged?.call(value?.trim());
+    // Stop infinite call here at changing the field value to trimmed one
+    if (_skipOnChanged) return null;
 
-// we need formManager to validate and show error when onEditingComplete will NEVER be called.
-// If onEditingComplete is called then formManager.onFieldChanged is called there so we skip it here
-    if (widget.onEditingComplete == null || widget.onEditingComplete == () {}) {
-      _skipOnChanged = true;
-// TODO REFACTOR - formatting and validation done in FormManager, formatted value passed back here
-// widget.formManager.onFieldChanged(keyString, value);
-      _skipOnChanged = false;
+    // Run custom onChanged callback if provided
+    widget.onChanged?.call(input?.trim() ?? '');
+
+    if (widget.validateMode == TextFieldValidateMode.onChange) {
+      // Here FormManager:
+      // - validates the input
+      // - saves results of format-validation in FormData -> FormFieldData -> FieldContent
+      String? formattedInput = super.onInputChanged(input);
+      _updateUi(formattedInput);
+    }
+    return null;
+  }
+
+  @mustCallSuper
+  void _onEditingComplete() {
+    // No FormatterValidatorChain for this TextFieldBrick
+    if (widget.validateMode == null) return null;
+
+    // Run custom onEditingComplete callback if provided
+    widget.onEditingComplete?.call();
+
+    if (widget.validateMode == TextFieldValidateMode.onEditingComplete) {
+      // Here FormManager:
+      // - validates the input
+      // - saves results of format-validation in FormData -> FormFieldData -> FieldContent
+      String? formattedInput = super.onInputChanged(controller.text);
+      _updateUi(formattedInput);
     }
   }
 
-  void _onEditingComplete() {
-// TODO uncomment and finish
-// _skipOnChanged = true;
-// var value = widget.onEditingComplete?.call();
-// _skipOnChanged = false;
-// TODO REFACTOR - formatting and validation done in FormManager, formatted value passed back here
-// widget.formManager.onFieldChanged(widget.keyString, value);
+  void _updateUi(String? formattedInput) {
+    _skipOnChanged = true;
+    setState(() => controller.text = formattedInput ?? '');
+    _skipOnChanged = false;
   }
 }
