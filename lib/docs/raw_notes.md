@@ -1,18 +1,15 @@
-/// If TextFieldBrick receives TextEditingController in the constructor and the passed controller
+- If `TextFieldBrick` receives a `TextEditingController` in the constructor and the passed
+  controller’s text is `null`, its initial text is set from `FormData.initialValue`.
 
-/// text is null then its initial text is set to FormData.initialValue.
+- `FormFieldBrick` descendants do not declare an `initialValue` argument. The initial value is
+  supplied via `FormFieldDescriptor` → `FormSchema` → `FormManager` → `FormFieldBrick`.
 
-/// `FormFieldBrick` descendants do not declare their arg `initialValue` - initial value is passed
-/// via `FormFieldDescriptor` → `FormSchema` → `FormManager` → `FormFieldBrick`
+- `FormManager.focusedKeyString` must be set. If a field loses focus and no other `FormFieldBrick`
+  acquires focus, `focusedKeyString` remains unchanged and the last error message is displayed (
+  e.g., when clicking a button).
 
-/// `FormManager.focusedKeyString` must be set. Then when a field losses focus and no other
-/// FormFieldBrick acquires it then focusedKeyString remains unchanged and the last error message
-/// is displayed - example case: clicking a button
-
-/// Args `String keyString` and `FormatterValidatorPayload payload` passed to `FormatterValidator`
-/// allow passing additional data to `FormatterValidator` should be required in future implementations.
-/// Already `keyString` is required by `DateTimeRangeFormatterValidator` to identify which of the
-/// range fields is triggering the validation so that the others are not validated only their
-/// errors are read from `RangeController.errorsCacheMap`
-
-
+- Arguments `String keyString` and `FormatterValidatorPayload payload` passed to
+  `FormatterValidator` allow passing additional data to validators for future implementations.
+  `keyString` is already required by `DateTimeRangeFormatterValidator` to identify which range field
+  triggered validation, so the other fields are not revalidated and their errors are read from
+  `RangeController.errorsCacheMap`.
