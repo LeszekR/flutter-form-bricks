@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/src/form_fields/base/auto_validate_mode_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/formatter_validator_defaults.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/states_color_maker.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/text_field_brick.dart';
@@ -98,7 +99,7 @@ class LowerCaseTextField extends TextFieldBrick<TextEditingValue> {
     super.buttonParams,
     super.hintLocales,
   }) : super(
-            validateMode: TextFieldValidateMode.onChange,
+            validateMode: AutoValidateModeBrick.onChange,
             defaultFormatterValidatorListMaker: () => formatterValidatorDefaults.lowerCase());
 
   @override

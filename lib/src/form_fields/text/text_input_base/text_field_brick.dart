@@ -5,17 +5,16 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/form_fields/base/auto_validate_mode_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/states_controller/update_once_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/state_colored_icon_button.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/text_field_bordered_box.dart';
 
-enum TextFieldValidateMode { onChange, onEditingComplete }
-
 abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<String, V> {
   // TextFieldBrick
   final double? width;
-  final TextFieldValidateMode? validateMode;
+  final AutoValidateModeBrick? validateMode;
 
   // Flutter TextField
   final TextMagnifierConfiguration? magnifierConfiguration;
@@ -410,7 +409,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     // Run custom onChanged callback if provided
     widget.onChanged?.call(input?.trim() ?? '');
 
-    if (widget.validateMode == TextFieldValidateMode.onChange) {
+    if (widget.validateMode == AutoValidateModeBrick.onChange) {
       // Here FormManager:
       // - validates the input
       // - saves results of format-validation in FormData -> FormFieldData -> FieldContent
@@ -428,7 +427,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     // Run custom onEditingComplete callback if provided
     widget.onEditingComplete?.call();
 
-    if (widget.validateMode == TextFieldValidateMode.onEditingComplete) {
+    if (widget.validateMode == AutoValidateModeBrick.onEditingComplete) {
       // Here FormManager:
       // - validates the input
       // - saves results of format-validation in FormData -> FormFieldData -> FieldContent

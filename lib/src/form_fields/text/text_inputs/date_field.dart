@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/src/form_fields/base/auto_validate_mode_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/time_stamp.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/formatter_validator_defaults.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/states_color_maker.dart';
@@ -100,7 +101,7 @@ class DateField extends TextFieldBrick<Date> {
     super.hintLocales,
     // }) : super(defaultFormatterValidatorListMaker: () => getDefaultFormatterValidator<String, Date>('DateField'));
   }) : super(
-            validateMode: TextFieldValidateMode.onEditingComplete,
+            validateMode: AutoValidateModeBrick.onEditingComplete,
             defaultFormatterValidatorListMaker: () => formatterValidatorDefaults.date());
 
   @override
