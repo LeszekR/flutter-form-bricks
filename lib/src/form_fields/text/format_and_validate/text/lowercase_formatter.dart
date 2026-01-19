@@ -5,7 +5,7 @@ import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations
 
 LowercaseFormatter lowercaseFormatter = LowercaseFormatter();
 
-class LowercaseFormatter extends FormatterValidator<String, TextEditingValue> {
+class LowercaseFormatter extends FormatterValidator<TextEditingValue, String> {
   final _upperCase = RegExp(r'[A-Z]');
 
   LowercaseFormatter();
@@ -13,22 +13,22 @@ class LowercaseFormatter extends FormatterValidator<String, TextEditingValue> {
   @override
   TextFieldContent run(BricksLocalizations localizations,
       String keyString,
-      FieldContent<String, TextEditingValue> fieldContent,) {
+      FieldContent<TextEditingValue, String> fieldContent,) {
     if (fieldContent.input == null) return fieldContent;
-    if (!fieldContent.input!.contains(_upperCase)) return fieldContent;
+    if (!fieldContent.input!.text.contains(_upperCase)) return fieldContent;
 
-    final String lowerCaseInput = fieldContent.input!.toLowerCase();
+    final String lowerCaseInput = fieldContent.input!.text.toLowerCase();
     final TextSelection selection =
-        fieldContent.value?.selection ?? TextSelection.collapsed(offset: fieldContent.input!.length);
+        fieldContent.input?.selection ?? TextSelection.collapsed(offset: fieldContent.input!.text.length);
 
     // TU PRZERWAŁEM - finish correct support for text selection - now it selects the whole text
     return TextFieldContent.ok(
-      lowerCaseInput,
       TextEditingValue(
         text: lowerCaseInput,
         selection: selection,
         composing: TextRange.empty, // important when transforming text
       ),
+      lowerCaseInput,
     );
   }
 // final raw = fieldContent.input;

@@ -11,7 +11,7 @@ import 'package:flutter_form_bricks/src/form_fields/states_controller/update_onc
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/state_colored_icon_button.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/text_field_bordered_box.dart';
 
-abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<String, V> {
+abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditingValue, V> {
   // TextFieldBrick
   final double? width;
   final AutoValidateModeBrick? validateMode;
@@ -190,7 +190,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<String, V
 }
 
 abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>>
-    extends FormFieldStateBrick<String, V, B> {
+    extends FormFieldStateBrick<TextEditingValue, V, B> {
   late final TextEditingController controller;
 
   @override
@@ -207,8 +207,8 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     super.dispose();
   }
 
-  void _fillInitialInput(String? initialInput) {
-    controller.value = initialInput == null ? TextEditingValue.empty : TextEditingValue(text: initialInput);
+  void _fillInitialInput(TextEditingValue? initialInput) {
+    controller.value = initialInput == null ? TextEditingValue.empty : initialInput;
   }
 
   @override
@@ -310,7 +310,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       expands: widget.expands,
       maxLength: widget.maxLength,
       maxLengthEnforcement: widget.maxLengthEnforcement,
-      onChanged: onInputChanged,
+      onChanged: _onChanged,
       onEditingComplete: _onEditingComplete,
       onSubmitted: widget.onSubmitted,
       onAppPrivateCommand: widget.onAppPrivateCommand,
@@ -395,11 +395,15 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     );
   }
 
+  void _onChanged(String? inputString) {
+    onInputChanged(controller.value);
+  }
+
   var _skipOnChanged = false;
 
   @mustCallSuper
   @override
-  String? onInputChanged(String? input) {
+  TextEditingValue? onInputChanged(TextEditingValue? input) {
     // No FormatterValidatorChain for this TextFieldBrick
     if (widget.validateMode == null) return null;
 
@@ -407,13 +411,13 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     if (_skipOnChanged) return null;
 
     // Run custom onChanged callback if provided
-    widget.onChanged?.call(input?.trim() ?? '');
+    widget.onChanged?.call(input!);
 
     if (widget.validateMode == AutoValidateModeBrick.onChange) {
       // Here FormManager:
       // - validates the input
       // - saves results of format-validation in FormData -> FormFieldData -> FieldContent
-      String? formattedInput = super.onInputChanged(input);
+      TextEditingValue? formattedInput = super.onInputChanged(input);
       _updateUi(formattedInput);
     }
     return null;
@@ -431,14 +435,14 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       // Here FormManager:
       // - validates the input
       // - saves results of format-validation in FormData -> FormFieldData -> FieldContent
-      String? formattedInput = super.onInputChanged(controller.text);
-      _updateUi(formattedInput);
+      TextEditingValue? formattedValue = super.onInputChanged(controller.value);
+      _updateUi(formattedValue);
     }
   }
 
-  void _updateUi(String? formattedInput) {
+  void _updateUi(TextEditingValue? formattedValue) {
     _skipOnChanged = true;
-    setState(() => controller.text = formattedInput ?? '');
+    setState(() => controller.value = formattedValue ?? TextEditingValue.empty);
     _skipOnChanged = false;
   }
 }

@@ -7,7 +7,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/formatt
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/states_color_maker.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/text_field_brick.dart';
 
-class LowerCaseTextField extends TextFieldBrick<TextEditingValue> {
+class LowerCaseTextField extends TextFieldBrick<String> {
   LowerCaseTextField({
     super.key,
     //
@@ -106,4 +106,4 @@ class LowerCaseTextField extends TextFieldBrick<TextEditingValue> {
   LowerCaseFieldStateBrick createState() => LowerCaseFieldStateBrick();
 }
 
-class LowerCaseFieldStateBrick extends TextFieldStateBrick<TextEditingValue, LowerCaseTextField> {}
+class LowerCaseFieldStateBrick extends TextFieldStateBrick<String, LowerCaseTextField> {}

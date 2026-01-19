@@ -17,13 +17,13 @@ void setFormatterValidatorDefaultsForTest(FormatterValidatorDefaults replacement
 /// Defaults chosen by **value type V**.
 /// Keep these "internal"; the generator will reference the symbols directly.
 final class FormatterValidatorDefaults {
-  FormatterValidatorListMaker<String, Date> date =
-      () => <FormatterValidator<String, Date>>[
+  FormatterValidatorListMaker<TextEditingValue, Date> date =
+      () => <FormatterValidator<TextEditingValue, Date>>[
         dateFormatterValidator,
       ];
 
-  FormatterValidatorListMaker<String, TextEditingValue> lowerCase =
-      () => <FormatterValidator<String, TextEditingValue>>[
+  FormatterValidatorListMaker<TextEditingValue, String> lowerCase =
+      () => <FormatterValidator<TextEditingValue, String>>[
             lowercaseFormatter,
           ];
 

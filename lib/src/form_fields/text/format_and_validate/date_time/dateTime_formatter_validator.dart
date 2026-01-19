@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
@@ -8,35 +9,36 @@ import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations
 
 import 'date_formatter_validator.dart';
 
-class DateTimeFormatterValidator extends FormatterValidator<String, DateTime> {
+class DateTimeFormatterValidator extends FormatterValidator<TextEditingValue, DateTime> {
   final DateFormatterValidator _dateFormatterValidator;
   final TimeFormatterValidator _timeFormatterValidator;
 
-  DateTimeFormatterValidator(
-    DateTimeUtils _dateTimeUtils,
-    CurrentDate _currentDate,
-    DateTimeLimits? _dateTimeLimits,
-  )   : _dateFormatterValidator = DateFormatterValidator(_dateTimeUtils, _currentDate, _dateTimeLimits),
+  DateTimeFormatterValidator(DateTimeUtils _dateTimeUtils,
+      CurrentDate _currentDate,
+      DateTimeLimits? _dateTimeLimits,)
+      : _dateFormatterValidator = DateFormatterValidator(_dateTimeUtils, _currentDate, _dateTimeLimits),
         _timeFormatterValidator = TimeFormatterValidator(_dateTimeUtils, _dateTimeLimits);
 
-  DateTimeFieldContent run(
-    BricksLocalizations localizations,
-    String keyString,
-    DateTimeFieldContent fieldContent,
-  ) {
-    String textTrimmed = fieldContent.input!;
+  DateTimeFieldContent run(BricksLocalizations localizations,
+      String keyString,
+      DateTimeFieldContent fieldContent,) {
+    String textTrimmed = fieldContent.input!.text;
     textTrimmed = textTrimmed.trim();
     textTrimmed = textTrimmed.replaceAll(RegExp(' +'), ' ');
 
-    var nSpaces = RegExp(' ').allMatches(textTrimmed).length;
-    if (nSpaces == 0) return DateTimeFieldContent.err(textTrimmed, localizations.datetimeStringErrorNoSpace);
-    if (nSpaces > 1) return DateTimeFieldContent.err(textTrimmed, localizations.datetimeStringErrorTooManySpaces);
+    var nSpaces = RegExp(' ')
+        .allMatches(textTrimmed)
+        .length;
+    if (nSpaces == 0)
+      return DateTimeFieldContent.err(makeTextEditingValue(textTrimmed), localizations.datetimeStringErrorNoSpace);
+    if (nSpaces > 1) return DateTimeFieldContent.err(
+        makeTextEditingValue(textTrimmed), localizations.datetimeStringErrorTooManySpaces);
 
     var elementsList = textTrimmed.split(RegExp(' '));
-    DateFieldContent dateFieldContent = DateFieldContent.transient(elementsList[0]);
-    TimeFieldContent timeFieldContent = TimeFieldContent.transient(elementsList[1]);
+    DateFieldContent dateFieldContent = DateFieldContent.transient(makeTextEditingValue(elementsList[0]));
+    TimeFieldContent timeFieldContent = TimeFieldContent.transient(makeTextEditingValue(elementsList[1]));
 
-    DateFieldContent parseResultDate = _dateFormatterValidator.run(localizations, keyString, dateFieldContent);
+        DateFieldContent parseResultDate = _dateFormatterValidator.run(localizations, keyString, dateFieldContent);
     TimeFieldContent parseResultTime = _timeFormatterValidator.run(localizations, keyString, timeFieldContent);
 
     var parsedString = '${parseResultDate.input} ${parseResultTime.input}';
@@ -48,12 +50,12 @@ class DateTimeFormatterValidator extends FormatterValidator<String, DateTime> {
     // valid
     if (isStringValidDate && isStringValidTime) {
       DateTime dateTime = DateTime.parse(parsedString);
-      return DateTimeFieldContent.ok(parsedString, dateTime);
+      return DateTimeFieldContent.ok(makeTextEditingValue(parsedString), dateTime);
     }
 
     // invalid
     var connector = (!isStringValidDate && !isStringValidTime) ? '\n' : '';
     var errorMessage = '$errorMessageDate$connector$errorMessageTime';
-    return DateTimeFieldContent.err(parsedString, errorMessage);
+    return DateTimeFieldContent.err(makeTextEditingValue(parsedString), errorMessage);
   }
 }

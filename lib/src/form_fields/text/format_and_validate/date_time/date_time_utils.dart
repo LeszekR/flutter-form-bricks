@@ -26,7 +26,7 @@ class DateTimeUtils {
 
   DateTimeFieldContent cleanDateTimeString({
     required BricksLocalizations bricksLocalizations,
-    required String text,
+    required TextEditingValue textEditingValue,
     required DateTimeOrBoth dateTimeOrBoth,
     required String stringDelimiterPattern,
     required String stringDelimiter,
@@ -36,13 +36,13 @@ class DateTimeUtils {
   }) {
     // text must contain allowed chars only
     RegExp allowedRegex = RegExp('([0-9]|$stringDelimiterPattern)');
-    var allowedCharsLength = allowedRegex.allMatches(text).length;
-    if (allowedCharsLength < text.length)
-      return DateTimeFieldContent.err(text, errMsgForbiddenChars(bricksLocalizations, dateTimeOrBoth));
+    var allowedCharsLength = allowedRegex.allMatches(textEditingValue.text).length;
+    if (allowedCharsLength < textEditingValue.text.length)
+      return DateTimeFieldContent.err(textEditingValue, errMsgForbiddenChars(bricksLocalizations, dateTimeOrBoth));
 
     // remove forbidden chars
     // replace all delimiter-type elements and groups with single '-'
-    String textClean = text;
+    String textClean = textEditingValue.text;
     textClean = textClean.trim();
     textClean = textClean.replaceAll(RegExp('$stringDelimiterPattern+'), stringDelimiter);
     textClean = textClean.replaceAll(RegExp('$stringDelimiter+'), stringDelimiter);
@@ -53,16 +53,16 @@ class DateTimeUtils {
     // too many groups of digits
     var nDelimiters = RegExp(stringDelimiter).allMatches(textClean).length;
     if (nDelimiters > maxNumberDelimiters)
-      return DateTimeFieldContent.err(text, erMsgTooManyDelimiters(bricksLocalizations, dateTimeOrBoth));
+      return DateTimeFieldContent.err(textEditingValue, erMsgTooManyDelimiters(bricksLocalizations, dateTimeOrBoth));
 
     // too few digits or too many digits
-    var nDigits = RegExp('[0-9]').allMatches(text).length;
+    var nDigits = RegExp('[0-9]').allMatches(textEditingValue.text).length;
     if (nDigits + nDelimiters < minNumberOfDigits)
-      return DateTimeFieldContent.err(text, errMsgTooFewDigits(bricksLocalizations, dateTimeOrBoth));
+      return DateTimeFieldContent.err(textEditingValue, errMsgTooFewDigits(bricksLocalizations, dateTimeOrBoth));
     if (nDigits > maxNDigits && nDelimiters == 0)
-      return DateTimeFieldContent.err(text, errMsgTooManyDigits(bricksLocalizations, dateTimeOrBoth));
+      return DateTimeFieldContent.err(textEditingValue, errMsgTooManyDigits(bricksLocalizations, dateTimeOrBoth));
 
-    return DateTimeFieldContent.transient(textClean);
+    return DateTimeFieldContent.transient(makeTextEditingValue(textClean));
   }
 
   // String removeBadChars(String text, String stringDelimiterPattern) {
@@ -157,4 +157,11 @@ class DateTimeUtils {
   bool isValid(FieldContent dateContent) {
     return dateContent.isValid ?? true;
   }
+}
+
+TextEditingValue makeTextEditingValue(String dateString) {
+  return TextEditingValue(
+    text: dateString,
+    selection: TextSelection(baseOffset: dateString.length, extentOffset: 0),
+  );
 }

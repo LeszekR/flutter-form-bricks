@@ -81,19 +81,20 @@ class FieldContent<I extends Object, V extends Object> {
 /// Formatting-validation procedure return type for input of type `DateTime`.
 ///
 /// Usage - format-validation of: `DateFieldBrick`.
-typedef DateFieldContent = FieldContent<String, Date>;
+// TODO refactor to input as TextEditingValue
+typedef DateFieldContent = FieldContent<TextEditingValue, Date>;
 
 /// Formatting-validation procedure return type for input of type `DateTime`.
 ///
 /// Usage - format-validation of: `TimeFieldBrick` and its `..Range` fields.
-typedef TimeFieldContent = FieldContent<String, Time>;
+typedef TimeFieldContent = FieldContent<TextEditingValue, Time>;
 
 /// Formatting-validation procedure return type for input of type `DateTime`.
 ///
 /// Usage - format-validation of: `DateTimeFieldBrick`.
-typedef DateTimeFieldContent = FieldContent<String, DateTime>;
+typedef DateTimeFieldContent = FieldContent<TextEditingValue, DateTime>;
 
 /// Formatting-validation procedure return type for input of type `PlainTextField`.
 ///
 /// Usage - format-validation of: `DateTimeFieldBrick`.
-typedef TextFieldContent = FieldContent<String, TextEditingValue>;
+typedef TextFieldContent = FieldContent<TextEditingValue, String>;

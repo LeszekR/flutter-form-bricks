@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
@@ -8,7 +9,7 @@ import 'package:flutter_form_bricks/src/form_fields/base/formatter_validator_bas
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
-class DateTimeRangeFormatterValidator extends FormatterValidator<String, DateTime> {
+class DateTimeRangeFormatterValidator extends FormatterValidator<TextEditingValue, DateTime> {
   final FormManager _formManager;
   final DateTimeUtils _dateTimeUtils;
   final CurrentDate _currentDate;
