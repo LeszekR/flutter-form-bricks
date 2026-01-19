@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/dateTime_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_formatter_validator.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/time_formatter_validator.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/string_extension.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 import '../../../../tools/date_time_test_data.dart';
@@ -92,7 +94,11 @@ class TestDateFormatter implements ATestDateTimeFormatter {
     String fieldKeyString,
     String inputString,
   ) {
-    return dateFormatter.run(localizations, fieldKeyString, DateFieldContent.transient(inputString));
+    return dateFormatter.run(
+      localizations,
+      fieldKeyString,
+      DateFieldContent.transient(inputString.txtEditVal()),
+    );
   }
 
   String get dateDelimiterPattern => dateFormatter.dateDelimiterPattern;
@@ -109,7 +115,11 @@ class TestTimeFormatter implements ATestDateTimeFormatter {
     String fieldKeyString,
     String inputString,
   ) {
-    return timeFormatter.run(localizations, fieldKeyString, TimeFieldContent.transient(inputString));
+    return timeFormatter.run(
+      localizations,
+      fieldKeyString,
+      TimeFieldContent.transient(inputString.txtEditVal()),
+    );
   }
 
   String get timeDelimiterPattern => timeFormatter.timeDelimiterPattern;
@@ -126,6 +136,10 @@ class TestDateTimeFormatter implements ATestDateTimeFormatter {
     String fieldKeyString,
     String inputString,
   ) {
-    return dateTimeFormatter.run(localizations, fieldKeyString, DateTimeFieldContent.transient(inputString));
+    return dateTimeFormatter.run(
+      localizations,
+      fieldKeyString,
+      DateTimeFieldContent.transient(inputString.txtEditVal()),
+    );
   }
 }

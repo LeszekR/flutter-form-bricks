@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/string_extension.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:intl/intl.dart';
 
@@ -62,7 +63,7 @@ class DateTimeUtils {
     if (nDigits > maxNDigits && nDelimiters == 0)
       return DateTimeFieldContent.err(textEditingValue, errMsgTooManyDigits(bricksLocalizations, dateTimeOrBoth));
 
-    return DateTimeFieldContent.transient(makeTextEditingValue(textClean));
+    return DateTimeFieldContent.transient(textClean.txtEditVal());
   }
 
   // String removeBadChars(String text, String stringDelimiterPattern) {
@@ -159,7 +160,7 @@ class DateTimeUtils {
   }
 }
 
-TextEditingValue makeTextEditingValue(String dateString) {
+TextEditingValue toTextEditingValue(String dateString) {
   return TextEditingValue(
     text: dateString,
     selection: TextSelection(baseOffset: dateString.length, extentOffset: 0),

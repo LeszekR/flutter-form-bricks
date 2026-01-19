@@ -208,7 +208,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   }
 
   void _fillInitialInput(TextEditingValue? initialInput) {
-    controller.value = initialInput == null ? TextEditingValue.empty : initialInput;
+    controller.value = initialInput == null ? TextEditingValue.empty : initialInput ;
   }
 
   @override
@@ -395,7 +395,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     );
   }
 
-  void _onChanged(String? inputString) {
+  void _onChanged(_) {
     onInputChanged(controller.value);
   }
 

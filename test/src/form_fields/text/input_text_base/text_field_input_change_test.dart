@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/string_extension.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../../test_implementations/mock_formatter_validator.dart';
 import '../../../../test_implementations/mock_formatter_validator_chain.dart';
 import '../../../../test_implementations/test_color_maker.dart';
 import '../../../tools/test_constants.dart';
@@ -72,10 +74,11 @@ Future<void> _runValueChangeTest(
 
   final formManager = TestFormManager(
     schema: TestFormSchema.fromDescriptors([
-      FormFieldDescriptor<String, TextEditingValue>(
+      FormFieldDescriptor<TextEditingValue, String>(
         keyString: fieldKeyString,
-        initialInput: testCase.initialInput,
-        formatterValidatorChainBuilder: formatterValidatorChainBuilder,
+        initialInput: testCase.initialInput?.txtEditVal(),
+        // TU PRZERWAŁEM - finish correcting refactoring
+        defaultFormatterValidatorListMaker: () => [MockTextFormatterValidator(mockInput: mockInput.txtEditVal(), mockError: mockError)],
       )
     ]),
   );

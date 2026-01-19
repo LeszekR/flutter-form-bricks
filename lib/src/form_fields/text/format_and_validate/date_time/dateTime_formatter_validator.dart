@@ -5,6 +5,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/dat
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/time_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/base/formatter_validator_base/formatter_validator.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/string_extension.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 import 'date_formatter_validator.dart';
@@ -30,13 +31,13 @@ class DateTimeFormatterValidator extends FormatterValidator<TextEditingValue, Da
         .allMatches(textTrimmed)
         .length;
     if (nSpaces == 0)
-      return DateTimeFieldContent.err(makeTextEditingValue(textTrimmed), localizations.datetimeStringErrorNoSpace);
+      return DateTimeFieldContent.err(toTextEditingValue(textTrimmed), localizations.datetimeStringErrorNoSpace);
     if (nSpaces > 1) return DateTimeFieldContent.err(
-        makeTextEditingValue(textTrimmed), localizations.datetimeStringErrorTooManySpaces);
+        toTextEditingValue(textTrimmed), localizations.datetimeStringErrorTooManySpaces);
 
     var elementsList = textTrimmed.split(RegExp(' '));
-    DateFieldContent dateFieldContent = DateFieldContent.transient(makeTextEditingValue(elementsList[0]));
-    TimeFieldContent timeFieldContent = TimeFieldContent.transient(makeTextEditingValue(elementsList[1]));
+    DateFieldContent dateFieldContent = DateFieldContent.transient(elementsList[0].txtEditVal());
+    TimeFieldContent timeFieldContent = TimeFieldContent.transient(elementsList[1].txtEditVal());
 
         DateFieldContent parseResultDate = _dateFormatterValidator.run(localizations, keyString, dateFieldContent);
     TimeFieldContent parseResultTime = _timeFormatterValidator.run(localizations, keyString, timeFieldContent);
@@ -50,12 +51,12 @@ class DateTimeFormatterValidator extends FormatterValidator<TextEditingValue, Da
     // valid
     if (isStringValidDate && isStringValidTime) {
       DateTime dateTime = DateTime.parse(parsedString);
-      return DateTimeFieldContent.ok(makeTextEditingValue(parsedString), dateTime);
+      return DateTimeFieldContent.ok(toTextEditingValue(parsedString), dateTime);
     }
 
     // invalid
     var connector = (!isStringValidDate && !isStringValidTime) ? '\n' : '';
     var errorMessage = '$errorMessageDate$connector$errorMessageTime';
-    return DateTimeFieldContent.err(makeTextEditingValue(parsedString), errorMessage);
+    return DateTimeFieldContent.err(toTextEditingValue(parsedString), errorMessage);
   }
 }

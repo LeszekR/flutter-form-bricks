@@ -8,7 +8,7 @@ class FormFieldDescriptor<I extends Object, V extends Object> {
   final Type inputRuntimeType = I;
   final Type valueRuntimeType = V;
   final bool isRequired;
-  final bool validatorsFullRun;
+  final bool runValidatorsFullRun;
   final bool runDefaultValidatorsFirst;
   final I? initialInput;
   final bool? isFocusedOnStart;
@@ -22,7 +22,7 @@ class FormFieldDescriptor<I extends Object, V extends Object> {
     this.initialInput,
     this.isFocusedOnStart,
     this.isRequired = FormFieldBrick.defaultIsRequired,
-    this.validatorsFullRun = FormFieldBrick.defaultValidatorsFullRun,
+    this.runValidatorsFullRun = FormFieldBrick.defaultValidatorsFullRun,
     this.runDefaultValidatorsFirst = FormFieldBrick.defaultRunDefaultValidatorsFirst,
     this.defaultFormatterValidatorListMaker,
     this.addFormatterValidatorListMaker,
@@ -35,9 +35,9 @@ class FormFieldDescriptor<I extends Object, V extends Object> {
 /// Builds a [`FormatterValidatorChain`] for a descriptor by combining its default and additional validators.
 ///
 /// Chain policy:
-/// - When [validatorsFullRun] is `true` (default), returns a [FormatterValidatorChainFullRun]:
+/// - When [runValidatorsFullRun] is `true` (default), returns a [FormatterValidatorChainFullRun]:
 ///   runs **all** validators in order and returns the final `FieldContent`.
-/// - When [validatorsFullRun] is `false`, returns a [FormatterValidatorChainEarlyStop]:
+/// - When [runValidatorsFullRun] is `false`, returns a [FormatterValidatorChainEarlyStop]:
 ///   runs validators until the running result becomes **invalid**, then stops early,
 ///   or runs to the end if no invalid result is encountered.
 ///
@@ -76,7 +76,7 @@ FormatterValidatorChain<I, V>? _buildFormatterValidatorChainForDescriptor<I exte
 
   if (formatterValidatorList == null) {
     return null;
-  } else if (d.validatorsFullRun) {
+  } else if (d.runValidatorsFullRun) {
     return FormatterValidatorChainFullRun<I, V>(formatterValidatorList);
   } else {
     return FormatterValidatorChainEarlyStop<I, V>(formatterValidatorList);

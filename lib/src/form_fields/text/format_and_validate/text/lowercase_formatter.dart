@@ -21,7 +21,6 @@ class LowercaseFormatter extends FormatterValidator<TextEditingValue, String> {
     final TextSelection selection =
         fieldContent.input?.selection ?? TextSelection.collapsed(offset: fieldContent.input!.text.length);
 
-    // TU PRZERWAŁEM - finish correct support for text selection - now it selects the whole text
     return TextFieldContent.ok(
       TextEditingValue(
         text: lowerCaseInput,
@@ -31,31 +30,5 @@ class LowercaseFormatter extends FormatterValidator<TextEditingValue, String> {
       lowerCaseInput,
     );
   }
-// final raw = fieldContent.input;
-// if (raw == null || raw.isEmpty) return fieldContent;
-// if (!raw.contains(_upperCase)) return fieldContent;
-//
-// final lower = raw.toLowerCase();
-//
-// final incomingSel = fieldContent.value?.selection;
-// final selection = _safeSelection(incomingSel, lower.length);
-//
-// return TextFieldContent.ok(
-//   lower,
-//   TextEditingValue(
-//     text: lower,
-//     selection: selection,
-//     composing: TextRange.empty, // important when transforming text
-//   ),
-// );
-// TextSelection _safeSelection(TextSelection? sel, int len) {
-//   if (sel == null || !sel.isValid) {
-//     return TextSelection.collapsed(offset: len);
-//   }
-//   final base = sel.baseOffset.clamp(0, len);
-//   final extent = sel.extentOffset.clamp(0, len);
-//   if (base == extent) return TextSelection.collapsed(offset: extent);
-//   return TextSelection(baseOffset: base, extentOffset: extent);
-// }
 }
 
