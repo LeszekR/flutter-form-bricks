@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/base/formatter_validator_base/formatter_validator_chain.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/string_extension.dart';
 
 import '../src/tools/test_constants.dart';
+import 'mock_formatter_validator.dart';
 
 class TestFormSchema extends FormSchema {
   TestFormSchema.testDefault()
@@ -18,13 +19,13 @@ class TestFormSchema extends FormSchema {
   TestFormSchema.withSingleTextField({
     required String fieldKeyString,
     required String? initialInput,
-    FormatterValidatorChain? formatterValidatorChain,
+    FormatterValidatorListMaker<TextEditingValue, String>? formatterValidatorListMaker,
   }) : super(
           [
-            FormFieldDescriptor<String, TextEditingValue>(
+            FormFieldDescriptor<TextEditingValue, String>(
               keyString: fieldKeyString,
-              initialInput: initialInput ?? stringInput1,
-              formatterValidatorChainBuilder: formatterValidatorChain == null ? null : () => formatterValidatorChain,
+              initialInput: (initialInput ?? stringInput1).txtEditVal(),
+              defaultFormatterValidatorListMaker: formatterValidatorListMaker ?? () => [MockTextFormatterValidator()],
             )
           ],
         );

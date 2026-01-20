@@ -11,14 +11,14 @@ import '../src/tools/test_constants.dart';
 /// For use in all value-change tests to simulate both valid and invalid responses.
 class MockFormatterValidatorChain extends FormatterValidatorChainFullRun<TextEditingValue, String> {
   final bool shouldRunChain;
-  final String? mockInput;
+  final String? mockInputString;
   final String? mockError;
 
   MockFormatterValidatorChain({
     required this.shouldRunChain,
-    this.mockInput,
+    this.mockInputString,
     this.mockError,
-  }) : super([MockTextFormatterValidator(mockInput: mockInput, mockError: mockError)]);
+  }) : super([MockTextFormatterValidator(returnInputTEV: mockInputString?.txtEditVal(), mockError: mockError)]);
 
   @override
   FieldContent<TextEditingValue, String> runChain(

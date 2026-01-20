@@ -8,11 +8,11 @@ import 'test_form_state_data.dart';
 class TestFormManager extends FormManager {
   TestFormManager({required FormSchema schema})
       : super(
-          formData: TestFormStateData(),
+          formData: TestFormData(),
           formSchema: schema
         );
 
-  TestFormManager.testDefault() : super(formData: TestFormStateData(), formSchema: TestFormSchema.testDefault());
+  TestFormManager.testDefault() : super(formData: TestFormData(), formSchema: TestFormSchema.testDefault());
 
   @override
   FormStatus checkStatus() {

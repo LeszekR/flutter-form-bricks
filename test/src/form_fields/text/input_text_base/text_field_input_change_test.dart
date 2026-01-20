@@ -6,10 +6,10 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../../test_implementations/mock_formatter_validator.dart';
 import '../../../../test_implementations/mock_formatter_validator_chain.dart';
 import '../../../../test_implementations/test_color_maker.dart';
-import '../../../tools/test_constants.dart';
 import '../../../../test_implementations/test_form_field_brick.dart';
 import '../../../../test_implementations/test_form_manager.dart';
 import '../../../../test_implementations/test_form_schema.dart';
+import '../../../tools/test_constants.dart';
 
 void main() {
   group('FormFieldBrick value change → validation flow', () {
@@ -66,11 +66,12 @@ Future<void> _runValueChangeTest(
 ) async {
   final fieldKeyString = fieldKeyString1;
 
-  final formatterValidatorChainBuilder = () => MockFormatterValidatorChain(
-        shouldRunChain: true,
-        mockInput: testCase.newInput,
-        mockError: testCase.error,
-      );
+  final FormatterValidatorListMaker<TextEditingValue, String> mockTextFormatValidListMaker = () => [
+        MockTextFormatterValidator(
+          returnInputTEV: testCase.newInput.txtEditVal(),
+          mockError: testCase.error,
+        )
+      ];
 
   final formManager = TestFormManager(
     schema: TestFormSchema.fromDescriptors([
@@ -78,7 +79,7 @@ Future<void> _runValueChangeTest(
         keyString: fieldKeyString,
         initialInput: testCase.initialInput?.txtEditVal(),
         // TU PRZERWAŁEM - finish correcting refactoring
-        defaultFormatterValidatorListMaker: () => [MockTextFormatterValidator(mockInput: mockInput.txtEditVal(), mockError: mockError)],
+        defaultFormatterValidatorListMaker: mockTextFormatValidListMaker,
       )
     ]),
   );
@@ -99,7 +100,7 @@ Future<void> _runValueChangeTest(
               keyString: fieldKeyString,
               formManager: formManager,
               colorMaker: TestColorMaker(),
-              formatterValidatorChainBuilder: formatterValidatorChainBuilder,
+              defaultFormatterValidatorListMaker: mockTextFormatValidListMaker,
             );
           },
         ),
@@ -120,7 +121,7 @@ Future<void> _runValueChangeTest(
   expect(formManager.getFieldError(fieldKeyString), null);
 
   // --- Simulate user input change ---
-  state.changeValue(localizations!, testCase.newInput);
+  state.onInputChanged(testCase.newInput.txtEditVal());
 
   // --- Verify final FormManager state ---
   expect(formManager.getFieldValue(fieldKeyString), TextEditingValue(text: testCase.newInput));
@@ -130,7 +131,7 @@ Future<void> _runValueChangeTest(
   expect(formManager.getFieldError(fieldKeyString), testCase.error);
 
   // --- Verify TextField controller sync ---
-  expect(state.value, TextEditingValue(text: testCase.newInput));
+  expect(state.controller.value, TextEditingValue(text: testCase.newInput));
 
   // --- Verify error notifier propagation ---
   expect(formManager.errorMessageNotifier.value, testCase.error);

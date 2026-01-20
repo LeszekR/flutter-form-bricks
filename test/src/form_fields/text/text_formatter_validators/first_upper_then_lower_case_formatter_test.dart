@@ -4,6 +4,8 @@ import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/tex
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../../test_implementations/test_form_schema.dart';
+import '../../../../test_implementations/test_form_state_data.dart';
 import '../../../tools/test_data.dart';
 import '../../../tools/test_utils.dart';
 
@@ -39,7 +41,7 @@ void main() {
     //given
     const String enteredText = "Space at the end ";
 
-    final formManager = SingleFormManager();
+    final formManager = SingleFormManager(formData: TestFormData(), formSchema: TestFormSchema.withSingleTextField(fieldKeyString: te);
     await prepareDataForTrimmingSpacesTests(context, tester, formManager, keyString);
 
     //when

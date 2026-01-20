@@ -30,7 +30,7 @@ Future<bool> testDateTimeExcelStyleInput(
     final dynamic actual = testAction.call(textInput);
 
     passedOk &= (actual == testCase.expectedValueText) == (testCase.expectedIsValid);
-    if (!passedOk) debugPrint(makErrorString(testCase.input, testCase.input, actual, testCase.expectedValueText));
+    if (!passedOk) debugPrint(makeErrorString(testCase.input, testCase.input, actual, testCase.expectedValueText));
   }
   return Future.value(passedOk);
 }
@@ -51,12 +51,12 @@ String? tryExpect(String input, dynamic actual, dynamic expected, String? errors
   try {
     expect(actual, expected);
   } catch (e) {
-    errors = (errors ?? '') + makErrorString(testCaseTitle, input, actual, expected);
+    errors = (errors ?? '') + makeErrorString(testCaseTitle, input, actual, expected);
   }
   return errors;
 }
 
-String makErrorString(String testCaseTitle, String input, dynamic actual, dynamic expected) {
+String makeErrorString(String testCaseTitle, String input, dynamic actual, dynamic expected) {
   return ""
       "\n\t$testCaseTitle  \n\t\t  "
       "actual: ${addEndLines(actual.toString())} \n\t\t"
