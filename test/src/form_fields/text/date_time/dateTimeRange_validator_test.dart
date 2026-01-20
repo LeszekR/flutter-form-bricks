@@ -1,5 +1,4 @@
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/date_time_inputs.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_range_span.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/dateTimeRange_formatter_validator.dart';
@@ -7,21 +6,13 @@ import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../test_implementations/test_form_manager.dart';
 import '../../../../test_implementations/test_single_form.dart';
 import '../../../tools/test_utils.dart';
 import 'utils/dateTimeRange_test_utils.dart';
 
 void main() {
   var rangeId = "rng";
-  
-  // var dummyDatTimRngFormatValid = DateTimeRangeFormatterValidator(
-  //   'f',
-  //   TestFormManager.testDefault(),
-  //   DateTimeUtils(),
-  //   CurrentDate(),
-  //   DateTimeRangeLimits(DateTimeLimits(), DateTimeLimits(), 1, 1),
-  // );
+
   var keyStrings = [
     (DateTimeRangeFormatterValidator.rangeDateStartKeyString(rangeId)),
     (DateTimeRangeFormatterValidator.rangeTimeStartKeyString(rangeId)),
@@ -30,7 +21,7 @@ void main() {
   ];
 
   final dateTimeLimits = DateTimeLimits(minDateTime: DateTime(2014), maxDateTime: DateTime(2026));
-  final dateTimeRangeSpan = DateTimeRangeSpan(minDateTimeSpanMinutes: 15, maxDateTimeSpanMinutes:10080);
+  final dateTimeRangeSpan = DateTimeRangeSpan(minDateTimeSpanMinutes: 15, maxDateTimeSpanMinutes: 10080);
 
   testWidgets('correct input', (WidgetTester tester) async {
     String? errMsg = null;

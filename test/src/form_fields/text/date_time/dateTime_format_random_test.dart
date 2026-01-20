@@ -30,7 +30,7 @@ void main() {
       DateTimeTestCase('22-03-03-15-33', '22-03-03-15-33', false, local.datetimeStringErrorNoSpace),
       DateTimeTestCase('22 03 03 15/30', '22 03 03 15/30', false, local.datetimeStringErrorTooManySpaces),
     ];
-    var passedOk = runDateTimeFormatterTest(local, testCases, dateTimeFormatter);
+    var passedOk = runDateTimeFormatterTest<DateTime>(local, testCases, dateTimeFormatter);
     expect(passedOk, true);
   });
 

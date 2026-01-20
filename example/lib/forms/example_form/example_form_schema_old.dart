@@ -5,11 +5,11 @@
 // class ExampleFormSchema extends FormSchema {
 //   ExampleFormSchema()
 //       : super([
-//           FormFieldDescriptor<String, TextEditingValue>(
+//           FormFieldDescriptor<TextEditingValue,String>(
 //             keyString: plainTextKeyString1,
 //             initialInput: 'Ala',
 //           ),
-//           FormFieldDescriptor<String, TextEditingValue>(
+//           FormFieldDescriptor<TextEditingValue, String>(
 //             keyString: plainTextKeyString2,
 //             initialInput: 'Gucio',
 //           ),

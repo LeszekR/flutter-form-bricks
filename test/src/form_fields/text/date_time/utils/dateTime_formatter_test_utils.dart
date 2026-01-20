@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/time_stamp.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/dateTime_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/time_formatter_validator.dart';
@@ -10,7 +11,7 @@ import '../../../../tools/date_time_test_data.dart';
 import 'a_test_dateTime_formatter.dart';
 import 'dateTime_test_utils.dart';
 
-bool runDateTimeFormatterTest(
+bool runDateTimeFormatterTest<V extends Object>(
   BricksLocalizations localizations,
   List<DateTimeTestCase> testCases,
   ATestDateTimeFormatter testDateTimeFormatter, {
@@ -24,7 +25,7 @@ bool runDateTimeFormatterTest(
 
   if (delimitersPattern == null) {
     for (DateTimeTestCase testCase in testCases) {
-      passedOk &= assertSingleCaseDateTimeFormatter(
+      passedOk &= assertSingleCaseDateTimeFormatter<V>(
         localizations,
         testCase,
         testDateTimeFormatter,
@@ -33,7 +34,7 @@ bool runDateTimeFormatterTest(
   } else {
     for (DateTimeTestCase testCase in testCases) {
       for (String delimiter in extractDelimitersList(delimitersPattern)) {
-        passedOk &= assertSingleCaseDateTimeFormatter(
+        passedOk &= assertSingleCaseDateTimeFormatter<V>(
           localizations,
           testCase,
           testDateTimeFormatter,
@@ -46,7 +47,7 @@ bool runDateTimeFormatterTest(
   return passedOk;
 }
 
-bool assertSingleCaseDateTimeFormatter(
+bool assertSingleCaseDateTimeFormatter<V extends Object>(
   BricksLocalizations localizations,
   DateTimeTestCase testCase,
   ATestDateTimeFormatter testDateTimeFormatter, {
@@ -60,12 +61,13 @@ bool assertSingleCaseDateTimeFormatter(
   String input = (placeholder == null) ? testCase.input : (testCase.input.replaceAll(RegExp(placeholder), delimiter!));
 
   // print(testCase.input);
-  FieldContent result = testDateTimeFormatter.makeDateTime(localizations, input, input);
+  FieldContent<TextEditingValue, V> result =
+      testDateTimeFormatter.makeDateTime(localizations, input, input) as FieldContent<TextEditingValue, V>;
 
-  var actual = (placeholder == null)
+  var expected = (placeholder == null)
       ? testCase.expectedValueText
       : (testCase.expectedValueText.replaceAll(RegExp(placeholder), delimiter!));
-  errors = tryExpect(input, result.input, actual, errors, 'parsedString');
+  errors = tryExpect(input, result.input!.text, expected, errors, 'parsedString');
   errors = tryExpect(input, result.error, testCase.expectedError, errors, 'errorMessage');
   errors = tryExpect(input, result.isValid, testCase.expectedIsValid, errors, 'isStringValid');
 

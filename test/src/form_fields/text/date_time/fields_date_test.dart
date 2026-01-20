@@ -18,8 +18,6 @@ void main() {
   when(mockCurrentDate.getDateNow()).thenReturn(today);
 
   var dateTimeLimits = DateTimeLimits(minDateTime: DateTime(2014), maxDateTime: DateTime(2026));
-  final String yearMaxBack = dateTimeLimits.minDateTime!.year.toString();
-  final String yearMaxForward = dateTimeLimits.maxDateTime!.year.toString();
 
   testWidgets('DATE - refuses to parse with invalid characters', (WidgetTester tester) async {
     final List<DateTimeTestCase> testCases = [
@@ -100,6 +98,7 @@ Widget makeTextFieldDate(
     currentDate: currentDate,
     dateLimits: dateTimeLimits,
   );
+  return DateField(keyString: dateName, formManager: formManager);
 }
 
 String verifyDate(String text) {

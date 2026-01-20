@@ -114,35 +114,37 @@ void main() {
   testWidgets('creates formatted time string from excel-style input', (WidgetTester tester) async {
     final local = await getLocalizations();
     var testCases = [
-      DateTimeTestCase("1-12", "01:12", true, ''),
-      DateTimeTestCase("01/12", "01:12", true, ''),
-      DateTimeTestCase("01:2", "01:02", true, ''),
-      DateTimeTestCase("01 23", "01:23", true, ''),
-      DateTimeTestCase("13/5", "13:05", true, ''),
-      DateTimeTestCase("00,00", "00:00", true, ''),
-      DateTimeTestCase("00- 01", "00:01", true, ''),
-      DateTimeTestCase(" 012", "00:12", true, ''),
-      DateTimeTestCase("0/1", "00:01", true, ''),
-      DateTimeTestCase("0  12  ", "00:12", true, ''),
-      DateTimeTestCase("00 , 00", "00:00", true, ''),
-      DateTimeTestCase("00-- 01", "00:01", true, ''),
-      DateTimeTestCase(" 012", "00:12", true, ''),
-      DateTimeTestCase("0////1", "00:01", true, ''),
-      DateTimeTestCase("0 12  ", "00:12", true, ''),
+      DateTimeTestCase("1-12", "01:12", true, null),
+      DateTimeTestCase("01/12", "01:12", true, null),
+      DateTimeTestCase("01:2", "01:02", true, null),
+      DateTimeTestCase("01 23", "01:23", true, null),
+      DateTimeTestCase("13/5", "13:05", true, null),
+      DateTimeTestCase("00,00", "00:00", true, null),
+      DateTimeTestCase("00- 01", "00:01", true, null),
+      DateTimeTestCase(" 012", "00:12", true, null),
+      DateTimeTestCase("0/1", "00:01", true, null),
+      DateTimeTestCase("0  12  ", "00:12", true, null),
+      DateTimeTestCase("00 , 00", "00:00", true, null),
+      DateTimeTestCase("00-- 01", "00:01", true, null),
+      DateTimeTestCase(" 012", "00:12", true, null),
+      DateTimeTestCase("0////1", "00:01", true, null),
+      DateTimeTestCase("0 12  ", "00:12", true, null),
     ];
-    runDateTimeFormatterTest(local, testCases, timeFormatter);
+    bool passed = runDateTimeFormatterTest(local, testCases, timeFormatter);
+    expect(passed, true);
   });
 
   testWidgets('creates formatted time string from digits only input', (WidgetTester tester) async {
     final local = await getLocalizations();
     var testCases = [
-      DateTimeTestCase("001", "00:01", true, ''),
-      DateTimeTestCase("0201", "02:01", true, ''),
-      DateTimeTestCase("0000", "00:00", true, ''),
-      DateTimeTestCase("0201", "02:01", true, ''),
-      DateTimeTestCase("0000", "00:00", true, ''),
+      DateTimeTestCase("001", "00:01", true, null),
+      DateTimeTestCase("0201", "02:01", true, null),
+      DateTimeTestCase("0000", "00:00", true, null),
+      DateTimeTestCase("0201", "02:01", true, null),
+      DateTimeTestCase("0000", "00:00", true, null),
     ];
-    runDateTimeFormatterTest(local, testCases, timeFormatter);
+    bool passed = runDateTimeFormatterTest(local, testCases, timeFormatter);
+    expect(passed, true);
   });
 
   testWidgets('shows error on invalid time', (WidgetTester tester) async {

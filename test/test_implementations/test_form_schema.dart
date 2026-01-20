@@ -8,9 +8,9 @@ import 'mock_formatter_validator.dart';
 class TestFormSchema extends FormSchema {
   TestFormSchema.testDefault()
       : super([
-          FormFieldDescriptor<String, TextEditingValue>(
+          FormFieldDescriptor<TextEditingValue, String>(
             keyString: fieldKeyString1,
-            initialInput: stringInput1,
+            initialInput: stringInput1.txtEditVal(),
           )
         ]);
 

@@ -73,7 +73,7 @@ void main() {
       // --------------------------------------------
       DateTimeTestCase('3123', '2024-31-23', false, local.dateErrorMonthOver12),
     ];
-    var passedOk = runDateTimeFormatterTest(local, testCases, dateFormatter);
+    var passedOk = runDateTimeFormatterTest<Date>(local, testCases, dateFormatter);
     expect(passedOk, true);
   });
 
@@ -87,7 +87,7 @@ void main() {
       DateTimeTestCase('01*2', '01*2', false, local.dateStringErrorBadChars),
       DateTimeTestCase('01+23', '01+23', false, local.dateStringErrorBadChars),
     ];
-    var passedOk = runDateTimeFormatterTest(local, testCases, dateFormatter);
+    var passedOk = runDateTimeFormatterTest<Date>(local, testCases, dateFormatter);
     expect(passedOk, true);
   });
 
@@ -104,7 +104,7 @@ void main() {
       DateTimeTestCase('0211231', '2021-12-31', true, null),
       DateTimeTestCase('20211231', '2021-12-31', true, null),
     ];
-    var passedOk = runDateTimeFormatterTest(local, testCases, dateFormatter);
+    var passedOk = runDateTimeFormatterTest<Date>(local, testCases, dateFormatter);
     expect(passedOk, true);
   });
 
@@ -117,7 +117,7 @@ void main() {
       DateTimeTestCase('4/01,23', '2024-01-23', true, null),
       DateTimeTestCase('24;1-23', '2024-01-23', true, null),
     ];
-    var passedOk = runDateTimeFormatterTest(local, testCases, dateFormatter);
+    var passedOk = runDateTimeFormatterTest<Date>(local, testCases, dateFormatter);
     expect(passedOk, true);
   });
 
@@ -136,7 +136,7 @@ void main() {
       DateTimeTestCase('4${p}01${p}23', '2024-01-23', true, null),
       DateTimeTestCase('24${p}1${p}23', '2024-01-23', true, null),
     ];
-    var passedOk = runDateTimeFormatterTest(
+    var passedOk = runDateTimeFormatterTest<Date>(
       local,
       testCases,
       dateFormatter,
@@ -175,7 +175,7 @@ void main() {
       DateTimeTestCase('001231', '2000-12-31', false, local.dateErrorTooFarBack(dateMaxBack)),
       DateTimeTestCase('301231', '2030-12-31', false, local.dateErrorTooFarForward(dateMaxForward)),
     ];
-    var passedOk = runDateTimeFormatterTest(local, testCases, dateFormatterWithLimits);
+    var passedOk = runDateTimeFormatterTest<Date>(local, testCases, dateFormatterWithLimits);
     expect(passedOk, true);
   });
 
@@ -210,7 +210,7 @@ void main() {
       DateTimeTestCase('19001216', '1900-12-16', false, local.dateErrorTooFarBack(dateMaxBack)),
       DateTimeTestCase('39001216', '3900-12-16', false, local.dateErrorTooFarForward(dateMaxForward)),
     ];
-    var passedOk = runDateTimeFormatterTest(local, testCases, dateFormatterWithLimits);
+    var passedOk = runDateTimeFormatterTest<Date>(local, testCases, dateFormatterWithLimits);
     expect(passedOk, true);
   });
 
@@ -252,7 +252,7 @@ void main() {
         local.dateErrorMonthOver12 + '\n' + local.dateErrorTooManyDaysInMonth,
       ),
     ];
-    var passedOk = runDateTimeFormatterTest(local, testCases, dateFormatterWithLimits);
+    var passedOk = runDateTimeFormatterTest<Date>(local, testCases, dateFormatterWithLimits);
     expect(passedOk, true);
   });
 }
