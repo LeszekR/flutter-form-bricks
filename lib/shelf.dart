@@ -13,9 +13,6 @@ export 'src/awaiting_refactoring/ui/inputs/date_time/date_time_inputs.dart';
 export 'src/awaiting_refactoring/ui/inputs/number/number_inputs.dart';
 export 'src/awaiting_refactoring/ui/inputs/text/text_inputs.dart';
 
-// API
-export 'src/annotations/auto_form_schema.dart';
-
 // DIALOGS
 export 'src/dialogs/dialogs.dart';
 export 'src/form_fields/base/form_field_brick.dart';
