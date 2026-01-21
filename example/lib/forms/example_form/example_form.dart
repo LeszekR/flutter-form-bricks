@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks_example/forms/example_form/example_form_manager.dart';
 
-part 'example_form.g.dart';
+part 'example_form_schema.dart';
 
 final GlobalKey<ExampleFormState> formKey1 = GlobalKey();
 final String dateKeyString1 = 'dateKeyString1';
 final String plainTextKeyString2 = 'plainKeyString1';
 final String lowerCaseKeyString3 = 'lowerCaseKeyString1';
 
-@AutoFormSchema()
+// @AutoFormSchema()
 class ExampleForm extends FormBrick {
   ExampleForm() : super(formManager: ExampleFormManager());
 
@@ -33,20 +33,17 @@ class ExampleFormState extends FormStateBrick {
               keyString: dateKeyString1,
               formManager: formManager,
               width: 150,
-              initialInput: TextEditingValue(text: 'Krokodyl'),
               // defaultFormatterValidatorListMaker: null,
             ),
             appSize.spacerBoxVerticalMedium,
             PlainTextField(
               keyString: plainTextKeyString2,
               formManager: formManager,
-              initialInput: TextEditingValue(text: 'Zenon'),
-              isFocusedOnStart: true,
               width: 200,
               maxLines: 3,
             ),
             appSize.spacerBoxVerticalMedium,
-            LowerCaseTextField(
+            LowerCaseField(
               keyString: lowerCaseKeyString3,
               formManager: formManager,
               width: 250,

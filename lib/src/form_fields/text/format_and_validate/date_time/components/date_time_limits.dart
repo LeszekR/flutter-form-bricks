@@ -1,17 +1,27 @@
+import 'package:flutter_form_bricks/shelf.dart';
+
 /// Configuration object - **date-with-time** limits for `DateTimeFormatterValidator` and `DateTimeRangeFormatterValidator`.
 ///
 /// In case only lower or only upper limit are required `null` must be passed as the other limit.
 class DateTimeLimits {
-  final DateTime? minDateTime;
-  final DateTime? maxDateTime;
+  final int maxMinutesBack;
+  final int maxMinutesForward;
+  final CurrentDate? currentDate;
+  final DateTime? fixedReferenceDateTime;
 
   DateTimeLimits({
-    this.minDateTime,
-    this.maxDateTime,
-  }) : assert(
-  minDateTime == null || maxDateTime == null || minDateTime.isBefore(maxDateTime),
-  'Minimal date-time must be before maximal date-time or one of them must be null',
-  );
+    required this.maxMinutesBack,
+    required this.maxMinutesForward,
+    this.currentDate,
+    this.fixedReferenceDateTime,
+  }) : assert((currentDate == null) != (fixedReferenceDateTime == null),
+            'Either currentDate or referenceDateTime must be set');
+
+  DateTime get minDateTime => _referencePoint().subtract(Duration(minutes: maxMinutesBack ?? 0));
+
+  DateTime get maxDateTime => _referencePoint().subtract(Duration(minutes: maxMinutesForward ?? 0));
+
+  DateTime _referencePoint() => fixedReferenceDateTime ?? currentDate!.getDateNow();
 }
 
 class DateTimeRangeLimits {
@@ -21,11 +31,11 @@ class DateTimeRangeLimits {
   final int? maxSpanMinutes;
 
   const DateTimeRangeLimits(
-      this.startDateTimeLimits,
-      this.endDateTimeLimits,
-      this.minSpanMinutes,
-      this.maxSpanMinutes,
-      );
+    this.startDateTimeLimits,
+    this.endDateTimeLimits,
+    this.minSpanMinutes,
+    this.maxSpanMinutes,
+  );
 }
 
 // TODO remove if remains redundant
@@ -109,4 +119,3 @@ class DateTimeRangeLimits {
 //     }
 //   }
 // }
-

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/formatter_validator_defaults.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/states_color_maker.dart';
+import 'package:flutter_form_bricks/src/form_fields/base/auto_validate_mode_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/states_color_maker.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
@@ -13,13 +13,6 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
 
   final FormManager formManager;
   final StatesColorMaker colorMaker;
-  final I? initialInput;
-  final bool isFocusedOnStart;
-  final bool isRequired;
-  final bool runDefaultValidatorsFirst;
-  final bool validatorsFullRun;
-  final FormatterValidatorListMaker<I, V>? defaultFormatterValidatorListMaker;
-  final FormatterValidatorListMaker<I, V>? addFormatterValidatorListMaker;
   final WidgetStatesController? statesObserver;
   final WidgetStatesController? statesNotifier;
   final ValueChanged<I>? onChanged;
@@ -33,13 +26,6 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
     // TODO add field label, required if has validator so FormManager shows error for named field
     required this.formManager,
     StatesColorMaker? colorMaker,
-    this.initialInput,
-    this.isFocusedOnStart = false,
-    this.isRequired = defaultIsRequired,
-    this.runDefaultValidatorsFirst = defaultRunDefaultValidatorsFirst,
-    this.validatorsFullRun = defaultValidatorsFullRun,
-    this.defaultFormatterValidatorListMaker = null,
-    this.addFormatterValidatorListMaker = null,
     this.statesObserver,
     this.statesNotifier,
     this.onChanged,
@@ -116,8 +102,8 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
     return formManager.onFieldChanged<I, V>(BricksLocalizations.of(context), keyString, input).input;
   }
 
-  bool _hasFormatterValidator() =>
-      widget.defaultFormatterValidatorListMaker != null || widget.addFormatterValidatorListMaker != null;
+  // TU PRZERWAŁEM - finish setting proper validationMode for all validated, or noValidator on no validated specialised fields
+  bool _hasFormatterValidator() => widget.autoValidateMode != AutoValidateModeBrick.noValidator;
 
   Color? makeColor() => widget.colorMaker.makeColor(context, _states);
 }

@@ -8,8 +8,8 @@ import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/base/auto_validate_mode_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/states_controller/update_once_widget_states_controller.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/state_colored_icon_button.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/text_field_bordered_box.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/state_colored_icon_button.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/text_field_bordered_box.dart';
 
 abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditingValue, V> {
   // TextFieldBrick
@@ -96,13 +96,6 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     required super.keyString,
     required super.formManager,
     StatesColorMaker? colorMaker,
-    super.initialInput,
-    super.isFocusedOnStart,
-    super.isRequired,
-    super.runDefaultValidatorsFirst,
-    super.validatorsFullRun,
-    super.defaultFormatterValidatorListMaker,
-    super.addFormatterValidatorListMaker,
     super.statesObserver,
     super.statesNotifier,
     super.autoValidateMode = AutovalidateMode.disabled,
@@ -181,12 +174,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     this.magnifierConfiguration,
     this.buttonParams,
     this.hintLocales,
-  }) : assert(
-            (validateMode == null) ==
-                (defaultFormatterValidatorListMaker == null && addFormatterValidatorListMaker == null),
-            'TextFieldBrick\'s \'validateMode\' must be null when '
-            '\'defaultFormatterValidatorListMaker\' and \'addFormatterValidatorListMaker\' are null,'
-            'and must be non-null when any of those is non-null');
+  }) : super(colorMaker: colorMaker ?? StatesColorMaker());
 }
 
 abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>>

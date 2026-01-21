@@ -52,6 +52,9 @@
 ///   continuous unnecessary validation.
 enum AutoValidateModeBrick {
   /// Validate once before the first build and again only when the form is saved.
+  noValidator,
+
+  /// Validate once before the first build and again only when the form is saved.
   onCreateOrSave,
 
   /// Validate before the first build and again every time the field’s value changes.

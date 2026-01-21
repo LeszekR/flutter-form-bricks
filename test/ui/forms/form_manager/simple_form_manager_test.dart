@@ -3,7 +3,7 @@
 // import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 // import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
-// import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/form_fields/text_formatter_validators/text_inputs.dart';
+// import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/form_fields/text_formatter_validators/text_fields.dart';
 // import 'package:flutter_form_bricks/src/form_fields/labelled_box/label_position.dart';
 // import 'package:flutter_form_bricks/src/form_fields/states_controller/formatter_helper.dart';
 // import 'package:flutter_form_bricks/src/form_fields/text_formatter_validators/format_and_validate/input_validator_provider.dart';

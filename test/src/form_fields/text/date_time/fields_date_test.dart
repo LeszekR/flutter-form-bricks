@@ -88,16 +88,16 @@ Widget makeTextFieldDate(
   CurrentDate currentDate,
   DateTimeLimits dateTimeLimits,
 ) {
-  return DateTimeInputs.date(
-    localizations: BricksLocalizations.of(context),
-    context: context,
-    keyString: dateName,
-    label: dateName,
-    labelPosition: LabelPosition.topLeft,
-    formManager: formManager,
-    currentDate: currentDate,
-    dateLimits: dateTimeLimits,
-  );
+  // return DateTimeInputs.date(
+  //   localizations: BricksLocalizations.of(context),
+  //   context: context,
+  //   keyString: dateName,
+  //   label: dateName,
+  //   labelPosition: LabelPosition.topLeft,
+  //   formManager: formManager,
+  //   currentDate: currentDate,
+  //   dateLimits: dateTimeLimits,
+  // );
   return DateField(keyString: dateName, formManager: formManager);
 }
 

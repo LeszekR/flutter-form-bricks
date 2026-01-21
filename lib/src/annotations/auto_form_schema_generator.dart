@@ -6,8 +6,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/formatter_validator_defaults_for_generator.dart'
-    show defaultFormValidListMakerForFieldClassName;
+import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/formatter_validator_defaults_for_generator.dart';
 import 'package:source_gen/source_gen.dart';
 
 import 'auto_form_schema.dart';
@@ -15,10 +14,10 @@ import 'auto_form_schema.dart';
 class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
   @override
   Future<String> generateForAnnotatedElement(
-      Element element,
-      ConstantReader annotation,
-      BuildStep buildStep,
-      ) async {
+    Element element,
+    ConstantReader annotation,
+    BuildStep buildStep,
+  ) async {
     if (element is! ClassElement) {
       throw InvalidGenerationSourceError(
         '@AutoFormSchema can only be applied to classes.',
@@ -56,8 +55,7 @@ class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
     final allItems = <_FieldInfo>[];
     for (final classDeclaration in classDeclarationList) {
       final methodIndexMap = <String, MethodDeclaration>{
-        for (final method in classDeclaration.members.whereType<MethodDeclaration>())
-          method.name.lexeme: method,
+        for (final method in classDeclaration.members.whereType<MethodDeclaration>()) method.name.lexeme: method,
       };
       final collector = _FieldCollector(
         methodIndexMap: methodIndexMap,
@@ -84,8 +82,7 @@ class AutoFormSchemaGenerator extends GeneratorForAnnotation<AutoFormSchema> {
       final genericI = fieldInfo.inputGenericSource ?? 'Object';
       final genericV = fieldInfo.valueGenericSource ?? 'Object';
 
-      final keyCode = fieldInfo.keyStringSource ??
-          _quote(fieldInfo.keyStringLiteral ?? fieldInfo.unknownKeyFallback);
+      final keyCode = fieldInfo.keyStringSource ?? _quote(fieldInfo.keyStringLiteral ?? fieldInfo.unknownKeyFallback);
 
       final initCode = fieldInfo.initialInputSource;
       final focusedCode = fieldInfo.isFocusedOnStartSource;

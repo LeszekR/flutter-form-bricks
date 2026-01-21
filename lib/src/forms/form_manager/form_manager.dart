@@ -37,7 +37,7 @@ abstract class FormManager extends ChangeNotifier {
   void _initFormData(FormSchema formSchema, FormData formData) {
     if (formData.fieldDataMap.isNotEmpty) return;
 
-    for (FormFieldDescriptor d in formSchema.descriptors) {
+    for (FieldDescriptor d in formSchema.descriptors) {
       formData.fieldDataMap[d.keyString] = FormFieldData(
         inputRuntimeType: d.inputRuntimeType,
         valueRuntimeType: d.valueRuntimeType,
@@ -100,6 +100,8 @@ abstract class FormManager extends ChangeNotifier {
                 'there must be one FormatterValidatorChain in the map for every such field.'
             : 'Found "$keyString" in formatterValidatorsMap while the field declares "withValidator == false"; '
                 'there must be no FormatterValidatorChain in the map for every such field.');
+
+    // TU PRZERWAŁEM TODO check FormFieldDescriptor type against the field type - must be associated by type
   }
 
   void setFocusListener(FocusNode focusNode, String keyString) {

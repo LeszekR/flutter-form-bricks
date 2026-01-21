@@ -3,10 +3,38 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/form_fields/base/auto_validate_mode_brick.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/time_stamp.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/formatter_validator_defaults.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/states_color_maker.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/text_field_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/base/form_field_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/base/form_field_descriptor.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/current_date.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/timestamp_date.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_formatter_validator.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/states_color_maker.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/text_field_brick.dart';
+
+class DateFieldDescriptor extends FieldDescriptor<TextEditingValue, Date> {
+  DateFieldDescriptor({
+    required super.keyString,
+    super.initialInput,
+    super.isFocusedOnStart,
+    super.isRequired = false,
+    super.runValidatorsFullRun = FormFieldBrick.defaultValidatorsFullRun,
+    super.additionalFormatterValidatorsMaker,
+    DateTimeLimits? dateTimeLimits,
+    DateTimeUtils? dateTimeUtils,
+    CurrentDate? currentDate,
+  }) : super(
+          runDefaultValidatorsFirst: FormFieldBrick.defaultRunDefaultValidatorsFirst,
+          defaultFormatterValidatorsMaker: () => [
+            DateFormatterValidator(
+              dateTimeUtils ?? DateTimeUtils(),
+              currentDate ?? CurrentDate(),
+              dateTimeLimits,
+            ),
+          ],
+        );
+}
 
 class DateField extends TextFieldBrick<Date> {
   DateField({
@@ -16,17 +44,11 @@ class DateField extends TextFieldBrick<Date> {
     required super.keyString,
     required super.formManager,
     StatesColorMaker? colorMaker,
-    super.initialInput,
-    super.isFocusedOnStart,
-    super.isRequired,
-    super.runDefaultValidatorsFirst,
-    super.validatorsFullRun,
-    super.addFormatterValidatorListMaker,
     super.statesObserver,
     super.statesNotifier,
     super.autoValidateMode = AutovalidateMode.disabled,
     //
-    // BrickTextField
+    // TextFieldBrick
     super.width,
     //
     // TextField
@@ -99,13 +121,10 @@ class DateField extends TextFieldBrick<Date> {
     super.magnifierConfiguration,
     super.buttonParams,
     super.hintLocales,
-    // }) : super(defaultFormatterValidatorListMaker: () => getDefaultFormatterValidator<String, Date>('DateField'));
-  }) : super(
-            validateMode: AutoValidateModeBrick.onEditingComplete,
-            defaultFormatterValidatorListMaker: () => formatterValidatorDefaults.date());
+  }) : super(validateMode: AutoValidateModeBrick.onEditingComplete);
 
   @override
-  State<StatefulWidget> createState() => DateFieldStateBrick();
+  State<StatefulWidget> createState() => DateFieldState();
 }
 
-class DateFieldStateBrick extends TextFieldStateBrick<Date, DateField> {}
+class DateFieldState extends TextFieldStateBrick<Date, DateField> {}

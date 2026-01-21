@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/string_extension.dart';
-import 'package:flutter_form_bricks/src/forms/base/form_field_descriptor.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/string_extension.dart';
+import 'package:flutter_form_bricks/src/form_fields/base/form_field_descriptor.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params_data.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -53,7 +53,7 @@ void _testControllerInitialValue({
 }) {
   testWidgets(description, (tester) async {
     final schema = TestFormSchema.fromDescriptors([
-      FormFieldDescriptor<TextEditingValue, String>(
+      FieldDescriptor<TextEditingValue, String>(
         keyString: fieldKeyString1,
         initialInput: initialInput?.txtEditVal(),
       )

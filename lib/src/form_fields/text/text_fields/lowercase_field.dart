@@ -1,24 +1,36 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/states_color_maker.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/text_field_brick.dart';
+import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/form_fields/base/auto_validate_mode_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/text/lowercase_formatter.dart';
 
-class PlainTextField extends TextFieldBrick<TextEditingValue> {
-  PlainTextField({
+class LowerCaseFieldDescriptor extends FieldDescriptor<TextEditingValue, String> {
+  LowerCaseFieldDescriptor({
+    required super.keyString,
+    super.initialInput,
+    super.isFocusedOnStart,
+    super.isRequired = false,
+    super.runValidatorsFullRun = FormFieldBrick.defaultValidatorsFullRun,
+    super.additionalFormatterValidatorsMaker,
+  }) : super(
+          runDefaultValidatorsFirst: FormFieldBrick.defaultRunDefaultValidatorsFirst,
+          defaultFormatterValidatorsMaker: () => [
+            LowercaseFormatter(),
+          ],
+        );
+}
+
+class LowerCaseField extends TextFieldBrick<String> {
+  LowerCaseField({
     super.key,
     //
     // FormFieldBrick
     required super.keyString,
     required super.formManager,
     StatesColorMaker? colorMaker,
-    super.initialInput,
-    super.isFocusedOnStart,
-    super.isRequired,
-    super.runDefaultValidatorsFirst,
-    super.validatorsFullRun,
-    super.defaultFormatterValidatorListMaker,
     super.statesObserver,
     super.statesNotifier,
     super.autoValidateMode = AutovalidateMode.disabled,
@@ -96,10 +108,10 @@ class PlainTextField extends TextFieldBrick<TextEditingValue> {
     super.magnifierConfiguration,
     super.buttonParams,
     super.hintLocales,
-  });
+  }) : super(validateMode: AutoValidateModeBrick.onChange);
 
   @override
-  PlainTextFieldStateBrick createState() => PlainTextFieldStateBrick();
+  LowerCaseFieldState createState() => LowerCaseFieldState();
 }
 
-class PlainTextFieldStateBrick extends TextFieldStateBrick<TextEditingValue, PlainTextField> {}
+class LowerCaseFieldState extends TextFieldStateBrick<String, LowerCaseField> {}

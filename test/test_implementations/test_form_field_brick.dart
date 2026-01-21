@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/form_fields/base/form_field_brick.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/states_color_maker.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/text_field_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/states_color_maker.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/text_field_brick.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 class TestPlainTextFormFieldBrick extends TextFieldBrick {

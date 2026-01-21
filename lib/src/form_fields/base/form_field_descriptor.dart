@@ -1,9 +1,10 @@
 import 'package:flutter_form_bricks/src/form_fields/base/form_field_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/base/formatter_validator_base/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/base/formatter_validator_base/formatter_validator_chain.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/text_input_base/formatter_validator_defaults.dart';
 
-class FormFieldDescriptor<I extends Object, V extends Object> {
+typedef FormatterValidatorListMaker<I extends Object, V extends Object> = List<FormatterValidator<I, V>> Function();
+
+abstract class FieldDescriptor<I extends Object, V extends Object> {
   final String keyString;
   final Type inputRuntimeType = I;
   final Type valueRuntimeType = V;
@@ -12,20 +13,20 @@ class FormFieldDescriptor<I extends Object, V extends Object> {
   final bool runDefaultValidatorsFirst;
   final I? initialInput;
   final bool? isFocusedOnStart;
-  final FormatterValidatorListMaker<I, V>? defaultFormatterValidatorListMaker;
-  final FormatterValidatorListMaker<I, V>? addFormatterValidatorListMaker;
+  final FormatterValidatorListMaker<I, V>? defaultFormatterValidatorsMaker;
+  final FormatterValidatorListMaker<I, V>? additionalFormatterValidatorsMaker;
 
   // TODO guarantee validator chain adequate to field type - e.g. checkbox with date-validator throws
 
-  FormFieldDescriptor({
+  FieldDescriptor({
     required this.keyString,
     this.initialInput,
     this.isFocusedOnStart,
     this.isRequired = FormFieldBrick.defaultIsRequired,
     this.runValidatorsFullRun = FormFieldBrick.defaultValidatorsFullRun,
     this.runDefaultValidatorsFirst = FormFieldBrick.defaultRunDefaultValidatorsFirst,
-    this.defaultFormatterValidatorListMaker,
-    this.addFormatterValidatorListMaker,
+    this.defaultFormatterValidatorsMaker,
+    this.additionalFormatterValidatorsMaker,
   })  : assert(I != dynamic, "FormFieldDescriptor<I, V>: Generic type I must not be dynamic."),
         assert(V != dynamic, "FormFieldDescriptor<I, V>: Generic type V must not be dynamic.");
 
@@ -53,10 +54,10 @@ class FormFieldDescriptor<I extends Object, V extends Object> {
 ///
 /// See also: [FormatterValidatorChain], [FormatterValidatorChainFullRun], [FormatterValidatorChainEarlyStop].
 FormatterValidatorChain<I, V>? _buildFormatterValidatorChainForDescriptor<I extends Object, V extends Object>(
-    FormFieldDescriptor<I, V> d) {
+    FieldDescriptor<I, V> d) {
   List<FormatterValidator<I, V>>? formatterValidatorList = null;
-  final List<FormatterValidator<I, V>>? defaults = d.defaultFormatterValidatorListMaker?.call();
-  final List<FormatterValidator<I, V>>? additions = d.addFormatterValidatorListMaker?.call();
+  final List<FormatterValidator<I, V>>? defaults = d.defaultFormatterValidatorsMaker?.call();
+  final List<FormatterValidator<I, V>>? additions = d.additionalFormatterValidatorsMaker?.call();
 
   if (defaults != null && additions != null) {
     if (d.runDefaultValidatorsFirst) {

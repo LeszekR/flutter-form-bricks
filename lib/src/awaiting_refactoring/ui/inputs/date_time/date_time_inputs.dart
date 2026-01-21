@@ -1,34 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/form_fields/labelled_box/label_position.dart';
+import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/text/text_input_base/basic_text_input.dart';
 import 'package:flutter_form_bricks/src/form_fields/states_controller/double_widget_states_controller.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_range_initial_set.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_range_required_fields.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_range_span.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/time_stamp.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/dateTimeRange_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/time_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
-import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
-import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
-import '../../../../form_fields/text/format_and_validate/input_validator_provider.dart';
 import '../../buttons/buttons.dart';
 import '../../shortcuts/keyboard_shortcuts.dart';
-import '../text/text_input_base/basic_text_input.dart';
 
 class DateTimeInputs {
-  static final DateTimeUtils _dateTimeUtils = DateTimeUtils();
-  static final CurrentDate _currentDate = CurrentDate();
-  static final DateFormatterValidator _dateFormatter = DateFormatterValidator(_dateTimeUtils, _currentDate);
-  static final TimeFormatterValidator _timeFormatter = TimeFormatterValidator(_dateTimeUtils);
-
-  // static final DateTimeFormatterValidator _dateTimeFormatter =
-  //     DateTimeFormatterValidator(_dateFormatter, _timeFormatter, _dateTimeUtils);
-
   DateTimeInputs._();
 
   static Widget dateTimeSeparateFields({
