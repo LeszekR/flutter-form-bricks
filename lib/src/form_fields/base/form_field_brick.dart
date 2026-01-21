@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/form_fields/base/auto_validate_mode_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/base/validate_mode_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/states_color_maker.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
@@ -18,7 +18,7 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
   final ValueChanged<I>? onChanged;
 
   // TODO implement identical functionality as in flutter_form_builder using onChange, onEditingComplete, onSave
-  final AutovalidateMode autoValidateMode;
+  final ValidateModeBrick validateMode;
 
   FormFieldBrick({
     Key? key,
@@ -29,7 +29,7 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
     this.statesObserver,
     this.statesNotifier,
     this.onChanged,
-    this.autoValidateMode = AutovalidateMode.disabled,
+    this.validateMode = ValidateModeBrick.noValidator,
   })  : this.colorMaker = colorMaker ?? StatesColorMaker(),
         super(key: key ?? ValueKey(keyString));
 }
@@ -103,7 +103,7 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   }
 
   // TU PRZERWAŁEM - finish setting proper validationMode for all validated, or noValidator on no validated specialised fields
-  bool _hasFormatterValidator() => widget.autoValidateMode != AutoValidateModeBrick.noValidator;
+  bool _hasFormatterValidator() => widget.validateMode != ValidateModeBrick.noValidator;
 
   Color? makeColor() => widget.colorMaker.makeColor(context, _states);
 }

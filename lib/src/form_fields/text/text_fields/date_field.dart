@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/form_fields/base/auto_validate_mode_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/base/validate_mode_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/base/form_field_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/base/form_field_descriptor.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/current_date.dart';
@@ -46,7 +46,6 @@ class DateField extends TextFieldBrick<Date> {
     StatesColorMaker? colorMaker,
     super.statesObserver,
     super.statesNotifier,
-    super.autoValidateMode = AutovalidateMode.disabled,
     //
     // TextFieldBrick
     super.width,
@@ -121,7 +120,7 @@ class DateField extends TextFieldBrick<Date> {
     super.magnifierConfiguration,
     super.buttonParams,
     super.hintLocales,
-  }) : super(validateMode: AutoValidateModeBrick.onEditingComplete);
+  }) : super(validateMode: ValidateModeBrick.onEditingComplete);
 
   @override
   State<StatefulWidget> createState() => DateFieldState();

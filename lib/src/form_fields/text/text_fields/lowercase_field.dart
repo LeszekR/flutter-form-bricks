@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/base/auto_validate_mode_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/base/validate_mode_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/text/lowercase_formatter.dart';
 
 class LowerCaseFieldDescriptor extends FieldDescriptor<TextEditingValue, String> {
@@ -33,7 +33,6 @@ class LowerCaseField extends TextFieldBrick<String> {
     StatesColorMaker? colorMaker,
     super.statesObserver,
     super.statesNotifier,
-    super.autoValidateMode = AutovalidateMode.disabled,
     //
     // BrickTextField
     super.width,
@@ -108,7 +107,7 @@ class LowerCaseField extends TextFieldBrick<String> {
     super.magnifierConfiguration,
     super.buttonParams,
     super.hintLocales,
-  }) : super(validateMode: AutoValidateModeBrick.onChange);
+  }) : super(validateMode: ValidateModeBrick.onChange);
 
   @override
   LowerCaseFieldState createState() => LowerCaseFieldState();

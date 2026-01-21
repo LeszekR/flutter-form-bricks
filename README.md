@@ -1,6 +1,7 @@
 # Flutter Form Bricks
 
 ## How to run
+
 Before running call from terminal
 
 Apart from fetching dependencies this will also build localizations necessary for the app to work
@@ -11,7 +12,8 @@ This will build any [FormSchema]s delegated to be generated with [@AutoFormSchem
 
 ## Localizations
 
-Since the lib contains a collection of standard UI messages and names it is localized. Follow flutter_localizations usage rules to add lnaguages by adding
+Since the lib contains a collection of standard UI messages and names it is localized. Follow
+flutter_localizations usage rules to add lnaguages by adding
 
 ## Gap analysis
 
@@ -39,13 +41,13 @@ keys.
 - **Future**: Eventually, all keys in this app will be supplied only through `KeyGen`
   implementations, ensuring full coverage.
 
-### AutoValidateModeBrick
+### ValidateModeBrick
 
-`AutoValidateModeBrick` defines when form fields automatically validate in Brick forms.
+`ValidateModeBrick` defines when form fields automatically validate in Brick forms.
 
-Unlike Flutter’s `AutovalidateMode`, Brick **always validates once before the first build**.  
-This replaces Flutter’s default post-build validation and ensures that the form knows its initial
-validity immediately.
+Unlike Flutter’s `AutovalidateMode`, flutter-form-bricks **always validates `FormBrick` once before
+the first build**. This replaces Flutter’s default post-build validation and ensures that the form
+knows its initial validity immediately.
 
 This approach also allows `TabbedFormBrick` to validate `initialValue`s without instantiating states
 for invisible tabs.  
@@ -82,16 +84,18 @@ Each `FormFieldBrick` tracks:
 - `value` (`T?`): the parsed, validated result (or `null` if invalid)
 
 This design ensures:
+
 - Safe typed values for saving
 - Raw input preserved across rebuilds
 - Friendly error handling without input loss
 
-Validators (like `DateTimeFormatterValidator`) parse `inputString` and return `DateTimeFieldContent<T>` with:
+Validators (like `DateTimeFormatterValidator`) parse `inputString` and return
+`DateTimeFieldContent<T>` with:
+
 - `parsedValue`: nullable, for precision control
 - `errorMessage`: used for in-form feedback
 
 On submit, parsed values are read from the field and passed to your domain layer for saving.
-
 
 ## TODO
 
@@ -125,7 +129,8 @@ On submit, parsed values are read from the field and passed to your domain layer
 - architecture: `LabelledContainer`, `TextFieldBox`, `BrickTextField`
   containint `StateAwareIconButton`
 - formatting validation chain
-- `FormManager` role: formatting, validation, storing state, collecting data from form_fields, initial
+- `FormManager` role: formatting, validation, storing state, collecting data from form_fields,
+  initial
   values
 
 **Visual params**
@@ -164,33 +169,32 @@ On submit, parsed values are read from the field and passed to your domain layer
 ### Form Creation and Initialization
 
 - **FormSchema**
-  - Declares each field’s `keyString`, value type, `initialValue`, and `FormatterValidatorChain`.
-  - Declares `initialFocusKeyString` for the field that receives focus first.
+    - Declares each field’s `keyString`, value type, `initialValue`, and `FormatterValidatorChain`.
+    - Declares `initialFocusKeyString` for the field that receives focus first.
 
 - **FormManager**
-  - Receives `FormSchema` and `FormStateData`.
-  - Populates its `fieldContentMap`:
-    - From **FormSchema** if `isInitiated == false`.
-    - From **FormStateData** otherwise.
-  - Runs validation on all fields and saves error messages in `FormFieldData`.
+    - Receives `FormSchema` and `FormStateData`.
+    - Populates its `fieldContentMap`:
+        - From **FormSchema** if `isInitiated == false`.
+        - From **FormStateData** otherwise.
+    - Runs validation on all fields and saves error messages in `FormFieldData`.
 
 - **FormBrick**
-  - Receives the initialized `FormManager` and builds all form fields.
+    - Receives the initialized `FormManager` and builds all form fields.
 
 - **FormFieldBrick**
-  - Registers itself in `FormManager`.
-  - Throws if its `keyString` isn’t in `FormSchema` or its value type mismatches.
-  - Gets its initial value and `onFieldChanged` callback from `FormManager`.
-  - `onFieldChanged`:
-    - Validates the new value.
-    - Updates `FormData` and triggers revalidation or saving.
+    - Registers itself in `FormManager`.
+    - Throws if its `keyString` isn’t in `FormSchema` or its value type mismatches.
+    - Gets its initial value and `onFieldChanged` callback from `FormManager`.
+    - `onFieldChanged`:
+        - Validates the new value.
+        - Updates `FormData` and triggers revalidation or saving.
 
-  - **FormBrick**
-   - must only use `keyStrings` declared in `FormSchema`
-   - for validation to work
+    - **FormBrick**
+    - must only use `keyStrings` declared in `FormSchema`
+    - for validation to work
 
 Ensures type safety, single source of truth, and automatic validation across the form.
-
 
 ### Centralized Validation Flow
 
@@ -198,10 +202,10 @@ Ensures type safety, single source of truth, and automatic validation across the
 - **`FormFieldBrick`** triggers validation by calling
   `formManager.onFieldChanged(keyString, value) -> validateField(keyString)`.
 - **`FormManager`**:
-  - Runs the corresponding `FormatterValidatorChain`.
-  - Updates `FormData`
-  - Returns a `ValidationResult` to the field.
-  - notifies global UI error display area.
+    - Runs the corresponding `FormatterValidatorChain`.
+    - Updates `FormData`
+    - Returns a `ValidationResult` to the field.
+    - notifies global UI error display area.
 - **FormFieldBrick** reacts locally (color or inline error)
   without directly handling validation logic.
 
@@ -210,6 +214,7 @@ and keeps all widgets stateless and presentation-focused.
 
 
 -----------------------------------
+
 ## Add your files
 
 - [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file)

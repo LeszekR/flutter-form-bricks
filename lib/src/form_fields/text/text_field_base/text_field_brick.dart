@@ -5,7 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/base/auto_validate_mode_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/base/validate_mode_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/states_controller/update_once_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/state_colored_icon_button.dart';
@@ -14,7 +14,6 @@ import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/text_fi
 abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditingValue, V> {
   // TextFieldBrick
   final double? width;
-  final AutoValidateModeBrick? validateMode;
 
   // Flutter TextField
   final TextMagnifierConfiguration? magnifierConfiguration;
@@ -98,11 +97,10 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     StatesColorMaker? colorMaker,
     super.statesObserver,
     super.statesNotifier,
-    super.autoValidateMode = AutovalidateMode.disabled,
+    super.validateMode,
     //
     // TextFieldBrick
     this.width,
-    this.validateMode,
     //
     // TextField
     this.groupId = EditableText,
@@ -196,7 +194,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   }
 
   void _fillInitialInput(TextEditingValue? initialInput) {
-    controller.value = initialInput == null ? TextEditingValue.empty : initialInput ;
+    controller.value = initialInput == null ? TextEditingValue.empty : initialInput;
   }
 
   @override
@@ -392,40 +390,37 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   @mustCallSuper
   @override
   TextEditingValue? onInputChanged(TextEditingValue? input) {
-    // No FormatterValidatorChain for this TextFieldBrick
-    if (widget.validateMode == null) return null;
-
     // Stop infinite call here at changing the field value to trimmed one
     if (_skipOnChanged) return null;
+
+    // Here FormManager:
+    // - validates the input and shows error message
+    // - formats the input and returns formatted input text in TextEditingValue
+    // - saves results of format-validation in FormData -> FormFieldData -> FieldContent
+    TextEditingValue? formattedInput = super.onInputChanged(input);
+
+    // draw formatted input in UI
+    if (widget.validateMode == ValidateModeBrick.onChange) _updateUi(formattedInput);
 
     // Run custom onChanged callback if provided
     widget.onChanged?.call(input!);
 
-    if (widget.validateMode == AutoValidateModeBrick.onChange) {
-      // Here FormManager:
-      // - validates the input
-      // - saves results of format-validation in FormData -> FormFieldData -> FieldContent
-      TextEditingValue? formattedInput = super.onInputChanged(input);
-      _updateUi(formattedInput);
-    }
     return null;
   }
 
   @mustCallSuper
   void _onEditingComplete() {
-    // No FormatterValidatorChain for this TextFieldBrick
-    if (widget.validateMode == null) return null;
+    // Here FormManager:
+    // - validates the input and shows error message
+    // - formats the input and returns formatted input text in TextEditingValue
+    // - saves results of format-validation in FormData -> FormFieldData -> FieldContent
+    TextEditingValue? formattedValue = super.onInputChanged(controller.value);
+
+    // draw formatted input in UI
+    if (widget.validateMode == ValidateModeBrick.onEditingComplete) _updateUi(formattedValue);
 
     // Run custom onEditingComplete callback if provided
     widget.onEditingComplete?.call();
-
-    if (widget.validateMode == AutoValidateModeBrick.onEditingComplete) {
-      // Here FormManager:
-      // - validates the input
-      // - saves results of format-validation in FormData -> FormFieldData -> FieldContent
-      TextEditingValue? formattedValue = super.onInputChanged(controller.value);
-      _updateUi(formattedValue);
-    }
   }
 
   void _updateUi(TextEditingValue? formattedValue) {

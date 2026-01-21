@@ -16,7 +16,7 @@ class PlainTextFieldDescriptor extends FieldDescriptor<TextEditingValue, String>
   });
 }
 
-class PlainTextField extends TextFieldBrick<TextEditingValue> {
+class PlainTextField extends TextFieldBrick<String> {
   PlainTextField({
     super.key,
     //
@@ -26,7 +26,7 @@ class PlainTextField extends TextFieldBrick<TextEditingValue> {
     StatesColorMaker? colorMaker,
     super.statesObserver,
     super.statesNotifier,
-    super.autoValidateMode = AutovalidateMode.disabled,
+    super.validateMode,
     //
     // BrickTextField
     super.width,
@@ -107,4 +107,4 @@ class PlainTextField extends TextFieldBrick<TextEditingValue> {
   PlainTextFieldStateBrick createState() => PlainTextFieldStateBrick();
 }
 
-class PlainTextFieldStateBrick extends TextFieldStateBrick<TextEditingValue, PlainTextField> {}
+class PlainTextFieldStateBrick extends TextFieldStateBrick<String, PlainTextField> {}

@@ -1,4 +1,4 @@
-/// ## AutoValidateModeBrick
+/// ## ValidateModeBrick
 ///
 /// Defines when a [FormFieldBrick] should automatically validate its value.
 ///
@@ -13,6 +13,10 @@
 /// - As a result, only three modes are needed to fully cover all use cases.
 ///
 /// ### Modes
+///
+/// - [noValidator]
+///   - **never** validates and must only be used on a field with no `FormatterValidator`
+///     attached.
 ///
 /// - [onCreateOrSave]
 ///   - Validates **once before the first build** (so the form knows its initial
@@ -50,7 +54,7 @@
 ///   affect validity, it would waste energy by revalidating fields unnecessarily.
 ///   This design intentionally favors slightly worse UX in rare cases over
 ///   continuous unnecessary validation.
-enum AutoValidateModeBrick {
+enum ValidateModeBrick {
   /// Validate once before the first build and again only when the form is saved.
   noValidator,
 
