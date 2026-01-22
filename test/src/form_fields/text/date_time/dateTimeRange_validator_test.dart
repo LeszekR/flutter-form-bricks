@@ -20,7 +20,11 @@ void main() {
     (DateTimeRangeFormatterValidator.rangeTimeEndKeyString(rangeId)),
   ];
 
-  final dateTimeLimits = DateTimeLimits(minDateTime: DateTime(2014), maxDateTime: DateTime(2026));
+  var dateTimeLimits = DateTimeLimits(
+    fixedReferenceDateTime: DateTime.parse('2024-02-01 22:11'),
+    maxMinutesBack: 5303520, // 2014-01-01
+    maxMinutesForward: 1008000, // 2026-01-01
+  );
   final dateTimeRangeSpan = DateTimeRangeSpan(minDateTimeSpanMinutes: 15, maxDateTimeSpanMinutes: 10080);
 
   testWidgets('correct input', (WidgetTester tester) async {

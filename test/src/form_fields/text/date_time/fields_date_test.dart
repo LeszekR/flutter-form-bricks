@@ -17,7 +17,12 @@ void main() {
   final mockCurrentDate = MockCurrentDate();
   when(mockCurrentDate.getDateNow()).thenReturn(today);
 
-  var dateTimeLimits = DateTimeLimits(minDateTime: DateTime(2014), maxDateTime: DateTime(2026));
+  // var dateTimeLimits = DateTimeLimits(minDateTime: DateTime(2014), maxDateTime: DateTime(2026));
+  var dateTimeLimits = DateTimeLimits(
+    fixedReferenceDateTime: mockCurrentDate.getDateNow(),
+    maxMinutesBack: 5258880, // 10 years back
+    maxMinutesForward: 1052640, // 2 years forward
+  );
 
   testWidgets('DATE - refuses to parse with invalid characters', (WidgetTester tester) async {
     final List<DateTimeTestCase> testCases = [
@@ -38,7 +43,6 @@ void main() {
     ];
     final formManager = TestFormManager.testDefault();
     testAction<String>(String text) => (formManager.getFieldValue(dateFieldKeyString) as TextEditingValue).text;
-    // testAction<String>(String text) => formManager.formKey.currentState!.fields[dateFieldKeyString]?.valueParsed;
     makeWidgetFunction(context, formManager) =>
         makeTextFieldDate(context, formManager, dateFieldKeyString, mockCurrentDate, dateTimeLimits);
     await testAllCasesInTextField(tester, makeWidgetFunction, formManager, testCases, testAction);

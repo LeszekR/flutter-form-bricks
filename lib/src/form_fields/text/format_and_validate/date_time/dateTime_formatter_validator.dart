@@ -16,8 +16,8 @@ class DateTimeFormatterValidator extends FormatterValidator<TextEditingValue, Da
 
   DateTimeFormatterValidator(
     DateTimeUtils _dateTimeUtils,
-    CurrentDate _currentDate,
-    DateTimeLimits? _dateTimeLimits,
+    CurrentDate _currentDate,[
+    DateTimeLimits? _dateTimeLimits,]
   )   : _dateFormatterValidator = DateFormatterValidator(_dateTimeUtils, _currentDate, _dateTimeLimits),
         _timeFormatterValidator = TimeFormatterValidator(_dateTimeUtils, _dateTimeLimits);
 

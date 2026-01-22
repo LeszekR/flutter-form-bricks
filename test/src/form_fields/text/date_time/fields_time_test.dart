@@ -11,8 +11,6 @@ import 'utils/dateTime_test_utils.dart';
 void main() {
   const timeFieldKeyString = 'time_input_test';
 
-  DateTimeLimits dateTimeLimits = DateTimeLimits(minDateTime: DateTime(2014), maxDateTime: DateTime(2026));
-
   testWidgets('TIME - should refuse to parse when bad character', (WidgetTester tester) async {
     final List<DateTimeTestCase> testCases = [
       DateTimeTestCase("01*01", "01*01", false, ''),

@@ -47,7 +47,7 @@ void _testKeyStringInTheSchema({
         UiParams(
           data: UiParamsData(),
           child: MaterialApp(
-            home: TestPlainTextFormFieldBrick(
+            home: TestPlainTextFieldBrick(
               key: GlobalKey(),
               keyString: fieldKeyString,
               formManager: TestFormManager(schema: schema),
@@ -64,7 +64,7 @@ void _testKeyStringInTheSchema({
         expect(err, anyOf(isA<AssertionError>(), isA<FlutterError>()));
       } else {
         expect(err, isNull);
-        expect(find.byType(TestPlainTextFormFieldBrick), findsOneWidget);
+        expect(find.byType(TestPlainTextFieldBrick), findsOneWidget);
       }
     },
   );

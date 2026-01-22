@@ -4,11 +4,12 @@ import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/string_
 
 import '../src/tools/test_constants.dart';
 import 'mock_formatter_validator.dart';
+import 'test_form_field_brick.dart';
 
 class TestFormSchema extends FormSchema {
   TestFormSchema.testDefault()
       : super([
-          FormFieldDescriptor<TextEditingValue, String>(
+          TestPlainTextFieldDescriptor(
             keyString: fieldKeyString1,
             initialInput: stringInput1.txtEditVal(),
           )
@@ -22,7 +23,7 @@ class TestFormSchema extends FormSchema {
     FormatterValidatorListMaker<TextEditingValue, String>? formatterValidatorListMaker,
   }) : super(
           [
-            FormFieldDescriptor<TextEditingValue, String>(
+            TestPlainTextFieldDescriptor(
               keyString: fieldKeyString,
               initialInput: (initialInput ?? stringInput1).txtEditVal(),
               defaultFormatterValidatorsMaker: formatterValidatorListMaker ?? () => [MockTextFormatterValidator()],

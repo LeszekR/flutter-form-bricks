@@ -14,7 +14,11 @@ void main() {
   final mockCurrentDate = MockCurrentDate();
   when(mockCurrentDate.getDateNow()).thenReturn(DateTime.parse('2024-02-01 22:11'));
 
-  final DateTimeLimits dateTimeLimits = DateTimeLimits(minDateTime: DateTime(2014), maxDateTime: DateTime(2026));
+  var dateTimeLimits = DateTimeLimits(
+    fixedReferenceDateTime: mockCurrentDate.getDateNow(),
+    maxMinutesBack: 5303520,  // 2014-01-01
+    maxMinutesForward: 1008000,  // 2026-01-01
+  );
   final String dateMaxBack = dateTimeUtils.formatDate(dateTimeLimits.minDateTime!, 'yyyy-MM-dd');
   final String dateMaxForward = dateTimeUtils.formatDate(dateTimeLimits.maxDateTime!, 'yyyy-MM-dd');
 

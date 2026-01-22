@@ -4,22 +4,26 @@ import 'package:flutter_form_bricks/shelf.dart';
 ///
 /// In case only lower or only upper limit are required `null` must be passed as the other limit.
 class DateTimeLimits {
-  final int maxMinutesBack;
-  final int maxMinutesForward;
+  final int? maxMinutesBack;
+  final int? maxMinutesForward;
   final CurrentDate? currentDate;
   final DateTime? fixedReferenceDateTime;
 
   DateTimeLimits({
-    required this.maxMinutesBack,
-    required this.maxMinutesForward,
     this.currentDate,
     this.fixedReferenceDateTime,
+    this.maxMinutesBack,
+    this.maxMinutesForward,
   }) : assert((currentDate == null) != (fixedReferenceDateTime == null),
-            'Either currentDate or referenceDateTime must be set');
+            'One of the two - currentDate or referenceDateTime - must be set'),
+        assert((maxMinutesBack != null) || (maxMinutesForward != null),
+            'Either maxMinutesBack or maxMinutesForward or both must be set');
 
-  DateTime get minDateTime => _referencePoint().subtract(Duration(minutes: maxMinutesBack ?? 0));
+  DateTime? get minDateTime =>
+      maxMinutesBack == null ? null : _referencePoint().subtract(Duration(minutes: maxMinutesBack!));
 
-  DateTime get maxDateTime => _referencePoint().subtract(Duration(minutes: maxMinutesForward ?? 0));
+  DateTime? get maxDateTime =>
+      maxMinutesForward == null ? null : _referencePoint().add(Duration(minutes: maxMinutesForward!));
 
   DateTime _referencePoint() => fixedReferenceDateTime ?? currentDate!.getDateNow();
 }

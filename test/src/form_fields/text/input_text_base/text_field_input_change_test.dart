@@ -95,7 +95,7 @@ Future<void> _runValueChangeTest(
         home: Builder(
           builder: (context) {
             localizations = BricksLocalizations.of(context);
-            return TestPlainTextFormFieldBrick(
+            return TestPlainTextFieldBrick(
               key: globalKey,
               keyString: fieldKeyString,
               formManager: formManager,

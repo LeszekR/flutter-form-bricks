@@ -18,8 +18,8 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, Date> 
 
   DateFormatterValidator(
     this._dateTimeUtils,
-    this._currentDate,
-    this._dateTimeLimits,
+    this._currentDate,[
+    this._dateTimeLimits,]
   );
 
   @override

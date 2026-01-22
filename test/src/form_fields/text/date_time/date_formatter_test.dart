@@ -13,12 +13,17 @@ void main() {
   final dateTimeInputUtils = dateTimeUtils;
   final mockCurrentDate = MockCurrentDate();
   when(mockCurrentDate.getDateNow()).thenReturn(DateTime.parse('2024-02-01 22:11'));
-  TestDateFormatter dateFormatter = TestDateFormatter(DateFormatterValidator(dateTimeInputUtils, mockCurrentDate));
 
   var dateTimeLimits = DateTimeLimits(
-    minDateTime: DateTime(2023, 1, 1),
-    maxDateTime: DateTime(2024, 12, 31),
+    fixedReferenceDateTime: mockCurrentDate.getDateNow(),
+    maxMinutesBack: 570240,
+    maxMinutesForward: 480960,
   );
+
+  TestDateFormatter dateFormatter = TestDateFormatter(DateFormatterValidator(
+    dateTimeInputUtils,
+    mockCurrentDate,
+  ));
   TestDateFormatter dateFormatterWithLimits =
       TestDateFormatter(DateFormatterValidator(dateTimeInputUtils, mockCurrentDate, dateTimeLimits));
 
@@ -27,7 +32,6 @@ void main() {
 
   testWidgets('refuses to format excel-style invalid input', (WidgetTester tester) async {
     final local = await getLocalizations();
-    var dateTimeLimits = DateTimeLimits();
 
     var testCases = [
       DateTimeTestCase('0', '0', false, local.dateStringErrorTooFewDigits),
@@ -79,7 +83,6 @@ void main() {
 
   testWidgets('refuses to format date when forbidden chars', (WidgetTester tester) async {
     final local = await getLocalizations();
-    var dateTimeLimits = DateTimeLimits();
 
     var testCases = [
       DateTimeTestCase('00^12', '00^12', false, local.dateStringErrorBadChars),
@@ -93,7 +96,6 @@ void main() {
 
   testWidgets('creates formatted date string from digits only', (WidgetTester tester) async {
     final local = await getLocalizations();
-    var dateTimeLimits = DateTimeLimits(minDateTime: DateTime(2015));
 
     var testCases = [
       DateTimeTestCase('123', '2024-01-23', true, null),
@@ -110,7 +112,6 @@ void main() {
 
   testWidgets('creates formatted date string from excel-style input', (WidgetTester tester) async {
     final local = await getLocalizations();
-    var dateTimeLimits = DateTimeLimits();
 
     var testCases = [
       DateTimeTestCase('2;2', '2024-02-02', true, null),
@@ -123,7 +124,6 @@ void main() {
 
   testWidgets('creates formatted date string with all possible delimiters', (WidgetTester tester) async {
     final local = await getLocalizations();
-    var dateTimeLimits = DateTimeLimits();
 
     var p = '=';
     var testCases = [

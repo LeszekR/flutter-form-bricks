@@ -11,9 +11,11 @@ void main() {
   final dateTimeInputUtils = DateTimeUtils();
   TestTimeFormatter timeFormatter = TestTimeFormatter(TimeFormatterValidator(dateTimeInputUtils));
 
-  DateTimeLimits dateTimeLimits = DateTimeLimits(minDateTime: DateTime(2014), maxDateTime: DateTime(2026));
-  final String yearMaxBack = dateTimeLimits.minDateTime!.year.toString();
-  final String yearMaxForward = dateTimeLimits.maxDateTime!.year.toString();
+  var dateTimeLimits = DateTimeLimits(
+    fixedReferenceDateTime: DateTime.parse('2024-02-01 22:11'),
+    maxMinutesBack: 5258880, // 10 years back
+    maxMinutesForward: 1052640, // 2 years forward
+  );
 
   testWidgets('refuses to format excel-style time when input with delimiters incorrect', (WidgetTester tester) async {
     final local = await getLocalizations();
@@ -56,33 +58,25 @@ void main() {
     var placeholder = '=';
     final local = await getLocalizations();
     var testCases = [
-      DateTimeTestCase("1${placeholder}235", "1${placeholder}235", false,
-          local.timeStringErrorTooManyDigitsMinutes),
-      DateTimeTestCase("1${placeholder}66235", "1${placeholder}66235", false,
-          local.timeStringErrorTooManyDigitsMinutes),
+      DateTimeTestCase("1${placeholder}235", "1${placeholder}235", false, local.timeStringErrorTooManyDigitsMinutes),
+      DateTimeTestCase(
+          "1${placeholder}66235", "1${placeholder}66235", false, local.timeStringErrorTooManyDigitsMinutes),
       // -------------------------------------------------
-      DateTimeTestCase("123${placeholder}5", "123${placeholder}5", false,
-          local.timeStringErrorTooManyDigitsHours),
+      DateTimeTestCase("123${placeholder}5", "123${placeholder}5", false, local.timeStringErrorTooManyDigitsHours),
       DateTimeTestCase("100${placeholder}235", "100${placeholder}235", false,
           local.timeStringErrorTooManyDigitsHours + '\n' + local.timeStringErrorTooManyDigitsMinutes),
       DateTimeTestCase("123888${placeholder}3335", "123888${placeholder}3335", false,
           local.timeStringErrorTooManyDigitsHours + '\n' + local.timeStringErrorTooManyDigitsMinutes),
       // -------------------------------------------------
-      DateTimeTestCase("1${placeholder}61", "01:61", false,
-          local.timeErrorTooBigMinute),
-      DateTimeTestCase("25${placeholder}5", "25:05", false,
-          local.timeErrorTooBigHour),
+      DateTimeTestCase("1${placeholder}61", "01:61", false, local.timeErrorTooBigMinute),
+      DateTimeTestCase("25${placeholder}5", "25:05", false, local.timeErrorTooBigHour),
       // -------------------------------------------------
       DateTimeTestCase("0991${placeholder}66235", "0991${placeholder}66235", false,
           local.timeStringErrorTooManyDigitsHours + '\n' + local.timeStringErrorTooManyDigitsMinutes),
-      DateTimeTestCase("000${placeholder}12", "000${placeholder}12", false,
-          local.timeStringErrorTooManyDigitsHours),
-      DateTimeTestCase("000${placeholder}12 ", "000${placeholder}12 ", false,
-          local.timeStringErrorTooManyDigitsHours),
-      DateTimeTestCase("000 12 ", "000 12 ", false,
-          local.timeStringErrorTooManyDigitsHours),
-      DateTimeTestCase(" 000  12", " 000  12", false,
-          local.timeStringErrorTooManyDigitsHours),
+      DateTimeTestCase("000${placeholder}12", "000${placeholder}12", false, local.timeStringErrorTooManyDigitsHours),
+      DateTimeTestCase("000${placeholder}12 ", "000${placeholder}12 ", false, local.timeStringErrorTooManyDigitsHours),
+      DateTimeTestCase("000 12 ", "000 12 ", false, local.timeStringErrorTooManyDigitsHours),
+      DateTimeTestCase(" 000  12", " 000  12", false, local.timeStringErrorTooManyDigitsHours),
     ];
     var passedOk = runDateTimeFormatterTest(
       local,

@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/form_fields/base/form_field_brick.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/states_color_maker.dart';
+import 'package:flutter_form_bricks/src/form_fields/base/form_field_descriptor.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/timestamp_date.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/text_field_brick.dart';
-import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
-class TestPlainTextFormFieldBrick extends TextFieldBrick {
-  TestPlainTextFormFieldBrick({
+class TestPlainTextFieldDescriptor extends FormFieldDescriptor<TextEditingValue, String, TestPlainTextFieldBrick> {
+  TestPlainTextFieldDescriptor({
+    required super.keyString,
+    super.initialInput,
+    super.isFocusedOnStart,
+    super.isRequired,
+    super.runValidatorsFullRun,
+    super.defaultFormatterValidatorsMaker,
+  });
+}
+
+class TestPlainTextFieldBrick extends TextFieldBrick<String> {
+  TestPlainTextFieldBrick({
     super.key,
     required super.keyString,
     required super.formManager,
     super.colorMaker,
-    super.initialInput,
-    super.isFocusedOnStart,
-    super.defaultFormatterValidatorListMaker,
   });
 
   @override
