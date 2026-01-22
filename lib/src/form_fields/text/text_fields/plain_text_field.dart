@@ -5,13 +5,13 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 
-class PlainTextFieldDescriptor extends FieldDescriptor<TextEditingValue, String> {
+class PlainTextFieldDescriptor extends FormFieldDescriptor<TextEditingValue, String, PlainTextField> {
   PlainTextFieldDescriptor({
     required super.keyString,
     super.initialInput,
     super.isFocusedOnStart,
-    super.isRequired = false,
-    super.runValidatorsFullRun = FormFieldBrick.defaultValidatorsFullRun,
+    super.isRequired,
+    super.runValidatorsFullRun,
     super.additionalFormatterValidatorsMaker,
   });
 }

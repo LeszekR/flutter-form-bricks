@@ -13,19 +13,18 @@ import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/dat
 import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/states_color_maker.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/text_field_brick.dart';
 
-class DateFieldDescriptor extends FieldDescriptor<TextEditingValue, Date> {
+class DateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, Date, DateField> {
   DateFieldDescriptor({
     required super.keyString,
     super.initialInput,
     super.isFocusedOnStart,
-    super.isRequired = false,
-    super.runValidatorsFullRun = FormFieldBrick.defaultValidatorsFullRun,
+    super.isRequired,
+    super.runValidatorsFullRun,
     super.additionalFormatterValidatorsMaker,
     DateTimeLimits? dateTimeLimits,
     DateTimeUtils? dateTimeUtils,
     CurrentDate? currentDate,
   }) : super(
-          runDefaultValidatorsFirst: FormFieldBrick.defaultRunDefaultValidatorsFirst,
           defaultFormatterValidatorsMaker: () => [
             DateFormatterValidator(
               dateTimeUtils ?? DateTimeUtils(),

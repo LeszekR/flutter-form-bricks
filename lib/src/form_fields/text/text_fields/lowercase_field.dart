@@ -7,16 +7,15 @@ import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/base/validate_mode_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/text/lowercase_formatter.dart';
 
-class LowerCaseFieldDescriptor extends FieldDescriptor<TextEditingValue, String> {
+class LowerCaseFieldDescriptor extends FormFieldDescriptor<TextEditingValue, String, LowerCaseField> {
   LowerCaseFieldDescriptor({
     required super.keyString,
     super.initialInput,
     super.isFocusedOnStart,
     super.isRequired = false,
-    super.runValidatorsFullRun = FormFieldBrick.defaultValidatorsFullRun,
+    super.runValidatorsFullRun,
     super.additionalFormatterValidatorsMaker,
   }) : super(
-          runDefaultValidatorsFirst: FormFieldBrick.defaultRunDefaultValidatorsFirst,
           defaultFormatterValidatorsMaker: () => [
             LowercaseFormatter(),
           ],

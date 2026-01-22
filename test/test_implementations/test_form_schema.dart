@@ -8,7 +8,7 @@ import 'mock_formatter_validator.dart';
 class TestFormSchema extends FormSchema {
   TestFormSchema.testDefault()
       : super([
-          FieldDescriptor<TextEditingValue, String>(
+          FormFieldDescriptor<TextEditingValue, String>(
             keyString: fieldKeyString1,
             initialInput: stringInput1.txtEditVal(),
           )
@@ -22,7 +22,7 @@ class TestFormSchema extends FormSchema {
     FormatterValidatorListMaker<TextEditingValue, String>? formatterValidatorListMaker,
   }) : super(
           [
-            FieldDescriptor<TextEditingValue, String>(
+            FormFieldDescriptor<TextEditingValue, String>(
               keyString: fieldKeyString,
               initialInput: (initialInput ?? stringInput1).txtEditVal(),
               defaultFormatterValidatorsMaker: formatterValidatorListMaker ?? () => [MockTextFormatterValidator()],

@@ -5,9 +5,6 @@ import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 abstract class FormFieldBrick<I extends Object, V extends Object> extends StatefulWidget {
-  static const bool defaultIsRequired = false;
-  static const bool defaultRunDefaultValidatorsFirst = true;
-  static const bool defaultValidatorsFullRun = true;
 
   final String keyString;
 
@@ -42,19 +39,19 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   /// and updated in `setState()`;
   late I? _input;
 
+  /// Controls the field's color and is passed to `InputDecoration` it the field shows its error this way.
+  String? _error;
+
   late final FocusNode focusNode;
 
   FormManager get formManager => widget.formManager;
 
   String get keyString => widget.keyString;
 
-  /// Controls the field's color and is passed to `InputDecoration` it the field shows its error this way.
-  String? _error;
-
   @mustCallSuper
   @override
   void initState() {
-    formManager.registerField<I, V>(keyString, _hasFormatterValidator());
+    formManager.registerField<F>(keyString, _hasFormatterValidator());
 
     focusNode = FocusNode();
     formManager.setFocusListener(focusNode, keyString);
@@ -102,7 +99,6 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
     return formManager.onFieldChanged<I, V>(BricksLocalizations.of(context), keyString, input).input;
   }
 
-  // TU PRZERWAŁEM - finish setting proper validationMode for all validated, or noValidator on no validated specialised fields
   bool _hasFormatterValidator() => widget.validateMode != ValidateModeBrick.noValidator;
 
   Color? makeColor() => widget.colorMaker.makeColor(context, _states);

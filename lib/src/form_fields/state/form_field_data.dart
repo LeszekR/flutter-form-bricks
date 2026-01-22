@@ -1,15 +1,18 @@
 import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
+import 'package:flutter_form_bricks/src/form_fields/base/form_field_brick.dart';
 
-final class FormFieldData<I extends Object, V extends Object> {
-  final Type inputRuntimeType;
-  final Type valueRuntimeType;
+final class FormFieldData<I extends Object, V extends Object, F extends FormFieldBrick<I, V>> {
+  // final Type inputRuntimeType;
+  // final Type valueRuntimeType;
+  final Type fieldType;
   final FieldContent<I, V> fieldContent;
   final I? initialInput;
   final bool isValidating;
 
-  const FormFieldData({
-    required this.inputRuntimeType,
-    required this.valueRuntimeType,
+  FormFieldData({
+    // required this.inputRuntimeType,
+    // required this.valueRuntimeType,
+    required this.fieldType,
     required this.fieldContent,
     this.initialInput,
     this.isValidating = false,
@@ -21,18 +24,20 @@ final class FormFieldData<I extends Object, V extends Object> {
     I? initialInput,
   }) =>
       FormFieldData(
-        inputRuntimeType: I,
-        valueRuntimeType: V,
+        // inputRuntimeType: I,
+        // valueRuntimeType: V,
+        fieldType: F,
         fieldContent: FieldContent.of(initialInput),
       );
 
-  FormFieldData<I, V> copyWith({
+  FormFieldData<I, V, F> copyWith({
     bool? isValidating,
     FieldContent<I, V>? fieldContent,
   }) {
-    return FormFieldData<I, V>(
-      inputRuntimeType: inputRuntimeType,
-      valueRuntimeType: valueRuntimeType,
+    return FormFieldData<I, V, F>(
+      // inputRuntimeType: inputRuntimeType,
+      // valueRuntimeType: valueRuntimeType,
+      fieldType: fieldType,
       initialInput: initialInput,
       isValidating: isValidating ?? this.isValidating,
       fieldContent: fieldContent ?? this.fieldContent,
@@ -48,7 +53,7 @@ final class FormFieldData<I extends Object, V extends Object> {
     if (identical(this, other)) return true;
     if (other.runtimeType != runtimeType) return false;
 
-    return other is FormFieldData<I, V> &&
+    return other is FormFieldData<I, V, F> &&
         other.initialInput == initialInput &&
         other.isValidating == isValidating &&
         other.fieldContent == fieldContent;

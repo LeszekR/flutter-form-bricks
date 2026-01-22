@@ -37,10 +37,9 @@ abstract class FormManager extends ChangeNotifier {
   void _initFormData(FormSchema formSchema, FormData formData) {
     if (formData.fieldDataMap.isNotEmpty) return;
 
-    for (FieldDescriptor d in formSchema.descriptors) {
+    for (FormFieldDescriptor d in formSchema.descriptors) {
       formData.fieldDataMap[d.keyString] = FormFieldData(
-        inputRuntimeType: d.inputRuntimeType,
-        valueRuntimeType: d.valueRuntimeType,
+        fieldType: d.fieldType,
         fieldContent: FieldContent.transient(d.initialInput),
         initialInput: d.initialInput,
       );
@@ -66,42 +65,30 @@ abstract class FormManager extends ChangeNotifier {
 
   // fields registration in FormManager
   // ==============================================================================
-  String _forgotToRunBuild = ' (Did you forget to run \'dart run build-runner build\'?)';
-
   /// Obligatory for every field - guarantees access to:
   ///  - `FormatterValidatorChain` for the field (if there is any)
   ///  - state preservation object: `FormData` where field's **input**, **value**, **isValid**,
   ///    **error** will be kept over the life of the `FormBrick`.
-  void registerField<I extends Object, V extends Object>(String keyString, bool withValidator) {
+  void registerField<F extends FormFieldBrick>(String keyString, bool withValidator) {
     assert(
       fieldDataMap.keys.contains(keyString),
       'No "$keyString" found in FormData.fieldDataMap; '
-      'all fields in form must be declared in FormSchema => FormFieldData.$_forgotToRunBuild',
+      'all fields in form must be declared in FormSchema => FormFieldData.',
     );
 
-    var inputRuntimeType = _fieldData(keyString).inputRuntimeType;
-    assert(
-      I == inputRuntimeType,
-      'Field input type is different from FieldData inputType (\'${I.toString()}\' vs. \'${inputRuntimeType.toString()})\' '
-      'for keyString: \'$keyString\' declared in FormSchema -> FormFieldDescriptor.$_forgotToRunBuild',
-    );
-
-    var valueRuntimeType = _fieldData(keyString).valueRuntimeType;
-    assert(
-      V == valueRuntimeType,
-      'Field value type is different from FieldData valueType (\'${V.toString()}\' vs. \'${valueRuntimeType.toString()})\' '
-      'for keyString: \'$keyString\' declared in FormSchema -> FormFieldDescriptor.$_forgotToRunBuild',
-    );
+    var fieldType = _fieldData(keyString).fieldType;
+    assert (F == fieldType,
+    'Field type is different from FieldData fieldType (\'${F.toString()}\' vs. \'${fieldType.toString()})\' '
+        'for keyString: \'$keyString\' declared in FormSchema -> FormFieldDescriptor.',
+        );
 
     assert(
-        withValidator == (getFormatterValidatorChain(keyString) != null),
-        withValidator
-            ? 'No "$keyString" found in formatterValidatorsMap while the field declares "withValidator == true"; '
-                'there must be one FormatterValidatorChain in the map for every such field.'
-            : 'Found "$keyString" in formatterValidatorsMap while the field declares "withValidator == false"; '
-                'there must be no FormatterValidatorChain in the map for every such field.');
-
-    // TU PRZERWAŁEM TODO check FormFieldDescriptor type against the field type - must be associated by type
+    withValidator == (getFormatterValidatorChain(keyString) != null),
+    withValidator
+        ? 'No "$keyString" found in formatterValidatorsMap while the field declares "withValidator == true"; '
+        'there must be one FormatterValidatorChain in the map for every such field.'
+        : 'Found "$keyString" in formatterValidatorsMap while the field declares "withValidator == false"; '
+        'there must be no FormatterValidatorChain in the map for every such field.');
   }
 
   void setFocusListener(FocusNode focusNode, String keyString) {

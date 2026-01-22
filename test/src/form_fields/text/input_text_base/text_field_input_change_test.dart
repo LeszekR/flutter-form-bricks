@@ -75,7 +75,7 @@ Future<void> _runValueChangeTest(
 
   final formManager = TestFormManager(
     schema: TestFormSchema.fromDescriptors([
-      FieldDescriptor<TextEditingValue, String>(
+      FormFieldDescriptor<TextEditingValue, String>(
         keyString: fieldKeyString,
         initialInput: testCase.initialInput?.txtEditVal(),
         // TU PRZERWAŁEM - finish correcting refactoring

@@ -4,10 +4,11 @@ import 'package:flutter_form_bricks/src/form_fields/base/formatter_validator_bas
 
 typedef FormatterValidatorListMaker<I extends Object, V extends Object> = List<FormatterValidator<I, V>> Function();
 
-abstract class FieldDescriptor<I extends Object, V extends Object> {
+abstract class FormFieldDescriptor<I extends Object, V extends Object, F extends FormFieldBrick<I, V>> {
   final String keyString;
   final Type inputRuntimeType = I;
   final Type valueRuntimeType = V;
+  final Type fieldType = F;
   final bool isRequired;
   final bool runValidatorsFullRun;
   final bool runDefaultValidatorsFirst;
@@ -18,19 +19,19 @@ abstract class FieldDescriptor<I extends Object, V extends Object> {
 
   // TODO guarantee validator chain adequate to field type - e.g. checkbox with date-validator throws
 
-  FieldDescriptor({
+  FormFieldDescriptor({
     required this.keyString,
     this.initialInput,
     this.isFocusedOnStart,
-    this.isRequired = FormFieldBrick.defaultIsRequired,
-    this.runValidatorsFullRun = FormFieldBrick.defaultValidatorsFullRun,
-    this.runDefaultValidatorsFirst = FormFieldBrick.defaultRunDefaultValidatorsFirst,
+    this.isRequired = false,
+    this.runValidatorsFullRun = true,
+    this.runDefaultValidatorsFirst = true,
     this.defaultFormatterValidatorsMaker,
     this.additionalFormatterValidatorsMaker,
   })  : assert(I != dynamic, "FormFieldDescriptor<I, V>: Generic type I must not be dynamic."),
         assert(V != dynamic, "FormFieldDescriptor<I, V>: Generic type V must not be dynamic.");
 
-  FormatterValidatorChain<I, V>? buildChain() => _buildFormatterValidatorChainForDescriptor<I, V>(this);
+  FormatterValidatorChain<I, V>? buildChain() => _buildFormatterValidatorChainForDescriptor<I, V, F>(this);
 }
 
 /// Builds a [`FormatterValidatorChain`] for a descriptor by combining its default and additional validators.
@@ -53,8 +54,9 @@ abstract class FieldDescriptor<I extends Object, V extends Object> {
 /// are merged and which chain execution policy is used.
 ///
 /// See also: [FormatterValidatorChain], [FormatterValidatorChainFullRun], [FormatterValidatorChainEarlyStop].
-FormatterValidatorChain<I, V>? _buildFormatterValidatorChainForDescriptor<I extends Object, V extends Object>(
-    FieldDescriptor<I, V> d) {
+FormatterValidatorChain<I, V>?
+    _buildFormatterValidatorChainForDescriptor<I extends Object, V extends Object, F extends FormFieldBrick<I, V>>(
+        FormFieldDescriptor<I, V, F> d) {
   List<FormatterValidator<I, V>>? formatterValidatorList = null;
   final List<FormatterValidator<I, V>>? defaults = d.defaultFormatterValidatorsMaker?.call();
   final List<FormatterValidator<I, V>>? additions = d.additionalFormatterValidatorsMaker?.call();

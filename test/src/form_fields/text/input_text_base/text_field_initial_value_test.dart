@@ -53,7 +53,7 @@ void _testControllerInitialValue({
 }) {
   testWidgets(description, (tester) async {
     final schema = TestFormSchema.fromDescriptors([
-      FieldDescriptor<TextEditingValue, String>(
+      FormFieldDescriptor<TextEditingValue, String>(
         keyString: fieldKeyString1,
         initialInput: initialInput?.txtEditVal(),
       )

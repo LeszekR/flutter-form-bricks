@@ -13,3 +13,6 @@
   `keyString` is already required by `DateTimeRangeFormatterValidator` to identify which range field
   triggered validation, so the other fields are not revalidated and their errors are read from
   `RangeController.errorsCacheMap`.
+
+- Creation of new specialised field: create the `FormFieldBrick` descendant, `FormFieldDescriptor`
+  descendant dedicated for the field, set default `FormatterValidator` list in the `FormFieldDescriptor`, 
