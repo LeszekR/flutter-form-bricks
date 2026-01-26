@@ -11,7 +11,6 @@ class LowerCaseFieldDescriptor extends FormFieldDescriptor<TextEditingValue, Str
   LowerCaseFieldDescriptor({
     required super.keyString,
     super.initialInput,
-    super.isFocusedOnStart,
     super.isRequired = false,
     super.runValidatorsFullRun,
     super.additionalFormatterValidatorsMaker,

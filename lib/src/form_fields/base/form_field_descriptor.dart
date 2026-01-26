@@ -13,7 +13,7 @@ abstract class FormFieldDescriptor<I extends Object, V extends Object, F extends
   final bool runValidatorsFullRun;
   final bool runDefaultValidatorsFirst;
   final I? initialInput;
-  final bool? isFocusedOnStart;
+  // final bool? isFocusedOnStart;
   final FormatterValidatorListMaker<I, V>? defaultFormatterValidatorsMaker;
   final FormatterValidatorListMaker<I, V>? additionalFormatterValidatorsMaker;
 
@@ -22,7 +22,7 @@ abstract class FormFieldDescriptor<I extends Object, V extends Object, F extends
   FormFieldDescriptor({
     required this.keyString,
     this.initialInput,
-    this.isFocusedOnStart,
+    // this.isFocusedOnStart,
     this.isRequired = false,
     this.runValidatorsFullRun = true,
     this.runDefaultValidatorsFirst = true,

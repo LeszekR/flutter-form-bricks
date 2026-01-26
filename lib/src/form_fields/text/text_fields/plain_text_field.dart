@@ -9,7 +9,6 @@ class PlainTextFieldDescriptor extends FormFieldDescriptor<TextEditingValue, Str
   PlainTextFieldDescriptor({
     required super.keyString,
     super.initialInput,
-    super.isFocusedOnStart,
     super.isRequired,
     super.runValidatorsFullRun,
     super.additionalFormatterValidatorsMaker,

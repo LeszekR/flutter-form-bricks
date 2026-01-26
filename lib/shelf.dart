@@ -43,7 +43,6 @@ export 'src/forms/base/form_schema.dart';
 export 'src/forms/form_manager/form_manager.dart';
 export 'src/forms/form_manager/form_status.dart';
 export 'src/forms/state/form_data.dart';
-export 'src/forms/state/single_form_state_data.dart';
 
 // STRING LITERALS
 export 'src/string_literals/gen/bricks_localizations.dart';

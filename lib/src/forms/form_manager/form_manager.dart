@@ -6,9 +6,10 @@ import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
 abstract class FormManager extends ChangeNotifier {
   @visibleForTesting
   final ValueNotifier<String> errorMessageNotifier = ValueNotifier<String>('');
+  late BricksLocalizations _localizations;
+  final GlobalKey<FormStateBrick> _formKey;
   final FormData _formData;
   final Map<String, FormatterValidatorChain?> _formatterValidatorChainMap;
-  late BricksLocalizations _localizations;
 
   // TODO add focusing chosen field? or leave it as finding the field and then focusing
 
@@ -20,12 +21,13 @@ abstract class FormManager extends ChangeNotifier {
 
   void set localizations(BricksLocalizations localizations) => _localizations = localizations;
 
-  GlobalKey<FormStateBrick> get formKey => _formData.formKey;
+  GlobalKey<FormStateBrick> get formKey => _formKey;
 
   Map<String, FormFieldData> get fieldDataMap => _formData.fieldDataMap;
 
   FormManager({required FormData formData, required FormSchema formSchema})
-      : _formData = formData,
+      : _formKey = formSchema.formKey,
+        _formData = formData,
         _formatterValidatorChainMap = {
           for (final d in formSchema.descriptors) d.keyString: d.buildChain(),
         } {
@@ -37,13 +39,14 @@ abstract class FormManager extends ChangeNotifier {
   void _initFormData(FormSchema formSchema, FormData formData) {
     if (formData.fieldDataMap.isNotEmpty) return;
 
+    formData.initiallyFocusedKeyString = formSchema.initiallyFocusedKeyString;
+
     for (FormFieldDescriptor d in formSchema.descriptors) {
       formData.fieldDataMap[d.keyString] = FormFieldData(
         fieldType: d.fieldType,
         fieldContent: FieldContent.transient(d.initialInput),
         initialInput: d.initialInput,
       );
-      if (d.isFocusedOnStart ?? false) formData.focusedKeyString = d.keyString;
     }
   }
 
@@ -104,7 +107,7 @@ abstract class FormManager extends ChangeNotifier {
   // ==============================================================================
   FieldContent getFieldContent(String keyString) => _fieldData(keyString).fieldContent;
 
-  bool isFocusedOnStart(String keyString) => _formData.focusedKeyString == keyString;
+  bool isFocusedOnStart(String keyString) => _formData.initiallyFocusedKeyString == keyString;
 
   dynamic getInitialInput(String keyString) => _fieldData(keyString).initialInput;
 
@@ -124,7 +127,7 @@ abstract class FormManager extends ChangeNotifier {
   FormatterValidatorChain<I, V>? getFormatterValidatorChain<I extends Object, V extends Object>(String keyString) =>
       (_formatterValidatorChainMap[keyString] as FormatterValidatorChain<I, V>?);
 
-  void _setFocusedKeyString(String keyString) => _formData.focusedKeyString = keyString;
+  void _setFocusedKeyString(String keyString) => _formData.initiallyFocusedKeyString = keyString;
 
   void storeFieldContent(String keyString, FieldContent fieldContent) =>
       _updateFieldData(keyString, fieldContent: fieldContent);
@@ -188,7 +191,7 @@ abstract class FormManager extends ChangeNotifier {
       storeFieldContent(keyString, fieldContent);
     }
 
-    _showFieldErrorMessage(_formData.focusedKeyString);
+    _showFieldErrorMessage(_formData.initiallyFocusedKeyString);
   }
 
   // showing error message

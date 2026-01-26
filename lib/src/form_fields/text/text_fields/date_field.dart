@@ -17,7 +17,6 @@ class DateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, Date, Da
   DateFieldDescriptor({
     required super.keyString,
     super.initialInput,
-    super.isFocusedOnStart,
     super.isRequired,
     super.runValidatorsFullRun,
     super.additionalFormatterValidatorsMaker,
