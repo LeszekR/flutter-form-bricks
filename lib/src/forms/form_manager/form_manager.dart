@@ -29,7 +29,7 @@ abstract class FormManager extends ChangeNotifier {
       : _formKey = formSchema.formKey,
         _formData = formData,
         _formatterValidatorChainMap = {
-          for (final d in formSchema.descriptors) d.keyString: d.buildChain(),
+          for (final d in formSchema.fieldDescriptors) d.keyString: d.buildChain(),
         } {
     _initFormData(formSchema, _formData);
   }
@@ -41,7 +41,7 @@ abstract class FormManager extends ChangeNotifier {
 
     formData.initiallyFocusedKeyString = formSchema.initiallyFocusedKeyString;
 
-    for (FormFieldDescriptor d in formSchema.descriptors) {
+    for (FormFieldDescriptor d in formSchema.fieldDescriptors) {
       formData.fieldDataMap[d.keyString] = FormFieldData(
         fieldType: d.fieldType,
         fieldContent: FieldContent.transient(d.initialInput),
@@ -76,22 +76,23 @@ abstract class FormManager extends ChangeNotifier {
     assert(
       fieldDataMap.keys.contains(keyString),
       'No "$keyString" found in FormData.fieldDataMap; '
-      'all fields in form must be declared in FormSchema => FormFieldData.',
+      'all fields in form must be declared in FormSchema -> fieldDescriptors.',
     );
 
     var fieldType = _fieldData(keyString).fieldType;
-    assert (F == fieldType,
-    'Field type is different from FieldData fieldType (\'${F.toString()}\' vs. \'${fieldType.toString()})\' '
-        'for keyString: \'$keyString\' declared in FormSchema -> FormFieldDescriptor.',
-        );
+    assert(
+      F == fieldType,
+      'Field type is different from FieldData fieldType (\'${F.toString()}\' vs. \'${fieldType.toString()})\' '
+      'for keyString: \'$keyString\' declared in FormSchema -> FormFieldDescriptor.',
+    );
 
     assert(
-    withValidator == (getFormatterValidatorChain(keyString) != null),
-    withValidator
-        ? 'No "$keyString" found in formatterValidatorsMap while the field declares "withValidator == true"; '
-        'there must be one FormatterValidatorChain in the map for every such field.'
-        : 'Found "$keyString" in formatterValidatorsMap while the field declares "withValidator == false"; '
-        'there must be no FormatterValidatorChain in the map for every such field.');
+        withValidator == (getFormatterValidatorChain(keyString) != null),
+        withValidator
+            ? 'No "$keyString" found in formatterValidatorsMap while the field declares "withValidator == true"; '
+                'there must be one FormatterValidatorChain in the map for every such field.'
+            : 'Found "$keyString" in formatterValidatorsMap while the field declares "withValidator == false"; '
+                'there must be no FormatterValidatorChain in the map for every such field.');
   }
 
   void setFocusListener(FocusNode focusNode, String keyString) {
@@ -145,21 +146,21 @@ abstract class FormManager extends ChangeNotifier {
   // validation
   // ==============================================================================
   FieldContent<I, V> onFieldChanged<I extends Object, V extends Object>(
-      BricksLocalizations localizations, String keyString, dynamic input) {
-    FieldContent<I, V> fieldContent = formatAndValidateQuietly<I, V>(localizations, keyString, input);
+      BricksLocalizations localizations, String keyString, dynamic input, dynamic defaultValue) {
+    FieldContent<I, V> fieldContent = formatAndValidateQuietly<I, V>(localizations, keyString, input, defaultValue);
     _showFieldErrorMessage(keyString);
     return fieldContent;
   }
 
   FieldContent<I, V> formatAndValidateQuietly<I extends Object, V extends Object>(
-      BricksLocalizations localizations, String keyString, dynamic input) {
+      BricksLocalizations localizations, String keyString, dynamic input, dynamic defaultValue) {
     FieldContent<I, V> fieldContent;
     FormatterValidatorChain<I, V>? formatterValidatorChain = getFormatterValidatorChain<I, V>(keyString);
 
     if (formatterValidatorChain != null) {
       fieldContent = formatterValidatorChain.runChain(localizations, keyString, input);
     } else {
-      fieldContent = FieldContent.ok(input, input);
+      fieldContent = FieldContent.ok(input, defaultValue);
     }
 
     storeFieldContent(keyString, fieldContent);

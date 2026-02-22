@@ -4,18 +4,17 @@ import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/string_
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../test_implementations/mock_formatter_validator.dart';
-import '../../../../test_implementations/mock_formatter_validator_chain.dart';
 import '../../../../test_implementations/test_color_maker.dart';
-import '../../../../test_implementations/test_form_field_brick.dart';
 import '../../../../test_implementations/test_form_manager.dart';
 import '../../../../test_implementations/test_form_schema.dart';
+import '../../../../test_implementations/test_text_field_brick.dart';
 import '../../../tools/test_constants.dart';
 
 void main() {
   group('FormFieldBrick value change → validation flow', () {
     for (final testCase in _cases) {
       testWidgets(testCase.description, (tester) async {
-        await _runValueChangeTest(tester, testCase);
+        await _runInputChangeTest(tester, testCase);
       });
     }
   });
@@ -60,7 +59,7 @@ final List<ValueChangeTestCase> _cases = [
   ),
 ];
 
-Future<void> _runValueChangeTest(
+Future<void> _runInputChangeTest(
   WidgetTester tester,
   ValueChangeTestCase testCase,
 ) async {
@@ -68,23 +67,25 @@ Future<void> _runValueChangeTest(
 
   final FormatterValidatorListMaker<TextEditingValue, String> mockTextFormatValidListMaker = () => [
         MockTextFormatterValidator(
-          returnInputTEV: testCase.newInput.txtEditVal(),
+          returnInputTxEdVal: testCase.newInput.txtEditVal(),
           mockError: testCase.error,
         )
       ];
 
   final formManager = TestFormManager(
-    schema: TestFormSchema.fromDescriptors([
-      FormFieldDescriptor<TextEditingValue, String>(
-        keyString: fieldKeyString,
-        initialInput: testCase.initialInput?.txtEditVal(),
-        // TU PRZERWAŁEM - finish correcting refactoring
-        defaultFormatterValidatorsMaker: mockTextFormatValidListMaker,
-      )
-    ]),
+    schema: TestFormSchema.fromDescriptors(
+      initiallyFocusedKeyString: fieldKeyString,
+      fieldDescriptors: [
+        TestTextFieldDescriptor(
+          keyString: fieldKeyString,
+          initialInput: testCase.initialInput?.txtEditVal(),
+          additionalFormatterValidatorsMaker: mockTextFormatValidListMaker,
+        )
+      ],
+    ),
   );
 
-  final globalKey = GlobalKey<TestFormFieldBrickState>();
+  final globalKey = GlobalKey<TestTextFieldState>();
   BricksLocalizations? localizations;
 
   await tester.pumpWidget(
@@ -92,17 +93,18 @@ Future<void> _runValueChangeTest(
       data: UiParamsData(),
       child: MaterialApp(
         localizationsDelegates: BricksLocalizations.localizationsDelegates,
-        home: Builder(
-          builder: (context) {
-            localizations = BricksLocalizations.of(context);
-            return TestPlainTextFieldBrick(
-              key: globalKey,
-              keyString: fieldKeyString,
-              formManager: formManager,
-              colorMaker: TestColorMaker(),
-              defaultFormatterValidatorListMaker: mockTextFormatValidListMaker,
-            );
-          },
+        home: Scaffold(
+          body: Builder(
+            builder: (context) {
+              localizations = BricksLocalizations.of(context);
+              return TestTextField(
+                key: globalKey,
+                keyString: fieldKeyString,
+                formManager: formManager,
+                colorMaker: TestColorMaker(),
+              );
+            },
+          ),
         ),
       ),
     ),
@@ -121,10 +123,10 @@ Future<void> _runValueChangeTest(
   expect(formManager.getFieldError(fieldKeyString), null);
 
   // --- Simulate user input change ---
-  state.onInputChanged(testCase.newInput.txtEditVal());
+  state.onInputChanged(TextEditingValue(text: testCase.newInput), testCase.newInput);
 
   // --- Verify final FormManager state ---
-  expect(formManager.getFieldValue(fieldKeyString), TextEditingValue(text: testCase.newInput));
+  expect(formManager.getFieldValue(fieldKeyString), testCase.newInput);
   expect(formManager.isFieldDirty(fieldKeyString), true);
   expect(formManager.isFieldValidating(fieldKeyString), false);
   expect(formManager.isFieldValid(fieldKeyString), testCase.error == null);

@@ -408,7 +408,7 @@ class DateTimeInputs {
       if (value != null) {
 // TODO connect to rangeValidator
         final formattedText = Date.dateFormat.format(value);
-        formManager.onFieldChanged(localizations, keyString, formattedText);
+        formManager.onFieldChanged(localizations, keyString, formattedText, null);
       }
     });
   }
@@ -431,7 +431,7 @@ class DateTimeInputs {
             hour: value.hour,
           ),
         );
-        formManager.onFieldChanged(localizations, keyString, formattedText);
+        formManager.onFieldChanged(localizations, keyString, formattedText, null);
       }
     });
   }
@@ -465,7 +465,7 @@ class DateTimeInputs {
           selectedTime.minute,
         );
         final formattedText = Date.dateHourFormat.format(combined);
-        formManager.onFieldChanged(localizations, keyString, formattedText);
+        formManager.onFieldChanged(localizations, keyString, formattedText, null);
       }
     }
   }

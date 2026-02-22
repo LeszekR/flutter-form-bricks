@@ -28,7 +28,7 @@ class LowerCaseField extends TextFieldBrick<String> {
     // FormFieldBrick
     required super.keyString,
     required super.formManager,
-    StatesColorMaker? colorMaker,
+    super.colorMaker,
     super.statesObserver,
     super.statesNotifier,
     //
@@ -111,4 +111,8 @@ class LowerCaseField extends TextFieldBrick<String> {
   LowerCaseFieldState createState() => LowerCaseFieldState();
 }
 
-class LowerCaseFieldState extends TextFieldStateBrick<String, LowerCaseField> {}
+class LowerCaseFieldState extends TextFieldStateBrick<String, LowerCaseField> {
+
+  @override
+  String? get defaultValue => controller.text;
+}

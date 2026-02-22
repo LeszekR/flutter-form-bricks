@@ -5,7 +5,6 @@ import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 abstract class FormFieldBrick<I extends Object, V extends Object> extends StatefulWidget {
-
   final String keyString;
 
   final FormManager formManager;
@@ -22,11 +21,11 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
     required this.keyString,
     // TODO add field label, required if has validator so FormManager shows error for named field
     required this.formManager,
+    required this.validateMode,
     StatesColorMaker? colorMaker,
     this.statesObserver,
     this.statesNotifier,
     this.onChanged,
-    this.validateMode = ValidateModeBrick.noValidator,
   })  : this.colorMaker = colorMaker ?? StatesColorMaker(),
         super(key: key ?? ValueKey(keyString));
 }
@@ -34,6 +33,10 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
 abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends FormFieldBrick<I, V>>
     extends State<F> {
   Set<WidgetState>? _states;
+
+  /// Value of the field saved in `FieldData` and used on form save when the field has no
+  /// `FormatterValidator` (which otherwise provides formatted value).
+  V? get defaultValue;
 
   /// Object holding state of this `FormFieldBrick`. Fetched from `FormManager` prior to `build()`
   /// and updated in `setState()`;
@@ -92,11 +95,11 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   ///   displays error if the field uses `InputDecoration` for this (error alternatively it can be displayed in
   ///   dedicated `FormBrick` area by `FormManager`).
   @mustCallSuper
-  I? onInputChanged(I? input) {
+  I? onInputChanged(I? input, V? defaultValue) {
     // Here FormManager:
     // - validates the input
     // - saves results of format-validation in FormData -> FormFieldData -> FieldContent
-    return formManager.onFieldChanged<I, V>(BricksLocalizations.of(context), keyString, input).input;
+    return formManager.onFieldChanged<I, V>(BricksLocalizations.of(context), keyString, input, defaultValue).input;
   }
 
   bool _hasFormatterValidator() => widget.validateMode != ValidateModeBrick.noValidator;

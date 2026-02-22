@@ -81,7 +81,7 @@ class ChoiceInputs {
           ? null
           : (value) {
               onChanged?.call(value);
-              formManager?.onFieldChanged(localizations, keyString, value);
+              formManager?.onFieldChanged(localizations, keyString, value, null);
             },
       enabled: !readonly,
       focusNode: focusNode,

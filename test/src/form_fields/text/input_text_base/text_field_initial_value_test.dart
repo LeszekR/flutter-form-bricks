@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/string_extension.dart';
-import 'package:flutter_form_bricks/src/form_fields/base/form_field_descriptor.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params_data.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../../test_implementations/test_color_maker.dart';
-import '../../../tools/test_constants.dart';
 import '../../../../test_implementations/test_form_manager.dart';
 import '../../../../test_implementations/test_form_schema.dart';
 import '../../../../test_implementations/test_text_field_brick.dart';
+import '../../../tools/test_constants.dart';
 
 // TODO test all FormFieldBrick implementations for showing initial value: double, integer, checkbox, radio, ...
 void main() {
@@ -52,23 +49,20 @@ void _testControllerInitialValue({
   required String expectedValueText,
 }) {
   testWidgets(description, (tester) async {
-    final schema = TestFormSchema.fromDescriptors([
-      FormFieldDescriptor<TextEditingValue, String>(
-        keyString: fieldKeyString1,
-        initialInput: initialInput?.txtEditVal(),
-      )
-    ]);
+    final schema = TestFormSchema.withSingleTextField(
+      fieldKeyString: fieldKeyString1,
+      initialInput: initialInput,
+    );
 
     await tester.pumpWidget(
       UiParams(
         data: UiParamsData(), // Required by bricks for styling/context.
         child: MaterialApp(
           home: Scaffold(
-            body: TestTextFieldBrick(
+            body: TestTextField(
               keyString: fieldKeyString1,
-              controller: controller,
               formManager: TestFormManager(schema: schema),
-              colorMaker: TestColorMaker(),
+              controller: controller,
             ),
           ),
         ),

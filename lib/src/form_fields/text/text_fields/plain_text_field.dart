@@ -22,10 +22,10 @@ class PlainTextField extends TextFieldBrick<String> {
     // FormFieldBrick
     required super.keyString,
     required super.formManager,
-    StatesColorMaker? colorMaker,
+    required super.validateMode,
+    super.colorMaker,
     super.statesObserver,
     super.statesNotifier,
-    super.validateMode,
     //
     // BrickTextField
     super.width,
@@ -106,4 +106,7 @@ class PlainTextField extends TextFieldBrick<String> {
   PlainTextFieldStateBrick createState() => PlainTextFieldStateBrick();
 }
 
-class PlainTextFieldStateBrick extends TextFieldStateBrick<String, PlainTextField> {}
+class PlainTextFieldStateBrick extends TextFieldStateBrick<String, PlainTextField> {
+  @override
+  String? get defaultValue => controller.text;
+}

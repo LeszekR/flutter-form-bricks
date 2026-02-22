@@ -7,10 +7,10 @@ import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations
 /// Mocked [FormatterValidator] that returns a fixed validation result.
 /// For use in all value-change tests to simulate both valid and invalid responses.
 class MockTextFormatterValidator extends FormatterValidator<TextEditingValue, String> {
-  final TextEditingValue? returnInputTEV;
+  final TextEditingValue? returnInputTxEdVal;
   final String? mockError;
 
-  MockTextFormatterValidator({this.returnInputTEV, this.mockError});
+  MockTextFormatterValidator({this.returnInputTxEdVal, this.mockError});
 
   @override
   FieldContent<TextEditingValue, String> run(
@@ -19,6 +19,6 @@ class MockTextFormatterValidator extends FormatterValidator<TextEditingValue, St
     FieldContent<TextEditingValue, String> fieldContent,
   ) {
     bool isValid = mockError == null ? true : false;
-    return FieldContent.of(returnInputTEV, returnInputTEV?.text, isValid, mockError);
+    return FieldContent.of(returnInputTxEdVal, returnInputTxEdVal?.text, isValid, mockError);
   }
 }

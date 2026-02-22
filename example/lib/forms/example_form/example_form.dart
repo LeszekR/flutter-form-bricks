@@ -33,7 +33,6 @@ class ExampleFormState extends FormStateBrick {
               keyString: dateKeyString1,
               formManager: formManager,
               width: 150,
-              // defaultFormatterValidatorListMaker: null,
             ),
             appSize.spacerBoxVerticalMedium,
             PlainTextField(
@@ -41,6 +40,7 @@ class ExampleFormState extends FormStateBrick {
               formManager: formManager,
               width: 200,
               maxLines: 3,
+              validateMode: ValidateModeBrick.noValidator,
             ),
             appSize.spacerBoxVerticalMedium,
             LowerCaseField(

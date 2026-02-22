@@ -41,7 +41,7 @@ class DateField extends TextFieldBrick<Date> {
     // FormFieldBrick
     required super.keyString,
     required super.formManager,
-    StatesColorMaker? colorMaker,
+    super.colorMaker,
     super.statesObserver,
     super.statesNotifier,
     //
@@ -124,4 +124,8 @@ class DateField extends TextFieldBrick<Date> {
   State<StatefulWidget> createState() => DateFieldState();
 }
 
-class DateFieldState extends TextFieldStateBrick<Date, DateField> {}
+class DateFieldState extends TextFieldStateBrick<Date, DateField> {
+
+  @override
+  Date? get defaultValue => null;
+}

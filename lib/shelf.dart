@@ -12,6 +12,7 @@ export 'src/awaiting_refactoring/ui/inputs/choice/choice_inputs.dart';
 export 'src/awaiting_refactoring/ui/inputs/date_time/date_time_inputs.dart';
 export 'src/awaiting_refactoring/ui/inputs/number/number_inputs.dart';
 export 'src/awaiting_refactoring/ui/inputs/text/text_inputs.dart';
+export 'src/awaiting_refactoring/ui/inputs/input_validator_provider.dart';
 
 // DIALOGS
 export 'src/dialogs/dialogs.dart';
@@ -21,13 +22,13 @@ export 'src/form_fields/labelled_box/label_position.dart';
 // INPUTS
 export 'src/form_fields/state/form_field_data.dart';
 export 'src/form_fields/states_controller/formatter_helper.dart';
-export 'src/awaiting_refactoring/ui/inputs/input_validator_provider.dart';
 export 'src/form_fields/text/text_field_base/icon_button_params.dart';
 export 'src/form_fields/text/text_field_base/states_color_maker.dart';
 export 'src/form_fields/text/text_field_base/text_field_brick.dart';
 export 'src/form_fields/text/text_fields/date_field.dart';
 export 'src/form_fields/text/text_fields/lowercase_field.dart';
 export 'src/form_fields/text/text_fields/plain_text_field.dart';
+export 'src/form_fields/base/validate_mode_brick.dart';
 
 // DATE TIME
 export 'src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';

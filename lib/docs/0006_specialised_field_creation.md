@@ -91,7 +91,7 @@ final class PhoneField extends TextFieldBrick<PhoneNumber> {
     super.key,
     required super.keyString,
     required super.formManager,
-    StatesColorMaker? colorMaker,
+    super.colorMaker,
     super.initialInput,
     super.isFocusedOnStart = false,
     super.isRequired = false,

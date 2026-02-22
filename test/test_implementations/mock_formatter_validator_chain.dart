@@ -18,7 +18,7 @@ class MockFormatterValidatorChain extends FormatterValidatorChainFullRun<TextEdi
     required this.shouldRunChain,
     this.mockInputString,
     this.mockError,
-  }) : super([MockTextFormatterValidator(returnInputTEV: mockInputString?.txtEditVal(), mockError: mockError)]);
+  }) : super([MockTextFormatterValidator(returnInputTxEdVal: mockInputString?.txtEditVal(), mockError: mockError)]);
 
   @override
   FieldContent<TextEditingValue, String> runChain(
