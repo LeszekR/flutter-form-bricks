@@ -4,8 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/base/validate_mode_brick.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/text/lowercase_formatter.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/lowercase_formatter.dart';
 
 class LowerCaseFieldDescriptor extends FormFieldDescriptor<TextEditingValue, String, LowerCaseField> {
   LowerCaseFieldDescriptor({
@@ -112,7 +111,6 @@ class LowerCaseField extends TextFieldBrick<String> {
 }
 
 class LowerCaseFieldState extends TextFieldStateBrick<String, LowerCaseField> {
-
   @override
   String? get defaultValue => controller.text;
 }

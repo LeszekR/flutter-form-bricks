@@ -1,12 +1,12 @@
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_status.dart';
-import 'package:flutter_form_bricks/src/form_fields/base/form_field_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/base/form_field_brick.dart';
 
 import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_color/app_color.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_color/app_color.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_style/app_style.dart';
-import 'package:flutter_form_bricks/src/form_fields/labelled_box/label_position.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/labelled_box/label_position.dart';
 
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 

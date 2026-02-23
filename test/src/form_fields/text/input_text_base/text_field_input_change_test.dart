@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/string_extension.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/string_extension.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../test_implementations/mock_formatter_validator.dart';
-import '../../../../test_implementations/test_color_maker.dart';
 import '../../../../test_implementations/test_form_manager.dart';
 import '../../../../test_implementations/test_form_schema.dart';
 import '../../../../test_implementations/test_text_field_brick.dart';
@@ -101,7 +100,7 @@ Future<void> _runInputChangeTest(
                 key: globalKey,
                 keyString: fieldKeyString,
                 formManager: formManager,
-                colorMaker: TestColorMaker(),
+                validateMode: ValidateModeBrick.onChange,
               );
             },
           ),

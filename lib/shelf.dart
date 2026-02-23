@@ -16,19 +16,19 @@ export 'src/awaiting_refactoring/ui/inputs/input_validator_provider.dart';
 
 // DIALOGS
 export 'src/dialogs/dialogs.dart';
-export 'src/form_fields/base/form_field_brick.dart';
-export 'src/form_fields/labelled_box/label_position.dart';
+export 'src/form_fields/components/base/form_field_brick.dart';
+export 'src/form_fields/components/labelled_box/label_position.dart';
 
 // INPUTS
-export 'src/form_fields/state/form_field_data.dart';
-export 'src/form_fields/states_controller/formatter_helper.dart';
-export 'src/form_fields/text/text_field_base/icon_button_params.dart';
-export 'src/form_fields/text/text_field_base/states_color_maker.dart';
-export 'src/form_fields/text/text_field_base/text_field_brick.dart';
-export 'src/form_fields/text/text_fields/date_field.dart';
-export 'src/form_fields/text/text_fields/lowercase_field.dart';
-export 'src/form_fields/text/text_fields/plain_text_field.dart';
-export 'src/form_fields/base/validate_mode_brick.dart';
+export 'src/form_fields/components/state/form_field_data.dart';
+export 'src/form_fields/components/states_controller/formatter_helper.dart';
+export 'src/form_fields/text/base/icon_button_params.dart';
+export 'src/form_fields/text/base/states_color_maker.dart';
+export 'src/form_fields/text/base/text_field_brick.dart';
+export 'src/form_fields/text/fields/date_field.dart';
+export 'src/form_fields/text/fields/lowercase_field.dart';
+export 'src/form_fields/text/fields/plain_text_field.dart';
+export 'src/form_fields/components/base/validate_mode_brick.dart';
 
 // DATE TIME
 export 'src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
@@ -39,7 +39,7 @@ export 'src/form_fields/text/format_and_validate/date_time/components/timestamp_
 
 // FORMS
 export 'src/forms/base/form_brick.dart';
-export 'src/form_fields/base/form_field_descriptor.dart';
+export 'src/form_fields/components/base/form_field_descriptor.dart';
 export 'src/forms/base/form_schema.dart';
 export 'src/forms/form_manager/form_manager.dart';
 export 'src/forms/form_manager/form_status.dart';

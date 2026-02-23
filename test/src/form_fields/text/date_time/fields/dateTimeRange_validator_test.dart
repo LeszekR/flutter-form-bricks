@@ -10,6 +10,12 @@ import '../../../../../test_implementations/test_single_form.dart';
 import '../../../../tools/test_utils.dart';
 import '../utils/dateTimeRange_test_utils.dart';
 
+// TU PRZERWAŁEM - finish date, time, date time range fields and then use DateTimeRange field here
+//  - test DateField (formatting on enter, showing the date or incorrect input)
+//  - create TimeField
+//  - test TimeField (formatting on enter, showing the date or incorrect input)
+//  - create DateTimeRangeField
+//  - use DateTimeRangeField here in test
 void main() {
   var rangeId = "rng";
 

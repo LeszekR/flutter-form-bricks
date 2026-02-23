@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/base/formatter_validator_base/formatter_validator_chain.dart';
-import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator_chain.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
 
 abstract class FormManager extends ChangeNotifier {
   @visibleForTesting

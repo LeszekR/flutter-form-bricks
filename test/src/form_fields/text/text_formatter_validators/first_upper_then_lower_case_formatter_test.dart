@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/text/first_upper_then_lower_case_formatter.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/first_upper_then_lower_case_formatter.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -12,7 +12,6 @@ import '../../../tools/test_utils.dart';
 void main() {
   const String keyString = "first_uppercase_text_single 2";
 
-  // TU PRZERWAŁEM - refactor all text fields to Bricks and then fix the tests here
   group('Should always format first uppercase', () {
     final List<TestData> testParameters = [
       TestData("Adam Test", "Adam Test"),
@@ -36,12 +35,18 @@ void main() {
     }
   });
 
-  testWidgets("Should test triming spaces in first upper then lower field", (WidgetTester tester) async {
+  testWidgets("Should test trimming spaces in first-upper-then-lower field", (WidgetTester tester) async {
     BuildContext context = await pumpAppGetContext(tester);
     //given
     const String enteredText = "Space at the end ";
 
-    final formManager = SingleFormManager(formData: TestFormData(), formSchema: TestFormSchema.withSingleTextField(fieldKeyString: te);
+    final formManager = SingleFormManager(
+      formData: TestFormData(),
+      formSchema: TestFormSchema.withSingleTextField(
+        fieldKeyString: keyString,
+        initialInput: '',
+      ),
+    );
     await prepareDataForTrimmingSpacesTests(context, tester, formManager, keyString);
 
     //when

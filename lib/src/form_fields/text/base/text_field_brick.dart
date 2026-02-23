@@ -5,11 +5,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/base/validate_mode_brick.dart';
-import 'package:flutter_form_bricks/src/form_fields/states_controller/double_widget_states_controller.dart';
-import 'package:flutter_form_bricks/src/form_fields/states_controller/update_once_widget_states_controller.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/state_colored_icon_button.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/text_field_bordered_box.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/base/validate_mode_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/states_controller/double_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/states_controller/update_once_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/state_colored_icon_button.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_bordered_box.dart';
 
 abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditingValue, V> {
   // TextFieldBrick

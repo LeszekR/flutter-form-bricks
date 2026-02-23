@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/form_fields/base/validate_mode_brick.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/states_color_maker.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/base/validate_mode_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/states_color_maker.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 

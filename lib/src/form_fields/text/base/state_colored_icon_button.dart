@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/text_field_base/states_color_maker.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/states_controller/update_once_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/states_color_maker.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
-import '../../states_controller/update_once_widget_states_controller.dart';
 
 class StateColoredIconButton extends StatefulWidget {
   final UpdateOnceWidgetStatesController statesObserver;

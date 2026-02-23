@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/text/text_input_base/basic_text_input.dart';
-import 'package:flutter_form_bricks/src/form_fields/labelled_box/label_position.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/labelled_box/label_position.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/input_validator_provider.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';

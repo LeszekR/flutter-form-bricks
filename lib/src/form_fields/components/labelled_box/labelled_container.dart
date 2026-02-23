@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/form_fields/labelled_box/label_position.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/labelled_box/label_position.dart';
 
 
 

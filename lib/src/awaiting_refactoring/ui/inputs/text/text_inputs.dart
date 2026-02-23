@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/text/text_input_base/basic_text_input.dart';
-import 'package:flutter_form_bricks/src/form_fields/states_controller/double_widget_states_controller.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/text/first_upper_then_lower_case_formatter.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/text/forbidden_whitespaces_formatter.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/text/lowercase_formatter.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/text/uppercase_formatter.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/text/vat_formatter.dart';
-import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/states_controller/double_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/first_upper_then_lower_case_formatter.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/forbidden_whitespaces_formatter.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/uppercase_formatter.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/vat_formatter.dart';
 
 import '../../../../../shelf.dart';
 import '../../buttons/buttons.dart';
-import '../../forms/form_manager/form_manager_OLD.dart';
 
 class TextInputs {
   TextInputs._();
@@ -79,7 +76,8 @@ class TextInputs {
       inputWidth: inputWidth,
       initialValue: initialValue,
       readonly: readonly,
-      inputFormatters: null, //_mergeWithDefault(inputFormatter: LowercaseFormatter()),
+      inputFormatters: null,
+      //_mergeWithDefault(inputFormatter: LowercaseFormatter()),
       validator: validator,
       onChanged: onChanged,
       linkedFields: linkedFields,

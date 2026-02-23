@@ -1,5 +1,5 @@
-import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
-import 'package:flutter_form_bricks/src/form_fields/base/form_field_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/base/form_field_brick.dart';
 
 final class FormFieldData<I extends Object, V extends Object, F extends FormFieldBrick<I, V>> {
   // final Type inputRuntimeType;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_bricks/src/form_fields/base/form_field_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/base/form_field_brick.dart';
 
 import '../../string_literals/gen/bricks_localizations.dart';
 import '../form_manager/form_manager.dart';

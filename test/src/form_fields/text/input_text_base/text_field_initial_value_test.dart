@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/base/validate_mode_brick.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params_data.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -63,6 +64,7 @@ void _testControllerInitialValue({
               keyString: fieldKeyString1,
               formManager: TestFormManager(schema: schema),
               controller: controller,
+              validateMode: ValidateModeBrick.noValidator,
             ),
           ),
         ),

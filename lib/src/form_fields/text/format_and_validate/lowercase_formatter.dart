@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_form_bricks/src/form_fields/base/formatter_validator_base/formatter_validator.dart';
-import 'package:flutter_form_bricks/src/form_fields/state/field_content.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 LowercaseFormatter lowercaseFormatter = LowercaseFormatter();

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/base/validate_mode_brick.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params_data.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../test_implementations/test_color_maker.dart';
-import '../../tools/test_constants.dart';
-import '../../../test_implementations/test_form_field_brick.dart';
 import '../../../test_implementations/test_form_manager.dart';
 import '../../../test_implementations/test_form_schema.dart';
+import '../../../test_implementations/test_text_field_brick.dart';
+import '../../tools/test_constants.dart';
 
 void main() {
   group('FormFieldBrick basic build behavior', () {
@@ -47,11 +47,12 @@ void _testKeyStringInTheSchema({
         UiParams(
           data: UiParamsData(),
           child: MaterialApp(
-            home: TestPlainTextFieldBrick(
-              key: GlobalKey(),
-              keyString: fieldKeyString,
-              formManager: TestFormManager(schema: schema),
-              colorMaker: TestColorMaker(),
+            home: Scaffold(
+              body: TestTextField(
+                keyString: fieldKeyString,
+                formManager: TestFormManager(schema: schema),
+                validateMode: ValidateModeBrick.noValidator,
+              ),
             ),
           ),
         ),
@@ -64,7 +65,7 @@ void _testKeyStringInTheSchema({
         expect(err, anyOf(isA<AssertionError>(), isA<FlutterError>()));
       } else {
         expect(err, isNull);
-        expect(find.byType(TestPlainTextFieldBrick), findsOneWidget);
+        expect(find.byType(TestTextField), findsOneWidget);
       }
     },
   );

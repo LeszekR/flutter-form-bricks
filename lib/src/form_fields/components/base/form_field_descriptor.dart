@@ -1,6 +1,6 @@
-import 'package:flutter_form_bricks/src/form_fields/base/form_field_brick.dart';
-import 'package:flutter_form_bricks/src/form_fields/base/formatter_validator_base/formatter_validator.dart';
-import 'package:flutter_form_bricks/src/form_fields/base/formatter_validator_base/formatter_validator_chain.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/base/form_field_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator_chain.dart';
 
 typedef FormatterValidatorListMaker<I extends Object, V extends Object> = List<FormatterValidator<I, V>> Function();
 

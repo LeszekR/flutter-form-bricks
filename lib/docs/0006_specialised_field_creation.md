@@ -60,7 +60,7 @@ final class PhoneNumberFormatterValidator extends FormatterValidator<String, Pho
 ///
 
 ```dart
-// lib/src/form_fields/base/formatter_validator_base/formatter_validator_defaults.dart
+// lib/src/form_fields/components/formatter_validator_base/formatter_validator_defaults.dart
 
 final class FormatterValidatorDefaults {
   // Existing
