@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/timestamp_date.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/string_extension.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/dateTime_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/time_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/string_extension.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
-import '../../../../tools/date_time_test_data.dart';
-import 'a_test_dateTime_formatter.dart';
-import 'dateTime_test_utils.dart';
+import '../utils/date_time_test_data.dart';
+import '../utils/test_utils.dart';
 
 bool runDateTimeFormatterTest<V extends Object>(
   BricksLocalizations localizations,
@@ -143,4 +141,12 @@ class TestDateTimeFormatter implements ATestDateTimeFormatter {
       DateTimeFieldContent.transient(inputString.txtEditVal()),
     );
   }
+}
+
+abstract class ATestDateTimeFormatter {
+  FieldContent makeDateTime(
+    BricksLocalizations localizations,
+    String fieldKeyString,
+    String inputString,
+  );
 }

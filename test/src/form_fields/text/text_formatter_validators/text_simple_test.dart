@@ -3,8 +3,7 @@ import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_for
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../test_utils.dart';
-import '../../../tools/constants.dart';
+import '../../../../tools/test_utils.dart';
 
 void main() {
   testWidgets("Should test triming spaces in textSimple", (WidgetTester tester) async {

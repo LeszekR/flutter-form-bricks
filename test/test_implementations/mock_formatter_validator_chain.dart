@@ -5,7 +5,7 @@ import 'package:flutter_form_bricks/src/form_fields/components/formatter_validat
 import 'package:flutter_form_bricks/src/form_fields/text/base/string_extension.dart';
 
 import 'mock_formatter_validator.dart';
-import '../src/tools/test_constants.dart';
+import '../src/form_fields/text/date_time/utils/test_constants.dart';
 
 /// Mocked [FormatterValidatorChain] that returns a fixed validation result.
 /// For use in all value-change tests to simulate both valid and invalid responses.

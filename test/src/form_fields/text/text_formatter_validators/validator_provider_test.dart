@@ -7,8 +7,7 @@ import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../tools/test_data.dart';
-import '../../../tools/test_utils.dart';
-import '../../../../ui/inputs/formatters/date_time/utils/dateTime_test_utils.dart';
+import '../../../../tools/test_utils.dart';
 
 void main() {
   const key = Key("key");
@@ -49,7 +48,7 @@ void main() {
       TestData(inputText.length - 1, false),
     ];
 
-    for (maxLength in testParameters) {
+    for (TestData maxLength in testParameters) {
       testWidgets(
           'If max length is "${maxLength.inputString}" and user input length is "${inputText.length}" then validation result should be: "${maxLength.expectedValueText}"',
           (WidgetTester tester) async {
@@ -81,7 +80,7 @@ void main() {
       TestData(inputText.length - 1, true),
     ];
 
-    for (minLength in testParameters) {
+    for (TestData minLength in testParameters) {
       testWidgets(
           'If min length is "${minLength.inputString}" and user input length is "${inputText.length}" then validation result should be: "${minLength.expectedValueText}"',
           (WidgetTester tester) async {
@@ -113,7 +112,7 @@ void main() {
       TestData(inputContent - 1, false),
     ];
 
-    for (validationValue in testParameters) {
+    for (TestData validationValue in testParameters) {
       testWidgets(
           'If max value is "${validationValue.inputString}" and user input is "$inputContent" then validation result should be: "${validationValue.expectedValueText}"',
           (WidgetTester tester) async {
@@ -145,7 +144,7 @@ void main() {
       TestData(inputContent - 1, true),
     ];
 
-    for (validationValue in testParameters) {
+    for (TestData validationValue in testParameters) {
       testWidgets(
           'If min value is "${validationValue.inputString}" and user input is "$inputContent" then validation result should be: "${validationValue.expectedValueText}"',
           (WidgetTester tester) async {
@@ -179,7 +178,7 @@ void main() {
       TestData("some.email.pl", false),
     ];
 
-    for (testParam in testParameters) {
+    for (TestData testParam in testParameters) {
       testWidgets(
           'If user input is "${testParam.inputString}" then email regex validation result should be: "${testParam.expectedValueText}"',
           (WidgetTester tester) async {

@@ -1,4 +1,4 @@
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/text/vat_formatter.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/vat_formatter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -4,8 +4,7 @@ import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_for
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../test_data.dart';
-import '../../test_utils.dart';
+import '../../../../tools/test_utils.dart';
 
 void main() {
   group("Should test vat number input", () {

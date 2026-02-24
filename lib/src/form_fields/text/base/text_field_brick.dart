@@ -265,7 +265,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     TextStyle style,
   ) {
     return TextField(
-      key: Key(keyString),
+      // key: Key(keyString),
       groupId: widget.groupId,
       controller: controller,
       focusNode: widget.focusNode,
