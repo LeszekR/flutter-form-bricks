@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/string_extension.dart';
 
-import '../src/form_fields/text/date_time/utils/test_constants.dart';
+import '../src/form_fields/text/date_time/tools/test_constants.dart';
 import 'test_text_field_brick.dart';
 
 class TestFormSchema extends FormSchema {

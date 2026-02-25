@@ -13,7 +13,7 @@ import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../tools/test_utils.dart';
-import '../date_time/utils/test_constants.dart';
+import '../date_time/tools/test_constants.dart';
 
 Future<void> prepareDataForTrimmingSpacesTests(
   BuildContext context,
