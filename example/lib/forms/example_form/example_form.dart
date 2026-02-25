@@ -6,6 +6,7 @@ part 'example_form_schema.dart';
 
 final GlobalKey<ExampleFormState> formKey1 = GlobalKey();
 final String dateKeyString1 = 'dateKeyString1';
+final String timeKeyString1 = 'timeKeyString1';
 final String plainTextKeyString2 = 'plainKeyString1';
 final String lowerCaseKeyString3 = 'lowerCaseKeyString1';
 
@@ -33,6 +34,12 @@ class ExampleFormState extends FormStateBrick {
               keyString: dateKeyString1,
               formManager: formManager,
               width: 150,
+            ),
+            appSize.spacerBoxVerticalMedium,
+            TimeField(
+              keyString: timeKeyString1,
+              formManager: formManager,
+              width: 100,
             ),
             appSize.spacerBoxVerticalMedium,
             PlainTextField(

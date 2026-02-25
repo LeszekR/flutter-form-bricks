@@ -6,7 +6,7 @@ import '../../../../../test_implementations/test_form_manager.dart';
 import '../../../../../test_implementations/test_form_schema.dart';
 import '../../../../../tools/test_utils.dart';
 import '../../text_formatter_validators/utils.dart';
-import '../utils/test_constants.dart';
+import '../tools/test_constants.dart';
 
 void main() {
   testWidgets('does not format on input change, formats on Enter', (WidgetTester tester) async {

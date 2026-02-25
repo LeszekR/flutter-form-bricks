@@ -26,6 +26,7 @@ export 'src/form_fields/text/base/icon_button_params.dart';
 export 'src/form_fields/text/base/states_color_maker.dart';
 export 'src/form_fields/text/base/text_field_brick.dart';
 export 'src/form_fields/text/fields/date_field.dart';
+export 'src/form_fields/text/fields/time_field.dart';
 export 'src/form_fields/text/fields/lowercase_field.dart';
 export 'src/form_fields/text/fields/plain_text_field.dart';
 export 'src/form_fields/components/base/validate_mode_brick.dart';

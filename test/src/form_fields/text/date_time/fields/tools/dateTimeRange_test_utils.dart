@@ -7,10 +7,10 @@ import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/dat
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../../../test_implementations/test_form_manager.dart';
-import '../../../../../test_implementations/test_single_form.dart';
-import '../../../../../tools/test_utils.dart';
-import '../utils/test_utils.dart';
+import '../../../../../../test_implementations/test_form_manager.dart';
+import '../../../../../../test_implementations/test_single_form.dart';
+import '../../../../../../tools/test_utils.dart';
+import '../../tools/test_utils.dart';
 
 class RangeTestData {
   final List<String> texts;
