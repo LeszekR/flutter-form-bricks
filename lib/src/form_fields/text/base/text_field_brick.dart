@@ -5,13 +5,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/base/validate_mode_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/states_controller/update_once_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/state_colored_icon_button.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_bordered_box.dart';
 
-abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditingValue, V> {
+abstract class TextFieldBrick<I extends Object, V extends Object> extends FormFieldBrick<TextEditingValue, V> {
   // TextFieldBrick
   final double? width;
 
@@ -21,7 +20,11 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
   final TextEditingController? controller;
   final FocusNode? focusNode;
   final InputDecoration? decoration;
+
+  // TODO set constant for Datefield - number or datetime
   final TextInputType? keyboardType;
+
+  // TODO set TextInputAction.newline? in multiline fields? Or it will be default there?
   final TextInputAction? textInputAction;
   final TextCapitalization textCapitalization;
   final TextStyle? style;
@@ -29,14 +32,16 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
   final TextAlign textAlign;
   final TextAlignVertical? textAlignVertical;
   final TextDirection? textDirection;
-  final bool autofocus;
-
-  // final MaterialStatesController? statesController;
+  // final bool autofocus; => FormData takes over initial focus in form
+  // final MaterialStatesController? statesController; => replaced with statesObserver and statesNotifier
   final String obscuringCharacter;
   final bool obscureText;
   final bool autocorrect;
+  // TODO turn off and lock it for strictly formatting fields like DateField
   final SmartDashesType? smartDashesType;
+  // TODO turn off and lock it for strictly formatting fields like DateField
   final SmartQuotesType? smartQuotesType;
+  // TODO turn off and lock it for strictly formatting fields like DateField
   final bool enableSuggestions;
   final int? maxLines;
   final int? minLines;
@@ -79,6 +84,8 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
   final String? restorationId;
   final bool stylusHandwritingEnabled;
   final bool enableIMEPersonalizedLearning;
+
+  // TODO turn off and lock it for strictly formatting fields like DateField
   final ContentInsertionConfiguration? contentInsertionConfiguration;
   final EditableTextContextMenuBuilder? contextMenuBuilder;
   final bool canRequestFocus;
@@ -95,12 +102,15 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     required super.keyString,
     required super.formManager,
     required super.validateMode,
+    super.label,
+    super.labelPosition,
     super.colorMaker,
     super.statesObserver,
     super.statesNotifier,
     //
     // TextFieldBrick
     this.width,
+    this.buttonParams,
     //
     // TextField
     this.groupId = EditableText,
@@ -110,31 +120,41 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     this.decoration,
     this.keyboardType,
     this.textInputAction,
+    // TODO use instead of formatter-validator first-upper-then-lower
     this.textCapitalization = TextCapitalization.none,
     this.style,
     this.strutStyle,
+    // TODO set constant for Datefield
     this.textAlign = TextAlign.start,
+    // TODO set constant for Datefield
     this.textAlignVertical,
+    // TODO set constant for Datefield
     this.textDirection,
     this.readOnly = false,
     this.showCursor,
-    this.autofocus = false,
+    // this.autofocus = false, - FormData takes over in this
     // this.statesController,  => replaced with statesObserver and statesNotifier
+    // TODO remove for all non-password fields
     this.obscuringCharacter = '•',
+    // TODO remove for all non-password fields
     this.obscureText = false,
+    // TODO remove for all fields where this does not make sense - like DateField etc
     this.autocorrect = true,
     this.smartDashesType,
     this.smartQuotesType,
     this.enableSuggestions = true,
+    // TODO lock in fields where multiline makes no sense like DateField etc
     this.maxLines = 1,
     this.minLines,
     this.expands = false,
+    // TODO implement remaining n showing on the screen maximum allowed “characters” (with caveats re: grapheme clusters); shows a counter by default.
     this.maxLength,
     this.maxLengthEnforcement,
     super.onChanged,
     this.onEditingComplete,
     this.onSubmitted,
     this.onAppPrivateCommand,
+    // TODO use for our formatter-validators running in onChange now
     this.inputFormatters,
     this.enabled,
     this.ignorePointers,
@@ -157,11 +177,19 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     this.onTapOutside,
     this.onTapUpOutside,
     this.mouseCursor,
+    // TODO use? to implement remaining n showing on the screen of maximum allowed “characters”
     this.buildCounter,
+    // TODO lock for single-line fields like DateField
     this.scrollController,
+    // TODO lock for single-line fields like DateField
     this.scrollPhysics,
+    // TODO NameField (use also capitalisation there, add other fields of similar specialisation):
+    // keyboardType: TextInputType.name
+    // autofillHints: const [AutofillHints.name]
     this.autofillHints = const <String>[],
+    // TODO lock for fields where no content will ever be inserted like DateField
     this.contentInsertionConfiguration,
+    // TODO lock for fields where no content will ever be inserted like DateField
     this.clipBehavior = Clip.hardEdge,
     this.restorationId,
     this.stylusHandwritingEnabled = EditableText.defaultStylusHandwritingEnabled,
@@ -170,12 +198,11 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     this.canRequestFocus = true,
     this.spellCheckConfiguration,
     this.magnifierConfiguration,
-    this.buttonParams,
     this.hintLocales,
   });
 }
 
-abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>>
+abstract class TextFieldStateBrick<I extends Object, V extends Object, B extends TextFieldBrick<I, V>>
     extends FormFieldStateBrick<TextEditingValue, V, B> {
   late final TextEditingController controller;
 
@@ -280,11 +307,9 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       textAlignVertical: widget.textAlignVertical,
       textDirection: widget.textDirection,
       readOnly: widget.readOnly,
-
-// Deprecated: toolbarOptions - not used
-
+      // Deprecated: toolbarOptions - not used
       showCursor: widget.showCursor,
-      autofocus: widget.autofocus,
+      // autofocus: widget.autofocus,
       statesController: widget.statesObserver,
       obscuringCharacter: widget.obscuringCharacter,
       obscureText: widget.obscureText,
@@ -303,6 +328,14 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       onAppPrivateCommand: widget.onAppPrivateCommand,
       inputFormatters: widget.inputFormatters,
       enabled: widget.enabled,
+
+      /// ignorePointers tells the TextField to ignore pointer events (taps, clicks, drags) for hit-testing. That means:
+      /// user taps won’t focus it, selection/handles won’t respond, mouse interactions won’t apply.
+      /// It’s different from / enabled: false / readOnly: true: enabled: false also affects styling and semantics like
+      /// a disabled control. / readOnly: true still allows focus/selection/copy in many cases. ignorePointers: true is a
+      /// blunt “don’t react to / pointer input” switch.
+      /// You’d use it for “overlay intercepts touches”, or when the field / is visually shown but / interaction is
+      /// controlled elsewhere.
       ignorePointers: widget.ignorePointers,
       cursorWidth: widget.cursorWidth,
       cursorHeight: widget.cursorHeight,

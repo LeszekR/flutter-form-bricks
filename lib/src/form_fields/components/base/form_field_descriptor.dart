@@ -29,6 +29,8 @@ abstract class FormFieldDescriptor<I extends Object, V extends Object, F extends
   })  : assert(I != dynamic, "FormFieldDescriptor<I, V>: Generic type I must not be dynamic."),
         assert(V != dynamic, "FormFieldDescriptor<I, V>: Generic type V must not be dynamic.");
 
+  Map<String, FormatterValidatorChain<I, V>?> get formatterValidatorChainMap => {keyString: buildChain()};
+
   FormatterValidatorChain<I, V>? buildChain() => _buildFormatterValidatorChainForDescriptor<I, V, F>(this);
 }
 

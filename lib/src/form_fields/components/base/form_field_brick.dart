@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/base/validate_mode_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/labelled_box/label_position.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/states_color_maker.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
@@ -12,6 +13,8 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
   final WidgetStatesController? statesObserver;
   final WidgetStatesController? statesNotifier;
   final ValueChanged<I>? onChanged;
+  final String? label;
+  final LabelPosition labelPosition;
 
   // TODO implement identical functionality as in flutter_form_builder using onChange, onEditingComplete, onSave
   final ValidateModeBrick validateMode;
@@ -22,6 +25,8 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
     // TODO add field label, required if has validator so FormManager shows error for named field
     required this.formManager,
     required this.validateMode,
+    this.label,
+    this.labelPosition = LabelPosition.topLeft,
     StatesColorMaker? colorMaker,
     this.statesObserver,
     this.statesNotifier,

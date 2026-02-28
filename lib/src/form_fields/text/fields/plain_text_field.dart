@@ -15,7 +15,7 @@ class PlainTextFieldDescriptor extends FormFieldDescriptor<TextEditingValue, Str
   });
 }
 
-class PlainTextField extends TextFieldBrick<String> {
+class PlainTextField extends TextFieldBrick<TextEditingValue, String> {
   PlainTextField({
     super.key,
     //
@@ -46,7 +46,7 @@ class PlainTextField extends TextFieldBrick<String> {
     super.textDirection,
     super.readOnly = false,
     super.showCursor,
-    super.autofocus = false,
+    // this.autofocus = false, - FormData takes over in this
     // super.statesController,  => replaced with statesObserver and statesNotifier
     super.obscuringCharacter = '•',
     super.obscureText = false,
@@ -106,7 +106,7 @@ class PlainTextField extends TextFieldBrick<String> {
   PlainTextFieldStateBrick createState() => PlainTextFieldStateBrick();
 }
 
-class PlainTextFieldStateBrick extends TextFieldStateBrick<String, PlainTextField> {
+class PlainTextFieldStateBrick extends TextFieldStateBrick<TextEditingValue, String, PlainTextField> {
   @override
   String? get defaultValue => controller.text;
 }

@@ -2,16 +2,17 @@ import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/base/validate_mode_brick.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/base/form_field_brick.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/base/form_field_descriptor.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/base/validate_mode_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator_chain.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/current_date.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/data_time_text_editing_value.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/timestamp_date.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/states_color_maker.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_brick.dart';
 
 class DateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, Date, DateField> {
   DateFieldDescriptor({
@@ -34,19 +35,21 @@ class DateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, Date, Da
         );
 }
 
-class DateField extends TextFieldBrick<Date> {
+class DateField extends TextFieldBrick<TextEditingValue, Date> {
   DateField({
-    super.key,
-    //
     // FormFieldBrick
     required super.keyString,
     required super.formManager,
+    super.label,
+    super.labelPosition,
     super.colorMaker,
     super.statesObserver,
     super.statesNotifier,
     //
     // TextFieldBrick
     super.width,
+    // TODO implement button for date field
+    super.buttonParams,
     //
     // TextField
     super.groupId = EditableText,
@@ -56,32 +59,31 @@ class DateField extends TextFieldBrick<Date> {
     super.decoration,
     super.keyboardType,
     super.textInputAction,
-    super.textCapitalization = TextCapitalization.none,
     super.style,
     super.strutStyle,
-    super.textAlign = TextAlign.start,
+    super.textAlign = TextAlign.center,
     super.textAlignVertical,
-    super.textDirection,
+    super.textDirection = TextDirection.ltr,
     super.readOnly = false,
     super.showCursor,
-    super.autofocus = false,
-    // super.statesController,  => replaced with statesObserver and statesNotifier
-    super.obscuringCharacter = '•',
-    super.obscureText = false,
-    super.autocorrect = true,
-    super.smartDashesType,
-    super.smartQuotesType,
+    // super.autofocus = false, => FormData takes over initial focus in form
+    // super.statesController, => replaced with statesObserver and statesNotifier
+    // super.obscuringCharacter = '•', => this is non-password field
+    // super.obscureText = false, => fixed in constructor
+    // super.autocorrect = true, => not relevant in this field
+    // super.smartDashesType = SmartDashesType.disabled, => fixed in constructor
+    // super.smartQuotesType = SmartQuotesType.disabled, => fixed in constructor
     super.enableSuggestions = true,
-    super.maxLines = 1,
-    super.minLines,
+    // super.maxLines = 1, => fixed in constructor
+    // super.minLines = 1, => fixed in constructor
     super.expands = false,
-    super.maxLength,
-    super.maxLengthEnforcement,
+    // super.maxLength, => not relevant in this field
+    // super.maxLengthEnforcement, => not relevant in this field
     super.onChanged,
     super.onEditingComplete,
     super.onSubmitted,
     super.onAppPrivateCommand,
-    super.inputFormatters,
+    // super.inputFormatters, => FormManager takes over formatting
     super.enabled,
     super.ignorePointers,
     super.cursorWidth = 2.0,
@@ -103,12 +105,12 @@ class DateField extends TextFieldBrick<Date> {
     super.onTapOutside,
     super.onTapUpOutside,
     super.mouseCursor,
-    super.buildCounter,
-    super.scrollController,
-    super.scrollPhysics,
+    // super.buildCounter, => not relevant in this field
+    // super.scrollController, => not relevant in this field
+    // super.scrollPhysics, => not relevant in this field
     super.autofillHints = const <String>[],
-    super.contentInsertionConfiguration,
-    super.clipBehavior = Clip.hardEdge,
+    // super.contentInsertionConfiguration = null, => not relevant in this field
+    // super.clipBehavior = Clip.hardEdge, => not relevant in this field
     super.restorationId,
     super.stylusHandwritingEnabled = EditableText.defaultStylusHandwritingEnabled,
     super.enableIMEPersonalizedLearning = true,
@@ -116,16 +118,22 @@ class DateField extends TextFieldBrick<Date> {
     super.canRequestFocus = true,
     super.spellCheckConfiguration,
     super.magnifierConfiguration,
-    super.buttonParams,
     super.hintLocales,
-  }) : super(validateMode: ValidateModeBrick.onEditingComplete);
+  }) : super(
+          validateMode: ValidateModeBrick.onEditingComplete,
+          textCapitalization: TextCapitalization.none,
+          obscureText: false,
+          smartDashesType: SmartDashesType.disabled,
+          smartQuotesType: SmartQuotesType.disabled,
+          maxLines: 1,
+          minLines: 1,
+        );
 
   @override
-  State<StatefulWidget> createState() => DateFieldState();
+  DateFieldState createState() => DateFieldState();
 }
 
-class DateFieldState extends TextFieldStateBrick<Date, DateField> {
-
+class DateFieldState extends TextFieldStateBrick<TextEditingValue, Date, DateField> {
   @override
   Date? get defaultValue => null;
 }
