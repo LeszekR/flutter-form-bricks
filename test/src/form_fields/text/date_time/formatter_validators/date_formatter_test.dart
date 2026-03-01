@@ -27,8 +27,8 @@ void main() {
   TestDateFormatter dateFormatterWithLimits =
       TestDateFormatter(DateFormatterValidator(dateTimeInputUtils, mockCurrentDate, dateTimeLimits));
 
-  final String dateMaxBack = dateTimeUtils.formatDate(dateTimeLimits.minDateTime!, 'yyyy-MM-dd');
-  final String dateMaxForward = dateTimeUtils.formatDate(dateTimeLimits.maxDateTime!, 'yyyy-MM-dd');
+  final String dateMaxBack = dateTimeUtils.formatDate(dateTimeLimits.minDateTime!);
+  final String dateMaxForward = dateTimeUtils.formatDate(dateTimeLimits.maxDateTime!);
 
   testWidgets('refuses to format excel-style invalid input', (WidgetTester tester) async {
     final local = await getLocalizations();

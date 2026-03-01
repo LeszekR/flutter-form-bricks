@@ -162,5 +162,8 @@
   },
 
   "datetimeStringErrorNoSpace": "Date must be separated from time with space",
-  "datetimeStringErrorTooManySpaces": "Too many spaces"
+  "datetimeStringErrorTooManySpaces": "Too many spaces",
+
+  "dateTimeSeparateFieldsNoTimeForLimitValidation": "Enter time to check if it fits in allowed range",
+  "dateTimeSeparateFieldsNoDateForLimitValidation": "Enter date to check if it fits in allowed range"
 }

@@ -19,8 +19,8 @@ void main() {
     maxMinutesBack: 5303520,  // 2014-01-01
     maxMinutesForward: 1008000,  // 2026-01-01
   );
-  final String dateMaxBack = dateTimeUtils.formatDate(dateTimeLimits.minDateTime!, 'yyyy-MM-dd');
-  final String dateMaxForward = dateTimeUtils.formatDate(dateTimeLimits.maxDateTime!, 'yyyy-MM-dd');
+  final String dateMaxBack = dateTimeUtils.formatDate(dateTimeLimits.minDateTime!);
+  final String dateMaxForward = dateTimeUtils.formatDate(dateTimeLimits.maxDateTime!);
 
   TestDateTimeFormatter dateTimeFormatter =
       TestDateTimeFormatter(DateTimeFormatterValidator(dateTimeUtils, mockCurrentDate, dateTimeLimits));

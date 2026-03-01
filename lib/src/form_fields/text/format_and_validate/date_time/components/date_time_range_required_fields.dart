@@ -14,6 +14,6 @@ class DateTimeRequiredFields {
 
   const DateTimeRequiredFields(this._date, this._time);
 
-  bool get date => _date ?? false;
-  bool get time => _time ?? false;
+  bool get isDateRequired => _date ?? false;
+  bool get isTimeRequired => _time ?? false;
 }

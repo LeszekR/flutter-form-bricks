@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/timestamp_date.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/timestamp_time.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/timestamp_date_time_brick.dart';
 
 /// Represents the result of a formatting and validation operation performed by a `FormatterValidator`.
 ///
@@ -79,21 +78,21 @@ class FieldContent<I extends Object, V extends Object> {
   int get hashCode => Object.hash(input, value, isValid, error);
 }
 
-/// Formatting-validation procedure return type for input of type `DateTime`.
-///
-/// Usage - format-validation of: `DateFieldBrick`.
-// TODO refactor to input as TextEditingValue
-typedef DateFieldContent = FieldContent<TextEditingValue, Date>;
-
-/// Formatting-validation procedure return type for input of type `DateTime`.
-///
-/// Usage - format-validation of: `TimeFieldBrick` and its `..Range` fields.
-typedef TimeFieldContent = FieldContent<TextEditingValue, Time>;
+// /// Formatting-validation procedure return type for input of type `DateTime`.
+// ///
+// /// Usage - format-validation of: `DateFieldBrick`.
+// // TODO refactor to input as TextEditingValue
+// typedef DateFieldContent = FieldContent<TextEditingValue, Date>;
+//
+// /// Formatting-validation procedure return type for input of type `DateTime`.
+// ///
+// /// Usage - format-validation of: `TimeFieldBrick` and its `..Range` fields.
+// typedef TimeFieldContent = FieldContent<TextEditingValue, Time>;
 
 /// Formatting-validation procedure return type for input of type `DateTime`.
 ///
 /// Usage - format-validation of: `DateTimeFieldBrick`.
-typedef DateTimeFieldContent = FieldContent<TextEditingValue, DateTime>;
+typedef DateTimeFieldContent = FieldContent<TextEditingValue, DateTimeBrick>;
 
 /// Formatting-validation procedure return type for input of type `PlainTextField`.
 ///

@@ -1,15 +1,16 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/timestamp_date_time_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_formatter_validator.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/time_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
-class DateTimeRangeFormatterValidator extends FormatterValidator<TextEditingValue, DateTime> {
+class DateTimeRangeFormatterValidator extends FormatterValidator<TextEditingValue, DateTimeBrick> {
   final FormManager _formManager;
   final DateTimeUtils _dateTimeUtils;
   final CurrentDate _currentDate;
@@ -35,7 +36,7 @@ class DateTimeRangeFormatterValidator extends FormatterValidator<TextEditingValu
     this._dateTimeUtils,
     this._currentDate,
     this._rangeLimits,
-  ) {
+  ) : assert(!keyString.contains('~'), 'DateTimeRangeFormatterValidator keyString must not contain "~"') {
     _setKeyStrings(keyString);
     _fillDateTimeFormatterValidators();
   }
@@ -293,19 +294,30 @@ class DateTimeRangeFormatterValidator extends FormatterValidator<TextEditingValu
     return _formManager.getFieldValue(keyString);
   }
 
-  static String makeRangeKeyStringStart(String rangeKeyString) => "${rangeKeyString}_start";
+  // leave tilda as prefix for those to guarantee the postfixes to be app-unique.
+  // (the constructor here makes sure tilda will never be used in keyString itself)
+  static const String start = '~start';
+  static const String end = '~end';
+  static const String date = '~date';
+  static const String time = '~time';
 
-  static String makeRangeKeyStringEnd(String rangeKeyString) => "${rangeKeyString}_end";
+  static String makeRangeKeyStringStart(String rangeKeyString) => "${rangeKeyString}$start";
 
-  static String makeDateKeyString(String rangePartKeyString) => "${rangePartKeyString}_date";
+  static String makeRangeKeyStringEnd(String rangeKeyString) => "${rangeKeyString}$end";
 
-  static String makeTimeKeyString(String rangePartKeyString) => "${rangePartKeyString}_time";
+  static String makeDateKeyString(String rangePartKeyString) => "${rangePartKeyString}$date";
 
-  static String rangeDateStartKeyString(String rangeKeyString) => makeDateKeyString(makeRangeKeyStringStart(rangeKeyString));
+  static String makeTimeKeyString(String rangePartKeyString) => "${rangePartKeyString}$time";
 
-  static String rangeTimeStartKeyString(String rangeKeyString) => makeTimeKeyString(makeRangeKeyStringStart(rangeKeyString));
+  static String rangeDateStartKeyString(String rangeKeyString) =>
+      makeDateKeyString(makeRangeKeyStringStart(rangeKeyString));
 
-  static String rangeDateEndKeyString(String rangeKeyString) => makeDateKeyString(makeRangeKeyStringEnd(rangeKeyString));
+  static String rangeTimeStartKeyString(String rangeKeyString) =>
+      makeTimeKeyString(makeRangeKeyStringStart(rangeKeyString));
 
-  static String rangeTimeEndKeyString(String rangeKeyString) => makeTimeKeyString(makeRangeKeyStringEnd(rangeKeyString));
+  static String rangeDateEndKeyString(String rangeKeyString) =>
+      makeDateKeyString(makeRangeKeyStringEnd(rangeKeyString));
+
+  static String rangeTimeEndKeyString(String rangeKeyString) =>
+      makeTimeKeyString(makeRangeKeyStringEnd(rangeKeyString));
 }

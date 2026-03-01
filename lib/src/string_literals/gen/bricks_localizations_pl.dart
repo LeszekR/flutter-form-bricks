@@ -291,4 +291,12 @@ class BricksLocalizationsPl extends BricksLocalizations {
 
   @override
   String get datetimeStringErrorTooManySpaces => 'Za dużo spacji';
+
+  @override
+  String get dateTimeSeparateFieldsNoTimeForLimitValidation =>
+      'Podaj czas aby można było sprawdzić czy mieści się w dozwolonym przedziale';
+
+  @override
+  String get dateTimeSeparateFieldsNoDateForLimitValidation =>
+      'Podaj datę aby można było sprawdzić czy mieści się w dozwolonym przedziale';
 }

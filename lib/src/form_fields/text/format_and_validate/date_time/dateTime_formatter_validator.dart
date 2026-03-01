@@ -37,11 +37,11 @@ class DateTimeFormatterValidator extends FormatterValidator<TextEditingValue, Da
       return DateTimeFieldContent.err(toTextEditingValue(textTrimmed), localizations.datetimeStringErrorTooManySpaces);
 
     var elementsList = textTrimmed.split(RegExp(' '));
-    DateFieldContent dateFieldContent = DateFieldContent.transient(elementsList[0].txtEditVal());
-    TimeFieldContent timeFieldContent = TimeFieldContent.transient(elementsList[1].txtEditVal());
+    DateTimeFieldContent dateFieldContent = DateTimeFieldContent.transient(elementsList[0].txtEditVal());
+    DateTimeFieldContent timeFieldContent = DateTimeFieldContent.transient(elementsList[1].txtEditVal());
 
-    DateFieldContent parseResultDate = _dateFormatterValidator.run(localizations, keyString, dateFieldContent);
-    TimeFieldContent parseResultTime = _timeFormatterValidator.run(localizations, keyString, timeFieldContent);
+    DateTimeFieldContent parseResultDate = _dateFormatterValidator.run(localizations, keyString, dateFieldContent);
+    DateTimeFieldContent parseResultTime = _timeFormatterValidator.run(localizations, keyString, timeFieldContent);
 
     var parsedString = '${parseResultDate.input?.text} ${parseResultTime.input?.text}';
     var errorMessageDate = parseResultDate.error ?? '';

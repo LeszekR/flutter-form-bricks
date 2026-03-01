@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/string_extension.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/timestamp_date.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/timestamp_date_time_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/string_extension.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
-class DateFormatterValidator extends FormatterValidator<TextEditingValue, Date> {
+class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTimeBrick> {
   final dateDelimiterPattern = '( |/|-|,|;|\\.|=)';
   final dateDelimiter = '-';
 
@@ -18,15 +19,16 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, Date> 
 
   DateFormatterValidator(
     this._dateTimeUtils,
-    this._currentDate,[
-    this._dateTimeLimits,]
-  );
+    this._currentDate, [
+    this._dateTimeLimits,
+  ]);
 
   @override
-  DateFieldContent run(
+  DateTimeFieldContent run(
     BricksLocalizations localizations,
     String keyString,
-    DateFieldContent fieldContent,
+    DateTimeFieldContent fieldContent,
+    // DateFieldContent fieldContent,
   ) {
     DateTimeFieldContent dateTimeContent = _dateTimeUtils.cleanDateTimeString(
       bricksLocalizations: localizations,
@@ -38,10 +40,10 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, Date> 
       maxNDigits: 8,
       maxNumberDelimiters: 2,
     );
-    if (!isValid(dateTimeContent)) return DateFieldContent.err(fieldContent.input, dateTimeContent.error);
+    if (!isValid(dateTimeContent)) return DateTimeFieldContent.err(fieldContent.input, dateTimeContent.error);
 
-    DateFieldContent dateContent = parseDateFromString(localizations, dateTimeContent);
-    if (!isValid(dateContent)) return DateFieldContent.err(fieldContent.input, dateContent.error);
+    DateTimeFieldContent dateContent = parseDateFromString(localizations, dateTimeContent);
+    if (!isValid(dateContent)) return DateTimeFieldContent.err(fieldContent.input, dateContent.error);
 
     dateContent = validateDate(localizations, dateContent, _dateTimeLimits);
 
@@ -49,11 +51,12 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, Date> 
     return dateContent;
   }
 
-  DateFieldContent parseDateFromString(BricksLocalizations localizations, DateTimeFieldContent dateTimeFieldContent) {
+  DateTimeFieldContent parseDateFromString(
+      BricksLocalizations localizations, DateTimeFieldContent dateTimeFieldContent) {
     String dateTimeText = dateTimeFieldContent.input!.text;
     int nDelimiters = RegExp(dateDelimiter).allMatches(dateTimeText).length;
 
-    DateFieldContent dateContent;
+    DateTimeFieldContent dateContent;
 
     if (nDelimiters == 0) {
       dateContent = makeDateStringNoDelimiters(dateTimeText);
@@ -66,7 +69,7 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, Date> 
     return addYear(dateContent, nDelimiters);
   }
 
-  DateFieldContent makeDateStringNoDelimiters(String text) {
+  DateTimeFieldContent makeDateStringNoDelimiters(String text) {
     String dateString = '';
     String element = '';
     int nElements = 0;
@@ -88,10 +91,10 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, Date> 
       }
       dateString = element + dateString;
     }
-    return DateFieldContent.transient(dateString.txtEditVal());
+    return DateTimeFieldContent.transient(dateString.txtEditVal());
   }
 
-  DateFieldContent makeDateStringWithDelimiters(BricksLocalizations localizations, String text, int nDelimiters) {
+  DateTimeFieldContent makeDateStringWithDelimiters(BricksLocalizations localizations, String text, int nDelimiters) {
     String dateString = '';
     String element = '';
     List<String> resultList = text.split(dateDelimiter);
@@ -133,15 +136,15 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, Date> 
       }
     }
 
-    if (errMsg.isNotEmpty) return DateFieldContent.err(toTextEditingValue(dateString), errMsg);
-    return DateFieldContent.transient(dateString.txtEditVal());
+    if (errMsg.isNotEmpty) return DateTimeFieldContent.err(toTextEditingValue(dateString), errMsg);
+    return DateTimeFieldContent.transient(dateString.txtEditVal());
   }
 
-  DateFieldContent addYear(DateFieldContent dateString, int nDelimiters) {
+  DateTimeFieldContent addYear(DateTimeFieldContent dateString, int nDelimiters) {
     String dateWithoutYear = dateString.input!.text;
     nDelimiters = RegExp(dateDelimiter).allMatches(dateWithoutYear).length;
 
-    if (nDelimiters < 2) return DateFieldContent.transient(dateWithoutYear.txtEditVal());
+    if (nDelimiters < 2) return DateTimeFieldContent.transient(dateWithoutYear.txtEditVal());
 
     String year = _currentDate.getDateNow().year.toString();
     String yearElement = dateWithoutYear.split(dateDelimiter)[0];
@@ -153,12 +156,12 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, Date> 
       yearElement = year.substring(0, 4 - yearElementLength);
       dateWithoutYear = '$yearElement$dateWithoutYear';
     }
-    return DateFieldContent.transient(dateWithoutYear.txtEditVal());
+    return DateTimeFieldContent.transient(dateWithoutYear.txtEditVal());
   }
 
-  DateFieldContent validateDate(
+  DateTimeFieldContent validateDate(
     BricksLocalizations localizations,
-    DateFieldContent fieldContent,
+    DateTimeFieldContent fieldContent,
     DateTimeLimits? dateLimits,
   ) {
     String dateString = fieldContent.input!.text;
@@ -207,13 +210,13 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, Date> 
         DateTime? minDate = dateLimits.minDateTime;
         if (minDate != null) {
           if (parsedDate.dateTime.compareTo(minDate) < 0) {
-            errLimit = localizations.dateErrorTooFarBack(_dateTimeUtils.formatDate(minDate, 'yyyy-MM-dd'));
+            errLimit = localizations.dateErrorTooFarBack(_dateTimeUtils.formatDate(minDate));
           }
         }
         DateTime? maxDate = dateLimits.maxDateTime;
         if (maxDate != null) {
           if (parsedDate.dateTime.compareTo(maxDate) > 0) {
-            errLimit = localizations.dateErrorTooFarForward(_dateTimeUtils.formatDate(maxDate, 'yyyy-MM-dd'));
+            errLimit = localizations.dateErrorTooFarForward(_dateTimeUtils.formatDate(maxDate));
           }
         }
       }
@@ -221,16 +224,16 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, Date> 
 
     if (errLimit.isNotEmpty) errMsg = _dateTimeUtils.addErrMsg(errMsg, connector, errLimit);
 
-    if (errMsg.isNotEmpty) return DateFieldContent.err(toTextEditingValue(dateString), errMsg);
+    if (errMsg.isNotEmpty) return DateTimeFieldContent.err(toTextEditingValue(dateString), errMsg);
 
-    return DateFieldContent.ok(toTextEditingValue(dateString), parsedDate);
+    return DateTimeFieldContent.ok(toTextEditingValue(dateString), parsedDate);
   }
 
-  DateFieldContent _makeDateFCFromDateTimeFC(DateTimeFieldContent content) {
-    TextEditingValue input = (content.input?.text ?? '').txtEditVal();
-    Date value = Date.fromDateTime(content.value!);
-    return DateFieldContent.ok(input, value);
-  }
+  // DateTimeFieldContent _makeDateFCFromDateTimeFC(DateTimeFieldContent content) {
+  //   TextEditingValue input = (content.input?.text ?? '').txtEditVal();
+  //   Date value = Date.fromDateTime(content.value!);
+  //   return DateTimeFieldContent.ok(input, value);
+  // }
 
   bool isValid(FieldContent dateContent) {
     return _dateTimeUtils.isValid(dateContent);

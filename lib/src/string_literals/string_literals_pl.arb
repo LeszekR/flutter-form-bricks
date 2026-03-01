@@ -19,7 +19,6 @@
 
   "progressPleaseWait": "Proszę czekać",
 
-
   "validationMessageRequired": "{field} {gender, select, male { jest wymagany} female { jest wymagana} other { jest wymagane}}",
   "validationPasswordOldNew": "Nowe i stare hasło muszą się różnić",
   "validationPasswordPassRepeatPass": "Hasło i hasło powtórz musza się zgadzać",
@@ -123,7 +122,7 @@
         }
       }
     },
-  "dateErrorTooFarForward": "Data nie może być późniejsza niż {maxDateParam}",
+  "dateErrorTooFarForward": "Data i czas nie mogą być późniejsze niż {maxDateParam}",
     "@dateErrorTooFarForward": {
       "placeholders": {
         "maxDateParam": {
@@ -163,5 +162,8 @@
   },
 
   "datetimeStringErrorNoSpace": "Data musi być oddzielona spacją od godziny",
-  "datetimeStringErrorTooManySpaces": "Za dużo spacji"
+  "datetimeStringErrorTooManySpaces": "Za dużo spacji",
+
+  "dateTimeSeparateFieldsNoTimeForLimitValidation": "Podaj czas aby można było sprawdzić czy mieści się w dozwolonym przedziale",
+  "dateTimeSeparateFieldsNoDateForLimitValidation": "Podaj datę aby można było sprawdzić czy mieści się w dozwolonym przedziale"
 }

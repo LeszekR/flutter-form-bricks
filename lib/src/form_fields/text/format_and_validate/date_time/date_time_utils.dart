@@ -112,8 +112,12 @@ class DateTimeUtils {
     return (errMsg.isEmpty ? '' : (errMsg + connector)) + nextErrorMessage;
   }
 
-  String formatDate(DateTime dateTime, String format) {
-    return DateFormat(format).format(dateTime);
+  String formatDate(DateTime dateTime) {
+    return DateFormat('yyyy-MM-dd').format(dateTime);
+  }
+
+  String formatDateTime(DateTime dateTime) {
+    return DateFormat('yyyy-MM-dd HH:mm').format(dateTime);
   }
 
   String minutesToSpanCondition(int nMinutes) {
