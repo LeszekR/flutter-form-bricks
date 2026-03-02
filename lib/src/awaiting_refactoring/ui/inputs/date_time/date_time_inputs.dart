@@ -6,6 +6,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/dat
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_range_initial_set.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_range_required_fields.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_range_span.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/extension_date_time.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/timestamp_date_time_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/dateTimeRange_formatter_validator.dart';
 
@@ -123,7 +124,7 @@ class DateTimeInputs {
     required FormManager formManager,
     required CurrentDate currentDate,
     required DateTimeLimits? dateLimits,
-    Date? initialValue,
+    DateTime? initialValue,
     bool readonly = false,
     bool isRequired = false,
     List<String>? linkedFields,
@@ -215,7 +216,7 @@ class DateTimeInputs {
     required String label,
     required LabelPosition labelPosition,
     required FormManager formManager,
-    Time? initialValue,
+    DateTime? initialValue,
     bool readonly = false,
     bool isRequired = false,
     List<String>? linkedFields,
@@ -408,7 +409,7 @@ class DateTimeInputs {
     ).then((value) {
       if (value != null) {
 // TODO connect to rangeValidator
-        final formattedText = DateTimeBrick.dateFormat.format(value);
+        final String formattedText = value.toDateString();
         formManager.onFieldChanged(localizations, keyString, formattedText, null);
       }
     });
@@ -426,12 +427,12 @@ class DateTimeInputs {
     ).then((value) {
       if (value != null) {
         // TODO connect to rangeValidator
-        final formattedText = DateTimeBrick.timeFormatMinutePrecision.format(
-          DateTime.now().copyWith(
-            minute: value.minute,
-            hour: value.hour,
-          ),
-        );
+        final formattedText = DateTime.now()
+            .copyWith(
+              minute: value.minute,
+              hour: value.hour,
+            )
+            .toTimeStringMinutePrecision();
         formManager.onFieldChanged(localizations, keyString, formattedText, null);
       }
     });
@@ -465,7 +466,7 @@ class DateTimeInputs {
           selectedTime.hour,
           selectedTime.minute,
         );
-        final formattedText = DateTimeBrick.dateTimeFormat.format(combined);
+        final String formattedText = combined.toDateString();
         formManager.onFieldChanged(localizations, keyString, formattedText, null);
       }
     }

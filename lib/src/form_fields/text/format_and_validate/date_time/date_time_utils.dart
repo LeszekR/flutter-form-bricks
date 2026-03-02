@@ -16,6 +16,11 @@ const int minutesInDay = 1440;
 const int minutesInHour = 60;
 
 class DateTimeUtils {
+  static final DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+  static final DateFormat timeFormatMinutePrecision = DateFormat("HH:mm");
+  static final DateFormat timeFormatSecondPrecision = DateFormat("HH:mm:ss");
+  static final DateFormat dateTimeFormat = DateFormat("yyyy-MM-dd HH:mm");
+
   static DateTimeUtils? _instance;
 
   DateTimeUtils._();
@@ -112,12 +117,12 @@ class DateTimeUtils {
     return (errMsg.isEmpty ? '' : (errMsg + connector)) + nextErrorMessage;
   }
 
-  String formatDate(DateTime dateTime) {
-    return DateFormat('yyyy-MM-dd').format(dateTime);
+   DateTime fromDateTime(DateTime dt) {
+    return DateTime(dt.year, dt.month, dt.day);
   }
 
-  String formatDateTime(DateTime dateTime) {
-    return DateFormat('yyyy-MM-dd HH:mm').format(dateTime);
+   DateTime fromString(String stringVal) {
+    return dateFormat.parseStrict(stringVal);
   }
 
   String minutesToSpanCondition(int nMinutes) {

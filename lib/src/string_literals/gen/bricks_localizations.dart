@@ -479,13 +479,13 @@ abstract class BricksLocalizations {
   /// No description provided for @dateErrorTooFarBack.
   ///
   /// In en, this message translates to:
-  /// **'Date and time must not be earlier than {minDateParam}'**
+  /// **'DateTime and time must not be earlier than {minDateParam}'**
   String dateErrorTooFarBack(String minDateParam);
 
   /// No description provided for @dateErrorTooFarForward.
   ///
   /// In en, this message translates to:
-  /// **'Date and time must not be later than {maxDateParam}'**
+  /// **'DateTime and time must not be later than {maxDateParam}'**
   String dateErrorTooFarForward(String maxDateParam);
 
   /// No description provided for @mustNotPrecede.
@@ -557,7 +557,7 @@ abstract class BricksLocalizations {
   /// No description provided for @datetimeStringErrorNoSpace.
   ///
   /// In en, this message translates to:
-  /// **'Date must be separated from time with space'**
+  /// **'DateTime must be separated from time with space'**
   String get datetimeStringErrorNoSpace;
 
   /// No description provided for @datetimeStringErrorTooManySpaces.

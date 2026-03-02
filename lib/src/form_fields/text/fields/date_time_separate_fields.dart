@@ -21,7 +21,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/dat
 import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
 class DateTimeSeparateFieldsDescriptor
-    extends FormFieldDescriptor<TextEditingValue, DateTimeBrick, DateTimeSeparateFields> {
+    extends FormFieldDescriptor<TextEditingValue, DateTime, DateTimeSeparateFields> {
   DateTimeSeparateFieldsDescriptor({
     required super.keyString,
     super.initialInput,
@@ -43,8 +43,8 @@ class DateTimeSeparateFieldsDescriptor
         );
 
   @override
-  Map<String, FormatterValidatorChain<TextEditingValue, DateTimeBrick>> get formatterValidatorChainMap {
-    FormatterValidatorChain<TextEditingValue, DateTimeBrick>? formatterValidatorChain = buildChain();
+  Map<String, FormatterValidatorChain<TextEditingValue, DateTime>> get formatterValidatorChainMap {
+    FormatterValidatorChain<TextEditingValue, DateTime>? formatterValidatorChain = buildChain();
     return formatterValidatorChain == null
         ? {}
         : {
@@ -54,7 +54,7 @@ class DateTimeSeparateFieldsDescriptor
   }
 }
 
-class DateTimeSeparateFields extends TextFieldBrick<TextEditingValue, DateTimeBrick> {
+class DateTimeSeparateFields extends TextFieldBrick<TextEditingValue, DateTime> {
   DateTimeSeparateFields({
     // FormFieldBrick
     required super.keyString,
@@ -138,9 +138,9 @@ class DateTimeSeparateFields extends TextFieldBrick<TextEditingValue, DateTimeBr
 }
 
 class DateTimeSeparateFieldsState
-    extends TextFieldStateBrick<TextEditingValue, DateTimeBrick, DateTimeSeparateFields> {
+    extends TextFieldStateBrick<TextEditingValue, DateTime, DateTimeSeparateFields> {
   @override
-  DateTimeBrick? get defaultValue => null;
+  DateTime? get defaultValue => null;
 
   @override
   Widget build(BuildContext context) {

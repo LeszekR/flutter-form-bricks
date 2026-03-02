@@ -7,12 +7,10 @@ import 'package:flutter_form_bricks/src/form_fields/components/base/validate_mod
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/timestamp_date.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/timestamp_date_time_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
 
-class DateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTimeBrick, DateField> {
+class DateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime, DateField> {
   DateFieldDescriptor({
     required super.keyString,
     super.initialInput,
@@ -33,7 +31,7 @@ class DateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime
         );
 }
 
-class DateField extends TextFieldBrick<TextEditingValue, Date> {
+class DateField extends TextFieldBrick<TextEditingValue, DateTime> {
   DateField({
     // FormFieldBrick
     required super.keyString,
@@ -131,7 +129,7 @@ class DateField extends TextFieldBrick<TextEditingValue, Date> {
   DateFieldState createState() => DateFieldState();
 }
 
-class DateFieldState extends TextFieldStateBrick<TextEditingValue, Date, DateField> {
+class DateFieldState extends TextFieldStateBrick<TextEditingValue, DateTime, DateField> {
   @override
-  Date? get defaultValue => null;
+  DateTime? get defaultValue => null;
 }

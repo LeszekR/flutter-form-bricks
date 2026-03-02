@@ -64,7 +64,7 @@ final class PhoneNumberFormatterValidator extends FormatterValidator<String, Pho
 
 final class FormatterValidatorDefaults {
   // Existing
-  List<FormatterValidator<String, Date>> date() =>
+  List<FormatterValidator<String, DateTime>> date() =>
       [
         DateFormatterValidator(DateTimeUtils(), CurrentDate()),
       ];

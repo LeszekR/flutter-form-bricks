@@ -311,7 +311,7 @@
 //           labelPosition: LabelPosition.topLeft,
 //           formManager: formManager,
 //           context),
-//     ], label: 'Date hour');
+//     ], label: 'DateTime hour');
 //
 //     return dates;
 //   }
@@ -361,7 +361,7 @@
 //           labelPosition: LabelPosition.topLeft,
 //           formManager: formManager,
 //           context)
-//     ], label: "Date and hour with one field");
+//     ], label: "DateTime and hour with one field");
 //
 //     return dates;
 //   }

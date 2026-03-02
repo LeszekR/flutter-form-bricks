@@ -1,4 +1,5 @@
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/extension_date_time.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/dateTime_formatter_validator.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,8 +20,8 @@ void main() {
     maxMinutesBack: 5303520,  // 2014-01-01
     maxMinutesForward: 1008000,  // 2026-01-01
   );
-  final String dateMaxBack = dateTimeUtils.formatDate(dateTimeLimits.minDateTime!);
-  final String dateMaxForward = dateTimeUtils.formatDate(dateTimeLimits.maxDateTime!);
+  final String dateMaxBack = dateTimeLimits.minDateTime!.toDateString();
+  final String dateMaxForward = dateTimeLimits.maxDateTime!.toDateString();
 
   TestDateTimeFormatter dateTimeFormatter =
       TestDateTimeFormatter(DateTimeFormatterValidator(dateTimeUtils, mockCurrentDate, dateTimeLimits));

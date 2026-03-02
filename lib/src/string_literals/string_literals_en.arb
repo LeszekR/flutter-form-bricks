@@ -114,7 +114,7 @@
   "dateErrorTooManyDaysInMonth": "Too many days in month",
   "dateErrorMonthOver12": "There are only 12 months, not more",
 
-  "dateErrorTooFarBack": "Date and time must not be earlier than {minDateParam}",
+  "dateErrorTooFarBack": "DateTime and time must not be earlier than {minDateParam}",
     "@dateErrorTooFarBack": {
       "placeholders": {
         "minDateParam": {
@@ -122,7 +122,7 @@
         }
       }
     },
-  "dateErrorTooFarForward": "Date and time must not be later than {maxDateParam}",
+  "dateErrorTooFarForward": "DateTime and time must not be later than {maxDateParam}",
     "@dateErrorTooFarForward": {
       "placeholders": {
         "maxDateParam": {
@@ -161,7 +161,7 @@
     }
   },
 
-  "datetimeStringErrorNoSpace": "Date must be separated from time with space",
+  "datetimeStringErrorNoSpace": "DateTime must be separated from time with space",
   "datetimeStringErrorTooManySpaces": "Too many spaces",
 
   "dateTimeSeparateFieldsNoTimeForLimitValidation": "Enter time to check if it fits in allowed range",

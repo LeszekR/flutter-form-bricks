@@ -11,7 +11,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/dat
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/time_formatter_validator.dart';
 
-class TimeFieldDescriptor extends FormFieldDescriptor<TextEditingValue, Time, TimeField> {
+class TimeFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime, TimeField> {
   TimeFieldDescriptor({
     required super.keyString,
     super.initialInput,
@@ -30,7 +30,7 @@ class TimeFieldDescriptor extends FormFieldDescriptor<TextEditingValue, Time, Ti
         );
 }
 
-class TimeField extends TextFieldBrick<TextEditingValue, Time> {
+class TimeField extends TextFieldBrick<TextEditingValue, DateTime> {
   TimeField({
     super.key,
     //
@@ -130,7 +130,7 @@ class TimeField extends TextFieldBrick<TextEditingValue, Time> {
   TimeFieldState createState() => TimeFieldState();
 }
 
-class TimeFieldState extends TextFieldStateBrick<TextEditingValue, Time, TimeField> {
+class TimeFieldState extends TextFieldStateBrick<TextEditingValue, DateTime, TimeField> {
   @override
-  Time? get defaultValue => null;
+  DateTime? get defaultValue => null;
 }

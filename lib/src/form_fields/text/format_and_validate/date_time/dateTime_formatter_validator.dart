@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/string_extension.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/time_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/string_extension.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 import 'date_formatter_validator.dart';
@@ -52,6 +52,7 @@ class DateTimeFormatterValidator extends FormatterValidator<TextEditingValue, Da
     // valid
     if (isStringValidDate && isStringValidTime) {
       DateTime dateTime = DateTime.parse(parsedString);
+      // TU PRZERWAŁEM - finish or reverse introduction of DateTime - or integrate DateTime and Time since they are trouble
       return DateTimeFieldContent.ok(toTextEditingValue(parsedString), dateTime);
     }
 

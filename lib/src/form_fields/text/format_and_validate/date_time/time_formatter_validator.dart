@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/extension_date_time.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/timestamp_date.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/timestamp_time.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
@@ -9,7 +10,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/base/string_extension.d
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:intl/intl.dart';
 
-class TimeFormatterValidator extends FormatterValidator<TextEditingValue, Time> {
+class TimeFormatterValidator extends FormatterValidator<TextEditingValue, DateTime> {
   final timeDelimiterPattern = '( |/|-|,|\\.|:|;)';
   final timeDelimiter = ':';
 
@@ -23,10 +24,10 @@ class TimeFormatterValidator extends FormatterValidator<TextEditingValue, Time> 
   ]);
 
   @override
-  TimeFieldContent run(
+  DateTimeFieldContent run(
     BricksLocalizations localizations,
     String keyString,
-    TimeFieldContent fieldContent,
+    DateTimeFieldContent fieldContent,
   ) {
     DateTimeFieldContent dateTimeContent = _dateTimeUtils.cleanDateTimeString(
       bricksLocalizations: localizations,
@@ -38,18 +39,18 @@ class TimeFormatterValidator extends FormatterValidator<TextEditingValue, Time> 
       maxNDigits: 4,
       maxNumberDelimiters: 1,
     );
-    if (!isValid(dateTimeContent)) return TimeFieldContent.err(fieldContent.input, dateTimeContent.error);
+    if (!isValid(dateTimeContent)) return DateTimeFieldContent.err(fieldContent.input, dateTimeContent.error);
 
-    TimeFieldContent timeContent = _parseTimeFromString(localizations, dateTimeContent);
-    if (!isValid(timeContent)) return TimeFieldContent.err(fieldContent.input, timeContent.error);
+    DateTimeFieldContent timeContent = _parseTimeFromString(localizations, dateTimeContent);
+    if (!isValid(timeContent)) return DateTimeFieldContent.err(fieldContent.input, timeContent.error);
 
     timeContent = _validateTime(localizations, timeContent, _dateTimeLimits);
 
-    // TimeFieldContent timeContent = _makeTimeFCFromDateTimeFC(dateTimeContent);
+    // DateTimeFieldContent timeContent = _makeTimeFCFromDateTimeFC(dateTimeContent);
     return timeContent;
   }
 
-  TimeFieldContent _parseTimeFromString(BricksLocalizations localizations, DateTimeFieldContent fieldContent) {
+  DateTimeFieldContent _parseTimeFromString(BricksLocalizations localizations, DateTimeFieldContent fieldContent) {
     String inputString = fieldContent.input!.text;
     int nDelimiters = RegExp(timeDelimiter).allMatches(inputString).length;
 
@@ -60,9 +61,9 @@ class TimeFormatterValidator extends FormatterValidator<TextEditingValue, Time> 
     }
   }
 
-  TimeFieldContent makeTimeStringNoDelimiters(BricksLocalizations localizations, String text) {
+  DateTimeFieldContent makeTimeStringNoDelimiters(BricksLocalizations localizations, String text) {
     if (text.length < 3)
-      return TimeFieldContent.err(toTextEditingValue(text), localizations.timeStringErrorTooFewDigits);
+      return DateTimeFieldContent.err(toTextEditingValue(text), localizations.timeStringErrorTooFewDigits);
 
     String formattedResult = '';
     String element = '';
@@ -81,10 +82,10 @@ class TimeFormatterValidator extends FormatterValidator<TextEditingValue, Time> 
       }
       formattedResult = element + formattedResult;
     }
-    return TimeFieldContent.transient(formattedResult.txtEditVal());
+    return DateTimeFieldContent.transient(formattedResult.txtEditVal());
   }
 
-  TimeFieldContent makeTimeStringWithDelimiters(BricksLocalizations localizations, String inputString) {
+  DateTimeFieldContent makeTimeStringWithDelimiters(BricksLocalizations localizations, String inputString) {
     String timeString = '';
     String element = '';
     List<String> resultList = inputString.split(timeDelimiter);
@@ -110,9 +111,9 @@ class TimeFormatterValidator extends FormatterValidator<TextEditingValue, Time> 
 
     if (errHours.isNotEmpty) errMsg = _dateTimeUtils.addErrMsg(errMsg, connector, errHours);
     if (errMinutes.isNotEmpty) errMsg = _dateTimeUtils.addErrMsg(errMsg, connector, errMinutes);
-    if (errMsg.isNotEmpty) return TimeFieldContent.err(toTextEditingValue(timeString), errMsg);
+    if (errMsg.isNotEmpty) return DateTimeFieldContent.err(toTextEditingValue(timeString), errMsg);
 
-    return TimeFieldContent.transient(timeString.txtEditVal());
+    return DateTimeFieldContent.transient(timeString.txtEditVal());
   }
 
   DateTime parseTime(String timeString) {
@@ -121,19 +122,19 @@ class TimeFormatterValidator extends FormatterValidator<TextEditingValue, Time> 
     return time;
   }
 
-  TimeFieldContent _validateTime(
+  DateTimeFieldContent _validateTime(
     BricksLocalizations localizations,
-    TimeFieldContent fieldContent,
+    DateTimeFieldContent fieldContent,
     DateTimeLimits? dateTimeLimits,
   ) {
-    TimeFieldContent resultContent;
+    DateTimeFieldContent resultContent;
     String timeString = fieldContent.input!.text;
 
     resultContent = _validateHourMinuteNumbers(localizations, timeString);
     if (!isValid(resultContent)) return resultContent;
 
-    Time parsedTime = Time.fromString(timeString);
-    resultContent = TimeFieldContent.ok(resultContent.input, parsedTime);
+    DateTime parsedTime = _dateTimeUtils.fromString(timeString);
+    resultContent = DateTimeFieldContent.ok(resultContent.input, parsedTime);
 
     if (dateTimeLimits != null)
       resultContent = _validateTimeLimits(localizations, resultContent, dateTimeLimits, timeString);
@@ -141,7 +142,7 @@ class TimeFormatterValidator extends FormatterValidator<TextEditingValue, Time> 
     return resultContent;
   }
 
-  TimeFieldContent _validateHourMinuteNumbers(BricksLocalizations localizations, String timeString) {
+  DateTimeFieldContent _validateHourMinuteNumbers(BricksLocalizations localizations, String timeString) {
     List<String> resultList = timeString.split(timeDelimiter);
 
     String errConnector = '\n';
@@ -158,52 +159,52 @@ class TimeFormatterValidator extends FormatterValidator<TextEditingValue, Time> 
     if (errHours.isNotEmpty) errMsg = _dateTimeUtils.addErrMsg(errMsg, errConnector, errHours);
     if (errMinutes.isNotEmpty) errMsg = _dateTimeUtils.addErrMsg(errMsg, errConnector, errMinutes);
 
-    if (errMsg.isNotEmpty) return TimeFieldContent.err(toTextEditingValue(timeString), errMsg);
-    return TimeFieldContent.transient(timeString.txtEditVal());
+    if (errMsg.isNotEmpty) return DateTimeFieldContent.err(toTextEditingValue(timeString), errMsg);
+    return DateTimeFieldContent.transient(timeString.txtEditVal());
   }
 
-  FieldContent<TextEditingValue, Time> _validateTimeLimits(
+  FieldContent<TextEditingValue, DateTime> _validateTimeLimits(
     BricksLocalizations localizations,
-    TimeFieldContent resultContent,
+    DateTimeFieldContent resultContent,
     DateTimeLimits? dateTimeLimits,
     String timeString,
   ) {
-    Time parsedTime = resultContent.value as Time;
+    DateTime parsedTime = resultContent.value!;
     if (dateTimeLimits != null) {
       DateTime? minDateLimit = dateTimeLimits.minDateTime;
       DateTime? maxDateLimit = dateTimeLimits.maxDateTime;
 
       if (minDateLimit != null && maxDateLimit != null) {
-        Date minDate = Date.fromDateTime(minDateLimit);
-        Date maxDate = Date.fromDateTime(maxDateLimit);
-        Time minTime = Time.fromDateTime(minDateLimit);
-        Time maxTime = Time.fromDateTime(maxDateLimit);
+        DateTime minDate = _dateTimeUtils.fromDateTime(minDateLimit);
+        DateTime maxDate = _dateTimeUtils.fromDateTime(maxDateLimit);
+        DateTime minTime = _dateTimeUtils.fromDateTime(minDateLimit);
+        DateTime maxTime = _dateTimeUtils.fromDateTime(maxDateLimit);
 
         bool minMaxDatesEqual = minDate == maxDate;
 
-        bool minBeforeMaxDate = minDate < maxDate;
-        bool minAfterMaxTime = minTime > maxTime;
+        bool minBeforeMaxDate = minDate.isBefore(maxDate);
+        bool minAfterMaxTime = minTime.isAfter(maxTime);
         bool hasExcludedTimeWindow = minBeforeMaxDate && minAfterMaxTime;
 
         if (minMaxDatesEqual || hasExcludedTimeWindow) {
-          if (parsedTime < minTime)
-            return TimeFieldContent.err(
+          if (parsedTime.isBefore(minTime))
+            return DateTimeFieldContent.err(
               timeString.txtEditVal(),
-              localizations.timeErrorTooFarBack(minTime.toString()),
+              localizations.timeErrorTooFarBack(minTime.toTimeStringMinutePrecision()),
             );
-          if (parsedTime > maxTime)
-            return TimeFieldContent.err(
+          if (parsedTime.isAfter(maxTime))
+            return DateTimeFieldContent.err(
               timeString.txtEditVal(),
-              localizations.timeErrorTooFarForward(maxTime.toString()),
+              localizations.timeErrorTooFarForward(maxTime.toTimeStringMinutePrecision()),
             );
         }
       }
     }
-    return TimeFieldContent.ok(toTextEditingValue(timeString), parsedTime);
+    return DateTimeFieldContent.ok(toTextEditingValue(timeString), parsedTime);
   }
 
-  TimeFieldContent _makeTimeFCFromDateTimeFC(DateTimeFieldContent content) {
-    return TimeFieldContent.ok(content.input, Time.fromDateTime(content.value!));
+  DateTimeFieldContent _makeTimeFCFromDateTimeFC(DateTimeFieldContent content) {
+    return DateTimeFieldContent.ok(content.input, _dateTimeUtils.fromDateTime(content.value!));
   }
 
   bool isValid(FieldContent dateContent) {

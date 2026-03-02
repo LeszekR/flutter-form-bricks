@@ -25,7 +25,7 @@
 //           minRangeSpanMinutes: 15,
 //           labelPosition: LabelPosition.topLeft,
 //           label: "Załadunek",
-//           dateTimeLimits: Date.fromString('2024-12-15'),
+//           dateTimeLimits: DateTime.fromString('2024-12-15'),
 //         ),
 //       ])
 //     ];

@@ -12,8 +12,8 @@ class DateTimeRangeInitialSet {
 }
 
 class DateTimeInitialSet {
-  final Date? date;
-  final Time? time;
+  final DateTime? date;
+  final DateTime? time;
 
   const DateTimeInitialSet({
     this.date,

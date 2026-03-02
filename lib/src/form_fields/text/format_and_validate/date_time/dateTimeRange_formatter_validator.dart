@@ -10,7 +10,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/dat
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
-class DateTimeRangeFormatterValidator extends FormatterValidator<TextEditingValue, DateTimeBrick> {
+class DateTimeRangeFormatterValidator extends FormatterValidator<TextEditingValue, DateTime> {
   final FormManager _formManager;
   final DateTimeUtils _dateTimeUtils;
   final CurrentDate _currentDate;

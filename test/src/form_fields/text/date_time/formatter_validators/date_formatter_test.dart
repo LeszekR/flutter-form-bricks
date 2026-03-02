@@ -1,5 +1,6 @@
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/extension_date_time.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -27,8 +28,8 @@ void main() {
   TestDateFormatter dateFormatterWithLimits =
       TestDateFormatter(DateFormatterValidator(dateTimeInputUtils, mockCurrentDate, dateTimeLimits));
 
-  final String dateMaxBack = dateTimeUtils.formatDate(dateTimeLimits.minDateTime!);
-  final String dateMaxForward = dateTimeUtils.formatDate(dateTimeLimits.maxDateTime!);
+  final String dateMaxBack = dateTimeLimits.minDateTime!.toDateString();
+  final String dateMaxForward = dateTimeLimits.maxDateTime!.toDateString();
 
   testWidgets('refuses to format excel-style invalid input', (WidgetTester tester) async {
     final local = await getLocalizations();
@@ -77,7 +78,7 @@ void main() {
       // --------------------------------------------
       DateTimeTestCase('3123', '2024-31-23', false, local.dateErrorMonthOver12),
     ];
-    var passedOk = runDateTimeFormatterTest<Date>(local, testCases, dateFormatter);
+    var passedOk = runDateTimeFormatterTest<DateTime>(local, testCases, dateFormatter);
     expect(passedOk, true);
   });
 
@@ -90,7 +91,7 @@ void main() {
       DateTimeTestCase('01*2', '01*2', false, local.dateStringErrorBadChars),
       DateTimeTestCase('01+23', '01+23', false, local.dateStringErrorBadChars),
     ];
-    var passedOk = runDateTimeFormatterTest<Date>(local, testCases, dateFormatter);
+    var passedOk = runDateTimeFormatterTest<DateTime>(local, testCases, dateFormatter);
     expect(passedOk, true);
   });
 
@@ -106,7 +107,7 @@ void main() {
       DateTimeTestCase('0211231', '2021-12-31', true, null),
       DateTimeTestCase('20211231', '2021-12-31', true, null),
     ];
-    var passedOk = runDateTimeFormatterTest<Date>(local, testCases, dateFormatter);
+    var passedOk = runDateTimeFormatterTest<DateTime>(local, testCases, dateFormatter);
     expect(passedOk, true);
   });
 
@@ -118,7 +119,7 @@ void main() {
       DateTimeTestCase('4/01,23', '2024-01-23', true, null),
       DateTimeTestCase('24;1-23', '2024-01-23', true, null),
     ];
-    var passedOk = runDateTimeFormatterTest<Date>(local, testCases, dateFormatter);
+    var passedOk = runDateTimeFormatterTest<DateTime>(local, testCases, dateFormatter);
     expect(passedOk, true);
   });
 
@@ -136,7 +137,7 @@ void main() {
       DateTimeTestCase('4${p}01${p}23', '2024-01-23', true, null),
       DateTimeTestCase('24${p}1${p}23', '2024-01-23', true, null),
     ];
-    var passedOk = runDateTimeFormatterTest<Date>(
+    var passedOk = runDateTimeFormatterTest<DateTime>(
       local,
       testCases,
       dateFormatter,
@@ -175,7 +176,7 @@ void main() {
       DateTimeTestCase('001231', '2000-12-31', false, local.dateErrorTooFarBack(dateMaxBack)),
       DateTimeTestCase('301231', '2030-12-31', false, local.dateErrorTooFarForward(dateMaxForward)),
     ];
-    var passedOk = runDateTimeFormatterTest<Date>(local, testCases, dateFormatterWithLimits);
+    var passedOk = runDateTimeFormatterTest<DateTime>(local, testCases, dateFormatterWithLimits);
     expect(passedOk, true);
   });
 
@@ -210,7 +211,7 @@ void main() {
       DateTimeTestCase('19001216', '1900-12-16', false, local.dateErrorTooFarBack(dateMaxBack)),
       DateTimeTestCase('39001216', '3900-12-16', false, local.dateErrorTooFarForward(dateMaxForward)),
     ];
-    var passedOk = runDateTimeFormatterTest<Date>(local, testCases, dateFormatterWithLimits);
+    var passedOk = runDateTimeFormatterTest<DateTime>(local, testCases, dateFormatterWithLimits);
     expect(passedOk, true);
   });
 
@@ -252,7 +253,7 @@ void main() {
         local.dateErrorMonthOver12 + '\n' + local.dateErrorTooManyDaysInMonth,
       ),
     ];
-    var passedOk = runDateTimeFormatterTest<Date>(local, testCases, dateFormatterWithLimits);
+    var passedOk = runDateTimeFormatterTest<DateTime>(local, testCases, dateFormatterWithLimits);
     expect(passedOk, true);
   });
 }

@@ -4,11 +4,11 @@ import 'package:flutter_form_bricks/src/form_fields/components/formatter_validat
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_range_required_fields.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/timestamp_date_time_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/extension_date_time.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/dateTimeRange_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/time_formatter_validator.dart';
 
-class DateTimeSeparateFieldsFormatterValidator extends FormatterValidator<TextEditingValue, DateTimeBrick> {
+class DateTimeSeparateFieldsFormatterValidator extends FormatterValidator<TextEditingValue, DateTime> {
   final DateTimeRequiredFields _dateTimeRequiredFields;
   final DateTimeUtils _dateTimeUtils;
   final DateTimeLimits? _dateTimeLimits;
@@ -29,7 +29,7 @@ class DateTimeSeparateFieldsFormatterValidator extends FormatterValidator<TextEd
         timeFormatterValidator = TimeFormatterValidator(_dateTimeUtils);
 
   @override
-  FieldContent<TextEditingValue, DateTimeBrick> run(
+  FieldContent<TextEditingValue, DateTime> run(
     BricksLocalizations localizations,
     String keyString,
     DateTimeFieldContent fieldContent,
@@ -49,34 +49,32 @@ class DateTimeSeparateFieldsFormatterValidator extends FormatterValidator<TextEd
 
     if (_dateTimeLimits == null) return result;
 
-    Date? date;
-    Time? time;
+    DateTime? date;
+    DateTime? time;
     if (isDateField(keyString)) {
-      date = result.value as Date;
+      date = result.value;
       time = _formManager.getFieldValue(getTimeKeyString(keyString)).value;
       if (time == null) {
         return DateTimeFieldContent.err(result.input, localizations.dateTimeSeparateFieldsNoTimeForLimitValidation);
       }
     } else if (isTimeField(keyString)) {
-      time = result.value as Time;
+      time = result.value;
       date = _formManager.getFieldValue(getDateKeyString(keyString)).value;
       if (date == null) {
         return DateTimeFieldContent.err(result.input, localizations.dateTimeSeparateFieldsNoDateForLimitValidation);
       }
     }
 
-    DateTime dtDate = date!.dateTime;
-    DateTime dtTime = time!.dateTime;
-    DateTime dateTime = DateTime(dtDate.year, dtDate.month, dtDate.day, dtTime.hour, dtTime.minute);
+    DateTime dateTime = DateTime(date!.year, date.month, date.day, time!.hour, time.minute);
 
     DateTime minDateTime = _dateTimeLimits!.minDateTime!;
     if (dateTime.compareTo(minDateTime) < 0) {
-      String minDateTimeString = _dateTimeUtils.formatDateTime(minDateTime);
+      String minDateTimeString = minDateTime.toDateTimeString();
       return DateTimeFieldContent.err(result.input, localizations.dateErrorTooFarBack(minDateTimeString));
     }
     DateTime maxDateTime = _dateTimeLimits!.maxDateTime!;
     if (dateTime.compareTo(maxDateTime) > 0) {
-      String maxDateTimeString = _dateTimeUtils.formatDateTime(maxDateTime);
+      String maxDateTimeString = maxDateTime.toDateTimeString();
       return DateTimeFieldContent.err(result.input, localizations.dateErrorTooFarForward(maxDateTimeString));
     }
 

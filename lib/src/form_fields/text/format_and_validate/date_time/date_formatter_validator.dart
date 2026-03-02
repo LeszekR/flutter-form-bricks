@@ -4,12 +4,13 @@ import 'package:flutter_form_bricks/src/form_fields/components/state/field_conte
 import 'package:flutter_form_bricks/src/form_fields/text/base/string_extension.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/extension_date_time.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/timestamp_date.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/timestamp_date_time_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
-class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTimeBrick> {
+class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTime> {
   final dateDelimiterPattern = '( |/|-|,|;|\\.|=)';
   final dateDelimiter = '-';
 
@@ -170,7 +171,7 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
     String connector = '\n';
     String errMsg = '';
     String errLimit = '', errMonth = '', errDays = '';
-    Date? parsedDate;
+    DateTime? parsedDate;
 
     // non-existing month
     int monthIndex = elementsListLength - 2;
@@ -204,19 +205,19 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
 
     // date-time limits
     if (errDays.isEmpty && errMonth.isEmpty) {
-      parsedDate = Date.fromString(dateString);
+      parsedDate = _dateTimeUtils.fromString(dateString);
 
       if (dateLimits != null) {
         DateTime? minDate = dateLimits.minDateTime;
         if (minDate != null) {
-          if (parsedDate.dateTime.compareTo(minDate) < 0) {
-            errLimit = localizations.dateErrorTooFarBack(_dateTimeUtils.formatDate(minDate));
+          if (parsedDate.compareTo(minDate) < 0) {
+            errLimit = localizations.dateErrorTooFarBack(minDate.toDateString());
           }
         }
         DateTime? maxDate = dateLimits.maxDateTime;
         if (maxDate != null) {
-          if (parsedDate.dateTime.compareTo(maxDate) > 0) {
-            errLimit = localizations.dateErrorTooFarForward(_dateTimeUtils.formatDate(maxDate));
+          if (parsedDate.compareTo(maxDate) > 0) {
+            errLimit = localizations.dateErrorTooFarForward(maxDate.toDateString());
           }
         }
       }
@@ -231,7 +232,7 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
 
   // DateTimeFieldContent _makeDateFCFromDateTimeFC(DateTimeFieldContent content) {
   //   TextEditingValue input = (content.input?.text ?? '').txtEditVal();
-  //   Date value = Date.fromDateTime(content.value!);
+  //   DateTime value = DateTime.fromDateTime(content.value!);
   //   return DateTimeFieldContent.ok(input, value);
   // }
 
