@@ -52,7 +52,6 @@ class DateTimeFormatterValidator extends FormatterValidator<TextEditingValue, Da
     // valid
     if (isStringValidDate && isStringValidTime) {
       DateTime dateTime = DateTime.parse(parsedString);
-      // TU PRZERWAŁEM - finish or reverse introduction of DateTime - or integrate DateTime and Time since they are trouble
       return DateTimeFieldContent.ok(toTextEditingValue(parsedString), dateTime);
     }
 

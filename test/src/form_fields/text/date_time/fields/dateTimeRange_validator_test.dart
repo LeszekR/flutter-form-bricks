@@ -11,7 +11,8 @@ import '../../../../../tools/test_utils.dart';
 import 'tools/dateTimeRange_test_utils.dart';
 
 // TU PRZERWAŁEM - finish date, time, date time range fields and then use DateTimeRange field here
-//  - create and test DateTimeSeparateFields field
+//  - refactor DateTimeSeparateFieldsFormatterValidator formatter-validator to DateTimeRangeFormatterValidator style - 2-step validation
+//  - test DateTimeSepareateFieldsFormatterValidator
 //  - create DateTimeRangeField
 //  - use DateTimeRangeField here in test
 void main() {
@@ -31,6 +32,7 @@ void main() {
   );
   final dateTimeRangeSpan = DateTimeRangeSpan(minDateTimeSpanMinutes: 15, maxDateTimeSpanMinutes: 10080);
 
+  // TU PRZERWAŁEM - fix code so the test runs
   testWidgets('correct input', (WidgetTester tester) async {
     String? errMsg = null;
     var expectedValues = [errMsg, errMsg, errMsg, errMsg];

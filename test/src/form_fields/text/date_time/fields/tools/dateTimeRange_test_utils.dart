@@ -93,6 +93,15 @@ Future<bool> runDateTimeRangeValidatorTest(
       }
     }
 
+    if (errFieldIndex == null) {
+      for (int i = 0; i < 4; i++) {
+        if (testCase.texts[i].isNotEmpty) {
+          errFieldIndex = i;
+          break;
+        }
+      }
+    }
+
     // repeat fill and Enter in the incorrect field for the formManager to show errorMessage in the form err-text_formatter_validators
     if (errFieldIndex != null) {
       await tester.enterText(find.byKey(Key(keyStrings[errFieldIndex])), testCase.texts[errFieldIndex]);
