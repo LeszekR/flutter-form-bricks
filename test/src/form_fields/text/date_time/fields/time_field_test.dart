@@ -33,14 +33,14 @@ void main() {
     expect(controller.text, '01:02');
   });
 
-  testWidgets('shows incorrect input unchanged, shows correct input formatted to date', (WidgetTester tester) async {
+  testWidgets('shows incorrect input unchanged, shows correct input formatted to time', (WidgetTester tester) async {
     // with
     var keyString = fieldKeyString1;
     await _prepareTimeField(tester, keyString);
     var fieldFinder = find.byKey(ValueKey(keyString));
     expect(fieldFinder, findsOneWidget);
 
-    // when - only entered text, no Enter
+    // when - incorrect input
     var text = '1-2x';
     await tester.enterText(fieldFinder, text);
     await tester.testTextInput.receiveAction(TextInputAction.done);
@@ -50,7 +50,7 @@ void main() {
     TextEditingController controller = await getTextEditingController(tester, keyString);
     expect(controller.text, text);
 
-    // when - Enter clicked
+    // when - correct input
     text = '1-2';
     await tester.enterText(fieldFinder, text);
     await tester.testTextInput.receiveAction(TextInputAction.done);
@@ -63,7 +63,9 @@ void main() {
 
 Future<void> _prepareTimeField(WidgetTester tester, String keyString) async {
   var schema = TestFormSchema.fromDescriptors(
-      initiallyFocusedKeyString: keyString, fieldDescriptors: [TimeFieldDescriptor(keyString: keyString)]);
+    initiallyFocusedKeyString: keyString,
+    fieldDescriptors: [TimeFieldDescriptor(keyString: keyString)],
+  );
   var widgetMaker =
       (BuildContext context) => TimeField(keyString: keyString, formManager: TestFormManager(schema: schema));
   await prepareWidget(tester, widgetMaker);

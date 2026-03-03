@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/string_extension.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/extension_date_time.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/timestamp_date.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/timestamp_time.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/string_extension.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:intl/intl.dart';
 
@@ -133,7 +131,7 @@ class TimeFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
     resultContent = _validateHourMinuteNumbers(localizations, timeString);
     if (!isValid(resultContent)) return resultContent;
 
-    DateTime parsedTime = _dateTimeUtils.fromString(timeString);
+    DateTime parsedTime = _dateTimeUtils.timeMinutePrecisionFromString(timeString);
     resultContent = DateTimeFieldContent.ok(resultContent.input, parsedTime);
 
     if (dateTimeLimits != null)

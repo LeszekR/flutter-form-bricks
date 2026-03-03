@@ -121,8 +121,16 @@ class DateTimeUtils {
     return DateTime(dt.year, dt.month, dt.day);
   }
 
-   DateTime fromString(String stringVal) {
+   DateTime dateFromString(String stringVal) {
     return dateFormat.parseStrict(stringVal);
+  }
+
+   DateTime timeMinutePrecisionFromString(String stringVal) {
+    return timeFormatMinutePrecision.parseStrict(stringVal);
+  }
+
+   DateTime timeSecondPrecisionFromString(String stringVal) {
+    return timeFormatSecondPrecision.parseStrict(stringVal);
   }
 
   String minutesToSpanCondition(int nMinutes) {

@@ -34,9 +34,8 @@ export 'src/form_fields/components/base/validate_mode_brick.dart';
 // DATE TIME
 export 'src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
 export 'src/form_fields/text/format_and_validate/date_time/date_formatter_validator.dart';
-export 'src/form_fields/text/format_and_validate/date_time/components/timestamp_date.dart';
 export 'src/form_fields/text/format_and_validate/date_time/components/current_date.dart';
-export 'src/form_fields/text/format_and_validate/date_time/components/timestamp_time.dart';
+export 'src/form_fields/text/format_and_validate/date_time/components/extension_date_time.dart';
 
 // FORMS
 export 'src/forms/base/form_brick.dart';
