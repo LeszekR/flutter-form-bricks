@@ -1,15 +1,15 @@
 import 'package:flutter/services.dart';
 
-class FirstUpperThenLowerCaseFormatter extends TextInputFormatter {
-  static FirstUpperThenLowerCaseFormatter? _singleton;
+class FirstCapitalFormatter extends TextInputFormatter {
+  static FirstCapitalFormatter? _singleton;
   static final RegExp _firstAlwaysUppercase = RegExp(r'\b\w+\b', multiLine: true);
 
-  factory FirstUpperThenLowerCaseFormatter() {
-    _singleton ??= FirstUpperThenLowerCaseFormatter._();
+  factory FirstCapitalFormatter() {
+    _singleton ??= FirstCapitalFormatter._();
     return _singleton!;
   }
 
-  FirstUpperThenLowerCaseFormatter._();
+  FirstCapitalFormatter._();
 
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue,TextEditingValue newValue) {

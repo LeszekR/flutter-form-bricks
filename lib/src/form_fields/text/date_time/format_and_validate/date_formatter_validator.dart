@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/string_extension.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/current_date.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/extension_date_time.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/timestamp_date.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/timestamp_date_time_brick.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/current_date.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/extension_date_time.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTime> {
@@ -29,7 +27,6 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
     BricksLocalizations localizations,
     String keyString,
     DateTimeFieldContent fieldContent,
-    // DateFieldContent fieldContent,
   ) {
     DateTimeFieldContent dateTimeContent = _dateTimeUtils.cleanDateTimeString(
       bricksLocalizations: localizations,
@@ -205,7 +202,7 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
 
     // date-time limits
     if (errDays.isEmpty && errMonth.isEmpty) {
-      parsedDate = _dateTimeUtils.fromString(dateString);
+      parsedDate = _dateTimeUtils.dateFromString(dateString);
 
       if (dateLimits != null) {
         DateTime? minDate = dateLimits.minDateTime;

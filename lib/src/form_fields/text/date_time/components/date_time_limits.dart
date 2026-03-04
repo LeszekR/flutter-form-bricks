@@ -1,4 +1,4 @@
-import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/current_date.dart';
 
 /// Configuration object - **date-with-time** limits for `DateTimeFormatterValidator` and `DateTimeRangeFormatterValidator`.
 ///
@@ -14,7 +14,7 @@ class DateTimeLimits {
     this.fixedReferenceDateTime,
     this.maxMinutesBack,
     this.maxMinutesForward,
-  }) : assert((currentDate == null) != (fixedReferenceDateTime == null),
+  })  : assert((currentDate == null) != (fixedReferenceDateTime == null),
             'One of the two - currentDate or referenceDateTime - must be set'),
         assert((maxMinutesBack != null) || (maxMinutesForward != null),
             'Either maxMinutesBack or maxMinutesForward or both must be set');

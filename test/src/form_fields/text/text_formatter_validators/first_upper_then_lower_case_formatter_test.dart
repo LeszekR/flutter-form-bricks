@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/first_upper_then_lower_case_formatter.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/first_capital/first_upper_then_lower_case_formatter.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../test_implementations/test_form_schema.dart';
 import '../../../../test_implementations/test_form_state_data.dart';
-import '../../../tools/test_data.dart';
 import '../../../../tools/test_utils.dart';
+import 'utils.dart';
 
 void main() {
   const String keyString = "first_uppercase_text_single 2";
@@ -27,7 +27,7 @@ void main() {
         final TextEditingValue newInput = TextEditingValue(text: param.input);
 
         //when
-        final result = FirstUpperThenLowerCaseFormatter().formatEditUpdate(initial, newInput);
+        final result = FirstCapitalFormatter().formatEditUpdate(initial, newInput);
 
         //then
         expect(result.text, param.expected);

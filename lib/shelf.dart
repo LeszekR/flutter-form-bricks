@@ -25,17 +25,17 @@ export 'src/form_fields/components/states_controller/formatter_helper.dart';
 export 'src/form_fields/text/base/icon_button_params.dart';
 export 'src/form_fields/text/base/states_color_maker.dart';
 export 'src/form_fields/text/base/text_field_brick.dart';
-export 'src/form_fields/text/fields/date_field.dart';
-export 'src/form_fields/text/fields/time_field.dart';
-export 'src/form_fields/text/fields/lowercase_field.dart';
-export 'src/form_fields/text/fields/plain_text_field.dart';
+export 'src/form_fields/text/date_time/date_field.dart';
+export 'src/form_fields/text/date_time/time_field.dart';
+export 'src/form_fields/text/lowercase/lowercase_field.dart';
+export 'src/form_fields/text/plain_text/plain_text_field.dart';
 export 'src/form_fields/components/base/validate_mode_brick.dart';
 
 // DATE TIME
-export 'src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
-export 'src/form_fields/text/format_and_validate/date_time/date_formatter_validator.dart';
-export 'src/form_fields/text/format_and_validate/date_time/components/current_date.dart';
-export 'src/form_fields/text/format_and_validate/date_time/components/extension_date_time.dart';
+export 'src/form_fields/text/date_time/format_and_validate/date_time_utils.dart';
+export 'src/form_fields/text/date_time/format_and_validate/date_formatter_validator.dart';
+export 'src/form_fields/text/date_time/components/current_date.dart';
+export 'src/form_fields/text/date_time/components/extension_date_time.dart';
 
 // FORMS
 export 'src/forms/base/form_brick.dart';

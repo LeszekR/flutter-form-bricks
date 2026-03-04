@@ -1,7 +1,8 @@
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/number/integer_formatter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../tools/test_data.dart';
+import '../text/text_formatter_validators/utils.dart';
+
 
 void main() {
   const TextEditingValue initial = TextEditingValue(text: "");

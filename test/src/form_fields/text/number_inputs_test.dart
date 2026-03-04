@@ -5,8 +5,8 @@ import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_for
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../test_implementations/test_form_manager.dart';
-import '../../tools/test_data.dart';
 import '../../../tools/test_utils.dart';
+import 'text_formatter_validators/utils.dart';
 
 void main() {
   const key = "key";

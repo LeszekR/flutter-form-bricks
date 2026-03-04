@@ -5,13 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/base/form_field_descriptor.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/base/validate_mode_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_brick.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/current_date.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_utils.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/time_formatter_validator.dart';
 
-class DateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime, DateField> {
-  DateFieldDescriptor({
+class TimeFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime, TimeField> {
+  TimeFieldDescriptor({
     required super.keyString,
     super.initialInput,
     super.isRequired,
@@ -19,20 +18,20 @@ class DateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime
     super.additionalFormatterValidatorsMaker,
     DateTimeLimits? dateTimeLimits,
     DateTimeUtils? dateTimeUtils,
-    CurrentDate? currentDate,
   }) : super(
           defaultFormatterValidatorsMaker: () => [
-            DateFormatterValidator(
+            TimeFormatterValidator(
               dateTimeUtils ?? DateTimeUtils(),
-              currentDate ?? CurrentDate(),
               dateTimeLimits,
             ),
           ],
         );
 }
 
-class DateField extends TextFieldBrick<TextEditingValue, DateTime> {
-  DateField({
+class TimeField extends TextFieldBrick<TextEditingValue, DateTime> {
+  TimeField({
+    super.key,
+    //
     // FormFieldBrick
     required super.keyString,
     required super.formManager,
@@ -44,7 +43,7 @@ class DateField extends TextFieldBrick<TextEditingValue, DateTime> {
     //
     // TextFieldBrick
     super.width,
-    // TODO implement button for date field
+    // TODO implement button for time field
     super.buttonParams,
     //
     // TextField
@@ -63,7 +62,7 @@ class DateField extends TextFieldBrick<TextEditingValue, DateTime> {
     super.readOnly = false,
     super.showCursor,
     // super.autofocus = false, => FormData takes over initial focus in form
-    // super.statesController, => replaced with statesObserver and statesNotifier
+    // super.statesController,  => replaced with statesObserver and statesNotifier
     // super.obscuringCharacter = '•', => this is non-password field
     // super.obscureText = false, => fixed in constructor
     // super.autocorrect = true, => not relevant in this field
@@ -126,10 +125,10 @@ class DateField extends TextFieldBrick<TextEditingValue, DateTime> {
         );
 
   @override
-  DateFieldState createState() => DateFieldState();
+  TimeFieldState createState() => TimeFieldState();
 }
 
-class DateFieldState extends TextFieldStateBrick<TextEditingValue, DateTime, DateField> {
+class TimeFieldState extends TextFieldStateBrick<TextEditingValue, DateTime, TimeField> {
   @override
   DateTime? get defaultValue => null;
 }

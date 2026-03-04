@@ -1,8 +1,8 @@
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/forbidden_whitespaces_formatter.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/no_whitespaces/forbidden_whitespaces_formatter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../tools/test_utils.dart';
-import '../../../tools/test_data.dart';
+import 'utils.dart';
 
 void main() {
   group('Should always remove leading and double spaces (exception with the tail whitespaces but covered in form)', () {
@@ -18,7 +18,7 @@ void main() {
         final TextEditingValue newInput = TextEditingValue(text: param.input);
 
         //when
-        final result = ForbiddenWhitespacesFormatter().formatEditUpdate(initial, newInput);
+        final result = NoWhitespaceFormatter().formatEditUpdate(initial, newInput);
 
         //then
         expect(result.text, param.expected);

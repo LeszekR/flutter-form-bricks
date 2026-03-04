@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/fields/time_field.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/time_field.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../../test_implementations/test_form_manager.dart';

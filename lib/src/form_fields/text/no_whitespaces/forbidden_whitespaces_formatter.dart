@@ -3,17 +3,17 @@ import 'package:flutter/services.dart';
 /*
 Default formatter for text form_fields
 */
-class ForbiddenWhitespacesFormatter extends TextInputFormatter {
-  static ForbiddenWhitespacesFormatter? _singleton;
+class NoWhitespaceFormatter extends TextInputFormatter {
+  static NoWhitespaceFormatter? _singleton;
   static final RegExp _noLeadingSpace = RegExp(r'^\s+');
   static final RegExp _noDoubleSpace = RegExp(r'\s{2,}');
 
-  factory ForbiddenWhitespacesFormatter() {
-    _singleton ??= ForbiddenWhitespacesFormatter._();
+  factory NoWhitespaceFormatter() {
+    _singleton ??= NoWhitespaceFormatter._();
     return _singleton!;
   }
 
-  ForbiddenWhitespacesFormatter._();
+  NoWhitespaceFormatter._();
 
   @override
   TextEditingValue formatEditUpdate(

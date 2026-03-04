@@ -7,15 +7,15 @@ import 'package:flutter_form_bricks/src/form_fields/components/base/form_field_d
 import 'package:flutter_form_bricks/src/form_fields/components/base/validate_mode_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_brick.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/fields/date_field.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/fields/time_field.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/current_date.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_limits.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_range_initial_set.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/components/date_time_range_required_fields.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/dateTimeRange_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/date_time/date_time_utils.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/date_field.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/current_date.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_initial_set.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_required_fields.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/dateTimeRange_formatter_validator.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_formatter_validator.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_utils.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/time_field.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
 class DateTimeSeparateFieldsDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime, DateTimeSeparateFields> {

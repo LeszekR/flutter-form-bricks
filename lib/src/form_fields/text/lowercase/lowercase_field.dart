@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/format_and_validate/lowercase_formatter.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/lowercase/lowercase_formatter.dart';
 
 class LowerCaseFieldDescriptor extends FormFieldDescriptor<TextEditingValue, String, LowerCaseField> {
   LowerCaseFieldDescriptor({

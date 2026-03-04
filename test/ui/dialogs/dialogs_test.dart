@@ -5,7 +5,8 @@ import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/shortcuts/keyboa
 import 'package:flutter_form_bricks/src/dialogs/progress_info.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../src/tools/test_data.dart';
+import '../../src/form_fields/text/text_formatter_validators/utils.dart';
+
 
 void main() {
   final Map<int, String> keyCodeMapping = {66: "Enter", 111: "Escape"};
