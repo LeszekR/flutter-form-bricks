@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/data_time_text_editing_value.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_required_fields.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/dateTimeRange_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/time_formatter_validator.dart';
 
-class DateTimeSeparateFieldsFormatterValidator extends FormatterValidator<TextEditingValue, DateTime> {
+class DateTimeSeparateFieldsFormatterValidator extends FormatterValidator<DateTimeTextEditingValue, DateTime> {
   final DateTimeRequiredFields _dateTimeRequiredFields;
   final DateTimeUtils _dateTimeUtils;
   final DateTimeLimits? _dateTimeLimits;
@@ -28,7 +29,7 @@ class DateTimeSeparateFieldsFormatterValidator extends FormatterValidator<TextEd
         timeFormatterValidator = TimeFormatterValidator(_dateTimeUtils);
 
   @override
-  FieldContent<TextEditingValue, DateTime> run(
+  FieldContent<DateTimeTextEditingValue, DateTime> run(
     BricksLocalizations localizations,
     String keyString,
     DateTimeFieldContent fieldContent,

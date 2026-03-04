@@ -6,23 +6,25 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/base/form_field_descriptor.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/base/validate_mode_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator_chain.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_brick.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/date_time/date_field.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_base_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/current_date.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/data_time_text_editing_value.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_initial_set.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_required_fields.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/date_field.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/dateTimeRange_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_formatter_validator.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_separate_fields_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/time_field.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
-class DateTimeSeparateFieldsDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime, DateTimeSeparateFields> {
+class DateTimeSeparateFieldsDescriptor
+    extends FormFieldDescriptor<DateTimeTextEditingValue, DateTime, DateTimeSeparateFields> {
   DateTimeSeparateFieldsDescriptor({
     required super.keyString,
+    required DateTimeRequiredFields requiredFields,
     super.initialInput,
-    DateTimeRequiredFields? requiredFields,
     super.runValidatorsFullRun,
     super.additionalFormatterValidatorsMaker,
     DateTimeLimits? dateTimeLimits,
@@ -31,7 +33,8 @@ class DateTimeSeparateFieldsDescriptor extends FormFieldDescriptor<TextEditingVa
     CurrentDate? currentDate,
   }) : super(
           defaultFormatterValidatorsMaker: () => [
-            DateFormatterValidator(
+            DateTimeSeparateFieldsFormatterValidator(
+              requiredFields,
               dateTimeUtils ?? DateTimeUtils(),
               currentDate ?? CurrentDate(),
               dateTimeLimits,
@@ -40,8 +43,8 @@ class DateTimeSeparateFieldsDescriptor extends FormFieldDescriptor<TextEditingVa
         );
 
   @override
-  Map<String, FormatterValidatorChain<TextEditingValue, DateTime>> get formatterValidatorChainMap {
-    FormatterValidatorChain<TextEditingValue, DateTime>? formatterValidatorChain = buildChain();
+  Map<String, FormatterValidatorChain<DateTimeTextEditingValue, DateTime>> get formatterValidatorChainMap {
+    FormatterValidatorChain<DateTimeTextEditingValue, DateTime>? formatterValidatorChain = buildChain();
     return formatterValidatorChain == null
         ? {}
         : {
@@ -51,7 +54,10 @@ class DateTimeSeparateFieldsDescriptor extends FormFieldDescriptor<TextEditingVa
   }
 }
 
-class DateTimeSeparateFields extends TextFieldBrick<TextEditingValue, DateTime> {
+class DateTimeSeparateFields extends TextFieldBaseBrick<DateTimeTextEditingValue, DateTime> {
+  final double? widthDate;
+  final double? widthTime;
+
   DateTimeSeparateFields({
     // FormFieldBrick
     required super.keyString,
@@ -63,7 +69,8 @@ class DateTimeSeparateFields extends TextFieldBrick<TextEditingValue, DateTime> 
     super.statesNotifier,
     //
     // TextFieldBrick
-    super.width,
+    this.widthDate,
+    this.widthTime,
     // TODO implement buttons for date-time-separate fields
     super.buttonParams,
     //
@@ -134,7 +141,8 @@ class DateTimeSeparateFields extends TextFieldBrick<TextEditingValue, DateTime> 
   DateTimeSeparateFieldsState createState() => DateTimeSeparateFieldsState();
 }
 
-class DateTimeSeparateFieldsState extends TextFieldStateBrick<TextEditingValue, DateTime, DateTimeSeparateFields> {
+class DateTimeSeparateFieldsState
+    extends TextFieldBaseStateBrick<DateTimeTextEditingValue, DateTime, DateTimeSeparateFields> {
   @override
   DateTime? get defaultValue => null;
 
@@ -208,7 +216,7 @@ class DateTimeSeparateFieldsState extends TextFieldStateBrick<TextEditingValue, 
       statesNotifier: widget.statesNotifier,
       //
       // TextFieldBrick
-      width: widget.width,
+      width: widget.widthDate,
       buttonParams: widget.buttonParams,
       //
       // TextField
@@ -228,6 +236,7 @@ class DateTimeSeparateFieldsState extends TextFieldStateBrick<TextEditingValue, 
       showCursor: widget.showCursor,
       enableSuggestions: widget.enableSuggestions,
       expands: widget.expands,
+      // TU PRZERWAŁEM - finish abstracting TextFieldBaseBrick
       onChanged: widget.onChanged,
       onEditingComplete: widget.onEditingComplete,
       onSubmitted: widget.onSubmitted,
@@ -277,7 +286,7 @@ class DateTimeSeparateFieldsState extends TextFieldStateBrick<TextEditingValue, 
       statesNotifier: widget.statesNotifier,
       //
       // TextFieldBrick
-      width: widget.width,
+      width: widget.widthTime,
       buttonParams: widget.buttonParams,
       //
       // TextField

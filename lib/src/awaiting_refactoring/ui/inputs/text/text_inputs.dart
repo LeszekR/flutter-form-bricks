@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/text/text_input_base/basic_text_input.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/states_controller/double_widget_states_controller.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/first_capital/first_upper_then_lower_case_formatter.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/no_whitespaces/forbidden_whitespaces_formatter.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/first_capital/first_capital_formatter.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/no_whitespaces/no_whitespaces_formatter.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/uppercase/uppercase_formatter.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/vat/vat_formatter.dart';
 

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class DateTimeRangeTextEditingValue {
+class DateTimeRangeTextEditingValue extends TextEditingValue {
   final DateTimeTextEditingValue start;
   final DateTimeTextEditingValue end;
 
   const DateTimeRangeTextEditingValue(this.start, this.end);
 }
 
-class DateTimeTextEditingValue {
+class DateTimeTextEditingValue extends TextEditingValue {
   final TextEditingValue dateEditingValue;
   final TextEditingValue timeEditingValue;
 
