@@ -55,8 +55,8 @@ abstract class FormManager extends ChangeNotifier {
   void _setFormManagerInDescriptors() {
     for (FormatterValidatorChain? fv in _formatterValidatorChainMap.values) {
       if (fv == null) continue;
-      if (fv is DateTimeSeparateFieldsFormatterValidator) {
-        (fv as DateTimeSeparateFieldsFormatterValidator).formManager = this;
+      if (fv is DateTimeSeparateFieldFormatterValidator) {
+        (fv as DateTimeSeparateFieldFormatterValidator).formManager = this;
       };
     }
   }
@@ -73,7 +73,7 @@ abstract class FormManager extends ChangeNotifier {
     _updateFieldData(
       keyString,
       isValidating: false,
-      fieldContent: FieldContent.of(fieldDataMap[keyString]!.initialInput),
+      fieldContent: FieldContent.transient(fieldDataMap[keyString]!.initialInput),
     );
   }
 
@@ -164,7 +164,7 @@ abstract class FormManager extends ChangeNotifier {
   }
 
   FieldContent<I, V> formatAndValidateQuietly<I extends Object, V extends Object>(
-      BricksLocalizations localizations, String keyString, dynamic input, dynamic defaultValue) {
+      BricksLocalizations localizations, String keyString, I? input, V? defaultValue) {
     FieldContent<I, V> fieldContent;
     FormatterValidatorChain<I, V>? formatterValidatorChain = getFormatterValidatorChain<I, V>(keyString);
 

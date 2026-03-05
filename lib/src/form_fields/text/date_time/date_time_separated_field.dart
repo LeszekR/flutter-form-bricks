@@ -19,9 +19,9 @@ import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_va
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/time_field.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
-class DateTimeSeparateFieldsDescriptor
-    extends FormFieldDescriptor<DateTimeTextEditingValue, DateTime, DateTimeSeparateFields> {
-  DateTimeSeparateFieldsDescriptor({
+class DateTimeSeparateFieldDescriptor
+    extends FormFieldDescriptor<DateTimeTextEditingValue, DateTime, DateTimeSeparatedField> {
+  DateTimeSeparateFieldDescriptor({
     required super.keyString,
     required DateTimeRequiredFields requiredFields,
     super.initialInput,
@@ -33,7 +33,7 @@ class DateTimeSeparateFieldsDescriptor
     CurrentDate? currentDate,
   }) : super(
           defaultFormatterValidatorsMaker: () => [
-            DateTimeSeparateFieldsFormatterValidator(
+            DateTimeSeparateFieldFormatterValidator(
               requiredFields,
               dateTimeUtils ?? DateTimeUtils(),
               currentDate ?? CurrentDate(),
@@ -54,11 +54,11 @@ class DateTimeSeparateFieldsDescriptor
   }
 }
 
-class DateTimeSeparateFields extends TextFieldBaseBrick<DateTimeTextEditingValue, DateTime> {
+class DateTimeSeparatedField extends TextFieldBaseBrick<DateTimeTextEditingValue, DateTime> {
   final double? widthDate;
   final double? widthTime;
 
-  DateTimeSeparateFields({
+  DateTimeSeparatedField({
     // FormFieldBrick
     required super.keyString,
     required super.formManager,
@@ -138,13 +138,39 @@ class DateTimeSeparateFields extends TextFieldBaseBrick<DateTimeTextEditingValue
         );
 
   @override
-  DateTimeSeparateFieldsState createState() => DateTimeSeparateFieldsState();
+  DateTimeSeparatedFieldState createState() => DateTimeSeparatedFieldState();
 }
 
-class DateTimeSeparateFieldsState
-    extends TextFieldBaseStateBrick<DateTimeTextEditingValue, DateTime, DateTimeSeparateFields> {
+class DateTimeSeparatedFieldState
+    extends TextFieldBaseStateBrick<DateTimeTextEditingValue, DateTime, DateTimeSeparatedField> {
+  //
+  TextEditingController dateController = TextEditingController();
+  TextEditingController timeController = TextEditingController();
+
   @override
   DateTime? get defaultValue => null;
+
+  @override
+  DateTimeTextEditingValue? getInput() {
+    return DateTimeTextEditingValue(dateController.value, timeController.value);
+  }
+
+  @override
+  void setInput(DateTimeTextEditingValue? formattedValue) {
+    dateController.value = formattedValue == null ? TextEditingValue.empty : formattedValue.dateEditingValue!;
+    timeController.value = formattedValue == null ? TextEditingValue.empty : formattedValue.timeEditingValue!;
+  }
+
+  void _onChanged(TextEditingValue? _) {
+    if (widget.onChanged !=  null) widget.onChanged!(getInput()!);
+  }
+
+  @override
+  void dispose() {
+    dateController.dispose();
+    timeController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -236,8 +262,7 @@ class DateTimeSeparateFieldsState
       showCursor: widget.showCursor,
       enableSuggestions: widget.enableSuggestions,
       expands: widget.expands,
-      // TU PRZERWAŁEM - finish abstracting TextFieldBaseBrick
-      onChanged: widget.onChanged,
+      onChanged: _onChanged,
       onEditingComplete: widget.onEditingComplete,
       onSubmitted: widget.onSubmitted,
       onAppPrivateCommand: widget.onAppPrivateCommand,
@@ -273,7 +298,6 @@ class DateTimeSeparateFieldsState
       hintLocales: widget.hintLocales,
     );
   }
-
   TimeField _makeTimeField() {
     return TimeField(
       // FormFieldBrick
@@ -306,7 +330,7 @@ class DateTimeSeparateFieldsState
       showCursor: widget.showCursor,
       enableSuggestions: widget.enableSuggestions,
       expands: widget.expands,
-      onChanged: widget.onChanged,
+      onChanged: _onChanged,
       onEditingComplete: widget.onEditingComplete,
       onSubmitted: widget.onSubmitted,
       onAppPrivateCommand: widget.onAppPrivateCommand,

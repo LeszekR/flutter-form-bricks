@@ -28,7 +28,7 @@ class TimeFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime
         );
 }
 
-class TimeField extends TextFieldBrick<TextEditingValue, DateTime> {
+class TimeField extends TextFieldBrick<DateTime> {
   TimeField({
     super.key,
     //
@@ -128,7 +128,7 @@ class TimeField extends TextFieldBrick<TextEditingValue, DateTime> {
   TimeFieldState createState() => TimeFieldState();
 }
 
-class TimeFieldState extends TextFieldStateBrick<TextEditingValue, DateTime, TimeField> {
+class TimeFieldState extends TextFieldStateBrick<DateTime, TimeField> {
   @override
   DateTime? get defaultValue => null;
 }

@@ -8,8 +8,8 @@ class DateTimeRangeTextEditingValue extends TextEditingValue {
 }
 
 class DateTimeTextEditingValue extends TextEditingValue {
-  final TextEditingValue dateEditingValue;
-  final TextEditingValue timeEditingValue;
+  final TextEditingValue? dateEditingValue;
+  final TextEditingValue? timeEditingValue;
 
   const DateTimeTextEditingValue(this.dateEditingValue, this.timeEditingValue);
 }

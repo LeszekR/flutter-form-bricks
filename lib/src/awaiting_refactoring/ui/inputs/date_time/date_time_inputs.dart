@@ -15,7 +15,7 @@ import '../../shortcuts/keyboard_shortcuts.dart';
 class DateTimeInputs {
   DateTimeInputs._();
 
-  static Widget dateTimeSeparateFields({
+  static Widget DateTimeSeparateField({
     required BuildContext context,
     required BricksLocalizations localizations,
     required String keyString,
@@ -299,7 +299,7 @@ class DateTimeInputs {
 
     // var rangeController = RangeController(rangeId);
 
-    final rangeStart = dateTimeSeparateFields(
+    final rangeStart = DateTimeSeparateField(
       context: context,
       localizations: localizations,
       keyString: DateTimeRangeFormatterValidator.makeRangeKeyStringStart(rangeKeyString),
@@ -313,7 +313,7 @@ class DateTimeInputs {
       currentDate: currentDate,
       // rangeController: rangeController,
     );
-    final rangeEnd = dateTimeSeparateFields(
+    final rangeEnd = DateTimeSeparateField(
       context: context,
       localizations: localizations,
       keyString: DateTimeRangeFormatterValidator.makeRangeKeyStringEnd(rangeKeyString),

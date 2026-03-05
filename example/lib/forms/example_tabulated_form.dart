@@ -283,7 +283,7 @@
 //         context,
 //       ),
 //       appSize.spacerBoxVerticalSmall,
-//       DateTimeInputs.dateTimeSeparateFields(
+//       DateTimeInputs.DateTimeSeparateField(
 //         keyString: "date_time_1",
 //         label: "Data i Czas",
 //         labelPosition: LabelPosition.topLeft,

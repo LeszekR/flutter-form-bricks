@@ -243,7 +243,7 @@ class BricksLocalizationsPl extends BricksLocalizations {
 
   @override
   String dateErrorTooFarForward(String maxDateParam) {
-    return 'Data nie może być późniejsza niż $maxDateParam';
+    return 'Data i czas nie mogą być późniejsze niż $maxDateParam';
   }
 
   @override
@@ -293,10 +293,10 @@ class BricksLocalizationsPl extends BricksLocalizations {
   String get datetimeStringErrorTooManySpaces => 'Za dużo spacji';
 
   @override
-  String get dateTimeSeparateFieldsNoTimeForLimitValidation =>
-      'Podaj czas aby można było sprawdzić czy mieści się w dozwolonym przedziale';
+  String get dateTimeSeparatedFieldNoTimeForLimitValidation =>
+      'Podaj poprawny czas aby można było sprawdzić czy mieści się w dozwolonym przedziale';
 
   @override
-  String get dateTimeSeparateFieldsNoDateForLimitValidation =>
-      'Podaj datę aby można było sprawdzić czy mieści się w dozwolonym przedziale';
+  String get dateTimeSeparatedFieldNoDateForLimitValidation =>
+      'Podaj poprawną datę aby można było sprawdzić czy mieści się w dozwolonym przedziale';
 }

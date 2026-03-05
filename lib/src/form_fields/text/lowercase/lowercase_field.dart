@@ -20,7 +20,7 @@ class LowerCaseFieldDescriptor extends FormFieldDescriptor<TextEditingValue, Str
         );
 }
 
-class LowerCaseField extends TextFieldBrick<TextEditingValue, String> {
+class LowerCaseField extends TextFieldBrick<String> {
   LowerCaseField({
     super.key,
     //
@@ -110,7 +110,7 @@ class LowerCaseField extends TextFieldBrick<TextEditingValue, String> {
   LowerCaseFieldState createState() => LowerCaseFieldState();
 }
 
-class LowerCaseFieldState extends TextFieldStateBrick<TextEditingValue, String, LowerCaseField> {
+class LowerCaseFieldState extends TextFieldStateBrick<String, LowerCaseField> {
   @override
   String? get defaultValue => controller.text;
 }

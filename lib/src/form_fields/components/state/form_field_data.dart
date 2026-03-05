@@ -27,7 +27,7 @@ final class FormFieldData<I extends Object, V extends Object, F extends FormFiel
         // inputRuntimeType: I,
         // valueRuntimeType: V,
         fieldType: F,
-        fieldContent: FieldContent.of(initialInput),
+        fieldContent: FieldContent.transient(initialInput),
       );
 
   FormFieldData<I, V, F> copyWith({

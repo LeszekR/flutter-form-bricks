@@ -566,17 +566,17 @@ abstract class BricksLocalizations {
   /// **'Too many spaces'**
   String get datetimeStringErrorTooManySpaces;
 
-  /// No description provided for @dateTimeSeparateFieldsNoTimeForLimitValidation.
+  /// No description provided for @dateTimeSeparatedFieldNoTimeForLimitValidation.
   ///
   /// In en, this message translates to:
-  /// **'Enter time to check if it fits in allowed range'**
-  String get dateTimeSeparateFieldsNoTimeForLimitValidation;
+  /// **'Enter correct time to check if it fits in allowed range'**
+  String get dateTimeSeparatedFieldNoTimeForLimitValidation;
 
-  /// No description provided for @dateTimeSeparateFieldsNoDateForLimitValidation.
+  /// No description provided for @dateTimeSeparatedFieldNoDateForLimitValidation.
   ///
   /// In en, this message translates to:
-  /// **'Enter date to check if it fits in allowed range'**
-  String get dateTimeSeparateFieldsNoDateForLimitValidation;
+  /// **'Enter correct date to check if it fits in allowed range'**
+  String get dateTimeSeparatedFieldNoDateForLimitValidation;
 }
 
 class _BricksLocalizationsDelegate

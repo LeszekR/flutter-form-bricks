@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/data_time_text_editing_value.dart';
 
 /// Represents the result of a formatting and validation operation performed by a `FormatterValidator`.
 ///
@@ -33,21 +34,21 @@ class FieldContent<I extends Object, V extends Object> {
   final String? error;
 
   /// Creates `fieldContent`.
-  const FieldContent.of(this.input, [this.value, this.isValid, this.error]);
+  const FieldContent._of(this.input, [this.value, this.isValid, this.error]);
 
   /// Only to be used as **temporary result** carrying transient state of the formatted input in formatting-validating
   /// procedure (e.g. partly formatted date string).
   /// **Never** to be used as a return value of `FormatterValidator`.
-  const FieldContent.transient(I? input) : this.of(input, null, null, null);
+  const FieldContent.transient(I? input) : this._of(input, null, null, null);
 
   /// Use in formatting-validating procedure when the result is valid.
-  const FieldContent.ok(I? input, V? value) : this.of(input, value, true, null);
+  const FieldContent.ok(I? input, V? value) : this._of(input, value, true, null);
 
   /// Use in formatting-validating procedure when the result is invalid.
-  const FieldContent.err(I? input, String? error) : this.of(input, null, false, error);
+  const FieldContent.err(I? input, String? error) : this._of(input, null, false, error);
 
   /// Use wherever no result should be returned as a step of the multi-step format-validating procedure.
-  const FieldContent.empty() : this.of(null, null, false, null);
+  const FieldContent.empty() : this._of(null, null, false, null);
 
   // TODO verify, refactor? - should use of named constructors vs copyWith - ?
   FieldContent<I, V> copyWith({
@@ -56,7 +57,7 @@ class FieldContent<I extends Object, V extends Object> {
     bool? isValid,
     String? error,
   }) {
-    return FieldContent.of(
+    return FieldContent._of(
       input ?? this.input,
       value ?? this.value,
       isValid ?? this.isValid,
@@ -92,6 +93,11 @@ class FieldContent<I extends Object, V extends Object> {
 ///
 /// Usage - format-validation of: `DateTimeFieldBrick`.
 typedef DateTimeFieldContent = FieldContent<TextEditingValue, DateTime>;
+
+/// Formatting-validation procedure return type for input of type `DateTime`.
+///
+/// Usage - format-validation of: `DateTimeFieldBrick`.
+typedef DateTimeSeparatedFieldContent = FieldContent<DateTimeTextEditingValue, DateTime>;
 
 /// Formatting-validation procedure return type for input of type `PlainTextField`.
 ///

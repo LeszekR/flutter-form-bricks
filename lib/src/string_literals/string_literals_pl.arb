@@ -164,6 +164,6 @@
   "datetimeStringErrorNoSpace": "Data musi być oddzielona spacją od godziny",
   "datetimeStringErrorTooManySpaces": "Za dużo spacji",
 
-  "dateTimeSeparateFieldsNoTimeForLimitValidation": "Podaj czas aby można było sprawdzić czy mieści się w dozwolonym przedziale",
-  "dateTimeSeparateFieldsNoDateForLimitValidation": "Podaj datę aby można było sprawdzić czy mieści się w dozwolonym przedziale"
+  "dateTimeSeparatedFieldNoTimeForLimitValidation": "Podaj poprawny czas aby można było sprawdzić czy mieści się w dozwolonym przedziale",
+  "dateTimeSeparatedFieldNoDateForLimitValidation": "Podaj poprawną datę aby można było sprawdzić czy mieści się w dozwolonym przedziale"
 }

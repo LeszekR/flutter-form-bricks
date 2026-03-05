@@ -29,7 +29,7 @@ class MockFormatterValidatorChain extends FormatterValidatorChainFullRun<TextEdi
     if (shouldRunChain) {
       return super.runChain(localizations, keyString, inputValue);
     }
-    return TextFieldContent.of(
+    return TextFieldContent._of(
       TextEditingValue(text: stringInput1),
       stringInput1,
       mockError == null,

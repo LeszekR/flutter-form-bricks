@@ -3,7 +3,6 @@ import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/states_controller/update_once_widget_states_controller.dart';
@@ -11,7 +10,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/base/state_colored_icon
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_base_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_bordered_box.dart';
 
-abstract class TextFieldBrick<I extends Object, V extends Object> extends TextFieldBaseBrick<TextEditingValue, V> {
+abstract class TextFieldBrick<V extends Object> extends TextFieldBaseBrick<TextEditingValue, V> {
   final double? width;
 
   TextFieldBrick({
@@ -121,27 +120,29 @@ abstract class TextFieldBrick<I extends Object, V extends Object> extends TextFi
   });
 }
 
-abstract class TextFieldStateBrick<I extends Object, V extends Object, B extends TextFieldBrick<I, V>>
-    extends FormFieldStateBrick<TextEditingValue, V, B> {
+abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>>
+    extends TextFieldBaseStateBrick<TextEditingValue, V, B> {
   late final TextEditingController controller;
 
   @override
-  void initState() {
-    super.initState();
+  TextEditingValue? getInput() => controller.value;
 
+  @override
+  void setInput(TextEditingValue? formattedValue) => controller.value = formattedValue ?? TextEditingValue.empty;
+
+  @override
+  void initState() {
     // TODO this strips the field from flutter's restoration - implement restoration pattern as in comments at the end of this file
     controller = widget.controller ?? TextEditingController();
-    _fillInitialInput(formManager.getInitialInput(keyString));
+    setInput(formManager.getInitialInput(keyString));
+
+    super.initState();
   }
 
   @override
   void dispose() {
     controller.dispose();
     super.dispose();
-  }
-
-  void _fillInitialInput(TextEditingValue? initialInput) {
-    controller.value = initialInput == null ? TextEditingValue.empty : initialInput;
   }
 
   @override
@@ -241,8 +242,8 @@ abstract class TextFieldStateBrick<I extends Object, V extends Object, B extends
       expands: widget.expands,
       maxLength: widget.maxLength,
       maxLengthEnforcement: widget.maxLengthEnforcement,
-      onChanged: _onChanged,
-      onEditingComplete: _onEditingComplete,
+      onChanged: (_) => onInputChanged(),
+      onEditingComplete: onEditingComplete,
       onSubmitted: widget.onSubmitted,
       onAppPrivateCommand: widget.onAppPrivateCommand,
       inputFormatters: widget.inputFormatters,
@@ -282,9 +283,7 @@ abstract class TextFieldStateBrick<I extends Object, V extends Object, B extends
       contentInsertionConfiguration: widget.contentInsertionConfiguration,
       clipBehavior: widget.clipBehavior,
       restorationId: widget.restorationId,
-
-// Deprecated: scribbleEnabled - not used
-
+      // Deprecated: scribbleEnabled - not used
       stylusHandwritingEnabled: widget.stylusHandwritingEnabled,
       enableIMEPersonalizedLearning: widget.enableIMEPersonalizedLearning,
       contextMenuBuilder: widget.contextMenuBuilder,
@@ -333,205 +332,4 @@ abstract class TextFieldStateBrick<I extends Object, V extends Object, B extends
       fillColor: makeColor(),
     );
   }
-
-  void _onChanged(_) {
-    onInputChanged(controller.value, defaultValue);
-  }
-
-  var _skipOnChanged = false;
-
-  @mustCallSuper
-  @override
-  TextEditingValue? onInputChanged(TextEditingValue? input, V? defaultValue) {
-    // Stop infinite call here at changing the field value to trimmed one
-    if (_skipOnChanged) return null;
-
-    // Here FormManager:
-    // - validates the input and shows error message
-    // - formats the input and returns formatted input text in TextEditingValue
-    // - saves results of format-validation in FormData -> FormFieldData -> FieldContent
-    TextEditingValue? formattedInput = super.onInputChanged(input, defaultValue);
-
-    // draw formatted input in UI
-    if (widget.validateMode == ValidateModeBrick.onChange) _updateUi(formattedInput);
-
-    // Run custom onChanged callback if provided
-    widget.onChanged?.call(input!);
-
-    return null;
-  }
-
-  @mustCallSuper
-  void _onEditingComplete() {
-    // Here FormManager:
-    // - validates the input and shows error message
-    // - formats the input and returns formatted input text in TextEditingValue
-    // - saves results of format-validation in FormData -> FormFieldData -> FieldContent
-    TextEditingValue? formattedValue = super.onInputChanged(controller.value, defaultValue);
-
-    // draw formatted input in UI
-    if (widget.validateMode == ValidateModeBrick.onEditingComplete) _updateUi(formattedValue);
-
-    // Run custom onEditingComplete callback if provided
-    widget.onEditingComplete?.call();
-  }
-
-  void _updateUi(TextEditingValue? formattedValue) {
-    _skipOnChanged = true;
-    setState(() => controller.value = formattedValue ?? TextEditingValue.empty);
-    _skipOnChanged = false;
-  }
 }
-
-// RESTORATION PATTERN
-//===========================
-// // lib/src/form_fields/text/text_input_base/text_field_state_brick.dart
-// import 'package:flutter/material.dart';
-//
-// /// Pattern: state-restorable controller for TextFieldBrick.
-// /// - Uses RestorableTextEditingController when widget.controller is NOT injected.
-// /// - If widget.controller is injected, we use it directly (non-restorable, external ownership).
-// /// - On first init (or restore), we hydrate from FormManager initial input.
-// /// - On changes, we push TextEditingValue back to FormManager.
-// ///
-// /// Assumptions:
-// /// - TextFieldBrick has: keyString, formManager, controller?, restorationId? (optional)
-// /// - formManager exposes: getInitialInput(keyString) -> String?
-// /// - formManager exposes: onTextEditingValueChanged(keyString, TextEditingValue)
-// mixin _FormManagerTextSync {
-//   void pushToManager(String keyString, dynamic formManager, TextEditingValue v) {
-//     // Adapt to your API:
-//     // e.g. formManager.onFieldChangedTextValue(keyString, v);
-//     formManager.onTextEditingValueChanged(keyString, v);
-//   }
-// }
-//
-// class TextFieldBrick extends StatefulWidget {
-//   final String keyString;
-//   final dynamic formManager;
-//
-//   /// If provided, caller owns lifecycle and restoration is caller’s responsibility.
-//   final TextEditingController? controller;
-//
-//   /// Optional: enables restoration for this field when using internal controller.
-//   /// If null, restoration still works if your State uses restorationId in the widget tree,
-//   /// but having a stable id per-field is recommended.
-//   final String? restorationId;
-//
-//   const TextFieldBrick({
-//     super.key,
-//     required this.keyString,
-//     required this.formManager,
-//     this.controller,
-//     this.restorationId,
-//   });
-//
-//   @override
-//   State<TextFieldBrick> createState() => _TextFieldBrickState();
-// }
-//
-// class _TextFieldBrickState extends State<TextFieldBrick> with RestorationMixin, _FormManagerTextSync {
-//   // Only used when widget.controller == null.
-//   final RestorableTextEditingController _restorableController = RestorableTextEditingController();
-//
-//   // Cached listener so we can remove it safely.
-//   VoidCallback? _listener;
-//
-//   // Whether we hydrated from manager at least once (avoid reapplying after user types).
-//   bool _didHydrate = false;
-//
-//   TextEditingController get _controller =>
-//       widget.controller ?? _restorableController.value;
-//
-//   @override
-//   String? get restorationId {
-//     // Tie to widget-provided id if given; else leave null (no restoration for this subtree).
-//     // In a form, you usually want something stable like:
-//     //   '${widget.formManager.formId}.${widget.keyString}'
-//     return widget.restorationId;
-//   }
-//
-//   @override
-//   void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
-//     if (widget.controller == null && restorationId != null) {
-//       registerForRestoration(_restorableController, 'text_controller');
-//     }
-//     // After restoration attaches, hydrate initial input if needed.
-//     _hydrateInitialIfNeeded();
-//   }
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     _attachListener();
-//     // If restoration is disabled (restorationId == null) we still want to hydrate once.
-//     WidgetsBinding.instance.addPostFrameCallback((_) => _hydrateInitialIfNeeded());
-//   }
-//
-//   @override
-//   void didUpdateWidget(covariant TextFieldBrick oldWidget) {
-//     super.didUpdateWidget(oldWidget);
-//     if (oldWidget.controller != widget.controller) {
-//       _detachListener(oldWidget.controller ?? _restorableController.value);
-//       _attachListener();
-//       // On controller swap, re-hydrate if we haven't yet.
-//       _didHydrate = false;
-//       WidgetsBinding.instance.addPostFrameCallback((_) => _hydrateInitialIfNeeded());
-//     }
-//   }
-//
-//   void _attachListener() {
-//     final c = _controller;
-//     _listener = () => pushToManager(widget.keyString, widget.formManager, c.value);
-//     c.addListener(_listener!);
-//   }
-//
-//   void _detachListener(TextEditingController c) {
-//     final l = _listener;
-//     if (l != null) c.removeListener(l);
-//     _listener = null;
-//   }
-//
-//   void _hydrateInitialIfNeeded() {
-//     if (!mounted || _didHydrate) return;
-//
-//     final initial = widget.formManager.getInitialInput(widget.keyString) as String?;
-//     if (initial == null) {
-//       _didHydrate = true;
-//       return;
-//     }
-//
-//     final c = _controller;
-//
-//     // Only set if controller is "empty" to avoid wiping restored/user state.
-//     if (c.text.isEmpty) {
-//       c.value = TextEditingValue(
-//         text: initial,
-//         selection: TextSelection.collapsed(offset: initial.length),
-//         composing: TextRange.empty,
-//       );
-//     }
-//
-//     _didHydrate = true;
-//   }
-//
-//   @override
-//   void dispose() {
-//     _detachListener(_controller);
-//     // Only dispose the restorable controller; injected controller belongs to caller.
-//     _restorableController.dispose();
-//     super.dispose();
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return TextField(
-//       controller: _controller, // IMPORTANT: prevents TextField from creating its own
-//       restorationId: widget.restorationId, // optional; can be null
-//       onChanged: (_) {
-//         // Optional: if you already listen to controller, you may not need this.
-//         // Keeping it empty avoids double updates.
-//       },
-//     );
-//   }
-// }

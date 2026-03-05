@@ -11,7 +11,7 @@ import '../../../../../tools/test_utils.dart';
 import 'tools/dateTimeRange_test_utils.dart';
 
 // TU PRZERWAŁEM - finish date, time, date time range fields and then use DateTimeRange field here
-//  - refactor DateTimeSeparateFieldsFormatterValidator formatter-validator to DateTimeRangeFormatterValidator style - 2-step validation
+//  - refactor DateTimeSeparateFieldFormatterValidator formatter-validator to DateTimeRangeFormatterValidator style - 2-step validation
 //  - test DateTimeSepareateFieldsFormatterValidator
 //  - create DateTimeRangeField
 //  - use DateTimeRangeField here in test

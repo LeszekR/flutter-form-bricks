@@ -19,6 +19,6 @@ class MockTextFormatterValidator extends FormatterValidator<TextEditingValue, St
     FieldContent<TextEditingValue, String> fieldContent,
   ) {
     bool isValid = mockError == null ? true : false;
-    return FieldContent.of(returnInputTxEdVal, returnInputTxEdVal?.text, isValid, mockError);
+    return FieldContent._of(returnInputTxEdVal, returnInputTxEdVal?.text, isValid, mockError);
   }
 }

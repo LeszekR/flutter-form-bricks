@@ -15,7 +15,7 @@ class PlainTextFieldDescriptor extends FormFieldDescriptor<TextEditingValue, Str
   });
 }
 
-class PlainTextField extends TextFieldBrick<TextEditingValue, String> {
+class PlainTextField extends TextFieldBrick<String> {
   PlainTextField({
     super.key,
     //
@@ -106,7 +106,7 @@ class PlainTextField extends TextFieldBrick<TextEditingValue, String> {
   PlainTextFieldStateBrick createState() => PlainTextFieldStateBrick();
 }
 
-class PlainTextFieldStateBrick extends TextFieldStateBrick<TextEditingValue, String, PlainTextField> {
+class PlainTextFieldStateBrick extends TextFieldStateBrick<String, PlainTextField> {
   @override
   String? get defaultValue => controller.text;
 }

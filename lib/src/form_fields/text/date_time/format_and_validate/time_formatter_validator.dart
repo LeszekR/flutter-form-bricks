@@ -61,7 +61,7 @@ class TimeFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
 
   DateTimeFieldContent makeTimeStringNoDelimiters(BricksLocalizations localizations, String text) {
     if (text.length < 3)
-      return DateTimeFieldContent.err(toTextEditingValue(text), localizations.timeStringErrorTooFewDigits);
+      return DateTimeFieldContent.err(text.txtEditVal(), localizations.timeStringErrorTooFewDigits);
 
     String formattedResult = '';
     String element = '';
@@ -109,7 +109,7 @@ class TimeFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
 
     if (errHours.isNotEmpty) errMsg = _dateTimeUtils.addErrMsg(errMsg, connector, errHours);
     if (errMinutes.isNotEmpty) errMsg = _dateTimeUtils.addErrMsg(errMsg, connector, errMinutes);
-    if (errMsg.isNotEmpty) return DateTimeFieldContent.err(toTextEditingValue(timeString), errMsg);
+    if (errMsg.isNotEmpty) return DateTimeFieldContent.err(timeString.txtEditVal(), errMsg);
 
     return DateTimeFieldContent.transient(timeString.txtEditVal());
   }
@@ -157,7 +157,7 @@ class TimeFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
     if (errHours.isNotEmpty) errMsg = _dateTimeUtils.addErrMsg(errMsg, errConnector, errHours);
     if (errMinutes.isNotEmpty) errMsg = _dateTimeUtils.addErrMsg(errMsg, errConnector, errMinutes);
 
-    if (errMsg.isNotEmpty) return DateTimeFieldContent.err(toTextEditingValue(timeString), errMsg);
+    if (errMsg.isNotEmpty) return DateTimeFieldContent.err(timeString.txtEditVal(), errMsg);
     return DateTimeFieldContent.transient(timeString.txtEditVal());
   }
 
@@ -198,7 +198,7 @@ class TimeFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
         }
       }
     }
-    return DateTimeFieldContent.ok(toTextEditingValue(timeString), parsedTime);
+    return DateTimeFieldContent.ok(timeString.txtEditVal(), parsedTime);
   }
 
   DateTimeFieldContent _makeTimeFCFromDateTimeFC(DateTimeFieldContent content) {

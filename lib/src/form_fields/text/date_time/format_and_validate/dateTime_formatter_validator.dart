@@ -32,9 +32,9 @@ class DateTimeFormatterValidator extends FormatterValidator<TextEditingValue, Da
 
     var nSpaces = RegExp(' ').allMatches(textTrimmed).length;
     if (nSpaces == 0)
-      return DateTimeFieldContent.err(toTextEditingValue(textTrimmed), localizations.datetimeStringErrorNoSpace);
+      return DateTimeFieldContent.err(textTrimmed.txtEditVal(), localizations.datetimeStringErrorNoSpace);
     if (nSpaces > 1)
-      return DateTimeFieldContent.err(toTextEditingValue(textTrimmed), localizations.datetimeStringErrorTooManySpaces);
+      return DateTimeFieldContent.err(textTrimmed.txtEditVal(), localizations.datetimeStringErrorTooManySpaces);
 
     var elementsList = textTrimmed.split(RegExp(' '));
     DateTimeFieldContent dateFieldContent = DateTimeFieldContent.transient(elementsList[0].txtEditVal());
@@ -52,12 +52,12 @@ class DateTimeFormatterValidator extends FormatterValidator<TextEditingValue, Da
     // valid
     if (isStringValidDate && isStringValidTime) {
       DateTime dateTime = DateTime.parse(parsedString);
-      return DateTimeFieldContent.ok(toTextEditingValue(parsedString), dateTime);
+      return DateTimeFieldContent.ok(parsedString.txtEditVal(), dateTime);
     }
 
     // invalid
     var connector = (!isStringValidDate && !isStringValidTime) ? '\n' : '';
     var errorMessage = '$errorMessageDate$connector$errorMessageTime';
-    return DateTimeFieldContent.err(toTextEditingValue(parsedString), errorMessage);
+    return DateTimeFieldContent.err(parsedString.txtEditVal(), errorMessage);
   }
 }

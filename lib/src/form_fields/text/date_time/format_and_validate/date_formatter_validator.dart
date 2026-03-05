@@ -134,7 +134,7 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
       }
     }
 
-    if (errMsg.isNotEmpty) return DateTimeFieldContent.err(toTextEditingValue(dateString), errMsg);
+    if (errMsg.isNotEmpty) return DateTimeFieldContent.err(dateString.txtEditVal(), errMsg);
     return DateTimeFieldContent.transient(dateString.txtEditVal());
   }
 
@@ -222,9 +222,9 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
 
     if (errLimit.isNotEmpty) errMsg = _dateTimeUtils.addErrMsg(errMsg, connector, errLimit);
 
-    if (errMsg.isNotEmpty) return DateTimeFieldContent.err(toTextEditingValue(dateString), errMsg);
+    if (errMsg.isNotEmpty) return DateTimeFieldContent.err(dateString.txtEditVal(), errMsg);
 
-    return DateTimeFieldContent.ok(toTextEditingValue(dateString), parsedDate);
+    return DateTimeFieldContent.ok(dateString.txtEditVal(), parsedDate);
   }
 
   // DateTimeFieldContent _makeDateFCFromDateTimeFC(DateTimeFieldContent content) {

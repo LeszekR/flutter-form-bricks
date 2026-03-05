@@ -117,19 +117,19 @@ class DateTimeUtils {
     return (errMsg.isEmpty ? '' : (errMsg + connector)) + nextErrorMessage;
   }
 
-   DateTime fromDateTime(DateTime dt) {
+  DateTime fromDateTime(DateTime dt) {
     return DateTime(dt.year, dt.month, dt.day);
   }
 
-   DateTime dateFromString(String stringVal) {
+  DateTime dateFromString(String stringVal) {
     return dateFormat.parseStrict(stringVal);
   }
 
-   DateTime timeMinutePrecisionFromString(String stringVal) {
+  DateTime timeMinutePrecisionFromString(String stringVal) {
     return timeFormatMinutePrecision.parseStrict(stringVal);
   }
 
-   DateTime timeSecondPrecisionFromString(String stringVal) {
+  DateTime timeSecondPrecisionFromString(String stringVal) {
     return timeFormatSecondPrecision.parseStrict(stringVal);
   }
 
@@ -175,11 +175,13 @@ class DateTimeUtils {
   bool isValid(FieldContent dateContent) {
     return dateContent.isValid ?? true;
   }
-}
 
-TextEditingValue toTextEditingValue(String dateString) {
-  return TextEditingValue(
-    text: dateString,
-    selection: TextSelection(baseOffset: dateString.length, extentOffset: 0),
-  );
+  DateTime mergeDateAndTime(DateTime date, DateTime time) => DateTime(
+        date.year,
+        date.month,
+        date.day,
+        time.hour,
+        time.minute,
+        time.second,
+      );
 }

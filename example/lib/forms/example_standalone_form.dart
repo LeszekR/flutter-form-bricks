@@ -305,7 +305,7 @@
 //
 //   Container _createDateHourPart() {
 //     final dates = FormUtils.verticalFormGroup([
-//       DateTimeInputs.dateTimeSeparateFields(
+//       DateTimeInputs.DateTimeSeparateField(
 //           keyString: "date_time_1",
 //           label: "Data i godzina",
 //           labelPosition: LabelPosition.topLeft,
@@ -335,7 +335,7 @@
 //           context),
 //       appSize.spacerBoxVerticalSmall,
 //       //
-//       DateTimeInputs.dateTimeSeparateFields(
+//       DateTimeInputs.DateTimeSeparateField(
 //           keyString: "date_time_2",
 //           label: "Data odbioru",
 //           labelPosition: LabelPosition.topLeft,

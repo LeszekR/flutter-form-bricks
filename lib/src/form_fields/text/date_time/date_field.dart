@@ -31,7 +31,7 @@ class DateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime
         );
 }
 
-class DateField extends TextFieldBrick<TextEditingValue, DateTime> {
+class DateField extends TextFieldBrick<DateTime> {
   DateField({
     // FormFieldBrick
     required super.keyString,
@@ -129,7 +129,7 @@ class DateField extends TextFieldBrick<TextEditingValue, DateTime> {
   DateFieldState createState() => DateFieldState();
 }
 
-class DateFieldState extends TextFieldStateBrick<TextEditingValue, DateTime, DateField> {
+class DateFieldState extends TextFieldStateBrick<DateTime, DateField> {
   @override
   DateTime? get defaultValue => null;
 }

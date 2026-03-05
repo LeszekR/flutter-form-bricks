@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
@@ -8,7 +7,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/da
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/dateTimeRange_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/time_formatter_validator.dart';
 
-class DateTimeSeparateFieldsFormatterValidator extends FormatterValidator<DateTimeTextEditingValue, DateTime> {
+class DateTimeSeparateFieldFormatterValidator extends FormatterValidator<DateTimeTextEditingValue, DateTime> {
   final DateTimeRequiredFields _dateTimeRequiredFields;
   final DateTimeUtils _dateTimeUtils;
   final DateTimeLimits? _dateTimeLimits;
@@ -20,7 +19,7 @@ class DateTimeSeparateFieldsFormatterValidator extends FormatterValidator<DateTi
 
   void set formManager(FormManager formManager) => _formManager = formManager;
 
-  DateTimeSeparateFieldsFormatterValidator(
+  DateTimeSeparateFieldFormatterValidator(
     this._dateTimeRequiredFields,
     this._dateTimeUtils,
     CurrentDate currentDate, [
@@ -29,56 +28,76 @@ class DateTimeSeparateFieldsFormatterValidator extends FormatterValidator<DateTi
         timeFormatterValidator = TimeFormatterValidator(_dateTimeUtils);
 
   @override
-  FieldContent<DateTimeTextEditingValue, DateTime> run(
+  DateTimeSeparatedFieldContent run(
     BricksLocalizations localizations,
     String keyString,
-    DateTimeFieldContent fieldContent,
+    DateTimeSeparatedFieldContent fieldContent,
   ) {
-    DateTimeFieldContent result;
+    //
+    assert(
+        isDateField(keyString) || isTimeField(keyString),
+        'DateTimeSeparateFieldFormatterValidator must receive either date or time field keyString '
+        '- received "$keyString" is none of those.');
+
+    DateTimeFieldContent dateFieldContent, timeFieldContent;
+    FieldContent result;
 
     if (isDateField(keyString)) {
-      result = dateFormatterValidator.run(localizations, keyString, fieldContent);
-    } else if (isTimeField(keyString)) {
-      result = timeFormatterValidator.run(localizations, keyString, fieldContent);
+      dateFieldContent = dateFormatterValidator.run(localizations, keyString, fieldContent);
+      timeFieldContent = _formManager.getFieldContent(getTimeKeyString(keyString)) as DateTimeFieldContent;
+      result = dateFieldContent;
     } else {
-      throw ArgumentError('DateTimeSeparateFieldsFormatterValidator must receive either date or time field keyString '
-          '- received "$keyString" is none.');
+      dateFieldContent = _formManager.getFieldContent(getDateKeyString(keyString)) as DateTimeFieldContent;
+      timeFieldContent = timeFormatterValidator.run(localizations, keyString, fieldContent);
+      result = timeFieldContent;
     }
 
-    if (!result.isValid!) return DateTimeFieldContent.err(fieldContent.input, result.error);
+    // error in date or time field
+    // ------------------------------------------------------------
+    if (!result.isValid!) return DateTimeSeparatedFieldContent.err(fieldContent.input, result.error);
 
-    if (_dateTimeLimits == null) return result;
+    DateTimeTextEditingValue formattedInput = DateTimeTextEditingValue(
+      dateFieldContent.input,
+      timeFieldContent.input,
+    );
+    DateTime? date = dateFieldContent.value;
+    DateTime? time = timeFieldContent.value;
 
-    DateTime? date;
-    DateTime? time;
+    // one of the fields is empty - can't compute the value
+    // ------------------------------------------------------------
     if (isDateField(keyString)) {
-      date = result.value;
-      time = _formManager.getFieldValue(getTimeKeyString(keyString)).value;
       if (time == null) {
-        return DateTimeFieldContent.err(result.input, localizations.dateTimeSeparateFieldsNoTimeForLimitValidation);
+        return DateTimeSeparatedFieldContent.err(
+            formattedInput, localizations.dateTimeSeparatedFieldNoTimeForLimitValidation);
       }
-    } else if (isTimeField(keyString)) {
-      time = result.value;
-      date = _formManager.getFieldValue(getDateKeyString(keyString)).value;
+    } else {
       if (date == null) {
-        return DateTimeFieldContent.err(result.input, localizations.dateTimeSeparateFieldsNoDateForLimitValidation);
+        return DateTimeSeparatedFieldContent.err(
+            formattedInput, localizations.dateTimeSeparatedFieldNoDateForLimitValidation);
       }
     }
 
-    DateTime dateTime = DateTime(date!.year, date.month, date.day, time!.hour, time.minute);
+    DateTime? value = _dateTimeUtils.mergeDateAndTime(date!, time!);
 
-    DateTime minDateTime = _dateTimeLimits!.minDateTime!;
-    if (dateTime.compareTo(minDateTime) < 0) {
-      String minDateTimeString = minDateTime.toDateTimeString();
-      return DateTimeFieldContent.err(result.input, localizations.dateErrorTooFarBack(minDateTimeString));
-    }
-    DateTime maxDateTime = _dateTimeLimits!.maxDateTime!;
-    if (dateTime.compareTo(maxDateTime) > 0) {
-      String maxDateTimeString = maxDateTime.toDateTimeString();
-      return DateTimeFieldContent.err(result.input, localizations.dateErrorTooFarForward(maxDateTimeString));
+    // check the limits
+    // ------------------------------------------------------------
+    if (_dateTimeLimits != null) {
+      DateTime minDateTime = _dateTimeLimits!.minDateTime!;
+      if (value.compareTo(minDateTime) < 0) {
+        String minDateTimeString = minDateTime.toDateTimeString();
+        return DateTimeSeparatedFieldContent.err(formattedInput, localizations.dateErrorTooFarBack(minDateTimeString));
+      }
+      DateTime maxDateTime = _dateTimeLimits!.maxDateTime!;
+      if (value.compareTo(maxDateTime) > 0) {
+        String maxDateTimeString = maxDateTime.toDateTimeString();
+        return DateTimeSeparatedFieldContent.err(
+            formattedInput, localizations.dateErrorTooFarForward(maxDateTimeString));
+      }
     }
 
-    return result;
+    // no limits - return ok
+    // ------------------------------------------------------------
+    return DateTimeSeparatedFieldContent.ok(formattedInput, value);
   }
 
   bool isDateField(String keyString) => keyString.contains(DateTimeRangeFormatterValidator.date);
@@ -94,7 +113,7 @@ class DateTimeSeparateFieldsFormatterValidator extends FormatterValidator<DateTi
             keyString.replaceFirst(DateTimeRangeFormatterValidator.time, DateTimeRangeFormatterValidator.date);
       } else {
         throw ArgumentError(
-            'DateTimeSeparateFieldsFormatterValidator must receive either date or time field keyString to cache'
+            'DateTimeSeparateFieldFormatterValidator must receive either date or time field keyString to cache'
             'elements keyStrings - received "$keyString" is none ');
       }
     }
@@ -110,7 +129,7 @@ class DateTimeSeparateFieldsFormatterValidator extends FormatterValidator<DateTi
             keyString.replaceFirst(DateTimeRangeFormatterValidator.date, DateTimeRangeFormatterValidator.time);
       } else {
         throw ArgumentError(
-            'DateTimeSeparateFieldsFormatterValidator must receive either date or time field keyString to cache'
+            'DateTimeSeparateFieldFormatterValidator must receive either date or time field keyString to cache'
             'elements keyStrings - received "$keyString" is none ');
       }
     }
