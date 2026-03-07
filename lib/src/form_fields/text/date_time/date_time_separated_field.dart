@@ -13,7 +13,6 @@ import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/da
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_initial_set.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_required_fields.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/date_field.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/dateTimeRange_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_separate_fields_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/time_field.dart';
@@ -48,8 +47,8 @@ class DateTimeSeparateFieldDescriptor
     return formatterValidatorChain == null
         ? {}
         : {
-            DateTimeRangeFormatterValidator.makeDateKeyString(keyString): formatterValidatorChain,
-            DateTimeRangeFormatterValidator.makeTimeKeyString(keyString): formatterValidatorChain,
+            DateTimeUtils.makeDateKeyString(keyString): formatterValidatorChain,
+            DateTimeUtils.makeTimeKeyString(keyString): formatterValidatorChain,
           };
   }
 }
@@ -162,7 +161,7 @@ class DateTimeSeparatedFieldState
   }
 
   void _onChanged(TextEditingValue? _) {
-    if (widget.onChanged !=  null) widget.onChanged!(getInput()!);
+    if (widget.onChanged != null) widget.onChanged!(getInput()!);
   }
 
   @override
@@ -233,7 +232,7 @@ class DateTimeSeparatedFieldState
   DateField _makeDateField() {
     return DateField(
       // FormFieldBrick
-      keyString: DateTimeRangeFormatterValidator.makeDateKeyString(widget.keyString),
+      keyString: DateTimeUtils.makeDateKeyString(widget.keyString),
       formManager: widget.formManager,
       // required String label,
       // required LabelPosition labelPosition,
@@ -298,10 +297,11 @@ class DateTimeSeparatedFieldState
       hintLocales: widget.hintLocales,
     );
   }
+
   TimeField _makeTimeField() {
     return TimeField(
       // FormFieldBrick
-      keyString: DateTimeRangeFormatterValidator.makeTimeKeyString(widget.keyString),
+      keyString: DateTimeUtils.makeTimeKeyString(widget.keyString),
       formManager: widget.formManager,
       // required String label,
       // required LabelPosition labelPosition,

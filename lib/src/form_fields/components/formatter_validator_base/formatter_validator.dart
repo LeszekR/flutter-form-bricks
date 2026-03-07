@@ -8,6 +8,6 @@ abstract class FormatterValidator<I extends Object, V extends Object> {
   FieldContent<I, V> run(
     BricksLocalizations localizations,
     String keyString,
-    FieldContent<I, V> fieldContent,
+    I input,
   );
 }

@@ -9,6 +9,10 @@ bool hasDuplicateTypes(List<Object> list) {
   return false;
 }
 
-// Map<T, int> mapTypeNumber<T extends Object>(List<T> list) {
-//   return {for (T element in list) element: countTypeElements(list, element.runtimeType)};
-// }
+bool empty(String? text) {
+  return text == null || text.isEmpty;
+}
+
+bool notEmpty(String? text) {
+  return text != null && text.isNotEmpty;
+}

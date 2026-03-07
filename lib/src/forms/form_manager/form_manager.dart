@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/dateTime_multifield_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_separate_fields_formatter_validator.dart';
 
 abstract class FormManager extends ChangeNotifier {
@@ -55,8 +56,8 @@ abstract class FormManager extends ChangeNotifier {
   void _setFormManagerInDescriptors() {
     for (FormatterValidatorChain? fv in _formatterValidatorChainMap.values) {
       if (fv == null) continue;
-      if (fv is DateTimeSeparateFieldFormatterValidator) {
-        (fv as DateTimeSeparateFieldFormatterValidator).formManager = this;
+      if (fv is DateTimeMultiFieldFormatterValidator) {
+        (fv as DateTimeMultiFieldFormatterValidator).formManager = this;
       };
     }
   }

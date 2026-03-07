@@ -1,23 +1,15 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_required_fields.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/dateTime_multifield_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/time_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
+import 'package:flutter_form_bricks/src/utils/utils.dart';
 
-class DateTimeRangeFormatterValidator extends FormatterValidator<TextEditingValue, DateTime> {
-  final FormManager _formManager;
-  final DateTimeUtils _dateTimeUtils;
-  final CurrentDate _currentDate;
-  final DateTimeRangeLimits? _rangeLimits;
-
-  List<String> _keyStrings = [];
-  final Map<String, DateTimeFieldContent> _resultsCache = {};
-  final Map<String, FormatterValidator> _formatterValidators = {};
+class DateTimeRangeFormatterValidator extends DateTimeMultiFieldFormatterValidator {
+  final DateTimeRangeRequiredFields requiredFields;
+  final DateTimeRangeLimits? rangeLimits;
 
   late final String _dateStartKeyString;
   late final String _timeStartKeyString;
@@ -30,152 +22,37 @@ class DateTimeRangeFormatterValidator extends FormatterValidator<TextEditingValu
   String? _timeEnd;
 
   DateTimeRangeFormatterValidator(
-    String keyString,
-    this._formManager,
-    this._dateTimeUtils,
-    this._currentDate,
-    this._rangeLimits,
-  ) : assert(
-            !keyString.contains('~'),
-            'DateTimeRangeFormatterValidator keyString must not contain "~"'
-            ' - it is reserved for use in automatically extended range-parts\' keyStrings.') {
-    _setKeyStrings(keyString);
-    _fillDateTimeFormatterValidators();
-  }
-
-  void _setKeyStrings(String keyString) {
-    _dateStartKeyString = rangeDateStartKeyString(keyString);
-    _timeStartKeyString = rangeTimeStartKeyString(keyString);
-    _dateEndKeyString = rangeDateEndKeyString(keyString);
-    _timeEndKeyString = rangeTimeEndKeyString(keyString);
-
-    _keyStrings = [
-      _dateStartKeyString,
-      _timeStartKeyString,
-      _dateEndKeyString,
-      _timeEndKeyString,
-    ];
-  }
-
-  void _fillDateTimeFormatterValidators() {
-    _formatterValidators[_dateStartKeyString] = DateFormatterValidator(
-      _dateTimeUtils,
-      _currentDate,
-      _rangeLimits?.startDateTimeLimits,
-    );
-    _formatterValidators[_timeStartKeyString] = TimeFormatterValidator(
-      _dateTimeUtils,
-      _rangeLimits?.startDateTimeLimits,
-    );
-    _formatterValidators[_dateEndKeyString] = DateFormatterValidator(
-      _dateTimeUtils,
-      _currentDate,
-      _rangeLimits?.endDateTimeLimits,
-    );
-    _formatterValidators[_timeEndKeyString] = TimeFormatterValidator(
-      _dateTimeUtils,
-      _rangeLimits?.endDateTimeLimits,
-    );
-  }
+    super.keyString,
+    super.dateTimeUtils,
+    super.currentDate,
+    this.requiredFields, [
+    this.rangeLimits,
+  ]);
 
   @override
-  DateTimeFieldContent run(
-    BricksLocalizations localizations,
-    String keyString,
-    DateTimeFieldContent fieldContent,
-  ) {
-    //
-    _validateField(localizations, keyString, fieldContent);
-
-    _validateOtherFields(localizations, keyString);
-
-    // All four fields will be validated against range criteria  by now - checked for date/times correctness.
-    // FieldContent of the field which triggered validation here will be stored after being returned from this method.
-    // The other fields' contents will be stored in FormManager -> FormData here.
-    if (_areAllFieldsValid()) {
-      _validateRange(localizations);
-    }
-
-    // FieldContent returned here will:
-    // - be stored in FormData by FormManager
-    // - FieldContent.input (just formatted by FormatterValidator) will be entered into the field
-    return _getFieldContent(keyString)!;
-  }
-
-  void _validateField(
-    BricksLocalizations localizations,
-    String keyString,
-    DateTimeFieldContent fieldContent,
-  ) {
-    FormatterValidator fieldFormaterValidator = _formatterValidators[keyString]!;
-    DateTimeFieldContent validatedContent =
-        fieldFormaterValidator.run(localizations, keyString, fieldContent) as DateTimeFieldContent;
-
-    // FieldContent cached here will be used during validation of any DateTime fields contained in
-    // this formatter-validator by:
-    // - providing FieldContent.isValid for future validation of other fields in this DateTimeRangeField
-    // - providing FieldContent to be stored in FormManager, (including the field's input and value)
-    _cacheFieldContent(keyString, validatedContent);
-  }
-
-  void _validateOtherFields(
-    BricksLocalizations localizations,
-    String excludedKeyString,
-  ) {
-    for (String keyString in _getOtherFieldsKeyStrings(excludedKeyString)) {
-      if (_getFieldContent(keyString)?.isValid == null) {
-        _validateField(localizations, keyString, _formManager.getFieldContent(keyString) as DateTimeFieldContent);
-      }
-    }
-  }
-
-  bool _areAllFieldsValid() {
-    for (String keyString in _keyStrings) {
-      if (!_formManager.getFieldContent(keyString).isValid!) return false;
-    }
-    return true;
-  }
-
-  Iterable<String> _getOtherFieldsKeyStrings(String? excludedKeyString) {
-    var otherFields = _keyStrings.where((k) => k != excludedKeyString);
-    return otherFields;
-  }
-
-  DateTimeFieldContent? _getFieldContent(String keyString) {
-    return _formManager.getFieldContent(keyString) as DateTimeFieldContent;
-  }
-
-  void _cacheFieldContent(String keyString, DateTimeFieldContent fieldContent) {
-    _formManager.storeFieldContent(keyString, fieldContent);
-  }
-
-  void _cacheError(String keyString, text, String errorText) {
-    _cacheFieldContent(keyString, _getFieldContent(keyString)!.copyWith(error: errorText));
-  }
-
-  void _validateRange(BricksLocalizations localizations) {
+  void validateFieldsGroup(BricksLocalizations localizations) {
     _setFieldTexts();
     String errorText;
 
     // start-date absent
     // -----------------------------------------------------------------
-    if (_empty(_dateStart)) {
+    if (empty(_dateStart)) {
       errorText = localizations.rangeDateStartRequired;
-      _cacheError(_dateStartKeyString, _dateStart, errorText);
+      cacheError(_dateStartKeyString, _dateStart, errorText);
       return;
     }
 
     // start-time absent & end-date absent & end-time present
     // -----------------------------------------------------------------
-    if (_empty(_timeStart) && _empty(_dateEnd) && _notEmpty(_timeEnd)) {
+    if (empty(_timeStart) && empty(_dateEnd) && notEmpty(_timeEnd)) {
       errorText = localizations.rangeDateEndRequiredOrRemoveTimeEnd;
-      _cacheError(_timeStartKeyString, _timeStart, errorText);
-      _cacheError(_dateEndKeyString, _dateEnd, errorText);
-      _cacheError(_timeEndKeyString, _timeEnd, errorText);
+      cacheError(_timeStartKeyString, _timeStart, errorText);
+      cacheError(_dateEndKeyString, _dateEnd, errorText);
+      cacheError(_timeEndKeyString, _timeEnd, errorText);
       return;
     }
 
-    if (_notEmpty(_dateStart) && _notEmpty(_dateEnd)) {
+    if (notEmpty(_dateStart) && notEmpty(_dateEnd)) {
       DateTime dateStart = _makeDateTimeOptional(_dateStart!, _timeStart);
       DateTime dateEnd = _makeDateTimeOptional(_dateEnd!, _timeEnd);
       int dateDiffMinutes = dateEnd.difference(dateStart).inMinutes;
@@ -184,33 +61,33 @@ class DateTimeRangeFormatterValidator extends FormatterValidator<TextEditingValu
       // -----------------------------------------------------------------
       if (dateDiffMinutes < 0) {
         errorText = localizations.rangeDateStartAfterEnd;
-        _cacheError(_dateStartKeyString, _dateStart, errorText);
-        _cacheError(_dateEndKeyString, _dateEnd, errorText);
+        cacheError(_dateStartKeyString, _dateStart, errorText);
+        cacheError(_dateEndKeyString, _dateEnd, errorText);
         return;
       }
 
       // start-date present & end-date present & end-date too far from start-date
       // -----------------------------------------------------------------
-      int? maxSpanMinutes = _rangeLimits?.maxSpanMinutes;
+      int? maxSpanMinutes = rangeLimits?.maxSpanMinutes;
       if (maxSpanMinutes != null) {
         if (dateDiffMinutes > maxSpanMinutes) {
-          String maxSpanCondition = _dateTimeUtils.minutesToSpanCondition(maxSpanMinutes);
+          String maxSpanCondition = dateTimeUtils.minutesToSpanCondition(maxSpanMinutes);
           errorText = localizations.rangeDatesTooFarApart(maxSpanCondition);
-          _cacheError(_dateStartKeyString, _dateStart, errorText);
-          _cacheError(_dateEndKeyString, _dateEnd, errorText);
+          cacheError(_dateStartKeyString, _dateStart, errorText);
+          cacheError(_dateEndKeyString, _dateEnd, errorText);
           return;
         }
       }
     }
 
-    if (_notEmpty(_timeStart) && _notEmpty(_timeEnd)) {
+    if (notEmpty(_timeStart) && notEmpty(_timeEnd)) {
       // identical start and end
       if (_dateStart == _dateEnd && _timeStart == _timeEnd) {
         errorText = localizations.rangeStartSameAsEnd;
-        _cacheError(_dateStartKeyString, _dateStart, errorText);
-        _cacheError(_timeStartKeyString, _timeStart, errorText);
-        _cacheError(_dateEndKeyString, _dateEnd, errorText);
-        _cacheError(_timeEndKeyString, _timeEnd, errorText);
+        cacheError(_dateStartKeyString, _dateStart, errorText);
+        cacheError(_timeStartKeyString, _timeStart, errorText);
+        cacheError(_dateEndKeyString, _dateEnd, errorText);
+        cacheError(_timeEndKeyString, _timeEnd, errorText);
         return;
       }
 
@@ -220,33 +97,33 @@ class DateTimeRangeFormatterValidator extends FormatterValidator<TextEditingValu
       int timeDiffMinutes = timeEnd.difference(timeStart).inMinutes;
 
       // end-date absent
-      if (_notEmpty(_dateStart) && _empty(_dateEnd)) {
+      if (notEmpty(_dateStart) && empty(_dateEnd)) {
         // start-time after end-time
         // -----------------------------------------------------------------
         if (timeDiffMinutes < 0) {
           errorText = localizations.rangeTimeStartAfterEndOrAddDateEnd;
-          _cacheError(_timeStartKeyString, _timeStart, errorText);
-          _cacheError(_dateEndKeyString, _dateEnd, errorText);
-          _cacheError(_timeEndKeyString, _timeEnd, errorText);
+          cacheError(_timeStartKeyString, _timeStart, errorText);
+          cacheError(_dateEndKeyString, _dateEnd, errorText);
+          cacheError(_timeEndKeyString, _timeEnd, errorText);
           return;
         }
         // start-time less than minimum before end-time
         // -----------------------------------------------------------------
-        int? minSpanMinutes = _rangeLimits?.minSpanMinutes;
+        int? minSpanMinutes = rangeLimits?.minSpanMinutes;
         if (minSpanMinutes != null) {
           if (timeDiffMinutes < minSpanMinutes) {
-            String minSpanCondition = _dateTimeUtils.minutesToSpanCondition(minSpanMinutes);
+            String minSpanCondition = dateTimeUtils.minutesToSpanCondition(minSpanMinutes);
             errorText = localizations.rangeTimeStartEndTooCloseOrAddDateEnd(minSpanCondition);
-            _cacheError(_timeStartKeyString, _timeStart, errorText);
-            _cacheError(_dateEndKeyString, _dateEnd, errorText);
-            _cacheError(_timeEndKeyString, _timeEnd, errorText);
+            cacheError(_timeStartKeyString, _timeStart, errorText);
+            cacheError(_dateEndKeyString, _dateEnd, errorText);
+            cacheError(_timeEndKeyString, _timeEnd, errorText);
             return;
           }
         }
       }
 
       // start-date = end-date
-      if (_notEmpty(_dateEnd) && _notEmpty(_dateStart)) {
+      if (notEmpty(_dateEnd) && notEmpty(_dateStart)) {
         DateTime dateTimeStart = _makeDateTime(_dateStart!, _timeStart!);
         DateTime dateTimeEnd = _makeDateTime(_dateEnd!, _timeEnd!);
         int dateTimeDiffMinutes = dateTimeEnd.difference(dateTimeStart).inMinutes;
@@ -255,33 +132,25 @@ class DateTimeRangeFormatterValidator extends FormatterValidator<TextEditingValu
         // -----------------------------------------------------------------
         if (dateTimeDiffMinutes < 0) {
           errorText = localizations.rangeTimeStartAfterEnd;
-          _cacheError(_timeStartKeyString, _timeStart, errorText);
-          _cacheError(_timeEndKeyString, _timeEnd, errorText);
+          cacheError(_timeStartKeyString, _timeStart, errorText);
+          cacheError(_timeEndKeyString, _timeEnd, errorText);
           return;
         }
         // start-time less than minimum before end-time
         // -----------------------------------------------------------------
-        int? minSpanMinutes = _rangeLimits?.minSpanMinutes;
+        int? minSpanMinutes = rangeLimits?.minSpanMinutes;
         if (minSpanMinutes != null) {
           if (dateTimeDiffMinutes < minSpanMinutes) {
-            String minSpan = _dateTimeUtils.minutesToSpanCondition(minSpanMinutes);
+            String minSpan = dateTimeUtils.minutesToSpanCondition(minSpanMinutes);
             errorText = localizations.rangeTimeStartEndTooCloseSameDate(minSpan);
-            _cacheError(_timeStartKeyString, _timeStart, errorText);
-            _cacheError(_timeEndKeyString, _timeEnd, errorText);
+            cacheError(_timeStartKeyString, _timeStart, errorText);
+            cacheError(_timeEndKeyString, _timeEnd, errorText);
             return;
           }
         }
       }
     }
     return;
-  }
-
-  bool _empty(String? text) {
-    return text == null || text.isEmpty;
-  }
-
-  bool _notEmpty(String? text) {
-    return text != null && text.isNotEmpty;
   }
 
   DateTime _makeDateTimeOptional(String dateStartText, String? timeStartText) {
@@ -305,33 +174,41 @@ class DateTimeRangeFormatterValidator extends FormatterValidator<TextEditingValu
   }
 
   String? _getRangeFieldText(String keyString) {
-    return _formManager.getFieldValue(keyString);
+    return formManager.getFieldValue(keyString);
   }
 
-  // leave tilda as prefix for those to guarantee the postfixes to be app-unique.
-  // (the constructor here makes sure tilda will never be used in keyString itself)
-  static const String start = '~start';
-  static const String end = '~end';
-  static const String date = '~date';
-  static const String time = '~time';
+  void setKeyStrings(String keyString) {
+    _dateStartKeyString = DateTimeUtils.rangeDateStartKeyString(keyString);
+    _timeStartKeyString = DateTimeUtils.rangeTimeStartKeyString(keyString);
+    _dateEndKeyString = DateTimeUtils.rangeDateEndKeyString(keyString);
+    _timeEndKeyString = DateTimeUtils.rangeTimeEndKeyString(keyString);
 
-  static String makeRangeKeyStringStart(String rangeKeyString) => "${rangeKeyString}$start";
+    keyStrings = [
+      _dateStartKeyString,
+      _timeStartKeyString,
+      _dateEndKeyString,
+      _timeEndKeyString,
+    ];
+  }
 
-  static String makeRangeKeyStringEnd(String rangeKeyString) => "${rangeKeyString}$end";
-
-  static String makeDateKeyString(String rangePartKeyString) => "${rangePartKeyString}$date";
-
-  static String makeTimeKeyString(String rangePartKeyString) => "${rangePartKeyString}$time";
-
-  static String rangeDateStartKeyString(String rangeKeyString) =>
-      makeDateKeyString(makeRangeKeyStringStart(rangeKeyString));
-
-  static String rangeTimeStartKeyString(String rangeKeyString) =>
-      makeTimeKeyString(makeRangeKeyStringStart(rangeKeyString));
-
-  static String rangeDateEndKeyString(String rangeKeyString) =>
-      makeDateKeyString(makeRangeKeyStringEnd(rangeKeyString));
-
-  static String rangeTimeEndKeyString(String rangeKeyString) =>
-      makeTimeKeyString(makeRangeKeyStringEnd(rangeKeyString));
+  void fillDateTimeFormatterValidators() {
+    formatterValidators[_dateStartKeyString] = DateFormatterValidator(
+      dateTimeUtils,
+      currentDate,
+      rangeLimits?.startDateTimeLimits,
+    );
+    formatterValidators[_timeStartKeyString] = TimeFormatterValidator(
+      dateTimeUtils,
+      rangeLimits?.startDateTimeLimits,
+    );
+    formatterValidators[_dateEndKeyString] = DateFormatterValidator(
+      dateTimeUtils,
+      currentDate,
+      rangeLimits?.endDateTimeLimits,
+    );
+    formatterValidators[_timeEndKeyString] = TimeFormatterValidator(
+      dateTimeUtils,
+      rangeLimits?.endDateTimeLimits,
+    );
+  }
 }

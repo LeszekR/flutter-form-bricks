@@ -184,4 +184,43 @@ class DateTimeUtils {
         time.minute,
         time.second,
       );
+
+  static bool isDateField(String keyString) => keyString.contains(datePostfix);
+
+  static bool isTimeField(String keyString) => keyString.contains(timePostfix);
+
+  static bool isStartDateField(String keyString) => keyString.contains(startPostfix) && isDateField(keyString);
+
+  static bool isStartTimeField(String keyString) => keyString.contains(startPostfix) && isTimeField(keyString);
+
+  static bool isEndDateField(String keyString) => keyString.contains(endPostfix) && isDateField(keyString);
+
+  static bool isEndTimeField(String keyString) => keyString.contains(endPostfix) && isTimeField(keyString);
+
+  // leave tilda as prefix for those to guarantee the postfixes to be app-unique.
+  // (the constructor here makes sure tilda will never be used in keyString itself)
+  static const String startPostfix = '~start';
+  static const String endPostfix = '~end';
+  static const String datePostfix = '~date';
+  static const String timePostfix = '~time';
+
+  static String makeRangeKeyStringStart(String rangeKeyString) => "${rangeKeyString}$startPostfix";
+
+  static String makeRangeKeyStringEnd(String rangeKeyString) => "${rangeKeyString}$endPostfix";
+
+  static String makeDateKeyString(String rangePartKeyString) => "${rangePartKeyString}$datePostfix";
+
+  static String makeTimeKeyString(String rangePartKeyString) => "${rangePartKeyString}$timePostfix";
+
+  static String rangeDateStartKeyString(String rangeKeyString) =>
+      makeDateKeyString(makeRangeKeyStringStart(rangeKeyString));
+
+  static String rangeTimeStartKeyString(String rangeKeyString) =>
+      makeTimeKeyString(makeRangeKeyStringStart(rangeKeyString));
+
+  static String rangeDateEndKeyString(String rangeKeyString) =>
+      makeDateKeyString(makeRangeKeyStringEnd(rangeKeyString));
+
+  static String rangeTimeEndKeyString(String rangeKeyString) =>
+      makeTimeKeyString(makeRangeKeyStringEnd(rangeKeyString));
 }

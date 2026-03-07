@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
@@ -5,56 +6,56 @@ import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/da
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_required_fields.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/dateTimeRange_formatter_validator.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/dateTime_multifield_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/time_formatter_validator.dart';
 
-class DateTimeSeparateFieldFormatterValidator extends FormatterValidator<DateTimeTextEditingValue, DateTime> {
-  final DateTimeRequiredFields _dateTimeRequiredFields;
-  final DateTimeUtils _dateTimeUtils;
+class DateTimeSeparateFieldFormatterValidator extends DateTimeMultiFieldFormatterValidator {
+  final DateTimeRequiredFields _requiredFields;
   final DateTimeLimits? _dateTimeLimits;
-  final DateFormatterValidator dateFormatterValidator;
-  final TimeFormatterValidator timeFormatterValidator;
-  late final FormManager _formManager;
-  late final String? _keyStringDate;
-  late final String? _keyStringTime;
 
-  void set formManager(FormManager formManager) => _formManager = formManager;
+  late final String _dateKeyString;
+  late final String _timeKeyString;
 
   DateTimeSeparateFieldFormatterValidator(
-    this._dateTimeRequiredFields,
-    this._dateTimeUtils,
-    CurrentDate currentDate, [
+    super.keyString,
+    super.dateTimeUtils,
+    super.currentDate,
+    this._requiredFields, [
     this._dateTimeLimits,
-  ])  : dateFormatterValidator = DateFormatterValidator(_dateTimeUtils, currentDate),
-        timeFormatterValidator = TimeFormatterValidator(_dateTimeUtils);
+  ]) : assert(
+            !keyString.contains('~'),
+            'DateTimeSeparaterFieldFormatterValidator keyString must not contain "~"'
+            ' - it is reserved for use in automatically extended range-parts\' keyStrings.') {
+    setKeyStrings(keyString);
+    fillDateTimeFormatterValidators();
+  }
 
   @override
-  DateTimeSeparatedFieldContent run(
-    BricksLocalizations localizations,
-    String keyString,
-    DateTimeSeparatedFieldContent fieldContent,
-  ) {
+  void validateFieldsGroup(BricksLocalizations localizations) {
+    // TODO: implement validateFieldsGroup
+
     //
     assert(
-        isDateField(keyString) || isTimeField(keyString),
+        DateTimeUtils.isDateField(keyString) || DateTimeUtils.isTimeField(keyString),
         'DateTimeSeparateFieldFormatterValidator must receive either date or time field keyString '
         '- received "$keyString" is none of those.');
 
     DateTimeFieldContent dateFieldContent, timeFieldContent;
     FieldContent result;
 
-    if (isDateField(keyString)) {
-      dateFieldContent = dateFormatterValidator.run(localizations, keyString, fieldContent);
+    if (DateTimeUtils.isDateField(keyString)) {
+      dateFieldContent = dateFormatterValidator.run(localizations, keyString, input);
       timeFieldContent = _formManager.getFieldContent(getTimeKeyString(keyString)) as DateTimeFieldContent;
       result = dateFieldContent;
     } else {
       dateFieldContent = _formManager.getFieldContent(getDateKeyString(keyString)) as DateTimeFieldContent;
-      timeFieldContent = timeFormatterValidator.run(localizations, keyString, fieldContent);
+      timeFieldContent = timeFormatterValidator.run(localizations, keyString, input);
       result = timeFieldContent;
     }
 
     // error in date or time field
     // ------------------------------------------------------------
-    if (!result.isValid!) return DateTimeSeparatedFieldContent.err(fieldContent.input, result.error);
+    if (!result.isValid!) return DateTimeSeparatedFieldContent.err(input, result.error);
 
     DateTimeTextEditingValue formattedInput = DateTimeTextEditingValue(
       dateFieldContent.input,
@@ -65,7 +66,7 @@ class DateTimeSeparateFieldFormatterValidator extends FormatterValidator<DateTim
 
     // one of the fields is empty - can't compute the value
     // ------------------------------------------------------------
-    if (isDateField(keyString)) {
+    if (DateTimeUtils.isDateField(keyString)) {
       if (time == null) {
         return DateTimeSeparatedFieldContent.err(
             formattedInput, localizations.dateTimeSeparatedFieldNoTimeForLimitValidation);
@@ -100,39 +101,56 @@ class DateTimeSeparateFieldFormatterValidator extends FormatterValidator<DateTim
     return DateTimeSeparatedFieldContent.ok(formattedInput, value);
   }
 
-  bool isDateField(String keyString) => keyString.contains(DateTimeRangeFormatterValidator.date);
-
-  bool isTimeField(String keyString) => keyString.contains(DateTimeRangeFormatterValidator.time);
-
   String getDateKeyString(String keyString) {
-    if (_keyStringDate == null) {
-      if (isDateField(keyString)) {
-        _keyStringDate = keyString;
-      } else if (isTimeField(keyString)) {
-        _keyStringDate =
-            keyString.replaceFirst(DateTimeRangeFormatterValidator.time, DateTimeRangeFormatterValidator.date);
+    if (_dateKeyString == null) {
+      if (DateTimeUtils.isDateField(keyString)) {
+        _dateKeyString = keyString;
+      } else if (DateTimeUtils.isTimeField(keyString)) {
+        _dateKeyString = keyString.replaceFirst(DateTimeUtils.timePostfix, DateTimeUtils.datePostfix);
       } else {
         throw ArgumentError(
             'DateTimeSeparateFieldFormatterValidator must receive either date or time field keyString to cache'
             'elements keyStrings - received "$keyString" is none ');
       }
     }
-    return _keyStringDate!;
+    return _dateKeyString!;
   }
 
   String getTimeKeyString(String keyString) {
-    if (_keyStringTime == null) {
-      if (isTimeField(keyString)) {
-        _keyStringTime = keyString;
-      } else if (isDateField(keyString)) {
-        _keyStringTime =
-            keyString.replaceFirst(DateTimeRangeFormatterValidator.date, DateTimeRangeFormatterValidator.time);
+    if (_timeKeyString == null) {
+      if (DateTimeUtils.isTimeField(keyString)) {
+        _timeKeyString = keyString;
+      } else if (DateTimeUtils.isDateField(keyString)) {
+        _timeKeyString = keyString.replaceFirst(DateTimeUtils.datePostfix, DateTimeUtils.timePostfix);
       } else {
         throw ArgumentError(
             'DateTimeSeparateFieldFormatterValidator must receive either date or time field keyString to cache'
             'elements keyStrings - received "$keyString" is none ');
       }
     }
-    return _keyStringTime!;
+    return _timeKeyString!;
+  }
+
+  @override
+  void setKeyStrings(String keyString) {
+    _dateKeyString = DateTimeUtils.makeDateKeyString(keyString);
+    _timeKeyString = DateTimeUtils.makeTimeKeyString(keyString);
+
+    keyStrings = [
+      _dateKeyString,
+      _timeKeyString,
+    ];
+  }
+
+  void fillDateTimeFormatterValidators() {
+    formatterValidators[_dateKeyString] = DateFormatterValidator(
+      dateTimeUtils,
+      currentDate,
+      _dateTimeLimits,
+    );
+    formatterValidators[_timeKeyString] = TimeFormatterValidator(
+      dateTimeUtils,
+      _dateTimeLimits,
+    );
   }
 }

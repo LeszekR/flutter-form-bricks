@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/data_time_text_editing_value.dart';
 
 /// Represents the result of a formatting and validation operation performed by a `FormatterValidator`.
@@ -26,7 +27,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/da
 /// - `error` – A user-visible error message, suitable for display in `InputDecoration.errorText` or similar
 ///
 /// Used across field bricks where the internal content type differs from the parsed data type,
-/// such as `DateFieldBrick`, `IntegerFieldBrick`, and `RadioBrick`.
+/// such as `DateField`, `IntegerFieldBrick`, and `RadioBrick`.
 class FieldContent<I extends Object, V extends Object> {
   final I? input;
   final V? value;
@@ -78,28 +79,37 @@ class FieldContent<I extends Object, V extends Object> {
   int get hashCode => Object.hash(input, value, isValid, error);
 }
 
-// /// Formatting-validation procedure return type for input of type `DateTime`.
-// ///
-// /// Usage - format-validation of: `DateFieldBrick`.
-// // TODO refactor to input as TextEditingValue
-// typedef DateFieldContent = FieldContent<TextEditingValue, DateTime>;
-//
-// /// Formatting-validation procedure return type for input of type `DateTime`.
-// ///
-// /// Usage - format-validation of: `TimeFieldBrick` and its `..Range` fields.
-// typedef TimeFieldContent = FieldContent<TextEditingValue, Time>;
+typedef TextFieldContent = FieldContent<TextEditingValue, String>;
 
-/// Formatting-validation procedure return type for input of type `DateTime`.
-///
-/// Usage - format-validation of: `DateTimeFieldBrick`.
 typedef DateTimeFieldContent = FieldContent<TextEditingValue, DateTime>;
 
-/// Formatting-validation procedure return type for input of type `DateTime`.
-///
-/// Usage - format-validation of: `DateTimeFieldBrick`.
 typedef DateTimeSeparatedFieldContent = FieldContent<DateTimeTextEditingValue, DateTime>;
 
-/// Formatting-validation procedure return type for input of type `PlainTextField`.
-///
-/// Usage - format-validation of: `DateTimeFieldBrick`.
-typedef TextFieldContent = FieldContent<TextEditingValue, String>;
+typedef DateTimeRangeFieldContent = FieldContent<DateTimeRangeTextEditingValue, DateTime>;
+
+DateTimeRangeFieldContent makeDateTimeRangeFieldContent(String keyString, TextEditingValue input) {
+  if (DateTimeUtils.isStartDateField(keyString)) {
+    return DateTimeRangeFieldContent.transient(DateTimeRangeTextEditingValue(
+      DateTimeTextEditingValue(input, null),
+      DateTimeTextEditingValue(null, null),
+    ));
+  } else if (DateTimeUtils.isStartTimeField(keyString)) {
+    return DateTimeRangeFieldContent.transient(DateTimeRangeTextEditingValue(
+      DateTimeTextEditingValue(null, input),
+      DateTimeTextEditingValue(null, null),
+    ));
+  } else if (DateTimeUtils.isEndDateField(keyString)) {
+    return DateTimeRangeFieldContent.transient(DateTimeRangeTextEditingValue(
+      DateTimeTextEditingValue(null, null),
+      DateTimeTextEditingValue(input, null),
+    ));
+  } else if (DateTimeUtils.isEndTimeField(keyString)) {
+    return DateTimeRangeFieldContent.transient(DateTimeRangeTextEditingValue(
+      DateTimeTextEditingValue(null, null),
+      DateTimeTextEditingValue(null, input),
+    ));
+  } else {
+    throw ArgumentError(
+        'Invalid keyString: $keyString - must be one of the following: ~start~date, ~start~time,  ~end~date, ~end~time, ');
+  }
+}

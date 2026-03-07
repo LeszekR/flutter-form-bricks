@@ -26,11 +26,11 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
   DateTimeFieldContent run(
     BricksLocalizations localizations,
     String keyString,
-    DateTimeFieldContent fieldContent,
+    TextEditingValue input,
   ) {
     DateTimeFieldContent dateTimeContent = _dateTimeUtils.cleanDateTimeString(
       bricksLocalizations: localizations,
-      textEditingValue: fieldContent.input!,
+      textEditingValue: input,
       dateTimeOrBoth: DateTimeOrBoth.date,
       stringDelimiterPattern: dateDelimiterPattern,
       stringDelimiter: dateDelimiter,
@@ -38,10 +38,10 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
       maxNDigits: 8,
       maxNumberDelimiters: 2,
     );
-    if (!isValid(dateTimeContent)) return DateTimeFieldContent.err(fieldContent.input, dateTimeContent.error);
+    if (!isValid(dateTimeContent)) return DateTimeFieldContent.err(input, dateTimeContent.error);
 
     DateTimeFieldContent dateContent = parseDateFromString(localizations, dateTimeContent);
-    if (!isValid(dateContent)) return DateTimeFieldContent.err(fieldContent.input, dateContent.error);
+    if (!isValid(dateContent)) return DateTimeFieldContent.err(input, dateContent.error);
 
     dateContent = validateDate(localizations, dateContent, _dateTimeLimits);
 
