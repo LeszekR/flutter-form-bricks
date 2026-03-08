@@ -20,13 +20,7 @@ class DateTimeSeparateFieldFormatterValidator extends DateTimeMultiFieldFormatte
     super.currentDate,
     this._requiredFields, [
     this._dateTimeLimits,
-  ]) : assert(
-            !keyString.contains('~'),
-            'DateTimeSeparaterFieldFormatterValidator keyString must not contain "~"'
-            ' - it is reserved for use in automatically added postfixes.') {
-    setKeyStrings(keyString);
-    fillDateTimeFormatterValidators();
-  }
+  ]);
 
   @override
   void validateFieldsGroup(BricksLocalizations localizations) {
