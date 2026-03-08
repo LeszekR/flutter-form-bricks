@@ -114,7 +114,7 @@
   "dateErrorTooManyDaysInMonth": "Za dużo dni w miesiącu",
   "dateErrorMonthOver12": "Nie ma miesiąca większego niż 12",
 
-  "dateErrorTooFarBack": "Data i czas nie mogą być wcześniejsze niż {minDateParam}",
+  "dateErrorTooFarBack": "Data nie może być wcześniejsze niż {minDateParam}",
     "@dateErrorTooFarBack": {
       "placeholders": {
         "minDateParam": {
@@ -122,10 +122,27 @@
         }
       }
     },
-  "dateErrorTooFarForward": "Data i czas nie mogą być późniejsze niż {maxDateParam}",
+  "dateErrorTooFarForward": "Data nie może być późniejsza niż {maxDateParam}",
     "@dateErrorTooFarForward": {
       "placeholders": {
         "maxDateParam": {
+          "type": "String"
+        }
+      }
+    },
+
+  "dateTimeErrorTooFarBack": "Data i czas nie mogą być wcześniejsze niż {minDateTimeParam}",
+    "@dateTimeErrorTooFarBack": {
+      "placeholders": {
+        "minDateTimeParam": {
+          "type": "String"
+        }
+      }
+    },
+  "dateTimeErrorTooFarForward": "Data i czas nie mogą być późniejsze niż {maxDateTimeParam}",
+    "@dateTimeErrorTooFarForward": {
+      "placeholders": {
+        "maxDateTimeParam": {
           "type": "String"
         }
       }

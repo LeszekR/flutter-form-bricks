@@ -238,12 +238,22 @@ class BricksLocalizationsPl extends BricksLocalizations {
 
   @override
   String dateErrorTooFarBack(String minDateParam) {
-    return 'Data i czas nie mogą być wcześniejsze niż $minDateParam';
+    return 'Data nie może być wcześniejsze niż $minDateParam';
   }
 
   @override
   String dateErrorTooFarForward(String maxDateParam) {
-    return 'Data i czas nie mogą być późniejsze niż $maxDateParam';
+    return 'Data nie może być późniejsza niż $maxDateParam';
+  }
+
+  @override
+  String dateTimeErrorTooFarBack(String minDateTimeParam) {
+    return 'Data i czas nie mogą być wcześniejsze niż $minDateTimeParam';
+  }
+
+  @override
+  String dateTimeErrorTooFarForward(String maxDateTimeParam) {
+    return 'Data i czas nie mogą być późniejsze niż $maxDateTimeParam';
   }
 
   @override

@@ -31,8 +31,10 @@ class DateTimeRangeFormatterValidator extends DateTimeMultiFieldFormatterValidat
 
   @override
   void validateFieldsGroup(BricksLocalizations localizations) {
-    _setFieldTexts();
+    _getFieldValues();
     String errorText;
+
+    // TU PRZERWAŁEM - TODO dateTimeLimits validation after concatenations of date and time
 
     // start-date absent
     // -----------------------------------------------------------------
@@ -166,14 +168,14 @@ class DateTimeRangeFormatterValidator extends DateTimeMultiFieldFormatterValidat
     return dateStart.add(Duration(hours: hour, minutes: minute));
   }
 
-  void _setFieldTexts() {
-    _dateStart = _getRangeFieldText(_dateStartKeyString);
-    _timeStart = _getRangeFieldText(_timeStartKeyString);
-    _dateEnd = _getRangeFieldText(_dateEndKeyString);
-    _timeEnd = _getRangeFieldText(_timeEndKeyString);
+  void _getFieldValues() {
+    _dateStart = _getRangeFieldValue(_dateStartKeyString);
+    _timeStart = _getRangeFieldValue(_timeStartKeyString);
+    _dateEnd = _getRangeFieldValue(_dateEndKeyString);
+    _timeEnd = _getRangeFieldValue(_timeEndKeyString);
   }
 
-  String? _getRangeFieldText(String keyString) {
+  String? _getRangeFieldValue(String keyString) {
     return formManager.getFieldValue(keyString);
   }
 
@@ -199,7 +201,8 @@ class DateTimeRangeFormatterValidator extends DateTimeMultiFieldFormatterValidat
     );
     formatterValidators[_timeStartKeyString] = TimeFormatterValidator(
       dateTimeUtils,
-      rangeLimits?.startDateTimeLimits,
+      // TU PRZERWAŁEM - TODO remove time limit validation here - move it to multiFieldValidation after concatenation of date and time
+      // rangeLimits?.startDateTimeLimits,
     );
     formatterValidators[_dateEndKeyString] = DateFormatterValidator(
       dateTimeUtils,
@@ -208,7 +211,8 @@ class DateTimeRangeFormatterValidator extends DateTimeMultiFieldFormatterValidat
     );
     formatterValidators[_timeEndKeyString] = TimeFormatterValidator(
       dateTimeUtils,
-      rangeLimits?.endDateTimeLimits,
+      // TU PRZERWAŁEM - TODO remove time limit validation here - move it to multiFieldValidation after concatenation of date and time
+      // rangeLimits?.endDateTimeLimits,
     );
   }
 }

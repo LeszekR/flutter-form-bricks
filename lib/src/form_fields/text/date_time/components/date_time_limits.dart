@@ -25,6 +25,18 @@ class DateTimeLimits {
   DateTime? get maxDateTime =>
       maxMinutesForward == null ? null : _referencePoint().add(Duration(minutes: maxMinutesForward!));
 
+  DateTime? get maxDateWithoutTime {
+    DateTime? maxDT = maxDateTime;
+    if (maxDT == null) return null;
+    return DateTime(maxDT.year, maxDT.month, maxDT.day);
+  }
+
+  DateTime? get minDateWithoutTime {
+    DateTime? minDT = minDateTime;
+    if (minDT == null) return null;
+    return DateTime(minDT.year, minDT.month, minDT.day);
+  }
+
   DateTime _referencePoint() => fixedReferenceDateTime ?? currentDate!.getDateNow();
 }
 

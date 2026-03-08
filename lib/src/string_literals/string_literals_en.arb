@@ -114,23 +114,39 @@
   "dateErrorTooManyDaysInMonth": "Too many days in month",
   "dateErrorMonthOver12": "There are only 12 months, not more",
 
-  "dateErrorTooFarBack": "DateTime and time must not be earlier than {minDateParam}",
-    "@dateErrorTooFarBack": {
-      "placeholders": {
-        "minDateParam": {
-          "type": "String"
-        }
+  "dateErrorTooFarBack": "Date must not be earlier than {minDateParam}",
+  "@dateErrorTooFarBack": {
+    "placeholders": {
+      "minDateParam": {
+        "type": "String"
       }
-    },
-  "dateErrorTooFarForward": "DateTime and time must not be later than {maxDateParam}",
-    "@dateErrorTooFarForward": {
-      "placeholders": {
-        "maxDateParam": {
-          "type": "String"
-        }
+    }
+  },
+  "dateErrorTooFarForward": "Date must not be later than {maxDateParam}",
+  "@dateErrorTooFarForward": {
+    "placeholders": {
+      "maxDateParam": {
+        "type": "String"
       }
-    },
+    }
+  },
 
+  "dateTimeErrorTooFarBack": "Date and time must not be earlier than {minDateTimeParam}",
+  "@dateTimeErrorTooFarBack": {
+    "placeholders": {
+      "minDateTimeParam": {
+        "type": "String"
+      }
+    }
+  },
+  "dateTimeErrorTooFarForward": "Date and time must not be later than {maxDateTimeParam}",
+  "@dateTimeErrorTooFarForward": {
+    "placeholders": {
+      "maxDateTimeParam": {
+        "type": "String"
+      }
+    }
+  },
   "mustNotPrecede": "must not precede",
 
   "timeStringErrorBadChars": "Characters not allowed for time",

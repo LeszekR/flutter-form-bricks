@@ -162,6 +162,7 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
     DateTimeFieldContent fieldContent,
     DateTimeLimits? dateLimits,
   ) {
+    // TU PRZERWAŁEM - TODO make sure date correctly validates on minutes anywhere inside min/max border day
     String dateString = fieldContent.input!.text;
     List<String> dateElementsList = dateString.split(dateDelimiter);
     int elementsListLength = dateElementsList.length;

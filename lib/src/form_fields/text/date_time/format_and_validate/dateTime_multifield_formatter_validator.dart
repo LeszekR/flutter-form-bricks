@@ -33,7 +33,7 @@ abstract class DateTimeMultiFieldFormatterValidator extends FormatterValidator<T
   ) : assert(
             !keyString.contains('~'),
             'DateTimeMultiFieldFormatterValidator keyString must not contain "~"'
-            ' - it is reserved for use in automatically extended range-parts\' keyStrings.') {
+            ' - it is reserved for use in automatically added postfixes.') {
     setKeyStrings(keyString);
     fillDateTimeFormatterValidators();
   }
@@ -111,7 +111,7 @@ abstract class DateTimeMultiFieldFormatterValidator extends FormatterValidator<T
     formManager.storeFieldContent(keyString, fieldContent);
   }
 
-  void cacheError(String keyString, text, String errorText) {
+  void cacheError(String keyString, String errorText) {
     _cacheFieldContent(keyString, _getFieldContent(keyString)!.copyWith(error: errorText));
   }
 }
