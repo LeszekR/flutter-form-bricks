@@ -15,104 +15,104 @@ import '../../shortcuts/keyboard_shortcuts.dart';
 class DateTimeInputs {
   DateTimeInputs._();
 
-  static Widget DateTimeSeparateField({
-    required BuildContext context,
-    required BricksLocalizations localizations,
-    required String keyString,
-    required String label,
-    required LabelPosition labelPosition,
-    required CurrentDate currentDate,
-    required FormManager formManager,
-    DateTimeLimits? dateTimeLimits,
-    DateTimeInitialSet? initialSet,
-    DateTimeRequiredFields? requiredFields,
-    DateTimeRangeSpan? rangeSpan,
-    // RangeController? rangeController,
-    bool readonly = false,
-    List<FormFieldValidator<String>>? additionalValidators,
-  }) {
-    // assert(
-    //     rangeSpan == null || rangeController != null, 'DateTimeRangeSpan requires RangeController which is null here.');
-
-    final localizations = BricksLocalizations.of(context);
-    final uiParams = UiParams.of(context);
-    final appSize = uiParams.appSize;
-
-    var dateKeyString = DateTimeRangeFormatterValidator.makeDateKeyString(keyString);
-    var timeKeyString = DateTimeRangeFormatterValidator.makeTimeKeyString(keyString);
-
-    FormFieldValidator<String>? rangeDateValidator;
-//     if (rangeController != null) {
-//       // TODO remove dateTimeLimits from here - this is validated in DateField
-//       rangeDateValidator = DateTimeValidators.dateTimeRangeValidator(
-//           localizations, dateKeyString, formManager, rangeController, dateTimeLimits, rangeSpan);
-// // if (isDateRequired || additionalValidators != null) {
-//       var validatorsExceptRange = ValidatorProvider.compose(
+//   static Widget DateTimeSeparateField({
+//     required BuildContext context,
+//     required BricksLocalizations localizations,
+//     required String keyString,
+//     required String label,
+//     required LabelPosition labelPosition,
+//     required CurrentDate currentDate,
+//     required FormManager formManager,
+//     DateTimeLimits? dateTimeLimits,
+//     DateTimeInitialSet? initialSet,
+//     DateTimeRequiredFields? requiredFields,
+//     DateTimeRangeSpan? rangeSpan,
+//     // RangeController? rangeController,
+//     bool readonly = false,
+//     List<FormFieldValidator<String>>? additionalValidators,
+//   }) {
+//     // assert(
+//     //     rangeSpan == null || rangeController != null, 'DateTimeRangeSpan requires RangeController which is null here.');
+//
+//     final localizations = BricksLocalizations.of(context);
+//     final uiParams = UiParams.of(context);
+//     final appSize = uiParams.appSize;
+//
+//     var dateKeyString = DateTimeRangeFormatterValidator.makeDateKeyString(keyString);
+//     var timeKeyString = DateTimeRangeFormatterValidator.makeTimeKeyString(keyString);
+//
+//     FormFieldValidator<String>? rangeDateValidator;
+// //     if (rangeController != null) {
+// //       // TODO remove dateTimeLimits from here - this is validated in DateField
+// //       rangeDateValidator = DateTimeValidators.dateTimeRangeValidator(
+// //           localizations, dateKeyString, formManager, rangeController, dateTimeLimits, rangeSpan);
+// // // if (isDateRequired || additionalValidators != null) {
+// //       var validatorsExceptRange = ValidatorProvider.compose(
+// //         context: context,
+// //         isRequired: requiredFields == null ? null : requiredFields.date,
+// //         customValidator: DateTimeValidators.dateInputValidator(localizations, dateTimeLimits),
+// //         validatorsList: additionalValidators,
+// //       );
+// //       rangeController._dateTimeFormatterValidators[dateKeyString] = validatorsExceptRange;
+// // // }
+// //     }
+//
+//     FormFieldValidator<String>? rangeTimeValidator;
+// //     if (rangeController != null) {
+// //       // TODO remove dateTimeLimits from here - this is validated in DateField
+// //       rangeTimeValidator = DateTimeValidators.dateTimeRangeValidator(
+// //           localizations, timeKeyString, formManager, rangeController, dateTimeLimits, rangeSpan);
+// //       var validatorsExceptRange = ValidatorProvider.compose(
+// //         context: context,
+// //         isRequired: requiredFields == null ? null : requiredFields.time,
+// //         customValidator: DateTimeValidators.timeInputValidator(localizations),
+// //         validatorsList: additionalValidators,
+// //       );
+// // // if (isTimeRequired || additionalValidators != null) {
+// //       rangeController._dateTimeFormatterValidators[timeKeyString] = validatorsExceptRange;
+// // // }
+// //     }
+//
+//     final elements = [
+//       date(
 //         context: context,
-//         isRequired: requiredFields == null ? null : requiredFields.date,
-//         customValidator: DateTimeValidators.dateInputValidator(localizations, dateTimeLimits),
-//         validatorsList: additionalValidators,
-//       );
-//       rangeController._dateTimeFormatterValidators[dateKeyString] = validatorsExceptRange;
-// // }
-//     }
-
-    FormFieldValidator<String>? rangeTimeValidator;
-//     if (rangeController != null) {
-//       // TODO remove dateTimeLimits from here - this is validated in DateField
-//       rangeTimeValidator = DateTimeValidators.dateTimeRangeValidator(
-//           localizations, timeKeyString, formManager, rangeController, dateTimeLimits, rangeSpan);
-//       var validatorsExceptRange = ValidatorProvider.compose(
+//         localizations: localizations,
+//         keyString: dateKeyString,
+//         label: localizations.date,
+//         labelPosition: LabelPosition.topLeft,
+//         initialValue: initialSet == null ? null : initialSet.date,
+//         readonly: readonly,
+//         currentDate: currentDate,
+//         dateLimits: dateTimeLimits,
+//         formManager: formManager,
+//         isRequired: requiredFields == null ? false : requiredFields.isDateRequired,
+//         // rangeController: rangeController,
+//         rangeValidator: rangeDateValidator,
+//         additionalValidators: additionalValidators,
+//       ),
+//       appSize.spacerBoxHorizontalSmallest,
+//       time(
 //         context: context,
-//         isRequired: requiredFields == null ? null : requiredFields.time,
-//         customValidator: DateTimeValidators.timeInputValidator(localizations),
-//         validatorsList: additionalValidators,
-//       );
-// // if (isTimeRequired || additionalValidators != null) {
-//       rangeController._dateTimeFormatterValidators[timeKeyString] = validatorsExceptRange;
-// // }
-//     }
-
-    final elements = [
-      date(
-        context: context,
-        localizations: localizations,
-        keyString: dateKeyString,
-        label: localizations.date,
-        labelPosition: LabelPosition.topLeft,
-        initialValue: initialSet == null ? null : initialSet.date,
-        readonly: readonly,
-        currentDate: currentDate,
-        dateLimits: dateTimeLimits,
-        formManager: formManager,
-        isRequired: requiredFields == null ? false : requiredFields.isDateRequired,
-        // rangeController: rangeController,
-        rangeValidator: rangeDateValidator,
-        additionalValidators: additionalValidators,
-      ),
-      appSize.spacerBoxHorizontalSmallest,
-      time(
-        context: context,
-        localizations: localizations,
-        keyString: timeKeyString,
-        label: localizations.time,
-        labelPosition: LabelPosition.topLeft,
-        initialValue: initialSet == null ? null : initialSet.time,
-        readonly: readonly,
-        formManager: formManager,
-        isRequired: requiredFields == null ? false : requiredFields.isTimeRequired,
-        // rangeController: rangeController,
-        rangeValidator: rangeTimeValidator,
-        additionalValidators: additionalValidators,
-      )
-    ];
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [Text(label), Row(children: elements)],
-    );
-  }
+//         localizations: localizations,
+//         keyString: timeKeyString,
+//         label: localizations.time,
+//         labelPosition: LabelPosition.topLeft,
+//         initialValue: initialSet == null ? null : initialSet.time,
+//         readonly: readonly,
+//         formManager: formManager,
+//         isRequired: requiredFields == null ? false : requiredFields.isTimeRequired,
+//         // rangeController: rangeController,
+//         rangeValidator: rangeTimeValidator,
+//         additionalValidators: additionalValidators,
+//       )
+//     ];
+//
+//     return Column(
+//       mainAxisSize: MainAxisSize.min,
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [Text(label), Row(children: elements)],
+//     );
+//   }
 
   static Widget date({
     required BuildContext context,
@@ -279,56 +279,56 @@ class DateTimeInputs {
     );
   }
 
-  static Widget dateTimeRange({
-    required BuildContext context,
-    required BricksLocalizations localizations,
-    required String rangeKeyString,
-    required String label, // TODO consider making label optional
-    required LabelPosition labelPosition,
-    required CurrentDate currentDate,
-    required FormManager formManager,
-    DateTimeLimits? dateTimeLimits,
-    DateTimeRangeSpan? dateTimeRangeSpan,
-    DateTimeRangeInitialSet? initialSet,
-    DateTimeRangeRequiredFields? requiredFields,
-    bool readonly = false,
-  }) {
-    final localizations = BricksLocalizations.of(context);
-    final uiParams = UiParams.of(context);
-    final appSize = uiParams.appSize;
-
-    // var rangeController = RangeController(rangeId);
-
-    final rangeStart = DateTimeSeparateField(
-      context: context,
-      localizations: localizations,
-      keyString: DateTimeRangeFormatterValidator.makeRangeKeyStringStart(rangeKeyString),
-      label: "$label ${localizations.start}",
-      labelPosition: labelPosition,
-      formManager: formManager,
-      dateTimeLimits: dateTimeLimits,
-      initialSet: initialSet == null ? null : initialSet.start,
-      requiredFields: requiredFields == null ? null : requiredFields.start,
-      rangeSpan: dateTimeRangeSpan,
-      currentDate: currentDate,
-      // rangeController: rangeController,
-    );
-    final rangeEnd = DateTimeSeparateField(
-      context: context,
-      localizations: localizations,
-      keyString: DateTimeRangeFormatterValidator.makeRangeKeyStringEnd(rangeKeyString),
-      label: "$label ${localizations.end}",
-      labelPosition: labelPosition,
-      formManager: formManager,
-      dateTimeLimits: dateTimeLimits,
-      initialSet: initialSet == null ? null : initialSet.end,
-      requiredFields: requiredFields == null ? null : requiredFields.end,
-      rangeSpan: dateTimeRangeSpan,
-      currentDate: currentDate,
-      // rangeController: rangeController,
-    );
-    return Row(children: [rangeStart, appSize.spacerBoxHorizontalMedium, rangeEnd]);
-  }
+  // static Widget dateTimeRange({
+  //   required BuildContext context,
+  //   required BricksLocalizations localizations,
+  //   required String rangeKeyString,
+  //   required String label, // TODO consider making label optional
+  //   required LabelPosition labelPosition,
+  //   required CurrentDate currentDate,
+  //   required FormManager formManager,
+  //   DateTimeLimits? dateTimeLimits,
+  //   DateTimeRangeSpan? dateTimeRangeSpan,
+  //   DateTimeRangeInitialSet? initialSet,
+  //   DateTimeRangeRequiredFields? requiredFields,
+  //   bool readonly = false,
+  // }) {
+  //   final localizations = BricksLocalizations.of(context);
+  //   final uiParams = UiParams.of(context);
+  //   final appSize = uiParams.appSize;
+  //
+  //   // var rangeController = RangeController(rangeId);
+  //
+  //   final rangeStart = DateTimeSeparateField(
+  //     context: context,
+  //     localizations: localizations,
+  //     keyString: DateTimeRangeFormatterValidator.makeRangeKeyStringStart(rangeKeyString),
+  //     label: "$label ${localizations.start}",
+  //     labelPosition: labelPosition,
+  //     formManager: formManager,
+  //     dateTimeLimits: dateTimeLimits,
+  //     initialSet: initialSet == null ? null : initialSet.start,
+  //     requiredFields: requiredFields == null ? null : requiredFields.start,
+  //     rangeSpan: dateTimeRangeSpan,
+  //     currentDate: currentDate,
+  //     // rangeController: rangeController,
+  //   );
+  //   final rangeEnd = DateTimeSeparateField(
+  //     context: context,
+  //     localizations: localizations,
+  //     keyString: DateTimeRangeFormatterValidator.makeRangeKeyStringEnd(rangeKeyString),
+  //     label: "$label ${localizations.end}",
+  //     labelPosition: labelPosition,
+  //     formManager: formManager,
+  //     dateTimeLimits: dateTimeLimits,
+  //     initialSet: initialSet == null ? null : initialSet.end,
+  //     requiredFields: requiredFields == null ? null : requiredFields.end,
+  //     rangeSpan: dateTimeRangeSpan,
+  //     currentDate: currentDate,
+  //     // rangeController: rangeController,
+  //   );
+  //   return Row(children: [rangeStart, appSize.spacerBoxHorizontalMedium, rangeEnd]);
+  // }
 
   static Widget dateTimeOneField({
     required BuildContext context,

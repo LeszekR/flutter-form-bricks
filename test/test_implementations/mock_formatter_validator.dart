@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/string_extension.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 /// Mocked [FormatterValidator] that returns a fixed validation result.
@@ -13,12 +12,15 @@ class MockTextFormatterValidator extends FormatterValidator<TextEditingValue, St
   MockTextFormatterValidator({this.returnInputTxEdVal, this.mockError});
 
   @override
-  FieldContent<TextEditingValue, String> run(
+  TextFieldContent run(
     BricksLocalizations localizations,
     String keyString,
-    FieldContent<TextEditingValue, String> fieldContent,
+    TextEditingValue? input,
   ) {
-    bool isValid = mockError == null ? true : false;
-    return FieldContent._of(returnInputTxEdVal, returnInputTxEdVal?.text, isValid, mockError);
+    if (mockError == null) {
+      return TextFieldContent.ok(returnInputTxEdVal, returnInputTxEdVal?.text);
+    } else {
+      return TextFieldContent.err(returnInputTxEdVal, mockError);
+    }
   }
 }

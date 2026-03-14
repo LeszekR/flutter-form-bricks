@@ -1,5 +1,6 @@
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_required_fields.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/extension_date_time.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/dateTime_multifield_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_utils.dart';
@@ -40,7 +41,7 @@ class DateTimeRangeFormatterValidator extends DateTimeMultiFieldFormatterValidat
     // -----------------------------------------------------------------
     if (empty(_dateStart)) {
       errorText = localizations.rangeDateStartRequired;
-      cacheError(_dateStartKeyString, _dateStart, errorText);
+      cacheError(_dateStartKeyString, errorText);
       return;
     }
 
@@ -48,9 +49,9 @@ class DateTimeRangeFormatterValidator extends DateTimeMultiFieldFormatterValidat
     // -----------------------------------------------------------------
     if (empty(_timeStart) && empty(_dateEnd) && notEmpty(_timeEnd)) {
       errorText = localizations.rangeDateEndRequiredOrRemoveTimeEnd;
-      cacheError(_timeStartKeyString, _timeStart, errorText);
-      cacheError(_dateEndKeyString, _dateEnd, errorText);
-      cacheError(_timeEndKeyString, _timeEnd, errorText);
+      cacheError(_timeStartKeyString, errorText);
+      cacheError(_dateEndKeyString, errorText);
+      cacheError(_timeEndKeyString, errorText);
       return;
     }
 
@@ -63,8 +64,8 @@ class DateTimeRangeFormatterValidator extends DateTimeMultiFieldFormatterValidat
       // -----------------------------------------------------------------
       if (dateDiffMinutes < 0) {
         errorText = localizations.rangeDateStartAfterEnd;
-        cacheError(_dateStartKeyString, _dateStart, errorText);
-        cacheError(_dateEndKeyString, _dateEnd, errorText);
+        cacheError(_dateStartKeyString, errorText);
+        cacheError(_dateEndKeyString, errorText);
         return;
       }
 
@@ -75,8 +76,8 @@ class DateTimeRangeFormatterValidator extends DateTimeMultiFieldFormatterValidat
         if (dateDiffMinutes > maxSpanMinutes) {
           String maxSpanCondition = dateTimeUtils.minutesToSpanCondition(maxSpanMinutes);
           errorText = localizations.rangeDatesTooFarApart(maxSpanCondition);
-          cacheError(_dateStartKeyString, _dateStart, errorText);
-          cacheError(_dateEndKeyString, _dateEnd, errorText);
+          cacheError(_dateStartKeyString, errorText);
+          cacheError(_dateEndKeyString, errorText);
           return;
         }
       }
@@ -86,10 +87,10 @@ class DateTimeRangeFormatterValidator extends DateTimeMultiFieldFormatterValidat
       // identical start and end
       if (_dateStart == _dateEnd && _timeStart == _timeEnd) {
         errorText = localizations.rangeStartSameAsEnd;
-        cacheError(_dateStartKeyString, _dateStart, errorText);
-        cacheError(_timeStartKeyString, _timeStart, errorText);
-        cacheError(_dateEndKeyString, _dateEnd, errorText);
-        cacheError(_timeEndKeyString, _timeEnd, errorText);
+        cacheError(_dateStartKeyString, errorText);
+        cacheError(_timeStartKeyString, errorText);
+        cacheError(_dateEndKeyString, errorText);
+        cacheError(_timeEndKeyString, errorText);
         return;
       }
 
@@ -104,9 +105,9 @@ class DateTimeRangeFormatterValidator extends DateTimeMultiFieldFormatterValidat
         // -----------------------------------------------------------------
         if (timeDiffMinutes < 0) {
           errorText = localizations.rangeTimeStartAfterEndOrAddDateEnd;
-          cacheError(_timeStartKeyString, _timeStart, errorText);
-          cacheError(_dateEndKeyString, _dateEnd, errorText);
-          cacheError(_timeEndKeyString, _timeEnd, errorText);
+          cacheError(_timeStartKeyString, errorText);
+          cacheError(_dateEndKeyString, errorText);
+          cacheError(_timeEndKeyString, errorText);
           return;
         }
         // start-time less than minimum before end-time
@@ -116,9 +117,9 @@ class DateTimeRangeFormatterValidator extends DateTimeMultiFieldFormatterValidat
           if (timeDiffMinutes < minSpanMinutes) {
             String minSpanCondition = dateTimeUtils.minutesToSpanCondition(minSpanMinutes);
             errorText = localizations.rangeTimeStartEndTooCloseOrAddDateEnd(minSpanCondition);
-            cacheError(_timeStartKeyString, _timeStart, errorText);
-            cacheError(_dateEndKeyString, _dateEnd, errorText);
-            cacheError(_timeEndKeyString, _timeEnd, errorText);
+            cacheError(_timeStartKeyString, errorText);
+            cacheError(_dateEndKeyString, errorText);
+            cacheError(_timeEndKeyString, errorText);
             return;
           }
         }
@@ -134,8 +135,8 @@ class DateTimeRangeFormatterValidator extends DateTimeMultiFieldFormatterValidat
         // -----------------------------------------------------------------
         if (dateTimeDiffMinutes < 0) {
           errorText = localizations.rangeTimeStartAfterEnd;
-          cacheError(_timeStartKeyString, _timeStart, errorText);
-          cacheError(_timeEndKeyString, _timeEnd, errorText);
+          cacheError(_timeStartKeyString, errorText);
+          cacheError(_timeEndKeyString, errorText);
           return;
         }
         // start-time less than minimum before end-time
@@ -145,13 +146,57 @@ class DateTimeRangeFormatterValidator extends DateTimeMultiFieldFormatterValidat
           if (dateTimeDiffMinutes < minSpanMinutes) {
             String minSpan = dateTimeUtils.minutesToSpanCondition(minSpanMinutes);
             errorText = localizations.rangeTimeStartEndTooCloseSameDate(minSpan);
-            cacheError(_timeStartKeyString, _timeStart, errorText);
-            cacheError(_timeEndKeyString, _timeEnd, errorText);
+            cacheError(_timeStartKeyString, errorText);
+            cacheError(_timeEndKeyString, errorText);
             return;
           }
         }
       }
     }
+
+    if (rangeLimits != null) {
+      DateTime endDateTime = _makeDateTimeOptional(_dateEnd!, _timeEnd);
+
+      if (rangeLimits!.startDateTimeLimits != null) {
+        DateTime minDate = rangeLimits!.startDateTimeLimits!.minDateWithoutTime!;
+        DateTime minDateTime = rangeLimits!.startDateTimeLimits!.minDateTime!;
+
+        DateTime startDateTime = _makeDateTimeOptional(_dateStart!, _timeStart);
+        if (notEmpty(_dateStart)) {
+          // start-date-time too early
+          // -----------------------------------------------------------------
+          if (notEmpty(_timeStart)) {
+            if (startDateTime.isBefore(minDateTime)) {
+              errorText = localizations.dateTimeErrorTooFarBack(minDateTime.toDateString());
+              cacheError(_dateStartKeyString, errorText);
+              cacheError(_timeStartKeyString, errorText);
+            }
+            // start-date too early
+            // -----------------------------------------------------------------
+          }
+          else {
+            if (startDateTime.isBefore(minDate)) {
+              errorText = localizations.dateTimeErrorTooFarBack(minDate.toDateString());
+              cacheError(_dateStartKeyString, errorText);
+            }
+          }
+        }
+
+        // end-date-time too early
+        // -----------------------------------------------------------------
+        // end-date too early
+        // -----------------------------------------------------------------
+      }
+      // start-date-time too late
+      // -----------------------------------------------------------------
+      // start-date too late
+      // -----------------------------------------------------------------
+      // end-date-time too late
+      // -----------------------------------------------------------------
+      // end-date too late
+      // -----------------------------------------------------------------
+    }
+
     return;
   }
 

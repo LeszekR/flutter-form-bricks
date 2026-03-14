@@ -26,11 +26,11 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
   DateTimeFieldContent run(
     BricksLocalizations localizations,
     String keyString,
-    TextEditingValue input,
+    TextEditingValue? input,
   ) {
     DateTimeFieldContent dateTimeContent = _dateTimeUtils.cleanDateTimeString(
       bricksLocalizations: localizations,
-      textEditingValue: input,
+      textEditingValue: input!,
       dateTimeOrBoth: DateTimeOrBoth.date,
       stringDelimiterPattern: dateDelimiterPattern,
       stringDelimiter: dateDelimiter,
@@ -162,7 +162,6 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
     DateTimeFieldContent fieldContent,
     DateTimeLimits? dateLimits,
   ) {
-    // TU PRZERWAŁEM - TODO make sure date correctly validates on minutes anywhere inside min/max border day
     String dateString = fieldContent.input!.text;
     List<String> dateElementsList = dateString.split(dateDelimiter);
     int elementsListLength = dateElementsList.length;
@@ -206,13 +205,13 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
       parsedDate = _dateTimeUtils.dateFromString(dateString);
 
       if (dateLimits != null) {
-        DateTime? minDate = dateLimits.minDateTime;
+        DateTime? minDate = dateLimits.minDateWithoutTime;
         if (minDate != null) {
           if (parsedDate.compareTo(minDate) < 0) {
             errLimit = localizations.dateErrorTooFarBack(minDate.toDateString());
           }
         }
-        DateTime? maxDate = dateLimits.maxDateTime;
+        DateTime? maxDate = dateLimits.maxDateWithoutTime;
         if (maxDate != null) {
           if (parsedDate.compareTo(maxDate) > 0) {
             errLimit = localizations.dateErrorTooFarForward(maxDate.toDateString());

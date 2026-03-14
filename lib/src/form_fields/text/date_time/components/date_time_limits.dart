@@ -14,10 +14,9 @@ class DateTimeLimits {
     this.fixedReferenceDateTime,
     this.maxMinutesBack,
     this.maxMinutesForward,
-  })  : assert((currentDate == null) != (fixedReferenceDateTime == null),
-            'One of the two - currentDate or referenceDateTime - must be set'),
-        assert((maxMinutesBack != null) || (maxMinutesForward != null),
-            'Either maxMinutesBack or maxMinutesForward or both must be set');
+  }) {
+    _checkDateTimeLimits(this);
+  }
 
   DateTime? get minDateTime =>
       maxMinutesBack == null ? null : _referencePoint().subtract(Duration(minutes: maxMinutesBack!));
@@ -46,92 +45,105 @@ class DateTimeRangeLimits {
   final int? minSpanMinutes;
   final int? maxSpanMinutes;
 
-  const DateTimeRangeLimits(
+  DateTimeRangeLimits(
     this.startDateTimeLimits,
     this.endDateTimeLimits,
     this.minSpanMinutes,
     this.maxSpanMinutes,
-  );
+  ) {
+    _checkDateTimeRangeLimits(this);
+  }
 }
 
-// TODO remove if remains redundant
-// DateTimeLimitsNow calculateDateLimits(DateTime dateNow) {
-//   if (minDateTime != null && maxDateTime != null) {
-//     return _DateTimeLimitsNow(minDate: minDateTime!, maxDate: maxDateTime!);
-//   }
-//
-//   const defaultExtension = Duration(days: 365);
-//   final defaultMinDate = dateNow.subtract(defaultExtension);
-//   final defaultMaxDate = dateNow.add(defaultExtension);
-//
-//   if (maxDateTime != null) {
-//     return _DateTimeLimitsNow(minDate: defaultMinDate, maxDate: maxDateTime!);
-//   }
-//   if (minDateTime != null) {
-//     return _DateTimeLimitsNow(minDate: minDateTime!, maxDate: defaultMaxDate);
-//   }
-//   return _DateTimeLimitsNow(minDate: defaultMinDate, maxDate: defaultMaxDate);
-// }
-// }
-//
-// class _DateTimeLimitsNow implements DateTimeLimitsNow {
-//   @override
-//   final DateTime minDate;
-//   @override
-//   final DateTime maxDate;
-//
-//   const _DateTimeLimitsNow({required this.minDate, required this.maxDate});
-// }
-//
-// abstract class DateTimeLimitsNow {
-//   DateTime get minDate;
-//
-//   DateTime get maxDate;
-// }
+void _failDT(DateTimeLimits limits, String msg) => throw ArgumentError.value(limits, 'DateTimeLimits', msg);
 
-// /// Configuration object - **time** limits for `TimeFormatterValidator`.
-// ///
-// /// Accept `int` number of minutes - the limiting hours must be recalculated to minutes before being passed to the
-// /// constructor.
-// ///
-// /// In case only lower or only upper limit are required `null` must be passed as the other limit.
-// ///
-// /// Example:
-// /// - limit of **15:30 - 22:15** should be passed as `TimeLimits(930, 1335)`
-// /// - not later than **15:30** should be passed as `TimeLimits(null, 930)`.
-// class TimeLimits {
-//   final int? minTimeMinutes;
-//   final int? maxTimeMinutes;
-//
-//   TimeLimits({
-//     this.minTimeMinutes,
-//     this.maxTimeMinutes,
-//   }) : assert(
-//           minTimeMinutes == null || maxTimeMinutes == null || minTimeMinutes < maxTimeMinutes,
-//           'Minimal Time must be before maximal Time-time or one of them must be null',
-//         );
-// }
-//
-// /// Configuration object - **date** limits for `DateFormatterValidator`.
-// ///
-// /// Regardless of what `DateTime`s were passed to the constructor the times are stripped to zeroes leaving
-// /// only the dates as limits for the validator.
-// class DateLimits {
-//   late final DateTime? minDate;
-//   late final DateTime? maxDate;
-//
-//   DateLimits({
-//     DateTime? minDate,
-//     DateTime? maxDate,
-//   }) : assert(
-//           minDate == null || maxDate == null || minDate.isBefore(maxDate),
-//           'Minimal date- must be before maximal date- or one of them must be null',
-//         ) {
-//     if (minDate != null) {
-//       this.minDate = DateTime(minDate.year, minDate.month, minDate.day);
-//     }
-//     if (maxDate != null) {
-//       this.maxDate = DateTime(maxDate.year, maxDate.month, maxDate.day);
-//     }
-//   }
-// }
+void _failDTR(DateTimeRangeLimits limits, String msg) => throw ArgumentError.value(limits, 'DateTimeRangeLimits', msg);
+
+void _checkDateTimeLimits(DateTimeLimits limits) {
+  if ((limits.currentDate == null) == (limits.fixedReferenceDateTime == null)) {
+    _failDT(limits, 'One of the two - currentDate or referenceDateTime - must be set');
+  }
+  if ((limits.maxMinutesBack == null) && (limits.maxMinutesForward == null)) {
+    _failDT(limits, 'Either maxMinutesBack or maxMinutesForward or both must be set');
+  }
+  if (limits.maxMinutesBack != null && limits.maxMinutesBack! < 0) {
+    _failDT(limits, 'DateTimeLimits.maxMinutesBack must be >= 0 (got ${limits.maxMinutesBack}).');
+  }
+  if (limits.maxMinutesForward != null && limits.maxMinutesForward! < 0) {
+    _failDT(limits, 'DateTimeLimits.maxMinutesForward must be >= 0 (got ${limits.maxMinutesForward}).');
+  }
+  final DateTime? minDT = limits.minDateTime;
+  final DateTime? maxDT = limits.maxDateTime;
+  if (minDT != null && maxDT != null && minDT.isAfter(maxDT)) {
+    _failDT(limits, 'DateTimeLimits has inverted bounds: minDateTime ($minDT) is after maxDateTime ($maxDT).');
+  }
+}
+
+void _checkDateTimeRangeLimits(DateTimeRangeLimits limits) {
+  final DateTimeLimits? startDateTimeLimits = limits.startDateTimeLimits;
+  final DateTimeLimits? endDateTimeLimits = limits.endDateTimeLimits;
+  final int? minSpanMinutes = limits.minSpanMinutes;
+  final int? maxSpanMinutes = limits.maxSpanMinutes;
+
+  // ---- span sanity ----
+  if (minSpanMinutes != null && minSpanMinutes < 0) {
+    _failDTR(limits, 'minSpanMinutes must be >= 0 (got $minSpanMinutes).');
+  }
+  if (maxSpanMinutes != null && maxSpanMinutes < 0) {
+    _failDTR(limits, 'maxSpanMinutes must be >= 0 (got $maxSpanMinutes).');
+  }
+  if (minSpanMinutes != null && maxSpanMinutes != null && minSpanMinutes > maxSpanMinutes) {
+    _failDTR(limits, 'minSpanMinutes ($minSpanMinutes) must be <= maxSpanMinutes ($maxSpanMinutes).');
+  }
+
+  // ---- cross-limits sanity (only if both exist and are fully/bounded enough) ----
+  if (startDateTimeLimits != null && endDateTimeLimits != null) {
+    final DateTime? startMin = startDateTimeLimits.minDateTime;
+    final DateTime? startMax = startDateTimeLimits.maxDateTime;
+    final DateTime? endMin = endDateTimeLimits.minDateTime;
+    final DateTime? endMax = endDateTimeLimits.maxDateTime;
+
+    // "Start limits start after start of end limits"
+    if (startMin != null && endMin != null && startMin.isAfter(endMin)) {
+      _failDTR(limits, 'Start range minimum ($startMin) cannot be after end range minimum ($endMin).');
+    }
+
+    // "Start limits end after end of end limits"
+    if (startMax != null && endMax != null && startMax.isAfter(endMax)) {
+      _failDTR(limits, 'Start range maximum ($startMax) cannot be after end range maximum ($endMax).');
+    }
+
+    // Additional illogical overlaps:
+    // Start window entirely after end window (stronger than min/min + max/max checks)
+    if (startMin != null && endMax != null && startMin.isAfter(endMax)) {
+      _failDTR(limits, 'Start minimum ($startMin) cannot be after end maximum ($endMax).');
+    }
+
+    // Start max after end min is not always illegal (ranges can overlap),
+    // but it becomes illegal if you require start <= end always AND both are single points.
+    // We only enforce what is unambiguously inconsistent with declared bounds.
+
+    // ---- span feasibility checks (if we have enough bounds) ----
+    if (minSpanMinutes != null && startMin != null && endMax != null) {
+      final int maxPossible = endMax.difference(startMin).inMinutes;
+      if (maxPossible < minSpanMinutes) {
+        _failDTR(
+          limits,
+          'minSpanMinutes ($minSpanMinutes) is impossible with the provided limits: '
+          'endMax ($endMax) - startMin ($startMin) = $maxPossible minutes.',
+        );
+      }
+    }
+
+    if (maxSpanMinutes != null && startMax != null && endMin != null) {
+      final int minPossible = endMin.difference(startMax).inMinutes;
+      if (minPossible > maxSpanMinutes) {
+        _failDTR(
+          limits,
+          'maxSpanMinutes ($maxSpanMinutes) is impossible with the provided limits: '
+          'endMin ($endMin) - startMax ($startMax) = $minPossible minutes.',
+        );
+      }
+    }
+  }
+}

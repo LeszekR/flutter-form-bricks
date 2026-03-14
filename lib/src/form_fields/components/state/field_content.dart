@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/data_time_text_editing_value.dart';
 
 /// Represents the result of a formatting and validation operation performed by a `FormatterValidator`.
 ///
@@ -82,34 +80,3 @@ class FieldContent<I extends Object, V extends Object> {
 typedef TextFieldContent = FieldContent<TextEditingValue, String>;
 
 typedef DateTimeFieldContent = FieldContent<TextEditingValue, DateTime>;
-
-typedef DateTimeSeparatedFieldContent = FieldContent<DateTimeTextEditingValue, DateTime>;
-
-typedef DateTimeRangeFieldContent = FieldContent<DateTimeRangeTextEditingValue, DateTime>;
-
-DateTimeRangeFieldContent makeDateTimeRangeFieldContent(String keyString, TextEditingValue input) {
-  if (DateTimeUtils.isStartDateField(keyString)) {
-    return DateTimeRangeFieldContent.transient(DateTimeRangeTextEditingValue(
-      DateTimeTextEditingValue(input, null),
-      DateTimeTextEditingValue(null, null),
-    ));
-  } else if (DateTimeUtils.isStartTimeField(keyString)) {
-    return DateTimeRangeFieldContent.transient(DateTimeRangeTextEditingValue(
-      DateTimeTextEditingValue(null, input),
-      DateTimeTextEditingValue(null, null),
-    ));
-  } else if (DateTimeUtils.isEndDateField(keyString)) {
-    return DateTimeRangeFieldContent.transient(DateTimeRangeTextEditingValue(
-      DateTimeTextEditingValue(null, null),
-      DateTimeTextEditingValue(input, null),
-    ));
-  } else if (DateTimeUtils.isEndTimeField(keyString)) {
-    return DateTimeRangeFieldContent.transient(DateTimeRangeTextEditingValue(
-      DateTimeTextEditingValue(null, null),
-      DateTimeTextEditingValue(null, input),
-    ));
-  } else {
-    throw ArgumentError(
-        'Invalid keyString: $keyString - must be one of the following: ~start~date, ~start~time,  ~end~date, ~end~time, ');
-  }
-}

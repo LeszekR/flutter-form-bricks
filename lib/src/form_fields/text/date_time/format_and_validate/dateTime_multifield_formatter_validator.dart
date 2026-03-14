@@ -42,10 +42,10 @@ abstract class DateTimeMultiFieldFormatterValidator extends FormatterValidator<T
   DateTimeFieldContent run(
     BricksLocalizations localizations,
     String keyString,
-    TextEditingValue input,
+    TextEditingValue? input,
   ) {
     //
-    _validateField(localizations, keyString, input);
+    _validateField(localizations, keyString, input!);
 
     _validateOtherFields(localizations, keyString);
 

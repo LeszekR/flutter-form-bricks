@@ -17,8 +17,8 @@ void main() {
 
   var dateTimeLimits = DateTimeLimits(
     fixedReferenceDateTime: mockCurrentDate.getDateNow(),
-    maxMinutesBack: 570240,
-    maxMinutesForward: 480960,
+    maxMinutesBack: 570240,  // 2023-01-01 22:11
+    maxMinutesForward: 480960,  //  2024-12-31 22:11
   );
 
   TestDateFormatter dateFormatter = TestDateFormatter(DateFormatterValidator(
@@ -173,6 +173,8 @@ void main() {
 
     var testCases = [
       DateTimeTestCase('0000,12,9', '0000-12-09', false, local.dateErrorTooFarBack(dateMaxBack)),
+      DateTimeTestCase('2023;01;01', '2023-01-01', true, null),
+      DateTimeTestCase('2022;12;31', '2022-12-31', false, local.dateErrorTooFarBack(dateMaxBack)),
       DateTimeTestCase('001231', '2000-12-31', false, local.dateErrorTooFarBack(dateMaxBack)),
       DateTimeTestCase('301231', '2030-12-31', false, local.dateErrorTooFarForward(dateMaxForward)),
     ];

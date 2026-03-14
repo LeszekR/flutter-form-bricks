@@ -77,7 +77,7 @@ class FormatterValidatorChainEarlyStop<I extends Object, V extends Object> exten
   ) {
     var resultFieldContent = FieldContent<I, V>.transient(input);
     for (final step in steps) {
-      resultFieldContent = step.run(localizations, keyString, resultFieldContent);
+      resultFieldContent = step.run(localizations, keyString, resultFieldContent.input);
       // TODO test early stop on invalid field content
       if (!(resultFieldContent.isValid ?? true)) {
         return resultFieldContent;
@@ -107,7 +107,7 @@ class FormatterValidatorChainFullRun<I extends Object, V extends Object> extends
   ) {
     var resultFieldContent = FieldContent<I, V>.transient(input);
     for (final step in steps) {
-      resultFieldContent = step.run(localizations, keyString, resultFieldContent);
+      resultFieldContent = step.run(localizations, keyString, resultFieldContent.input);
     }
     return resultFieldContent;
   }

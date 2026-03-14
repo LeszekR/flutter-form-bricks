@@ -25,11 +25,11 @@ class TimeFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
   DateTimeFieldContent run(
     BricksLocalizations localizations,
     String keyString,
-    TextEditingValue input,
+    TextEditingValue? input,
   ) {
     DateTimeFieldContent dateTimeContent = _dateTimeUtils.cleanDateTimeString(
       bricksLocalizations: localizations,
-      textEditingValue: input,
+      textEditingValue: input!,
       dateTimeOrBoth: DateTimeOrBoth.time,
       stringDelimiterPattern: timeDelimiterPattern,
       stringDelimiter: timeDelimiter,

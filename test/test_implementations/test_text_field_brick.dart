@@ -13,7 +13,7 @@ class TestTextFieldDescriptor extends FormFieldDescriptor<TextEditingValue, Stri
   });
 }
 
-class TestTextField extends TextFieldBrick<TextEditingValue, String> {
+class TestTextField extends TextFieldBrick<String> {
   TestTextField({
     super.key,
     required super.keyString,
@@ -29,7 +29,7 @@ class TestTextField extends TextFieldBrick<TextEditingValue, String> {
   TestTextFieldState createState() => TestTextFieldState();
 }
 
-class TestTextFieldState extends TextFieldStateBrick<TextEditingValue, String, TestTextField> {
+class TestTextFieldState extends TextFieldStateBrick<String, TestTextField> {
   TextEditingValue get text => controller.value;
 
   @override

@@ -11,15 +11,17 @@ class LowercaseFormatter extends FormatterValidator<TextEditingValue, String> {
   LowercaseFormatter();
 
   @override
-  TextFieldContent run(BricksLocalizations localizations,
-      String keyString,
-      FieldContent<TextEditingValue, String> fieldContent,) {
-    if (fieldContent.input == null) return fieldContent;
-    if (!fieldContent.input!.text.contains(_upperCase)) return fieldContent;
+  TextFieldContent run(
+    BricksLocalizations localizations,
+    String keyString,
+    TextEditingValue? input,
+  ) {
+    if (input == null) return TextFieldContent.ok(TextEditingValue.empty, '');
 
-    final String lowerCaseInput = fieldContent.input!.text.toLowerCase();
-    final TextSelection selection =
-        fieldContent.input?.selection ?? TextSelection.collapsed(offset: fieldContent.input!.text.length);
+    if (!input.text.contains(_upperCase)) return TextFieldContent.ok(input, input.text);
+
+    final String lowerCaseInput = input.text.toLowerCase();
+    final TextSelection selection = input.selection ?? TextSelection.collapsed(offset: input.text.length);
 
     return TextFieldContent.ok(
       TextEditingValue(
@@ -31,4 +33,3 @@ class LowercaseFormatter extends FormatterValidator<TextEditingValue, String> {
     );
   }
 }
-

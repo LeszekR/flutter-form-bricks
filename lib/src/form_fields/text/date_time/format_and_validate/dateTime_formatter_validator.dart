@@ -25,9 +25,9 @@ class DateTimeFormatterValidator extends FormatterValidator<TextEditingValue, Da
   DateTimeFieldContent run(
     BricksLocalizations localizations,
     String keyString,
-    TextEditingValue input,
+    TextEditingValue? input,
   ) {
-    String textTrimmed = input.text;
+    String textTrimmed = input!.text;
     textTrimmed = textTrimmed.trim();
     textTrimmed = textTrimmed.replaceAll(RegExp(' +'), ' ');
 

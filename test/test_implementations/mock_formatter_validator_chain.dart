@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator_chain.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/string_extension.dart';
 
 import '../src/form_fields/text/date_time/tools/test_constants.dart';
@@ -21,19 +21,17 @@ class MockFormatterValidatorChain extends FormatterValidatorChainFullRun<TextEdi
   }) : super([MockTextFormatterValidator(returnInputTxEdVal: mockInputString?.txtEditVal(), mockError: mockError)]);
 
   @override
-  FieldContent<TextEditingValue, String> runChain(
+  TextFieldContent runChain(
     BricksLocalizations localizations,
     String keyString,
     TextEditingValue? inputValue,
   ) {
     if (shouldRunChain) {
       return super.runChain(localizations, keyString, inputValue);
+    } else if (mockError == null) {
+      return TextFieldContent.ok(TextEditingValue(text: stringInput1), stringInput1);
+    } else {
+      return TextFieldContent.err(TextEditingValue(text: stringInput1), mockError);
     }
-    return TextFieldContent._of(
-      TextEditingValue(text: stringInput1),
-      stringInput1,
-      mockError == null,
-      mockError,
-    );
   }
 }
