@@ -33,9 +33,7 @@ class DateTimeRangeFormatterValidator extends DateTimeMultiFieldFormatterValidat
   @override
   void validateFieldsGroup(BricksLocalizations localizations) {
     _getFieldValues();
-    String errorText;
-
-    // TU PRZERWAŁEM - TODO dateTimeLimits validation after concatenations of date and time
+    String errorText;Limits
 
     // start-date absent
     // -----------------------------------------------------------------
@@ -154,49 +152,109 @@ class DateTimeRangeFormatterValidator extends DateTimeMultiFieldFormatterValidat
       }
     }
 
+    // TU PRZERWAŁEM - TODO TEST dateTimeLimits validation
+    // RANGE LIMITS
+    // =======================================================================
     if (rangeLimits != null) {
-      DateTime endDateTime = _makeDateTimeOptional(_dateEnd!, _timeEnd);
-
+      //
       if (rangeLimits!.startDateTimeLimits != null) {
-        DateTime minDate = rangeLimits!.startDateTimeLimits!.minDateWithoutTime!;
-        DateTime minDateTime = rangeLimits!.startDateTimeLimits!.minDateTime!;
-
-        DateTime startDateTime = _makeDateTimeOptional(_dateStart!, _timeStart);
+        //
         if (notEmpty(_dateStart)) {
+          DateTime startDateTime = _makeDateTimeOptional(_dateStart!, _timeStart);
+
+          DateTime minDateTime = rangeLimits!.startDateTimeLimits!.minDateTime!;
+          DateTime minDate = rangeLimits!.startDateTimeLimits!.minDateWithoutTime!;
+
           // start-date-time too early
           // -----------------------------------------------------------------
           if (notEmpty(_timeStart)) {
             if (startDateTime.isBefore(minDateTime)) {
-              errorText = localizations.dateTimeErrorTooFarBack(minDateTime.toDateString());
+              errorText = localizations.dateTimeErrorTooFarBack(minDateTime.toDateTimeString());
               cacheError(_dateStartKeyString, errorText);
               cacheError(_timeStartKeyString, errorText);
             }
-            // start-date too early
-            // -----------------------------------------------------------------
           }
+          // start-date too early
+          // -----------------------------------------------------------------
           else {
             if (startDateTime.isBefore(minDate)) {
-              errorText = localizations.dateTimeErrorTooFarBack(minDate.toDateString());
+              errorText = localizations.dateErrorTooFarBack(minDate.toDateString());
+              cacheError(_dateStartKeyString, errorText);
+            }
+          }
+
+          DateTime maxDateTime = rangeLimits!.startDateTimeLimits!.maxDateTime!;
+          DateTime maxDate = rangeLimits!.startDateTimeLimits!.maxDateWithoutTime!;
+
+          // start-date-time too late
+          // -----------------------------------------------------------------
+          if (notEmpty(_timeStart)) {
+            if (startDateTime.isAfter(maxDateTime)) {
+              errorText = localizations.dateTimeErrorTooFarForward(maxDateTime.toDateTimeString());
+              cacheError(_dateStartKeyString, errorText);
+              cacheError(_timeStartKeyString, errorText);
+            }
+          }
+          // start-date too late
+          // -----------------------------------------------------------------
+          else {
+            if (startDateTime.isAfter(maxDate)) {
+              errorText = localizations.dateErrorTooFarForward(maxDate.toDateString());
               cacheError(_dateStartKeyString, errorText);
             }
           }
         }
-
-        // end-date-time too early
-        // -----------------------------------------------------------------
-        // end-date too early
-        // -----------------------------------------------------------------
       }
-      // start-date-time too late
-      // -----------------------------------------------------------------
-      // start-date too late
-      // -----------------------------------------------------------------
-      // end-date-time too late
-      // -----------------------------------------------------------------
-      // end-date too late
-      // -----------------------------------------------------------------
-    }
 
+      if (rangeLimits!.endDateTimeLimits != null) {
+        //
+        if (notEmpty(_dateEnd)) {
+          DateTime endDateTime = _makeDateTimeOptional(_dateEnd!, _timeEnd);
+
+          DateTime minDateTime = rangeLimits!.endDateTimeLimits!.minDateTime!;
+          DateTime minDate = rangeLimits!.endDateTimeLimits!.minDateWithoutTime!;
+
+          // end-date-time too early
+          // -----------------------------------------------------------------
+          if (notEmpty(_timeEnd)) {
+            if (endDateTime.isBefore(minDateTime)) {
+              errorText = localizations.dateTimeErrorTooFarBack(minDateTime.toDateTimeString());
+              cacheError(_dateEndKeyString, errorText);
+              cacheError(_timeEndKeyString, errorText);
+            }
+          }
+          // end-date too early
+          // -----------------------------------------------------------------
+          else {
+            if (endDateTime.isBefore(minDate)) {
+              errorText = localizations.dateErrorTooFarBack(minDate.toDateString());
+              cacheError(_dateEndKeyString, errorText);
+            }
+          }
+
+          DateTime maxDateTime = rangeLimits!.endDateTimeLimits!.maxDateTime!;
+          DateTime maxDate = rangeLimits!.endDateTimeLimits!.maxDateWithoutTime!;
+
+          // end-date-time too late
+          // -----------------------------------------------------------------
+          if (notEmpty(_timeEnd)) {
+            if (endDateTime.isAfter(maxDateTime)) {
+              errorText = localizations.dateTimeErrorTooFarForward(maxDateTime.toDateTimeString());
+              cacheError(_dateEndKeyString, errorText);
+              cacheError(_timeEndKeyString, errorText);
+            }
+          }
+          // end-date too late
+          // -----------------------------------------------------------------
+          else {
+            if (endDateTime.isAfter(maxDate)) {
+              errorText = localizations.dateErrorTooFarForward(maxDate.toDateString());
+              cacheError(_dateEndKeyString, errorText);
+            }
+          }
+        }
+      }
+    }
     return;
   }
 
