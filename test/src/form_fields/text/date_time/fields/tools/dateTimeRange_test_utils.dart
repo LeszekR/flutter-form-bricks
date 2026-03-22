@@ -36,6 +36,7 @@ Future<TestSingleForm> prepDateTimeRangeTest(
     (context) => TestSingleForm(
       widgetBuilder: (context, formManager) => Column(
         children: [
+          Expanded(child: DateTimeRange(start: start, end: end))
         Expanded(
           child: DateTimeInputs.dateTimeRange(
             localizations: BricksLocalizations.of(context),

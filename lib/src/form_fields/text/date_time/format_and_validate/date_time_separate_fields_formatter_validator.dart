@@ -43,15 +43,17 @@ class DateTimeSeparateFieldFormatterValidator extends DateTimeMultiFieldFormatte
       }
     }
     // both are present - check if their concatenation fits the limits
-    DateTime dateTime = _date!.add(Duration(hours: _time!.hour, minutes: _time!.minute));
-    if (dateTime.compareTo(_dateTimeLimits!.minDateTime!) < 0) {
-      errorText = localizations.dateTimeErrorTooFarBack(_dateTimeLimits!.minDateTime!.toDateTimeString());
-      cacheError(_dateKeyString, errorText);
-      cacheError(_timeKeyString, errorText);
-    } else if (_date!.compareTo(_dateTimeLimits!.maxDateTime!) > 0) {
-      errorText = localizations.dateTimeErrorTooFarForward(_dateTimeLimits!.maxDateTime!.toDateTimeString());
-      cacheError(_dateKeyString, errorText);
-      cacheError(_timeKeyString, errorText);
+    else {
+      DateTime dateTime = _date!.add(Duration(hours: _time!.hour, minutes: _time!.minute));
+      if (dateTime.compareTo(_dateTimeLimits!.minDateTime!) < 0) {
+        errorText = localizations.dateTimeErrorTooFarBack(_dateTimeLimits!.minDateTime!.toDateTimeString());
+        cacheError(_dateKeyString, errorText);
+        cacheError(_timeKeyString, errorText);
+      } else if (_date!.compareTo(_dateTimeLimits!.maxDateTime!) > 0) {
+        errorText = localizations.dateTimeErrorTooFarForward(_dateTimeLimits!.maxDateTime!.toDateTimeString());
+        cacheError(_dateKeyString, errorText);
+        cacheError(_timeKeyString, errorText);
+      }
     }
   }
 

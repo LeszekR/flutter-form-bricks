@@ -33,17 +33,18 @@ class DateTimeSeparateFieldDescriptor
   }) : super(
           defaultFormatterValidatorsMaker: () => [
             DateTimeSeparateFieldFormatterValidator(
-              requiredFields,
+              keyString,
               dateTimeUtils ?? DateTimeUtils(),
               currentDate ?? CurrentDate(),
+              requiredFields,
               dateTimeLimits,
             ),
           ],
         );
 
   @override
-  Map<String, FormatterValidatorChain<DateTimeTextEditingValue, DateTime>> get formatterValidatorChainMap {
-    FormatterValidatorChain<DateTimeTextEditingValue, DateTime>? formatterValidatorChain = buildChain();
+  Map<String, FormatterValidatorChain<TextEditingValue, DateTime>> get formatterValidatorChainMap {
+    FormatterValidatorChain<TextEditingValue, DateTime>? formatterValidatorChain = buildChain();
     return formatterValidatorChain == null
         ? {}
         : {

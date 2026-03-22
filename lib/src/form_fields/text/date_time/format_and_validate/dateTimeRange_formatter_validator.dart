@@ -33,7 +33,7 @@ class DateTimeRangeFormatterValidator extends DateTimeMultiFieldFormatterValidat
   @override
   void validateFieldsGroup(BricksLocalizations localizations) {
     _getFieldValues();
-    String errorText;Limits
+    String errorText;
 
     // start-date absent
     // -----------------------------------------------------------------

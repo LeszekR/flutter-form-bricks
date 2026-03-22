@@ -19,10 +19,10 @@ void main() {
   var rangeId = "rng";
 
   var keyStrings = [
-    (DateTimeRangeFormatterValidator.rangeDateStartKeyString(rangeId)),
-    (DateTimeRangeFormatterValidator.rangeTimeStartKeyString(rangeId)),
-    (DateTimeRangeFormatterValidator.rangeDateEndKeyString(rangeId)),
-    (DateTimeRangeFormatterValidator.rangeTimeEndKeyString(rangeId)),
+    (DateTimeUtils.rangeDateStartKeyString(rangeId)),
+    (DateTimeUtils.rangeTimeStartKeyString(rangeId)),
+    (DateTimeUtils.rangeDateEndKeyString(rangeId)),
+    (DateTimeUtils.rangeTimeEndKeyString(rangeId)),
   ];
 
   var dateTimeLimits = DateTimeLimits(
