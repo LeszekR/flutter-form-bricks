@@ -6,7 +6,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_brick.d
 class TestTextFieldDescriptor extends FormFieldDescriptor<TextEditingValue, String, TestTextField> {
   TestTextFieldDescriptor({
     required super.keyString,
-    super.initialInput,
+    super.initialInputMap,
     super.isRequired,
     super.runValidatorsFullRun,
     super.additionalFormatterValidatorsMaker,

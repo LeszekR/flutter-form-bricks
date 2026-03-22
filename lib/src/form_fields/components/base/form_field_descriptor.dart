@@ -31,6 +31,8 @@ abstract class FormFieldDescriptor<I extends Object, V extends Object, F extends
 
   Map<String, FormatterValidatorChain<I, V>?> get formatterValidatorChainMap => {keyString: buildChain()};
 
+  Map<String, I?> get initialInputMap => {keyString: initialInput};
+
   FormatterValidatorChain<I, V>? buildChain() => _buildFormatterValidatorChainForDescriptor<I, V, F>(this);
 }
 

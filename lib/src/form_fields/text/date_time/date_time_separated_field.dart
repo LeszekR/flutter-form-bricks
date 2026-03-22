@@ -8,7 +8,6 @@ import 'package:flutter_form_bricks/src/form_fields/components/base/validate_mod
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_base_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/current_date.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/data_time_text_editing_value.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_initial_set.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_required_fields.dart';
@@ -18,12 +17,15 @@ import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_va
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/time_field.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
-class DateTimeSeparateFieldDescriptor
-    extends FormFieldDescriptor<DateTimeTextEditingValue, DateTime, DateTimeSeparatedField> {
+class DateTimeSeparateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime, DateTimeSeparatedField> {
+  TextEditingValue? dateInitialInput;
+  TextEditingValue? timeInitialInput;
+
   DateTimeSeparateFieldDescriptor({
     required super.keyString,
     required DateTimeRequiredFields requiredFields,
-    super.initialInput,
+    this.dateInitialInput,
+    this.timeInitialInput,
     super.runValidatorsFullRun,
     super.additionalFormatterValidatorsMaker,
     DateTimeLimits? dateTimeLimits,
@@ -52,9 +54,15 @@ class DateTimeSeparateFieldDescriptor
             DateTimeUtils.makeTimeKeyString(keyString): formatterValidatorChain,
           };
   }
+
+  @override
+  Map<String, TextEditingValue?> get initialInputMap => {
+        DateTimeUtils.makeDateKeyString(keyString): dateInitialInput,
+        DateTimeUtils.makeTimeKeyString(keyString): timeInitialInput,
+      };
 }
 
-class DateTimeSeparatedField extends TextFieldBaseBrick<DateTimeTextEditingValue, DateTime> {
+class DateTimeSeparatedField extends TextFieldBaseBrick<TextEditingValue, DateTime> {
   final double? widthDate;
   final double? widthTime;
 
@@ -141,72 +149,25 @@ class DateTimeSeparatedField extends TextFieldBaseBrick<DateTimeTextEditingValue
   DateTimeSeparatedFieldState createState() => DateTimeSeparatedFieldState();
 }
 
-class DateTimeSeparatedFieldState
-    extends TextFieldBaseStateBrick<DateTimeTextEditingValue, DateTime, DateTimeSeparatedField> {
+class DateTimeSeparatedFieldState extends TextFieldBaseStateBrick<TextEditingValue, DateTime, DateTimeSeparatedField> {
   //
-  TextEditingController dateController = TextEditingController();
-  TextEditingController timeController = TextEditingController();
-
   @override
   DateTime? get defaultValue => null;
 
   @override
-  DateTimeTextEditingValue? getInput() {
-    return DateTimeTextEditingValue(dateController.value, timeController.value);
+  TextEditingValue? getInput() {
+    // redundant in this class since DateField and TimeField validate themselves
+    return null;
   }
 
   @override
-  void setInput(DateTimeTextEditingValue? formattedValue) {
-    dateController.value = formattedValue == null ? TextEditingValue.empty : formattedValue.dateEditingValue!;
-    timeController.value = formattedValue == null ? TextEditingValue.empty : formattedValue.timeEditingValue!;
-  }
-
-  void _onChanged(TextEditingValue? _) {
-    if (widget.onChanged != null) widget.onChanged!(getInput()!);
-  }
-
-  @override
-  void dispose() {
-    dateController.dispose();
-    timeController.dispose();
-    super.dispose();
+  void setInput(TextEditingValue? formattedValue) {
+    // redundant in this class since DateField and TimeField fill their inputs themselves
   }
 
   @override
   Widget build(BuildContext context) {
     final appSize = UiParams.of(context).appSize;
-
-    FormFieldValidator<String>? rangeDateValidator;
-//     if (rangeController != null) {
-//       // TODO remove dateTimeLimits from here - this is validated in DateField
-//       rangeDateValidator = DateTimeValidators.dateTimeRangeValidator(
-//           localizations, dateKeyString, formManager, rangeController, dateTimeLimits, rangeSpan);
-// // if (isDateRequired || additionalValidators != null) {
-//       var validatorsExceptRange = ValidatorProvider.compose(
-//         context: context,
-//         isRequired: requiredFields == null ? null : requiredFields.date,
-//         customValidator: DateTimeValidators.dateInputValidator(localizations, dateTimeLimits),
-//         validatorsList: additionalValidators,
-//       );
-//       rangeController._dateTimeFormatterValidators[dateKeyString] = validatorsExceptRange;
-// // }
-//     }
-
-    FormFieldValidator<String>? rangeTimeValidator;
-//     if (rangeController != null) {
-//       // TODO remove dateTimeLimits from here - this is validated in DateField
-//       rangeTimeValidator = DateTimeValidators.dateTimeRangeValidator(
-//           localizations, timeKeyString, formManager, rangeController, dateTimeLimits, rangeSpan);
-//       var validatorsExceptRange = ValidatorProvider.compose(
-//         context: context,
-//         isRequired: requiredFields == null ? null : requiredFields.time,
-//         customValidator: DateTimeValidators.timeInputValidator(localizations),
-//         validatorsList: additionalValidators,
-//       );
-// // if (isTimeRequired || additionalValidators != null) {
-//       rangeController._dateTimeFormatterValidators[timeKeyString] = validatorsExceptRange;
-// // }
-//     }
 
     // TODO: use TextField.groupId to create shared tap region for the two fields
 
@@ -262,7 +223,7 @@ class DateTimeSeparatedFieldState
       showCursor: widget.showCursor,
       enableSuggestions: widget.enableSuggestions,
       expands: widget.expands,
-      onChanged: _onChanged,
+      onChanged: widget.onChanged,
       onEditingComplete: widget.onEditingComplete,
       onSubmitted: widget.onSubmitted,
       onAppPrivateCommand: widget.onAppPrivateCommand,
@@ -331,7 +292,7 @@ class DateTimeSeparatedFieldState
       showCursor: widget.showCursor,
       enableSuggestions: widget.enableSuggestions,
       expands: widget.expands,
-      onChanged: _onChanged,
+      onChanged: widget.onChanged,
       onEditingComplete: widget.onEditingComplete,
       onSubmitted: widget.onSubmitted,
       onAppPrivateCommand: widget.onAppPrivateCommand,

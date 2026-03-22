@@ -8,7 +8,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_va
 abstract class FormManager extends ChangeNotifier {
   @visibleForTesting
   final ValueNotifier<String> errorMessageNotifier = ValueNotifier<String>('');
-  late BricksLocalizations _localizations;
+  late final BricksLocalizations _localizations;
   final GlobalKey<FormStateBrick> _formKey;
   final FormData _formData;
   final Map<String, FormatterValidatorChain?> _formatterValidatorChainMap;
@@ -44,11 +44,12 @@ abstract class FormManager extends ChangeNotifier {
 
     formData.initiallyFocusedKeyString = formSchema.initiallyFocusedKeyString;
 
-    for (FormFieldDescriptor d in formSchema.fieldDescriptors) {
+    // Tu przerwałem - finish  field types , contents, initial inputs, in a map from the descriptor
+    for (final d in formSchema.fieldDescriptors) {
       formData.fieldDataMap[d.keyString] = FormFieldData(
         fieldType: d.fieldType,
-        fieldContent: FieldContent.transient(d.initialInput),
-        initialInput: d.initialInput,
+        fieldContent: FieldContent.transient(d.initialInputMap),
+        initialInput: d.initialInputMap,
       );
     }
   }

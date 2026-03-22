@@ -9,7 +9,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/lowercase/lowercase_for
 class LowerCaseFieldDescriptor extends FormFieldDescriptor<TextEditingValue, String, LowerCaseField> {
   LowerCaseFieldDescriptor({
     required super.keyString,
-    super.initialInput,
+    super.initialInputMap,
     super.isRequired = false,
     super.runValidatorsFullRun,
     super.additionalFormatterValidatorsMaker,
