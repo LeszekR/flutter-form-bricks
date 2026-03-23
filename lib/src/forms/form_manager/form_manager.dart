@@ -45,7 +45,9 @@ abstract class FormManager extends ChangeNotifier {
       for (final keyString in d.initialInputMap.keys) {
         formData.fieldDataMap[keyString] = FormFieldData(
           fieldType: d.fieldType,
-          fieldContent: FieldContent.transient(d.initialInputMap[keyString]),
+          // Tu przerwałem - finish creating strongly typed FieldContent here
+          fieldContent: d.makeFieldContent(keyString),
+          isValidating: false,
           initialInput: d.initialInputMap[keyString],
         );
       }
@@ -53,10 +55,12 @@ abstract class FormManager extends ChangeNotifier {
   }
 
   void _setFormManagerInDescriptors() {
-    for (FormatterValidatorChain? fv in _formatterValidatorChainMap.values) {
-      if (fv == null) continue;
-      if (fv is DateTimeMultiFieldFormatterValidator) {
-        (fv as DateTimeMultiFieldFormatterValidator).formManager = this;
+    for (FormatterValidatorChain? fvc in _formatterValidatorChainMap.values) {
+      if (fvc == null) continue;
+      for(final fv in fvc.steps) {
+        if (fv is DateTimeMultiFieldFormatterValidator) {
+          fv.formManager = this;
+        }
       }
     }
   }

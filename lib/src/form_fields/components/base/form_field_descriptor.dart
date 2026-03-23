@@ -1,6 +1,7 @@
 import 'package:flutter_form_bricks/src/form_fields/components/base/form_field_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator_chain.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
 
 typedef FormatterValidatorListMaker<I extends Object, V extends Object> = List<FormatterValidator<I, V>> Function();
 
@@ -28,6 +29,8 @@ abstract class FormFieldDescriptor<I extends Object, V extends Object, F extends
     this.additionalFormatterValidatorsMaker,
   })  : assert(I != dynamic, "FormFieldDescriptor<I, V>: Generic type I must not be dynamic."),
         assert(V != dynamic, "FormFieldDescriptor<I, V>: Generic type V must not be dynamic.");
+
+  FieldContent<I, V> makeFieldContent(String keyString) => FieldContent<I, V>.transient(initialInputMap[keyString]);
 
   Map<String, FormatterValidatorChain<I, V>?> get formatterValidatorChainMap => {keyString: buildChain()};
 

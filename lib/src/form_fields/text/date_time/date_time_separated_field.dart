@@ -6,10 +6,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/base/form_field_descriptor.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/base/validate_mode_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator_chain.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/string_extension.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_base_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_initial_set.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_multi_initial_set.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_required_fields.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/date_field.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_separate_fields_formatter_validator.dart';
@@ -18,21 +19,22 @@ import 'package:flutter_form_bricks/src/form_fields/text/date_time/time_field.da
 import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
 class DateTimeSeparateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime, DateTimeSeparatedField> {
-  TextEditingValue? dateInitialInput;
-  TextEditingValue? timeInitialInput;
+  DateTimeSeparatedInitialSet? initialInputSet;
+  String _dateKeyString;
+  String _timeKeyString;
 
   DateTimeSeparateFieldDescriptor({
     required super.keyString,
-    required DateTimeRequiredFields requiredFields,
-    this.dateInitialInput,
-    this.timeInitialInput,
+    DateTimeRequiredFields requiredFields = const DateTimeRequiredFields(true, true),
     super.runValidatorsFullRun,
     super.additionalFormatterValidatorsMaker,
     DateTimeLimits? dateTimeLimits,
-    DateTimeInitialSet? initialSet,
+    this.initialInputSet,
     DateTimeUtils? dateTimeUtils,
     CurrentDate? currentDate,
-  }) : super(
+  })  : _dateKeyString = DateTimeUtils.makeDateKeyString(keyString),
+        _timeKeyString = DateTimeUtils.makeTimeKeyString(keyString),
+        super(
           defaultFormatterValidatorsMaker: () => [
             DateTimeSeparateFieldFormatterValidator(
               keyString,
@@ -50,15 +52,15 @@ class DateTimeSeparateFieldDescriptor extends FormFieldDescriptor<TextEditingVal
     return formatterValidatorChain == null
         ? {}
         : {
-            DateTimeUtils.makeDateKeyString(keyString): formatterValidatorChain,
-            DateTimeUtils.makeTimeKeyString(keyString): formatterValidatorChain,
+            _dateKeyString: formatterValidatorChain,
+            _timeKeyString: formatterValidatorChain,
           };
   }
 
   @override
   Map<String, TextEditingValue?> get initialInputMap => {
-        DateTimeUtils.makeDateKeyString(keyString): dateInitialInput,
-        DateTimeUtils.makeTimeKeyString(keyString): timeInitialInput,
+        _dateKeyString: initialInputSet == null ? null : initialInputSet!.date.txtEditVal(),
+        _timeKeyString: initialInputSet == null ? null : initialInputSet!.time.txtEditVal(),
       };
 }
 

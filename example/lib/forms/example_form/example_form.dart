@@ -9,6 +9,7 @@ final String dateKeyString1 = 'dateKeyString1';
 final String timeKeyString1 = 'timeKeyString1';
 final String plainTextKeyString2 = 'plainKeyString1';
 final String lowerCaseKeyString3 = 'lowerCaseKeyString1';
+final String dateTimeSeparatedKeString1 = 'dateTimeSeparatedKeString1';
 
 // @AutoFormSchema()
 class ExampleForm extends FormBrick {
@@ -54,6 +55,11 @@ class ExampleFormState extends FormStateBrick {
               keyString: lowerCaseKeyString3,
               formManager: formManager,
               width: 250,
+            ),
+            appSize.spacerBoxVerticalMedium,
+            DateTimeSeparatedField(
+              keyString: dateTimeSeparatedKeString1,
+              formManager: formManager,
             ),
             // BrickTheme.of(context).sizes.spacerBoxVerticalMedium,
             // BrickTextField(

@@ -7,7 +7,7 @@ import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 abstract class DateTimeMultiFieldFormatterValidator extends FormatterValidator<TextEditingValue, DateTime> {
-  late final FormManager _formManager;
+  FormManager? _formManager;
   final DateTimeUtils dateTimeUtils;
   final CurrentDate currentDate;
 
@@ -15,9 +15,11 @@ abstract class DateTimeMultiFieldFormatterValidator extends FormatterValidator<T
   final Map<String, DateTimeFieldContent> resultsCache = {};
   final Map<String, FormatterValidator> formatterValidators = {};
 
-  void set formManager(FormManager formManager) => _formManager = formManager;
+  void set formManager(FormManager formManager) {
+    if (_formManager == null) _formManager = formManager;
+  }
 
-  FormManager get formManager => _formManager;
+  FormManager get formManager => _formManager!;
 
   void setComponentFieldsKeyStrings(String keyString);
 

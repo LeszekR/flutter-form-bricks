@@ -188,6 +188,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       button = _makeButton(statesObserver, statesNotifier, buttonWidth, buttonHeight);
     }
 
+    // TU PRZERWALEM - make this method abstrCT so multi fields build
     textField = _makeTextField(context, statesObserver, statesNotifier, style);
 
     return ValueListenableBuilder(
