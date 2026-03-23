@@ -227,13 +227,13 @@ abstract class TextFieldBaseStateBrick<I extends Object, V extends Object, B ext
   @mustCallSuper
   @override
   I? onInputChanged() {
-    // Stop infinite call here at changing the field value to trimmed one
+    // Stop infinite call here at changing the field value to formatted one
     if (_skipOnChanged) return null;
 
-    // Here FormManager:
+    // Here FormManager does the following:
     // - validates the input and shows error message
     // - formats the input and returns formatted input text in TextEditingValue
-    // - saves results of format-validation in FormData -> FormFieldData -> FieldContent
+    // - saves results of format and validation in FormData -> FormFieldData -> FieldContent
     I? formattedInput = super.onInputChanged();
 
     // draw formatted input in UI

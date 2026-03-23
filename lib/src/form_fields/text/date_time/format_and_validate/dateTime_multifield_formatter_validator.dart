@@ -7,7 +7,6 @@ import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 abstract class DateTimeMultiFieldFormatterValidator extends FormatterValidator<TextEditingValue, DateTime> {
-  final String keyString;
   late final FormManager _formManager;
   final DateTimeUtils dateTimeUtils;
   final CurrentDate currentDate;
@@ -20,22 +19,22 @@ abstract class DateTimeMultiFieldFormatterValidator extends FormatterValidator<T
 
   FormManager get formManager => _formManager;
 
-  void setKeyStrings(String keyString);
+  void setComponentFieldsKeyStrings(String keyString);
 
-  void fillDateTimeFormatterValidators();
+  void fillDateTimeFormatterValidatorsMap();
 
   void validateFieldsGroup(BricksLocalizations localizations);
 
   DateTimeMultiFieldFormatterValidator(
-    this.keyString,
+    String keyString,
     this.dateTimeUtils,
     this.currentDate,
   ) : assert(
             !keyString.contains('~'),
             'DateTimeMultiFieldFormatterValidator keyString must not contain "~"'
             ' - it is reserved for use in automatically added postfixes.') {
-    setKeyStrings(keyString);
-    fillDateTimeFormatterValidators();
+    setComponentFieldsKeyStrings(keyString);
+    fillDateTimeFormatterValidatorsMap();
   }
 
   @override

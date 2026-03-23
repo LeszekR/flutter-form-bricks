@@ -282,7 +282,7 @@ class DateTimeRangeFormatterValidator extends DateTimeMultiFieldFormatterValidat
     return formManager.getFieldValue(keyString);
   }
 
-  void setKeyStrings(String keyString) {
+  void setComponentFieldsKeyStrings(String keyString) {
     _dateStartKeyString = DateTimeUtils.rangeDateStartKeyString(keyString);
     _timeStartKeyString = DateTimeUtils.rangeTimeStartKeyString(keyString);
     _dateEndKeyString = DateTimeUtils.rangeDateEndKeyString(keyString);
@@ -296,7 +296,7 @@ class DateTimeRangeFormatterValidator extends DateTimeMultiFieldFormatterValidat
     ];
   }
 
-  void fillDateTimeFormatterValidators() {
+  void fillDateTimeFormatterValidatorsMap() {
     formatterValidators[_dateStartKeyString] = DateFormatterValidator(
       dateTimeUtils,
       currentDate,

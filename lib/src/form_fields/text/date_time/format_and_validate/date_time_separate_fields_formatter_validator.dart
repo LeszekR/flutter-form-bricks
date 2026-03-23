@@ -5,6 +5,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_va
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/time_formatter_validator.dart';
 
 class DateTimeSeparateFieldFormatterValidator extends DateTimeMultiFieldFormatterValidator {
+  // TODO - add support for required fields
   final DateTimeRequiredFields _requiredFields;
   final DateTimeLimits? _dateTimeLimits;
 
@@ -23,10 +24,34 @@ class DateTimeSeparateFieldFormatterValidator extends DateTimeMultiFieldFormatte
   ]);
 
   @override
+  void setComponentFieldsKeyStrings(String keyString) {
+    _dateKeyString = DateTimeUtils.makeDateKeyString(keyString);
+    _timeKeyString = DateTimeUtils.makeTimeKeyString(keyString);
+
+    keyStrings = [
+      _dateKeyString,
+      _timeKeyString,
+    ];
+  }
+
+  @override
+  void fillDateTimeFormatterValidatorsMap() {
+    formatterValidators[_dateKeyString] = DateFormatterValidator(
+      dateTimeUtils,
+      currentDate,
+      _dateTimeLimits,
+    );
+    formatterValidators[_timeKeyString] = TimeFormatterValidator(
+      dateTimeUtils,
+      _dateTimeLimits,
+    );
+  }
+
+  @override
   void validateFieldsGroup(BricksLocalizations localizations) {
     if (_dateTimeLimits == null) return;
 
-    _getFieldValues();
+    _readFieldValues();
     String errorText;
 
     // date is absent - limits validation not possible
@@ -57,35 +82,12 @@ class DateTimeSeparateFieldFormatterValidator extends DateTimeMultiFieldFormatte
     }
   }
 
-  void _getFieldValues() {
-    _date = _getRangeFieldValue(_dateKeyString);
-    _time = _getRangeFieldValue(_timeKeyString);
+  void _readFieldValues() {
+    _date = _getComponentFieldValue(_dateKeyString);
+    _time = _getComponentFieldValue(_timeKeyString);
   }
 
-  DateTime? _getRangeFieldValue(String keyString) {
+  DateTime? _getComponentFieldValue(String keyString) {
     return formManager.getFieldValue(keyString) as DateTime;
-  }
-
-  @override
-  void setKeyStrings(String keyString) {
-    _dateKeyString = DateTimeUtils.makeDateKeyString(keyString);
-    _timeKeyString = DateTimeUtils.makeTimeKeyString(keyString);
-
-    keyStrings = [
-      _dateKeyString,
-      _timeKeyString,
-    ];
-  }
-
-  void fillDateTimeFormatterValidators() {
-    formatterValidators[_dateKeyString] = DateFormatterValidator(
-      dateTimeUtils,
-      currentDate,
-      _dateTimeLimits,
-    );
-    formatterValidators[_timeKeyString] = TimeFormatterValidator(
-      dateTimeUtils,
-      _dateTimeLimits,
-    );
   }
 }

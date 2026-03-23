@@ -8,7 +8,7 @@ import 'package:flutter_form_bricks/shelf.dart';
 class PlainTextFieldDescriptor extends FormFieldDescriptor<TextEditingValue, String, PlainTextField> {
   PlainTextFieldDescriptor({
     required super.keyString,
-    super.initialInputMap,
+    super.initialInput,
     super.isRequired,
     super.runValidatorsFullRun,
     super.additionalFormatterValidatorsMaker,

@@ -3,7 +3,6 @@ import 'package:flutter_form_bricks/src/form_fields/components/formatter_validat
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/string_extension.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/current_date.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/data_time_text_editing_value.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/time_formatter_validator.dart';
@@ -17,9 +16,9 @@ class DateTimeFormatterValidator extends FormatterValidator<TextEditingValue, Da
 
   DateTimeFormatterValidator(
     DateTimeUtils _dateTimeUtils,
-    CurrentDate _currentDate,[
-    DateTimeLimits? _dateTimeLimits,]
-  )   : _dateFormatterValidator = DateFormatterValidator(_dateTimeUtils, _currentDate, _dateTimeLimits),
+    CurrentDate _currentDate, [
+    DateTimeLimits? _dateTimeLimits,
+  ])  : _dateFormatterValidator = DateFormatterValidator(_dateTimeUtils, _currentDate, _dateTimeLimits),
         _timeFormatterValidator = TimeFormatterValidator(_dateTimeUtils, _dateTimeLimits);
 
   DateTimeFieldContent run(

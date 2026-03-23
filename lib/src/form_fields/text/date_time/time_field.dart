@@ -12,7 +12,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_va
 class TimeFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime, TimeField> {
   TimeFieldDescriptor({
     required super.keyString,
-    super.initialInputMap,
+    super.initialInput,
     super.isRequired,
     super.runValidatorsFullRun,
     super.additionalFormatterValidatorsMaker,

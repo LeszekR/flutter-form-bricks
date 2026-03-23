@@ -3,7 +3,6 @@ import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/dateTime_multifield_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_separate_fields_formatter_validator.dart';
 
 abstract class FormManager extends ChangeNotifier {
   @visibleForTesting
@@ -33,24 +32,23 @@ abstract class FormManager extends ChangeNotifier {
         _formatterValidatorChainMap = {
           for (final d in formSchema.fieldDescriptors) ...d.formatterValidatorChainMap,
         } {
-    _initFormData(formSchema, _formData);
+    if (formData.fieldDataMap.isEmpty) _initFormData(formSchema, _formData);
     _setFormManagerInDescriptors();
   }
 
   // form reset
   // ==============================================================================
   void _initFormData(FormSchema formSchema, FormData formData) {
-    if (formData.fieldDataMap.isNotEmpty) return;
-
     formData.initiallyFocusedKeyString = formSchema.initiallyFocusedKeyString;
 
-    // Tu przerwałem - finish  field types , contents, initial inputs, in a map from the descriptor
     for (final d in formSchema.fieldDescriptors) {
-      formData.fieldDataMap[d.keyString] = FormFieldData(
-        fieldType: d.fieldType,
-        fieldContent: FieldContent.transient(d.initialInputMap),
-        initialInput: d.initialInputMap,
-      );
+      for (final keyString in d.initialInputMap.keys) {
+        formData.fieldDataMap[keyString] = FormFieldData(
+          fieldType: d.fieldType,
+          fieldContent: FieldContent.transient(d.initialInputMap[keyString]),
+          initialInput: d.initialInputMap[keyString],
+        );
+      }
     }
   }
 
@@ -59,7 +57,7 @@ abstract class FormManager extends ChangeNotifier {
       if (fv == null) continue;
       if (fv is DateTimeMultiFieldFormatterValidator) {
         (fv as DateTimeMultiFieldFormatterValidator).formManager = this;
-      };
+      }
     }
   }
 

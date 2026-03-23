@@ -22,7 +22,7 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
   FormFieldBrick({
     Key? key,
     required this.keyString,
-    // TODO add field label, required if has validator so FormManager shows error for named field
+    // TODO add field label, required if has validator so FormManager shows error for a named field
     required this.formManager,
     required this.validateMode,
     this.label,
@@ -51,7 +51,7 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   /// and updated in `setState()`;
   late I? _input;
 
-  /// Controls the field's color and is passed to `InputDecoration` it the field shows its error this way.
+  /// Controls the field's color and is passed to `InputDecoration` if the field shows its error this way.
   String? _error;
 
   late final FocusNode focusNode;
@@ -69,7 +69,6 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
     formManager.setFocusListener(focusNode, keyString);
 
     _input = formManager.getFieldContent(keyString).input as I?;
-    // _input = formManager.getFieldContent<I, V>(keyString).input;
 
     _states = widget.statesNotifier?.value;
     widget.statesNotifier?.addListener(_onStatesChanged);
