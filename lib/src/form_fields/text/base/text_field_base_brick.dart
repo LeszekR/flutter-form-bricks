@@ -205,23 +205,6 @@ abstract class TextFieldBaseBrick<I extends Object, V extends Object> extends Fo
 abstract class TextFieldBaseStateBrick<I extends Object, V extends Object, B extends TextFieldBaseBrick<I, V>>
     extends FormFieldStateBrick<I, V, B> {
 
-  // TODO move helper methods to a singleton
-  // TODO move this to FormFieldBrick?
-  InputDecoration _makeInputDecoration(InputDecoration? decoration) {
-    if (decoration == null) {
-      return InputDecoration(
-        // isDense: true,
-        // isCollapsed: true,
-        contentPadding: EdgeInsets.zero,
-        border: InputBorder.none,
-        fillColor: makeColor(),
-      );
-    }
-    return decoration.copyWith(
-      fillColor: makeColor(),
-    );
-  }
-
   bool _skipOnChanged = false;
 
   @mustCallSuper

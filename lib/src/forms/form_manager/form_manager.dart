@@ -45,10 +45,9 @@ abstract class FormManager extends ChangeNotifier {
       for (final keyString in d.initialInputMap.keys) {
         formData.fieldDataMap[keyString] = FormFieldData(
           fieldType: d.fieldType,
-          // Tu przerwałem - finish creating strongly typed FieldContent here
           fieldContent: d.makeFieldContent(keyString),
-          isValidating: false,
           initialInput: d.initialInputMap[keyString],
+          isValidating: false,
         );
       }
     }

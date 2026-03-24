@@ -19,9 +19,9 @@ import 'package:flutter_form_bricks/src/form_fields/text/date_time/time_field.da
 import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
 class DateTimeSeparateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime, DateTimeSeparatedField> {
-  DateTimeSeparatedInitialSet? initialInputSet;
   String _dateKeyString;
   String _timeKeyString;
+  DateTimeSeparatedInitialSet? initialInputSet;
 
   DateTimeSeparateFieldDescriptor({
     required super.keyString,
@@ -86,8 +86,8 @@ class DateTimeSeparatedField extends TextFieldBaseBrick<TextEditingValue, DateTi
     //
     // TextField
     super.groupId = EditableText,
-    super.controller,
-    super.focusNode,
+    // super.controller,
+    // super.focusNode,
     super.undoController,
     super.decoration,
     super.keyboardType,
