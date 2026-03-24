@@ -42,6 +42,7 @@ abstract class FormManager extends ChangeNotifier {
     formData.initiallyFocusedKeyString = formSchema.initiallyFocusedKeyString;
 
     for (final d in formSchema.fieldDescriptors) {
+      // TODO - register descriptor is used => Throw and print all unused descriptors if any are found
       for (final keyString in d.initialInputMap.keys) {
         formData.fieldDataMap[keyString] = FormFieldData(
           fieldType: d.fieldType,

@@ -64,7 +64,7 @@ class DateTimeSeparateFieldDescriptor extends FormFieldDescriptor<TextEditingVal
       };
 }
 
-class DateTimeSeparatedField extends TextFieldBaseBrick<TextEditingValue, DateTime> {
+class DateTimeSeparatedField extends StatelessWidget {
   final double? widthDate;
   final double? widthTime;
 

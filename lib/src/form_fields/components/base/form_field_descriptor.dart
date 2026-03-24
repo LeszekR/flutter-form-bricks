@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/base/form_field_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator_chain.dart';
@@ -5,7 +6,7 @@ import 'package:flutter_form_bricks/src/form_fields/components/state/field_conte
 
 typedef FormatterValidatorListMaker<I extends Object, V extends Object> = List<FormatterValidator<I, V>> Function();
 
-abstract class FormFieldDescriptor<I extends Object, V extends Object, F extends FormFieldBrick<I, V>> {
+abstract class FormFieldDescriptor<I extends Object, V extends Object, F extends Widget> {
   final String keyString;
   final Type inputRuntimeType = I;
   final Type valueRuntimeType = V;
@@ -60,7 +61,7 @@ abstract class FormFieldDescriptor<I extends Object, V extends Object, F extends
 ///
 /// See also: [FormatterValidatorChain], [FormatterValidatorChainFullRun], [FormatterValidatorChainEarlyStop].
 FormatterValidatorChain<I, V>?
-    _buildFormatterValidatorChainForDescriptor<I extends Object, V extends Object, F extends FormFieldBrick<I, V>>(
+    _buildFormatterValidatorChainForDescriptor<I extends Object, V extends Object, F extends Widget>(
         FormFieldDescriptor<I, V, F> d) {
   List<FormatterValidator<I, V>>? formatterValidatorList = null;
   final List<FormatterValidator<I, V>>? defaults = d.defaultFormatterValidatorsMaker?.call();

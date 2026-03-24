@@ -10,9 +10,8 @@ import 'package:flutter_form_bricks/src/form_fields/components/states_controller
 import 'package:flutter_form_bricks/src/form_fields/text/base/state_colored_icon_button.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_bordered_box.dart';
 
-abstract class TextFieldBaseBrick<I extends Object, V extends Object> extends FormFieldBrick<I, V> {
+class TextFieldConfig {
   // // TextFieldBrick
-  // final double? width;
   final IconButtonParams? buttonParams;
   //
   // Flutter TextField
@@ -38,7 +37,7 @@ abstract class TextFieldBaseBrick<I extends Object, V extends Object> extends Fo
   // final MaterialStatesController? statesController; => replaced with statesObserver and statesNotifier
   final String obscuringCharacter;
   final bool obscureText;
-  final bool autocorrect;
+  final bool? autocorrect;
 
   // TODO turn off and lock it for strictly formatting fields like DateField
   final SmartDashesType? smartDashesType;
@@ -56,6 +55,7 @@ abstract class TextFieldBaseBrick<I extends Object, V extends Object> extends Fo
   static const int noMaxLength = -1;
   final int? maxLength;
   final MaxLengthEnforcement? maxLengthEnforcement;
+  final VoidCallback? onChanged;
   final VoidCallback? onEditingComplete;
   final ValueChanged<String>? onSubmitted;
   final AppPrivateCommandCallback? onAppPrivateCommand;
@@ -68,8 +68,8 @@ abstract class TextFieldBaseBrick<I extends Object, V extends Object> extends Fo
   final bool? cursorOpacityAnimates;
   final Color? cursorColor;
   final Color? cursorErrorColor;
-  final BoxHeightStyle selectionHeightStyle;
-  final BoxWidthStyle selectionWidthStyle;
+  final BoxHeightStyle? selectionHeightStyle;
+  final BoxWidthStyle? selectionWidthStyle;
   final Brightness? keyboardAppearance;
   final EdgeInsets scrollPadding;
   final bool? enableInteractiveSelection;
@@ -98,28 +98,17 @@ abstract class TextFieldBaseBrick<I extends Object, V extends Object> extends Fo
   final SpellCheckConfiguration? spellCheckConfiguration;
   final List<Locale>? hintLocales;
 
-  TextFieldBaseBrick({
-    super.key,
+  TextFieldConfig({
     //
-    // TextFieldBaseBrick
+    // TextFieldConfig
     this.buttonParams,
-    //
-    // FormFieldBrick
-    required super.keyString,
-    required super.formManager,
-    required super.validateMode,
-    super.label,
-    super.labelPosition,
-    super.colorMaker,
-    super.statesObserver,
-    super.statesNotifier,
     //
     // TextField
     this.groupId = EditableText,
     this.controller,
     this.focusNode,
     this.undoController,
-    this.decoration,
+    this.decoration = const InputDecoration(),
     this.keyboardType,
     this.textInputAction,
     // TODO use instead of formatter-validator first-upper-then-lower
@@ -152,7 +141,7 @@ abstract class TextFieldBaseBrick<I extends Object, V extends Object> extends Fo
     // TODO implement remaining n showing on the screen maximum allowed “characters” (with caveats re: grapheme clusters); shows a counter by default.
     this.maxLength,
     this.maxLengthEnforcement,
-    super.onChanged,
+    this.onChanged,
     this.onEditingComplete,
     this.onSubmitted,
     this.onAppPrivateCommand,
@@ -200,52 +189,4 @@ abstract class TextFieldBaseBrick<I extends Object, V extends Object> extends Fo
     this.magnifierConfiguration,
     this.hintLocales,
   });
-}
-
-abstract class TextFieldBaseStateBrick<I extends Object, V extends Object, B extends TextFieldBaseBrick<I, V>>
-    extends FormFieldStateBrick<I, V, B> {
-
-  bool _skipOnChanged = false;
-
-  @mustCallSuper
-  @override
-  I? onInputChanged() {
-    // Stop infinite call here at changing the field value to formatted one
-    if (_skipOnChanged) return null;
-
-    // Here FormManager does the following:
-    // - validates the input and shows error message
-    // - formats the input and returns formatted input text in TextEditingValue
-    // - saves results of format and validation in FormData -> FormFieldData -> FieldContent
-    I? formattedInput = super.onInputChanged();
-
-    // draw formatted input in UI
-    if (widget.validateMode == ValidateModeBrick.onChange) _updateUi(formattedInput);
-
-    // Run custom onChanged callback if provided
-    widget.onChanged?.call(getInput()!);
-
-    return null;
-  }
-
-  @mustCallSuper
-  void onEditingComplete() {
-    // Here FormManager:
-    // - validates the input and shows error message
-    // - formats the input and returns formatted input text in TextEditingValue
-    // - saves results of format-validation in FormData -> FormFieldData -> FieldContent
-    I? formattedValue = super.onInputChanged();
-
-    // draw formatted input in UI
-    if (widget.validateMode == ValidateModeBrick.onEditingComplete) _updateUi(formattedValue);
-
-    // Run custom onEditingComplete callback if provided
-    widget.onEditingComplete?.call();
-  }
-
-  void _updateUi(I? formattedValue) {
-    _skipOnChanged = true;
-    setState(() => setInput(formattedValue));
-    _skipOnChanged = false;
-  }
 }
