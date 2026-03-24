@@ -13,6 +13,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_bordere
 class TextFieldConfig {
   // // TextFieldBrick
   final IconButtonParams? buttonParams;
+  final ValidateModeBrick validateMode;
   //
   // Flutter TextField
   final TextMagnifierConfiguration? magnifierConfiguration;
@@ -102,6 +103,7 @@ class TextFieldConfig {
     //
     // TextFieldConfig
     this.buttonParams,
+    this.validateMode = ValidateModeBrick.noValidator,
     //
     // TextField
     this.groupId = EditableText,
