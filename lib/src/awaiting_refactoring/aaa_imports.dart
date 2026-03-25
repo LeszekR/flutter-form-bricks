@@ -7,6 +7,7 @@ import 'package:flutter_form_bricks/src/ui_params/app_color/app_color.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_color/app_color.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_style/app_style.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/labelled_box/label_position.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/states_color_maker.dart';
 
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
@@ -25,6 +26,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/base/icon_button_params
 import 'package:flutter_form_bricks/src/forms/base/form_brick.dart';
 import 'package:flutter_form_bricks/src/forms/base/form_schema.dart';
 import 'package:flutter_form_bricks/src/forms/state/form_data.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/state/form_field_data.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/base/form_utils.dart';
 
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/input_validator_provider.dart';

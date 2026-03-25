@@ -1,14 +1,19 @@
-import 'package:flutter_form_bricks/src/form_fields/text/base/icon_button_params.dart';
 import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/base/form_field_descriptor.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/base/validate_mode_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator_chain.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/labelled_box/label_position.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/state/form_field_data.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/icon_button_params.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/states_color_maker.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/string_extension.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_base_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_multi_initial_set.dart';
@@ -17,6 +22,8 @@ import 'package:flutter_form_bricks/src/form_fields/text/date_time/date_field.da
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_separate_fields_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/time_field.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
+import 'package:flutter_form_bricks/src/ui_params/theme_data/bricks_theme_data.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
 class DateTimeSeparateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime, DateTimeSeparatedField> {
@@ -59,26 +66,39 @@ class DateTimeSeparateFieldDescriptor extends FormFieldDescriptor<TextEditingVal
   }
 
   @override
-  Map<String, TextEditingValue?> get initialInputMap => {
-        _dateKeyString: initialInputSet == null ? null : initialInputSet!.date.txtEditVal(),
-        _timeKeyString: initialInputSet == null ? null : initialInputSet!.time.txtEditVal(),
+  Map<String, FormFieldData> get fieldDataMap => {
+        _dateKeyString: FormFieldData(
+          fieldType: DateField,
+          fieldContent: DateTimeFieldContent.transient(initialInputSet?.date.txtEditVal()),
+          initialInput: initialInputSet?.date.txtEditVal(),
+          isValidating: false,
+        ),
+        _timeKeyString: FormFieldData(
+          fieldType: TimeField,
+          fieldContent: DateTimeFieldContent.transient(initialInputSet?.time.txtEditVal()),
+          initialInput: initialInputSet?.time.txtEditVal(),
+          isValidating: false,
+        )
       };
 }
 
 class DateTimeSeparatedField extends StatelessWidget {
+  final String keyString;
+  final TextFieldConfig config;
+  final FormManager formManager;
+  final StatesColorMaker colorMaker;
+  final String? label;
+  final LabelPosition labelPosition;
   final double? widthDate;
   final double? widthTime;
-  final TextFieldConfig config;
 
   DateTimeSeparatedField({
     // FormFieldBrick
-    required super.keyString,
-    required super.formManager,
-    super.label,
-    super.labelPosition,
-    super.colorMaker,
-    super.statesObserver,
-    super.statesNotifier,
+    required this.keyString,
+    required this.formManager,
+    StatesColorMaker? colorMaker,
+    this.label,
+    this.labelPosition = LabelPosition.topLeft,
     //
     // TextFieldBrick
     this.widthDate,
@@ -162,7 +182,8 @@ class DateTimeSeparatedField extends StatelessWidget {
     UndoHistoryController? undoController,
     SpellCheckConfiguration? spellCheckConfiguration,
     List<Locale>? hintLocales,
-  }) : config = TextFieldConfig(
+  })  : this.colorMaker = colorMaker ?? StatesColorMaker(),
+        config = TextFieldConfig(
           // // TextFieldConfig
           buttonParams: buttonParams,
           validateMode: ValidateModeBrick.onEditingComplete,
@@ -238,40 +259,21 @@ class DateTimeSeparatedField extends StatelessWidget {
           hintLocales: hintLocales,
         );
 
-//   @override
-//   DateTimeSeparatedFieldState createState() => DateTimeSeparatedFieldState();
-// }
-//
-// class DateTimeSeparatedFieldState extends TextFieldBaseStateBrick<TextEditingValue, DateTime, DateTimeSeparatedField> {
-//   //
-  @override
-  DateTime? get defaultValue => null;
-
-  @override
-  TextEditingValue? getInput() {
-    // redundant in this class since DateField and TimeField validate themselves
-    return null;
-  }
-
-  @override
-  void setInput(TextEditingValue? formattedValue) {
-    // redundant in this class since DateField and TimeField fill their inputs themselves
-  }
-
   @override
   Widget build(BuildContext context) {
     final appSize = UiParams.of(context).appSize;
+    final appTheme = UiParams.of(context).appTheme;
 
     // TODO: use TextField.groupId to create shared tap region for the two fields
 
     List<Widget> elements = [
-      _makeDateField(),
+      _makeDateField(appTheme),
       appSize.spacerBoxHorizontalSmallest,
-      _makeTimeField(),
+      _makeTimeField(appTheme),
     ];
-    if (config.label != null) {
+    if (label != null) {
       elements = [
-        Text(config.label!),
+        Text(label!),
         appSize.spacerBoxHorizontalSmallest,
         ...elements,
       ];
@@ -284,19 +286,19 @@ class DateTimeSeparatedField extends StatelessWidget {
     );
   }
 
-  DateField _makeDateField() {
+  DateField _makeDateField(BricksThemeData appTheme) {
     return DateField(
       // FormFieldBrick
-      keyString: DateTimeUtils.makeDateKeyString(config.keyString),
-      formManager: config.formManager,
+      keyString: DateTimeUtils.makeDateKeyString(keyString),
+      formManager: formManager,
       // required String label,
       // required LabelPosition labelPosition,
-      colorMaker: config.colorMaker,
-      statesObserver: config.statesObserver,
-      statesNotifier: config.statesNotifier,
+      colorMaker: colorMaker,
+      // statesObserver: statesObserver,
+      // statesNotifier: statesNotifier,
       //
       // TextFieldBrick
-      width: config.widthDate,
+      width: widthDate ?? appTheme.getFontDimension(TextDimension.widthOfChar0) * 12,
       buttonParams: config.buttonParams,
       //
       // TextField
@@ -353,19 +355,19 @@ class DateTimeSeparatedField extends StatelessWidget {
     );
   }
 
-  TimeField _makeTimeField() {
+  TimeField _makeTimeField(BricksThemeData appTheme) {
     return TimeField(
       // FormFieldBrick
-      keyString: DateTimeUtils.makeTimeKeyString(config.keyString),
-      formManager: config.formManager,
+      keyString: DateTimeUtils.makeTimeKeyString(keyString),
+      formManager: formManager,
       // required String label,
       // required LabelPosition labelPosition,
-      colorMaker: config.colorMaker,
-      statesObserver: config.statesObserver,
-      statesNotifier: config.statesNotifier,
+      colorMaker: colorMaker,
+      // statesObserver: statesObserver,
+      // statesNotifier: statesNotifier,
       //
       // TextFieldBrick
-      width: config.widthTime,
+      width: widthTime ?? appTheme.getFontDimension(TextDimension.widthOfChar0) * 8,
       buttonParams: config.buttonParams,
       //
       // TextField

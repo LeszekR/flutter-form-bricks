@@ -43,13 +43,8 @@ abstract class FormManager extends ChangeNotifier {
 
     for (final d in formSchema.fieldDescriptors) {
       // TODO - register descriptor is used => Throw and print all unused descriptors if any are found
-      for (final keyString in d.initialInputMap.keys) {
-        formData.fieldDataMap[keyString] = FormFieldData(
-          fieldType: d.fieldType,
-          fieldContent: d.makeFieldContent(keyString),
-          initialInput: d.initialInputMap[keyString],
-          isValidating: false,
-        );
+      for (final keyString in d.fieldDataMap.keys) {
+        formData.fieldDataMap[keyString] = d.fieldDataMap[keyString]!;
       }
     }
   }

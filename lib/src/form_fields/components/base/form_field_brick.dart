@@ -28,6 +28,7 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
     this.label,
     this.labelPosition = LabelPosition.topLeft,
     StatesColorMaker? colorMaker,
+    // TODO verify / test / fix passing-using ststesObserver - note: TextFieldBrick costructs it INSIDE - bug?
     this.statesObserver,
     this.statesNotifier,
     this.onChanged,

@@ -4,6 +4,9 @@ import '../app_color/app_color.dart';
 import '../app_size/app_size.dart';
 import '../app_style/app_style.dart';
 
+
+enum TextDimension { lineHeight, widthOfChar0 }
+
 /// BricksThemeData
 ///
 /// This abstraction mirrors **Flutter's `ThemeData` property types** on the
@@ -76,7 +79,7 @@ abstract class BricksThemeData {
     this.appStyle,
   );
 
-    TextStyle textStyle();
+  TextStyle textStyle();
 
   /// Final composer: builds ThemeData from abstract parts.
   ThemeData get themeData => ThemeData(
@@ -96,19 +99,25 @@ abstract class BricksThemeData {
         checkboxTheme: checkboxThemeData,
       );
 
-  double? _textLineHeight;
-  final Map<TextStyle, double> textLineHeightMap = {};
+  final Map<TextStyle, Map<TextDimension, double>> _textDimensionsMap = {};
 
-  double get textLineHeight => _textLineHeight ??= calculateLineHeight(textStyle());
+  double getFontDimension(TextDimension dimensionName) {
+    return computeFontDimension(textStyle(), dimensionName);
+  }
 
-  double calculateLineHeight(TextStyle style) {
-    if (!textLineHeightMap.containsKey(style)) {
-      final textPainter = TextPainter(
-        text: TextSpan(text: 'a', style: style),
-        textDirection: TextDirection.ltr,
-      )..layout();
-      textLineHeightMap[style] = textPainter.height;
+  double computeFontDimension(TextStyle style, TextDimension dimensionName) {
+    if (!_textDimensionsMap.containsKey(style)) {
+      _computeFontDimension(style, TextDimension.lineHeight, 'A', true);
+      _computeFontDimension(style, TextDimension.widthOfChar0, '0', false);
     }
-    return textLineHeightMap[style]!;
+    return _textDimensionsMap[style]![dimensionName]!;
+  }
+
+  void _computeFontDimension(TextStyle style, TextDimension textDimension, String char, bool vertical) {
+    final textPainter = TextPainter(
+      text: TextSpan(text: char, style: style),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    _textDimensionsMap.putIfAbsent(style, () => {})[textDimension] = vertical ? textPainter.height : textPainter.width;
   }
 }

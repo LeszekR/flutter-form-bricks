@@ -8,8 +8,9 @@ import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/states_controller/update_once_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/state_colored_icon_button.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_base_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_bordered_box.dart';
+import 'package:flutter_form_bricks/src/ui_params/theme_data/bricks_theme_data.dart';
 
 abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditingValue, V> {
   final double? width;
@@ -223,10 +224,10 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
     if (widget.config.style == null) {
       style = uiParams.appTheme.textStyle();
-      lineHeight = uiParams.appTheme.textLineHeight;
+      lineHeight = uiParams.appTheme.getFontDimension(TextDimension.lineHeight);
     } else {
       style = widget.config.style!;
-      lineHeight = uiParams.appTheme.calculateLineHeight(widget.config.style!);
+      lineHeight = uiParams.appTheme.computeFontDimension(widget.config.style!, TextDimension.lineHeight);
     }
 
     int maxLines = widget.config.maxLines ?? 1;
@@ -235,6 +236,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 // TODO SizedBox still not tall correctly
     textHeight = lineHeight * maxLines;
 
+    // TODO verify / test / fix passing-using ststesObserver - note: TextFieldBrick costructs it INSIDE - then what about the one in FormFieldBrick??
     if (widget.config.buttonParams == null) {
       var statesController = WidgetStatesController();
       statesObserver = statesController;
@@ -253,7 +255,6 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       button = _makeButton(statesObserver, statesNotifier, buttonWidth, buttonHeight);
     }
 
-    // TU PRZERWALEM - make this method abstrCT so multi fields build
     textField = _makeTextField(context, statesObserver, statesNotifier, style);
 
     return ValueListenableBuilder(
