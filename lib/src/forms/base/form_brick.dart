@@ -127,17 +127,21 @@ abstract class FormStateBrick<T extends FormBrick> extends State<T> {
   /// - is wrapped (`softWrap`)
   /// - is placed inside a `SingleChildScrollView`
   /// - uses styling from `UiParams`
-  ValueListenableBuilder buildErrorMessageText(BuildContext context) {
+  ValueListenableBuilder buildErrorDisplayArea(BuildContext context) {
     return ValueListenableBuilder<String>(
       valueListenable: formManager.errorMessageNotifier,
-      builder: (context, errors, child) => SingleChildScrollView(
-        child: Text(
-          errors,
-          key: Key(widget._errorTextKeyString),
-          softWrap: true,
-          // TODO 1 global error-area text style + background color
-          style: TextStyle(
-            backgroundColor: UiParams.of(context).appColor.greyLightest,
+      builder: (context, errors, child) => Container(
+        constraints: BoxConstraints.expand(),
+        padding: EdgeInsets.all(UiParams.of(context).appSize.paddingForm),
+        decoration: BoxDecoration(color: UiParams.of(context).appColor.greyLightest),
+        child: SingleChildScrollView(
+          child: Text(
+            // 'test text\ntest text\ntest text\ntest text\ntest text\ntest text\ntest text\n',
+            errors,
+            key: Key(widget._errorTextKeyString),
+            softWrap: true,
+            // TODO 1 global error-area text style + background color
+            style: TextStyle(),
           ),
         ),
       ),
@@ -158,30 +162,29 @@ abstract class FormStateBrick<T extends FormBrick> extends State<T> {
           child: Container(
             height: appSize.bottomPanelHeight,
             padding: EdgeInsets.all(appSize.paddingForm),
-            child: buildErrorMessageText(context),
+            child: buildErrorDisplayArea(context)),
           ),
-        ),
-        //
-        // appSize.spacerBoxHorizontalMedium,
-        // //
-        // Container(
-        //   height: appSize.bottomPanelHeight,
-        //   child: Column(
-        //     mainAxisSize: MainAxisSize.min,
-        //     children: [
-        //       /*decoration:  BoxDecoration(border: Border.all(width: appSize.borderWidth, color: AppColor.borderEnabled)),*/
-        //       /*child:*/
-        //       SizedBox(
-        //         height: appSize.bottomPanelHeight - appSize.buttonHeight - testControlsHeightCorrection(),
-        //         width: 50,
-        //       ),
-        //       // FormUtils.horizontalFormGroup(padding: false,
-        //       FormUtils.horizontalFormGroupBorderless(
-        //         createFormControlsList(),
-        //       ),
-        //     ],
-        //   ),
-        // ),
+          //
+          // appSize.spacerBoxHorizontalMedium,
+          // //
+          // Container(
+          //   height: appSize.bottomPanelHeight,
+          //   child: Column(
+          //     mainAxisSize: MainAxisSize.min,
+          //     children: [
+          //       /*decoration:  BoxDecoration(border: Border.all(width: appSize.borderWidth, color: AppColor.borderEnabled)),*/
+          //       /*child:*/
+          //       SizedBox(
+          //         height: appSize.bottomPanelHeight - appSize.buttonHeight - testControlsHeightCorrection(),
+          //         width: 50,
+          //       ),
+          //       // FormUtils.horizontalFormGroup(padding: false,
+          //       FormUtils.horizontalFormGroupBorderless(
+          //         createFormControlsList(),
+          //       ),
+          //     ],
+          //   ),
+          // ),
       ],
       height: appSize.bottomPanelHeight,
     );

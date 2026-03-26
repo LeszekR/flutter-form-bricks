@@ -282,7 +282,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       // key: Key(keyString),
       groupId: widget.config.groupId,
       controller: controller,
-      focusNode: widget.config.focusNode,
+      focusNode: widget.config.focusNode ?? focusNode,
       undoController: widget.config.undoController,
       decoration: _makeInputDecoration(widget.config.decoration),
       keyboardType: widget.config.keyboardType,
