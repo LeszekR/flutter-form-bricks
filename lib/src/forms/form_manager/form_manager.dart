@@ -5,7 +5,6 @@ import 'package:flutter_form_bricks/src/form_fields/components/state/field_conte
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/dateTime_multifield_formatter_validator.dart';
 
 abstract class FormManager extends ChangeNotifier {
-  @visibleForTesting
   final ValueNotifier<String> errorMessageNotifier = ValueNotifier<String>('');
   late final BricksLocalizations _localizations;
   final GlobalKey<FormStateBrick> _formKey;

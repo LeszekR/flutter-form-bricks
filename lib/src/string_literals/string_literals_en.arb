@@ -157,8 +157,8 @@
   "timeStringErrorTooManyDigitsMinutes": "Too many digits for minutes",
   "timeStringErrorTooManyDigitsHours": "Too many digits for hours",
 
-  "timeErrorTooBigMinute": "Too high minutes number - no such time exists",
-  "timeErrorTooBigHour": "Too high hours number - no such time exists (midnight is 00:00)",
+  "timeErrorTooBigMinute": "Too high number of minutes - no such time exists",
+  "timeErrorTooBigHour": "Too high number of hours - no such time exists (midnight is 00:00)",
 
   "timeErrorTooFarBack": "Time must not be earlier than {minTimeParam}",
   "@timeErrorTooFarBack": {

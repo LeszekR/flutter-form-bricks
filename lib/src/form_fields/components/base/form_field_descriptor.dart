@@ -18,8 +18,6 @@ abstract class FormFieldDescriptor<I extends Object, V extends Object, F extends
   final FormatterValidatorListMaker<I, V>? defaultFormatterValidatorsMaker;
   final FormatterValidatorListMaker<I, V>? additionalFormatterValidatorsMaker;
 
-  // TODO guarantee validator chain adequate to field type - e.g. checkbox with date-validator throws
-
   FormFieldDescriptor({
     required this.keyString,
     this.initialInput,

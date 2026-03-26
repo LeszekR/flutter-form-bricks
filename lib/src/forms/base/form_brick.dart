@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/base/form_field_brick.dart';
+import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
+import '../../awaiting_refactoring/ui/forms/base/form_utils.dart';
 import '../../string_literals/gen/bricks_localizations.dart';
 import '../form_manager/form_manager.dart';
+
+/// A type alias for a map of form fields.
+typedef FormFieldBrickFieldsMap = Map<String, FormFieldStateBrick<FormFieldBrick, dynamic, dynamic>>;
 
 ///  Top layer of forms used by this software.
 ///  Can be used for forms that are not intended to save any data to db
@@ -20,13 +25,11 @@ abstract class FormBrick extends StatefulWidget {
   @override
   FormStateBrick createState();
 
+  // TODO  is it needed? Remove?
   static Future<dynamic> openForm({required BuildContext context, required Widget form}) {
     return showDialog(context: context, barrierDismissible: false, builder: (BuildContext context) => form);
   }
 }
-
-/// A type alias for a map of form fields.
-typedef FormFieldBrickFieldsMap = Map<String, FormFieldStateBrick<FormFieldBrick, dynamic, dynamic>>;
 
 abstract class FormStateBrick<T extends FormBrick> extends State<T> {
   /// Do NOT override this method in PROD! This is ONLY FOR UI TESTS!
@@ -41,8 +44,6 @@ abstract class FormStateBrick<T extends FormBrick> extends State<T> {
   late final Map<int, VoidCallback> _keyboardMapping;
 
   FormManager get formManager => widget._formManager;
-
-  final _formKey = GlobalKey<FormStateBrick>();
 
   GlobalKey<FormStateBrick> get formKey => formManager.formKey;
 
@@ -82,8 +83,14 @@ abstract class FormStateBrick<T extends FormBrick> extends State<T> {
     return AnimatedBuilder(
       key: widget.formKey,
       animation: formManager,
-      // TODO - check this for correctness
-      builder: (context, _) => buildBody(context),
+      builder: (context, _) => SizedBox.expand(
+        child: Column(
+          children: [
+            Expanded(child: buildBody(context)),
+            buildFormControlPanel(context),
+          ],
+        ),
+      ),
     );
   }
 
@@ -111,57 +118,73 @@ abstract class FormStateBrick<T extends FormBrick> extends State<T> {
     super.dispose();
   }
 
-  Widget createFormControlPanel(
+  /// Builds a widget that displays error messages for the currently focused field.
+  ///
+  /// The widget listens to `formManager.errorMessageNotifier`
+  /// and rebuilds whenever its value changes.
+  ///
+  /// The error message:
+  /// - is wrapped (`softWrap`)
+  /// - is placed inside a `SingleChildScrollView`
+  /// - uses styling from `UiParams`
+  ValueListenableBuilder buildErrorMessageText(BuildContext context) {
+    return ValueListenableBuilder<String>(
+      valueListenable: formManager.errorMessageNotifier,
+      builder: (context, errors, child) => SingleChildScrollView(
+        child: Text(
+          errors,
+          key: Key(widget._errorTextKeyString),
+          softWrap: true,
+          // TODO 1 global error-area text style + background color
+          style: TextStyle(
+            backgroundColor: UiParams.of(context).appColor.greyLightest,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildFormControlPanel(
     BuildContext context,
   ) {
-    // TODO uncomment and refactor
-    return SizedBox(
-      width: 100,
-      height: 100,
+    var appSize = UiParams.of(context).appSize;
+
+    // return FormUtils.horizontalFormGroup(padding:false,height: AppSize.bottomPanelHeight + 1, [
+    return FormUtils.horizontalFormGroupBorderless(
+      context,
+      [
+        Expanded(
+          flex: 6,
+          child: Container(
+            height: appSize.bottomPanelHeight,
+            padding: EdgeInsets.all(appSize.paddingForm),
+            child: buildErrorMessageText(context),
+          ),
+        ),
+        //
+        // appSize.spacerBoxHorizontalMedium,
+        // //
+        // Container(
+        //   height: appSize.bottomPanelHeight,
+        //   child: Column(
+        //     mainAxisSize: MainAxisSize.min,
+        //     children: [
+        //       /*decoration:  BoxDecoration(border: Border.all(width: appSize.borderWidth, color: AppColor.borderEnabled)),*/
+        //       /*child:*/
+        //       SizedBox(
+        //         height: appSize.bottomPanelHeight - appSize.buttonHeight - testControlsHeightCorrection(),
+        //         width: 50,
+        //       ),
+        //       // FormUtils.horizontalFormGroup(padding: false,
+        //       FormUtils.horizontalFormGroupBorderless(
+        //         createFormControlsList(),
+        //       ),
+        //     ],
+        //   ),
+        // ),
+      ],
+      height: appSize.bottomPanelHeight,
     );
-    // // return FormUtils.horizontalFormGroup(padding:false,height: AppSize.bottomPanelHeight + 1, [
-    // return FormUtils.horizontalFormGroupBorderless(height: AppSize.bottomPanelHeight, [
-    //   Expanded(
-    //     flex: 6,
-    //     child: ValueListenableBuilder<String>(
-    //       valueListenable: formManager.errorMessageNotifier,
-    //       builder: (context, errors, child) {
-    //         return SingleChildScrollView(
-    //           child: Container(
-    //             height: AppSize.bottomPanelHeight,
-    //             padding: EdgeInsets.all(AppSize.paddingForm),
-    //             child: Text(
-    //               errors,
-    //               key: Key(widget._errorTextKeyString),
-    //               softWrap: true,
-    //             ),
-    //           ),
-    //         );
-    //       },
-    //     ),
-    //   ),
-    //   //
-    //   AppSize.spacerBoxHorizontalMedium,
-    //   //
-    //   Container(
-    //     height: AppSize.bottomPanelHeight,
-    //     child: Column(
-    //       mainAxisSize: MainAxisSize.min,
-    //       children: [
-    //         /*decoration:  BoxDecoration(border: Border.all(width: AppSize.borderWidth, color: AppColor.borderEnabled)),*/
-    //         /*child:*/
-    //         SizedBox(
-    //           height: AppSize.bottomPanelHeight - AppSize.buttonHeight - testControlsHeightCorrection(),
-    //           width: 50,
-    //         ),
-    //         // FormUtils.horizontalFormGroup(padding: false,
-    //         FormUtils.horizontalFormGroupBorderless(
-    //           createFormControlsList(),
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    // ]);
   }
 
   // TODO uncomment and refactor
