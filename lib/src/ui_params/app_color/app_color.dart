@@ -61,6 +61,9 @@ abstract class AppColor {
   Color get radioSelected;
   Color get radioUnselected;
 
+  // Text
+  Color get textError;
+
   WidgetStateColor fillColor(Set<WidgetState> states) {
     final stateColor = makeColor(states);
     return WidgetStateColor.resolveWith((_) => stateColor);

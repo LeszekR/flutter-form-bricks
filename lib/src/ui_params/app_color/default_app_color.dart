@@ -58,4 +58,7 @@ class DefaultAppColor extends AppColor {
   @override late final Color iconColor = Colors.black;
   @override late final Color radioSelected = colorSchemeMain.surfaceContainerHighest;
   @override late final Color radioUnselected = formFieldFillOk;
+
+  // ========== Text ==========
+  @override late final Color textError = red;
 }
