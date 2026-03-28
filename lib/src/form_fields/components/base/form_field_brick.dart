@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/base/validate_mode_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/labelled_box/label_position.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/states_color_maker.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
@@ -71,7 +72,8 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
 
     _input = formManager.getFieldContent(keyString).input as I?;
 
-    _states = widget.statesNotifier?.value;
+    // _states = widget.statesNotifier?.value;
+    _onStatesChanged();
     widget.statesNotifier?.addListener(_onStatesChanged);
 
     if (formManager.isFocusedOnStart(keyString)) focusNode.requestFocus();
@@ -107,11 +109,11 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   ///   displays error if the field uses `InputDecoration` for this (error alternatively it can be displayed in
   ///   dedicated `FormBrick` area by `FormManager`).
   @mustCallSuper
-  I? onInputChanged() {
+  FieldContent<I, V>? onInputChanged() {
     // Here FormManager:
     // - validates the input
     // - saves results of format and validation in FormData -> FormFieldData -> FieldContent
-    return formManager.onFieldChanged<I, V>(BricksLocalizations.of(context), keyString, getInput(), defaultValue).input;
+    return formManager.onFieldChanged<I, V>(BricksLocalizations.of(context), keyString, getInput(), defaultValue);
   }
 
   bool _hasFormatterValidator() => widget.validateMode != ValidateModeBrick.noValidator;

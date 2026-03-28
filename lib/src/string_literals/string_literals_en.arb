@@ -100,7 +100,7 @@
   },
   "rangeStartSameAsEnd": "Start is identical to End - change or remove End date / time",
 
-  "dateStringErrorBadChars": "Characters not allowed for date",
+  "dateStringErrorBadChars": "Characters not allowed in date field",
   "dateStringErrorTooFewDigits": "Too few digits for date",
   "dateStringErrorTooManyDigits": "Too many digits for date",
   "dateStringErrorTooManyDelimiters": "Too many delimiters for date",
@@ -149,7 +149,7 @@
   },
   "mustNotPrecede": "must not precede",
 
-  "timeStringErrorBadChars": "Characters not allowed for time",
+  "timeStringErrorBadChars": "Characters not allowed in time field",
   "timeStringErrorTooFewDigits": "Too few digits for time",
   "timeStringErrorTooManyDigits": "Too many digits for time",
   "timeStringErrorTooManyDelimiters": "Too many delimiters for time",

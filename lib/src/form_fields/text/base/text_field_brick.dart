@@ -5,11 +5,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/states_controller/update_once_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/state_colored_icon_button.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_bordered_box.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
 import 'package:flutter_form_bricks/src/ui_params/theme_data/bricks_theme_data.dart';
 
 abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditingValue, V> {
@@ -188,7 +189,13 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
 
 abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>>
     extends FormFieldStateBrick<TextEditingValue, V, B> {
+  //
   late final TextEditingController controller;
+  late WidgetStatesController statesObserver;
+  late WidgetStatesController statesNotifier;
+  late double lineHeight, textHeight, buttonWidth, buttonHeight, width;
+  late int maxLines;
+  late TextStyle style;
 
   @override
   TextEditingValue? getInput() => controller.value;
@@ -198,29 +205,28 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   @override
   void initState() {
+
     // TODO this strips the field from flutter's restoration - implement restoration pattern as in comments at the end of this file
     controller = widget.config.controller ?? TextEditingController();
     setInput(formManager.getInitialInput(keyString));
 
+    if (widget.config.buttonParams != null) {
+      var statesController = DoubleWidgetStatesController();
+      statesObserver = statesController.lateWidgetStatesController;
+      statesNotifier = statesController.receiverStatesController;
+    } else {
+      var statesController = WidgetStatesController();
+      statesObserver = statesController;
+      statesNotifier = statesController;
+    }
     super.initState();
   }
 
   @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
-  @override
-  Widget build(BuildContext context) {
     var uiParams = UiParams.of(context);
-
-    var statesObserver;
-    var statesNotifier;
-    TextField textField;
-    TextStyle style;
-    double lineHeight, textHeight, buttonWidth, buttonHeight;
-    StateColoredIconButton? button;
 
     if (widget.config.style == null) {
       style = uiParams.appTheme.textStyle();
@@ -230,32 +236,36 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       lineHeight = uiParams.appTheme.computeFontDimension(widget.config.style!, TextDimension.lineHeight);
     }
 
-    int maxLines = widget.config.maxLines ?? 1;
-    double width = widget.width ?? uiParams.appSize.textFieldWidth;
+    maxLines = widget.config.maxLines ?? 1;
+    width = widget.width ?? uiParams.appSize.textFieldWidth;
 
-// TODO SizedBox still not tall correctly
+    // TODO SizedBox still not tall correctly
     textHeight = lineHeight * maxLines;
 
     // TODO verify / test / fix passing-using ststesObserver - note: TextFieldBrick costructs it INSIDE - then what about the one in FormFieldBrick??
-    if (widget.config.buttonParams == null) {
-      var statesController = WidgetStatesController();
-      statesObserver = statesController;
-      statesNotifier = statesController;
-    } else {
-      var statesController = DoubleWidgetStatesController();
-      statesObserver = statesController.lateWidgetStatesController;
-      statesNotifier = statesController.receiverStatesController;
 
+    if (widget.config.buttonParams != null) {
       buttonWidth = widget.config.buttonParams!.width ?? uiParams.appSize.textFieldButtonWidth;
       assert(buttonWidth <= width / 2, 'BrickTextField button must not be wider than half of the field width');
 
       buttonHeight = widget.config.buttonParams!.height ?? uiParams.appSize.textFieldButtonHeight;
       buttonHeight = min(buttonHeight, textHeight);
-
-      button = _makeButton(statesObserver, statesNotifier, buttonWidth, buttonHeight);
     }
+  }
 
-    textField = _makeTextField(context, statesObserver, statesNotifier, style);
+  @override
+  void dispose() {
+    if(widget.config.controller == null) controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var uiParams = UiParams.of(context);
+
+    final button = widget.config.buttonParams == null
+        ? null
+        : _makeButton(buttonWidth, buttonHeight);
 
     return ValueListenableBuilder(
       valueListenable: statesNotifier,
@@ -265,26 +275,21 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
           width: width,
           lineHeight: lineHeight,
           nLines: maxLines,
-          textField: textField,
+          textField: _makeTextField(style),
           button: button,
         );
       },
     );
   }
 
-  TextField _makeTextField(
-    BuildContext context,
-    WidgetStatesController statesObserver,
-    WidgetStatesController statesNotifier,
-    TextStyle style,
-  ) {
+  TextField _makeTextField(TextStyle style) {
     return TextField(
       // key: Key(keyString),
       groupId: widget.config.groupId,
       controller: controller,
-      focusNode: widget.config.focusNode ?? focusNode,
+      focusNode: focusNode,
       undoController: widget.config.undoController,
-      decoration: _makeInputDecoration(widget.config.decoration),
+      decoration: _makeInputDecoration(),
       keyboardType: widget.config.keyboardType,
       textInputAction: widget.config.textInputAction,
       textCapitalization: widget.config.textCapitalization,
@@ -297,7 +302,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       // Deprecated: toolbarOptions - not used
       showCursor: widget.config.showCursor,
       // autofocus: widget.config.autofocus,
-      statesController: widget.statesObserver,
+      statesController: statesObserver,
       obscuringCharacter: widget.config.obscuringCharacter,
       obscureText: widget.config.obscureText,
       autocorrect: widget.config.autocorrect,
@@ -361,19 +366,11 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     );
   }
 
-  StateColoredIconButton? _makeButton(
-    UpdateOnceWidgetStatesController statesObserver,
-    WidgetStatesController statesNotifier,
-    double width,
-    double height,
-  ) {
-    if (widget.config.buttonParams == null) {
-      return null;
-    }
+  StateColoredIconButton? _makeButton(double width, double height) {
     return StateColoredIconButton(
       width: width,
       height: height,
-      statesObserver: statesObserver,
+      statesObserver: statesObserver as UpdateOnceWidgetStatesController,
       statesNotifier: statesNotifier,
       colorMaker: widget.colorMaker,
       iconData: widget.config.buttonParams!.iconData,
@@ -384,38 +381,42 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   }
 
   // TODO move helper methods to a singleton
-  // TODO move this to FormFieldBrick?
-  InputDecoration _makeInputDecoration(InputDecoration? decoration) {
-    if (decoration == null) {
+
+  InputDecoration _makeInputDecoration() {
+    if (widget.config.decoration != null) {
+      return widget.config.decoration!.copyWith(
+        errorText: formManager.getFieldError(keyString),
+        // fillColor: makeColor(),
+      );
+    } else {
       return InputDecoration(
-        // isDense: true,
-        // isCollapsed: true,
         contentPadding: EdgeInsets.zero,
         border: InputBorder.none,
-        fillColor: makeColor(),
+        // TU PRZERWALEM - uncomment and it will throw
+        // errorText: formManager.getFieldError(keyString),
+        // fillColor: makeColor(),
       );
     }
-    return decoration.copyWith(
-      fillColor: makeColor(),
-    );
   }
 
   bool _skipOnChanged = false;
 
   @mustCallSuper
   @override
-  TextEditingValue? onInputChanged() {
+  FieldContent<TextEditingValue, V>? onInputChanged() {
     // Stop infinite call here at changing the field value to formatted one
     if (_skipOnChanged) return null;
+
+    if (widget.validateMode != ValidateModeBrick.onChange) return null;
 
     // Here FormManager does the following:
     // - validates the input and shows error message
     // - formats the input and returns formatted input text in TextEditingValue
     // - saves results of format and validation in FormData -> FormFieldData -> FieldContent
-    TextEditingValue? formattedInput = super.onInputChanged();
+    FieldContent<TextEditingValue, V> fieldContent = super.onInputChanged()!;
 
     // draw formatted input in UI
-    if (widget.validateMode == ValidateModeBrick.onChange) _updateUi(formattedInput);
+    _updateUi(fieldContent);
 
     // Run custom onChanged callback if provided
     widget.onChanged?.call(getInput()!);
@@ -425,22 +426,27 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   @mustCallSuper
   void onEditingComplete() {
+    if (widget.validateMode != ValidateModeBrick.onEditingComplete) return;
+
     // Here FormManager:
     // - validates the input and shows error message
     // - formats the input and returns formatted input text in TextEditingValue
     // - saves results of format-validation in FormData -> FormFieldData -> FieldContent
-    TextEditingValue? formattedValue = super.onInputChanged();
+    FieldContent<TextEditingValue, V> fieldContent = super.onInputChanged()!;
 
     // draw formatted input in UI
-    if (widget.validateMode == ValidateModeBrick.onEditingComplete) _updateUi(formattedValue);
+    _updateUi(fieldContent);
 
     // Run custom onEditingComplete callback if provided
     widget.config.onEditingComplete?.call();
   }
 
-  void _updateUi(TextEditingValue? formattedValue) {
+  void _updateUi(FieldContent<TextEditingValue, V> fieldContent) {
     _skipOnChanged = true;
-    setState(() => setInput(formattedValue));
+    setState(() {
+      setInput(fieldContent.input);
+      // _inputDecoration = _inputDecoration.copyWith(errorText: fieldContent.error);
+    });
     _skipOnChanged = false;
   }
 }

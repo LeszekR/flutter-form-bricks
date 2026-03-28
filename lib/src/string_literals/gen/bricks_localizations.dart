@@ -413,7 +413,7 @@ abstract class BricksLocalizations {
   /// No description provided for @dateStringErrorBadChars.
   ///
   /// In en, this message translates to:
-  /// **'Characters not allowed for date'**
+  /// **'Characters not allowed in date field'**
   String get dateStringErrorBadChars;
 
   /// No description provided for @dateStringErrorTooFewDigits.
@@ -509,7 +509,7 @@ abstract class BricksLocalizations {
   /// No description provided for @timeStringErrorBadChars.
   ///
   /// In en, this message translates to:
-  /// **'Characters not allowed for time'**
+  /// **'Characters not allowed in time field'**
   String get timeStringErrorBadChars;
 
   /// No description provided for @timeStringErrorTooFewDigits.
@@ -545,13 +545,13 @@ abstract class BricksLocalizations {
   /// No description provided for @timeErrorTooBigMinute.
   ///
   /// In en, this message translates to:
-  /// **'Too high minutes number - no such time exists'**
+  /// **'Too high number of minutes - no such time exists'**
   String get timeErrorTooBigMinute;
 
   /// No description provided for @timeErrorTooBigHour.
   ///
   /// In en, this message translates to:
-  /// **'Too high hours number - no such time exists (midnight is 00:00)'**
+  /// **'Too high number of hours - no such time exists (midnight is 00:00)'**
   String get timeErrorTooBigHour;
 
   /// No description provided for @timeErrorTooFarBack.
