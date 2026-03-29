@@ -195,7 +195,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   late final TextEditingController controller;
   late final WidgetStatesController statesObserver;
   late final WidgetStatesController statesNotifier;
-  late final VoidCallback statesListener;
+  late final VoidCallback _statesListener;
   late final int maxLines;
   late double lineHeight, textHeight, buttonWidth, buttonHeight, width;
   late TextStyle style;
@@ -217,13 +217,14 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     maxLines = widget.config.maxLines ?? 1;
     super.initState();
 
-    statesListener = () {
-      if (!mounted) return;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) setState(() {});
-      });
+    _statesListener = () {
+      if (formUiUpdateCoordinator != null) {
+        formUiUpdateCoordinator!.requestRefresh();
+      } else {
+        WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+      }
     };
-    statesNotifier.addListener(statesListener);
+    statesNotifier.addListener(_statesListener);
   }
 
   @override
@@ -257,14 +258,16 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   void dispose() {
     if (widget.config.controller == null) controller.dispose();
     if (widget.config.focusNode == null) focusNode.dispose();
-    statesNotifier.removeListener(statesListener);
+    statesNotifier.removeListener(_statesListener);
+    if (statesObserver != statesNotifier) {
+      statesObserver.dispose();
+    }
     statesNotifier.dispose();
-    statesObserver.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildFieldWidget(BuildContext context) {
     var uiParams = UiParams.of(context);
 
     final TextField textField = _makeTextField(

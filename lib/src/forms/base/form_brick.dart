@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/base/form_field_brick.dart';
+import 'package:flutter_form_bricks/src/forms/base/form_ui_update_coordinator.dart';
+import 'package:flutter_form_bricks/src/forms/base/form_ui_update_scope.dart';
+
 import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
 import '../../awaiting_refactoring/ui/forms/base/form_utils.dart';
@@ -47,6 +50,8 @@ abstract class FormStateBrick<T extends FormBrick> extends State<T> {
 
   GlobalKey<FormStateBrick> get formKey => formManager.formKey;
 
+  late final FormUiUpdateCoordinator _formUiUpdateCoordinator;
+
   // TODO implement in implementations of this class mimcking FlutterFormBuilder
   // TODO move to FormManager?
   // bool get isValid;
@@ -62,6 +67,7 @@ abstract class FormStateBrick<T extends FormBrick> extends State<T> {
   void initState() {
     super.initState();
     _keyboardMapping = provideKeyboardActions();
+    _formUiUpdateCoordinator = FormUiUpdateCoordinator();
     // TODO uncomment and refactor
     // KeyboardEvents().subscribe(keyBoardActions);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -78,20 +84,31 @@ abstract class FormStateBrick<T extends FormBrick> extends State<T> {
   }
 
   @override
+  void dispose() {
+    _formUiUpdateCoordinator.dispose();
+    // TODO uncomment and refactor
+    // KeyboardEvents().unSubscribe(keyBoardActions);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // TODO make focusedKeyString actually request focus
-    return AnimatedBuilder(
-      key: widget.formKey,
-      animation: formManager,
-      builder: (context, _) => SizedBox.expand(
-        child: Column(
-          children: [
-            Expanded(child: buildBody(context)),
-            buildFormControlPanel(context),
-          ],
-        ),
-      ),
-    );
+    return FormUiUpdateScope(
+      coordinator: _formUiUpdateCoordinator,
+      child: AnimatedBuilder(
+        key: widget.formKey,
+        animation: formManager,
+        builder: (context, _) =>
+            SizedBox.expand(
+              child: Column(
+                children: [
+                  Expanded(child: buildBody(context)),
+                  buildFormControlPanel(context),
+                ],
+              ),
+            ),
+      ),);
   }
 
   void keyBoardActions(RawKeyEvent event) {
@@ -109,13 +126,6 @@ abstract class FormStateBrick<T extends FormBrick> extends State<T> {
       // TODO make focus move to next field
       // LogicalKeyboardKey.enter.keyId: () => onSubmit(),
     };
-  }
-
-  @override
-  void dispose() {
-    // TODO uncomment and refactor
-    // KeyboardEvents().unSubscribe(keyBoardActions);
-    super.dispose();
   }
 
   /// Builds a widget that displays error messages for the currently focused field.
@@ -137,21 +147,22 @@ abstract class FormStateBrick<T extends FormBrick> extends State<T> {
       child: SingleChildScrollView(
         child: ValueListenableBuilder<String>(
           valueListenable: formManager.errorMessageNotifier,
-          builder: (context, errors, child) => Text(
-            errors,
-            key: Key(widget._errorTextKeyString),
-            softWrap: true,
-            style: TextStyle(color: uiParams.appColor.textError),
-          ),
+          builder: (context, errors, child) =>
+              Text(
+                errors,
+                key: Key(widget._errorTextKeyString),
+                softWrap: true,
+                style: TextStyle(color: uiParams.appColor.textError),
+              ),
         ),
       ),
     );
   }
 
-  Widget buildFormControlPanel(
-    BuildContext context,
-  ) {
-    var appSize = UiParams.of(context).appSize;
+  Widget buildFormControlPanel(BuildContext context,) {
+    var appSize = UiParams
+        .of(context)
+        .appSize;
 
     // return FormUtils.horizontalFormGroup(padding:false,height: AppSize.bottomPanelHeight + 1, [
     return FormUtils.horizontalFormGroupBorderless(
