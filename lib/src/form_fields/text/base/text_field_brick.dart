@@ -111,7 +111,9 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     UndoHistoryController? undoController,
     SpellCheckConfiguration? spellCheckConfiguration,
     List<Locale>? hintLocales,
-  }) : config = TextFieldConfig(
+  })  : assert((expands == true) != (maxLines != null || minLines != null,),
+            'TextFieldBrick: when expands is true, both maxLines and minLines must be null'),
+        config = TextFieldConfig(
           // // TextFieldConfig
           buttonParams: buttonParams,
           //
@@ -191,11 +193,13 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     extends FormFieldStateBrick<TextEditingValue, V, B> {
   //
   late final TextEditingController controller;
-  late WidgetStatesController statesObserver;
-  late WidgetStatesController statesNotifier;
+  late final WidgetStatesController statesObserver;
+  late final WidgetStatesController statesNotifier;
+  late final VoidCallback statesListener;
+  late final int maxLines;
   late double lineHeight, textHeight, buttonWidth, buttonHeight, width;
-  late int maxLines;
   late TextStyle style;
+  String? _errorText;
 
   @override
   TextEditingValue? getInput() => controller.value;
@@ -205,21 +209,21 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   @override
   void initState() {
-
     // TODO this strips the field from flutter's restoration - implement restoration pattern as in comments at the end of this file
+    _setStatesController();
     controller = widget.config.controller ?? TextEditingController();
     setInput(formManager.getInitialInput(keyString));
-
-    if (widget.config.buttonParams != null) {
-      var statesController = DoubleWidgetStatesController();
-      statesObserver = statesController.lateWidgetStatesController;
-      statesNotifier = statesController.receiverStatesController;
-    } else {
-      var statesController = WidgetStatesController();
-      statesObserver = statesController;
-      statesNotifier = statesController;
-    }
+    _errorText = formManager.getFieldError(keyString);
+    maxLines = widget.config.maxLines ?? 1;
     super.initState();
+
+    statesListener = () {
+      if (!mounted) return;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) setState(() {});
+      });
+    };
+    statesNotifier.addListener(statesListener);
   }
 
   @override
@@ -236,13 +240,9 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       lineHeight = uiParams.appTheme.computeFontDimension(widget.config.style!, TextDimension.lineHeight);
     }
 
-    maxLines = widget.config.maxLines ?? 1;
     width = widget.width ?? uiParams.appSize.textFieldWidth;
-
     // TODO SizedBox still not tall correctly
     textHeight = lineHeight * maxLines;
-
-    // TODO verify / test / fix passing-using ststesObserver - note: TextFieldBrick costructs it INSIDE - then what about the one in FormFieldBrick??
 
     if (widget.config.buttonParams != null) {
       buttonWidth = widget.config.buttonParams!.width ?? uiParams.appSize.textFieldButtonWidth;
@@ -255,7 +255,11 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   @override
   void dispose() {
-    if(widget.config.controller == null) controller.dispose();
+    if (widget.config.controller == null) controller.dispose();
+    if (widget.config.focusNode == null) focusNode.dispose();
+    statesNotifier.removeListener(statesListener);
+    statesNotifier.dispose();
+    statesObserver.dispose();
     super.dispose();
   }
 
@@ -263,28 +267,37 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   Widget build(BuildContext context) {
     var uiParams = UiParams.of(context);
 
-    final button = widget.config.buttonParams == null
-        ? null
-        : _makeButton(buttonWidth, buttonHeight);
+    final TextField textField = _makeTextField(
+      controller,
+      statesObserver,
+      style,
+    );
 
-    return ValueListenableBuilder(
-      valueListenable: statesNotifier,
-      builder: (context, states, _) {
-        return TextFieldBorderedBox.build(
-          uiParamsData: uiParams,
-          width: width,
-          lineHeight: lineHeight,
-          nLines: maxLines,
-          textField: _makeTextField(style),
-          button: button,
-        );
-      },
+    final StateColoredIconButton? button = widget.config.buttonParams == null
+        ? null
+        : _makeButton(
+            statesObserver as UpdateOnceWidgetStatesController,
+            statesNotifier,
+            buttonWidth,
+            buttonHeight,
+          );
+
+    return TextFieldBorderedBox.build(
+      uiParamsData: uiParams,
+      width: width,
+      lineHeight: lineHeight,
+      nLines: maxLines,
+      textField: textField,
+      button: button,
     );
   }
 
-  TextField _makeTextField(TextStyle style) {
+  TextField _makeTextField(
+    TextEditingController controller,
+    WidgetStatesController statesController,
+    TextStyle style,
+  ) {
     return TextField(
-      // key: Key(keyString),
       groupId: widget.config.groupId,
       controller: controller,
       focusNode: focusNode,
@@ -302,7 +315,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       // Deprecated: toolbarOptions - not used
       showCursor: widget.config.showCursor,
       // autofocus: widget.config.autofocus,
-      statesController: statesObserver,
+      statesController: statesController,
       obscuringCharacter: widget.config.obscuringCharacter,
       obscureText: widget.config.obscureText,
       autocorrect: widget.config.autocorrect,
@@ -366,11 +379,29 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     );
   }
 
-  StateColoredIconButton? _makeButton(double width, double height) {
+  void _setStatesController() {
+    // TODO verify / test / fix passing-using ststesObserver - note: TextFieldBrick costructs it INSIDE - then what about the one in FormFieldBrick??
+    if (widget.config.buttonParams != null) {
+      var statesController = DoubleWidgetStatesController();
+      statesObserver = statesController.lateWidgetStatesController;
+      statesNotifier = statesController.receiverStatesController;
+    } else {
+      var statesController = WidgetStatesController();
+      statesObserver = statesController;
+      statesNotifier = statesController;
+    }
+  }
+
+  StateColoredIconButton? _makeButton(
+    UpdateOnceWidgetStatesController statesObserver,
+    WidgetStatesController statesNotifier,
+    double width,
+    double height,
+  ) {
     return StateColoredIconButton(
       width: width,
       height: height,
-      statesObserver: statesObserver as UpdateOnceWidgetStatesController,
+      statesObserver: statesObserver,
       statesNotifier: statesNotifier,
       colorMaker: widget.colorMaker,
       iconData: widget.config.buttonParams!.iconData,
@@ -385,16 +416,15 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   InputDecoration _makeInputDecoration() {
     if (widget.config.decoration != null) {
       return widget.config.decoration!.copyWith(
-        errorText: formManager.getFieldError(keyString),
-        // fillColor: makeColor(),
+        errorText: _errorText,
+        fillColor: makeColor(),
       );
     } else {
       return InputDecoration(
         contentPadding: EdgeInsets.zero,
         border: InputBorder.none,
-        // TU PRZERWALEM - uncomment and it will throw
-        // errorText: formManager.getFieldError(keyString),
-        // fillColor: makeColor(),
+        errorText: _errorText,
+        fillColor: makeColor(),
       );
     }
   }
@@ -445,7 +475,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     _skipOnChanged = true;
     setState(() {
       setInput(fieldContent.input);
-      // _inputDecoration = _inputDecoration.copyWith(errorText: fieldContent.error);
+      _errorText = fieldContent.error;
     });
     _skipOnChanged = false;
   }
