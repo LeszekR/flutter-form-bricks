@@ -4,27 +4,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/base/form_field_descriptor.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/base/validate_mode_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator_chain.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/labelled_box/label_position.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/state/form_field_data.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/icon_button_params.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/states_color_maker.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/string_extension.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/input_decoration_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_multi_initial_set.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_required_fields.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/date_time/date_field.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_separate_fields_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_utils.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/date_time/time_field.dart';
-import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_bricks/src/ui_params/theme_data/bricks_theme_data.dart';
-import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
 class DateTimeSeparateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime, DateTimeSeparatedField> {
   String _dateKeyString;
@@ -84,13 +71,18 @@ class DateTimeSeparateFieldDescriptor extends FormFieldDescriptor<TextEditingVal
 
 class DateTimeSeparatedField extends StatelessWidget {
   final String keyString;
-  final TextFieldConfig config;
   final FormManager formManager;
   final StatesColorMaker colorMaker;
   final String? label;
   final LabelPosition labelPosition;
-  final double? widthDate;
-  final double? widthTime;
+  final double? dateWidth;
+  final double? timeWidth;
+  final TextFieldConfig dateTextFieldConfig;
+  final TextFieldConfig timeTextFieldConfig;
+  final InputDecorationBrick? dateDecorationBrick;
+  final InputDecorationBrick? timeDecorationBrick;
+  final IconButtonConfig? dateButtonConfig;
+  final IconButtonConfig? timeButtonConfig;
 
   DateTimeSeparatedField({
     // FormFieldBrick
@@ -101,11 +93,14 @@ class DateTimeSeparatedField extends StatelessWidget {
     this.labelPosition = LabelPosition.topLeft,
     //
     // TextFieldBrick
-    this.widthDate,
-    this.widthTime,
+    this.dateWidth,
+    this.timeWidth,
     // TODO implement buttons for date-time-separate fields
-    // TextFieldConfig
-    IconButtonParams? buttonParams,
+    this.dateDecorationBrick,
+    this.timeDecorationBrick,
+    bool copyDateDecorationToTime = true,
+    this.dateButtonConfig,
+    this.timeButtonConfig,
     //
     // Flutter TextField
     TextMagnifierConfiguration? magnifierConfiguration,
@@ -183,17 +178,88 @@ class DateTimeSeparatedField extends StatelessWidget {
     SpellCheckConfiguration? spellCheckConfiguration,
     List<Locale>? hintLocales,
   })  : this.colorMaker = colorMaker ?? StatesColorMaker(),
-        config = TextFieldConfig(
-          // // TextFieldConfig
-          buttonParams: buttonParams,
-          validateMode: ValidateModeBrick.onEditingComplete,
-          //
+        dateTextFieldConfig = TextFieldConfig(
           // Flutter TextField
           magnifierConfiguration: magnifierConfiguration,
           groupId: groupId,
           controller: controller,
           focusNode: focusNode,
-          decoration: decoration,
+          decoration: dateDecorationBrick?.inputDecoration,
+          keyboardType: keyboardType,
+          textInputAction: textInputAction,
+          textCapitalization: TextCapitalization.none,
+          style: style,
+          strutStyle: strutStyle,
+          textAlign: textAlign,
+          textAlignVertical: textAlignVertical,
+          textDirection: textDirection,
+          //  bool autofocus: //  bool autofocus, => FormData takes over initial focus in form
+          //  MaterialStatesController statesController: //  MaterialStatesController statesController, => replaced with statesObserver and statesNotifier
+          obscuringCharacter: obscuringCharacter,
+          obscureText: false,
+          autocorrect: autocorrect,
+          smartDashesType: SmartDashesType.disabled,
+          smartQuotesType: SmartQuotesType.disabled,
+          enableSuggestions: enableSuggestions,
+          maxLines: 1,
+          minLines: 1,
+          expands: expands,
+          readOnly: readOnly,
+          showCursor: showCursor,
+          maxLength: 10,
+          maxLengthEnforcement: MaxLengthEnforcement.truncateAfterCompositionEnds,
+          onChanged: onChanged,
+          onEditingComplete: onEditingComplete,
+          onSubmitted: onSubmitted,
+          onAppPrivateCommand: onAppPrivateCommand,
+          inputFormatters: inputFormatters,
+          enabled: enabled,
+          ignorePointers: ignorePointers,
+          cursorWidth: cursorWidth,
+          cursorHeight: cursorHeight,
+          cursorRadius: cursorRadius,
+          cursorOpacityAnimates: cursorOpacityAnimates,
+          cursorColor: cursorColor,
+          cursorErrorColor: cursorErrorColor,
+          selectionHeightStyle: selectionHeightStyle,
+          selectionWidthStyle: selectionWidthStyle,
+          keyboardAppearance: keyboardAppearance,
+          scrollPadding: scrollPadding,
+          enableInteractiveSelection: enableInteractiveSelection,
+          selectAllOnFocus: selectAllOnFocus,
+          selectionControls: selectionControls,
+          dragStartBehavior: dragStartBehavior,
+          onTap: onTap,
+          onTapAlwaysCalled: onTapAlwaysCalled,
+          onTapOutside: onTapOutside,
+          onTapUpOutside: onTapUpOutside,
+          mouseCursor: mouseCursor,
+          buildCounter: buildCounter,
+          scrollPhysics: scrollPhysics,
+          scrollController: scrollController,
+          autofillHints: autofillHints,
+          clipBehavior: clipBehavior,
+          restorationId: restorationId,
+          stylusHandwritingEnabled: stylusHandwritingEnabled,
+          enableIMEPersonalizedLearning: enableIMEPersonalizedLearning,
+          contentInsertionConfiguration: contentInsertionConfiguration,
+          contextMenuBuilder: contextMenuBuilder,
+          canRequestFocus: canRequestFocus,
+          undoController: undoController,
+          spellCheckConfiguration: spellCheckConfiguration,
+          hintLocales: hintLocales,
+        ),
+        timeTextFieldConfig = TextFieldConfig(
+          // Flutter TextField
+          magnifierConfiguration: magnifierConfiguration,
+          groupId: groupId,
+          controller: controller,
+          focusNode: focusNode,
+          decoration: timeDecorationBrick?.inputDecoration == null
+              ? null
+              : !copyDateDecorationToTime
+                  ? timeDecorationBrick!.inputDecoration!
+                  : timeDecorationBrick!.inputDecoration!.fillGapsFrom(dateDecorationBrick?.inputDecoration),
           keyboardType: keyboardType,
           textInputAction: textInputAction,
           textCapitalization: TextCapitalization.none,
@@ -291,67 +357,63 @@ class DateTimeSeparatedField extends StatelessWidget {
       // FormFieldBrick
       keyString: DateTimeUtils.makeDateKeyString(keyString),
       formManager: formManager,
-      // required String label,
-      // required LabelPosition labelPosition,
       colorMaker: colorMaker,
-      // statesObserver: statesObserver,
-      // statesNotifier: statesNotifier,
       //
       // TextFieldBrick
-      width: widthDate ?? appTheme.getFontDimension(TextDimension.widthOfChar0) * 12,
-      buttonParams: config.buttonParams,
+      width: dateWidth ?? appTheme.getFontDimension(TextDimension.widthOfChar0) * 12,
+      decorationBrick: dateDecorationBrick,
+      buttonConfig: dateButtonConfig,
       //
       // TextField
-      groupId: config.groupId,
-      controller: config.controller,
-      focusNode: config.focusNode,
-      undoController: config.undoController,
-      decoration: config.decoration,
-      keyboardType: config.keyboardType,
-      textInputAction: config.textInputAction,
-      style: config.style,
-      strutStyle: config.strutStyle,
-      textAlign: config.textAlign,
-      textAlignVertical: config.textAlignVertical,
-      textDirection: config.textDirection,
-      readOnly: config.readOnly,
-      showCursor: config.showCursor,
-      enableSuggestions: config.enableSuggestions,
-      expands: config.expands,
-      onChanged: config.onChanged,
-      onEditingComplete: config.onEditingComplete,
-      onSubmitted: config.onSubmitted,
-      onAppPrivateCommand: config.onAppPrivateCommand,
-      enabled: config.enabled,
-      ignorePointers: config.ignorePointers,
-      cursorWidth: config.cursorWidth,
-      cursorHeight: config.cursorHeight,
-      cursorRadius: config.cursorRadius,
-      cursorOpacityAnimates: config.cursorOpacityAnimates,
-      cursorColor: config.cursorColor,
-      cursorErrorColor: config.cursorErrorColor,
-      selectionHeightStyle: config.selectionHeightStyle,
-      selectionWidthStyle: config.selectionWidthStyle,
-      keyboardAppearance: config.keyboardAppearance,
-      scrollPadding: config.scrollPadding,
-      dragStartBehavior: config.dragStartBehavior,
-      enableInteractiveSelection: config.enableInteractiveSelection,
-      selectAllOnFocus: config.selectAllOnFocus,
-      selectionControls: config.selectionControls,
-      onTap: config.onTap,
-      onTapAlwaysCalled: config.onTapAlwaysCalled,
-      onTapOutside: config.onTapOutside,
-      onTapUpOutside: config.onTapUpOutside,
-      mouseCursor: config.mouseCursor,
-      autofillHints: config.autofillHints,
-      restorationId: config.restorationId,
-      stylusHandwritingEnabled: config.stylusHandwritingEnabled,
-      enableIMEPersonalizedLearning: config.enableIMEPersonalizedLearning,
-      contextMenuBuilder: config.contextMenuBuilder,
-      canRequestFocus: config.canRequestFocus,
-      spellCheckConfiguration: config.spellCheckConfiguration,
-      magnifierConfiguration: config.magnifierConfiguration,
-      hintLocales: config.hintLocales,
+      groupId: dateTextFieldConfig.groupId,
+      controller: dateTextFieldConfig.controller,
+      focusNode: dateTextFieldConfig.focusNode,
+      undoController: dateTextFieldConfig.undoController,
+      keyboardType: dateTextFieldConfig.keyboardType,
+      textInputAction: dateTextFieldConfig.textInputAction,
+      style: dateTextFieldConfig.style,
+      strutStyle: dateTextFieldConfig.strutStyle,
+      textAlign: dateTextFieldConfig.textAlign,
+      textAlignVertical: dateTextFieldConfig.textAlignVertical,
+      textDirection: dateTextFieldConfig.textDirection,
+      readOnly: dateTextFieldConfig.readOnly,
+      showCursor: dateTextFieldConfig.showCursor,
+      enableSuggestions: dateTextFieldConfig.enableSuggestions,
+      expands: dateTextFieldConfig.expands,
+      onChanged: dateTextFieldConfig.onChanged,
+      onEditingComplete: dateTextFieldConfig.onEditingComplete,
+      onSubmitted: dateTextFieldConfig.onSubmitted,
+      onAppPrivateCommand: dateTextFieldConfig.onAppPrivateCommand,
+      enabled: dateTextFieldConfig.enabled,
+      ignorePointers: dateTextFieldConfig.ignorePointers,
+      cursorWidth: dateTextFieldConfig.cursorWidth,
+      cursorHeight: dateTextFieldConfig.cursorHeight,
+      cursorRadius: dateTextFieldConfig.cursorRadius,
+      cursorOpacityAnimates: dateTextFieldConfig.cursorOpacityAnimates,
+      cursorColor: dateTextFieldConfig.cursorColor,
+      cursorErrorColor: dateTextFieldConfig.cursorErrorColor,
+      selectionHeightStyle: dateTextFieldConfig.selectionHeightStyle,
+      selectionWidthStyle: dateTextFieldConfig.selectionWidthStyle,
+      keyboardAppearance: dateTextFieldConfig.keyboardAppearance,
+      scrollPadding: dateTextFieldConfig.scrollPadding,
+      dragStartBehavior: dateTextFieldConfig.dragStartBehavior,
+      enableInteractiveSelection: dateTextFieldConfig.enableInteractiveSelection,
+      selectAllOnFocus: dateTextFieldConfig.selectAllOnFocus,
+      selectionControls: dateTextFieldConfig.selectionControls,
+      onTap: dateTextFieldConfig.onTap,
+      onTapAlwaysCalled: dateTextFieldConfig.onTapAlwaysCalled,
+      onTapOutside: dateTextFieldConfig.onTapOutside,
+      onTapUpOutside: dateTextFieldConfig.onTapUpOutside,
+      mouseCursor: dateTextFieldConfig.mouseCursor,
+      autofillHints: dateTextFieldConfig.autofillHints,
+      restorationId: dateTextFieldConfig.restorationId,
+      stylusHandwritingEnabled: dateTextFieldConfig.stylusHandwritingEnabled,
+      enableIMEPersonalizedLearning: dateTextFieldConfig.enableIMEPersonalizedLearning,
+      contextMenuBuilder: dateTextFieldConfig.contextMenuBuilder,
+      canRequestFocus: dateTextFieldConfig.canRequestFocus,
+      spellCheckConfiguration: dateTextFieldConfig.spellCheckConfiguration,
+      magnifierConfiguration: dateTextFieldConfig.magnifierConfiguration,
+      hintLocales: dateTextFieldConfig.hintLocales,
     );
   }
 
@@ -360,67 +422,63 @@ class DateTimeSeparatedField extends StatelessWidget {
       // FormFieldBrick
       keyString: DateTimeUtils.makeTimeKeyString(keyString),
       formManager: formManager,
-      // required String label,
-      // required LabelPosition labelPosition,
       colorMaker: colorMaker,
-      // statesObserver: statesObserver,
-      // statesNotifier: statesNotifier,
       //
       // TextFieldBrick
-      width: widthTime ?? appTheme.getFontDimension(TextDimension.widthOfChar0) * 8,
-      buttonParams: config.buttonParams,
+      width: timeWidth ?? appTheme.getFontDimension(TextDimension.widthOfChar0) * 8,
+      decorationBrick: timeDecorationBrick,
+      buttonConfig: timeButtonConfig,
       //
       // TextField
-      groupId: config.groupId,
-      controller: config.controller,
-      focusNode: config.focusNode,
-      undoController: config.undoController,
-      decoration: config.decoration,
-      keyboardType: config.keyboardType,
-      textInputAction: config.textInputAction,
-      style: config.style,
-      strutStyle: config.strutStyle,
-      textAlign: config.textAlign,
-      textAlignVertical: config.textAlignVertical,
-      textDirection: config.textDirection,
-      readOnly: config.readOnly,
-      showCursor: config.showCursor,
-      enableSuggestions: config.enableSuggestions,
-      expands: config.expands,
-      onChanged: config.onChanged,
-      onEditingComplete: config.onEditingComplete,
-      onSubmitted: config.onSubmitted,
-      onAppPrivateCommand: config.onAppPrivateCommand,
-      enabled: config.enabled,
-      ignorePointers: config.ignorePointers,
-      cursorWidth: config.cursorWidth,
-      cursorHeight: config.cursorHeight,
-      cursorRadius: config.cursorRadius,
-      cursorOpacityAnimates: config.cursorOpacityAnimates,
-      cursorColor: config.cursorColor,
-      cursorErrorColor: config.cursorErrorColor,
-      selectionHeightStyle: config.selectionHeightStyle,
-      selectionWidthStyle: config.selectionWidthStyle,
-      keyboardAppearance: config.keyboardAppearance,
-      scrollPadding: config.scrollPadding,
-      dragStartBehavior: config.dragStartBehavior,
-      enableInteractiveSelection: config.enableInteractiveSelection,
-      selectAllOnFocus: config.selectAllOnFocus,
-      selectionControls: config.selectionControls,
-      onTap: config.onTap,
-      onTapAlwaysCalled: config.onTapAlwaysCalled,
-      onTapOutside: config.onTapOutside,
-      onTapUpOutside: config.onTapUpOutside,
-      mouseCursor: config.mouseCursor,
-      autofillHints: config.autofillHints,
-      restorationId: config.restorationId,
-      stylusHandwritingEnabled: config.stylusHandwritingEnabled,
-      enableIMEPersonalizedLearning: config.enableIMEPersonalizedLearning,
-      contextMenuBuilder: config.contextMenuBuilder,
-      canRequestFocus: config.canRequestFocus,
-      spellCheckConfiguration: config.spellCheckConfiguration,
-      magnifierConfiguration: config.magnifierConfiguration,
-      hintLocales: config.hintLocales,
+      groupId: dateTextFieldConfig.groupId,
+      controller: dateTextFieldConfig.controller,
+      focusNode: dateTextFieldConfig.focusNode,
+      undoController: dateTextFieldConfig.undoController,
+      keyboardType: dateTextFieldConfig.keyboardType,
+      textInputAction: dateTextFieldConfig.textInputAction,
+      style: dateTextFieldConfig.style,
+      strutStyle: dateTextFieldConfig.strutStyle,
+      textAlign: dateTextFieldConfig.textAlign,
+      textAlignVertical: dateTextFieldConfig.textAlignVertical,
+      textDirection: dateTextFieldConfig.textDirection,
+      readOnly: dateTextFieldConfig.readOnly,
+      showCursor: dateTextFieldConfig.showCursor,
+      enableSuggestions: dateTextFieldConfig.enableSuggestions,
+      expands: dateTextFieldConfig.expands,
+      onChanged: dateTextFieldConfig.onChanged,
+      onEditingComplete: dateTextFieldConfig.onEditingComplete,
+      onSubmitted: dateTextFieldConfig.onSubmitted,
+      onAppPrivateCommand: dateTextFieldConfig.onAppPrivateCommand,
+      enabled: dateTextFieldConfig.enabled,
+      ignorePointers: dateTextFieldConfig.ignorePointers,
+      cursorWidth: dateTextFieldConfig.cursorWidth,
+      cursorHeight: dateTextFieldConfig.cursorHeight,
+      cursorRadius: dateTextFieldConfig.cursorRadius,
+      cursorOpacityAnimates: dateTextFieldConfig.cursorOpacityAnimates,
+      cursorColor: dateTextFieldConfig.cursorColor,
+      cursorErrorColor: dateTextFieldConfig.cursorErrorColor,
+      selectionHeightStyle: dateTextFieldConfig.selectionHeightStyle,
+      selectionWidthStyle: dateTextFieldConfig.selectionWidthStyle,
+      keyboardAppearance: dateTextFieldConfig.keyboardAppearance,
+      scrollPadding: dateTextFieldConfig.scrollPadding,
+      dragStartBehavior: dateTextFieldConfig.dragStartBehavior,
+      enableInteractiveSelection: dateTextFieldConfig.enableInteractiveSelection,
+      selectAllOnFocus: dateTextFieldConfig.selectAllOnFocus,
+      selectionControls: dateTextFieldConfig.selectionControls,
+      onTap: dateTextFieldConfig.onTap,
+      onTapAlwaysCalled: dateTextFieldConfig.onTapAlwaysCalled,
+      onTapOutside: dateTextFieldConfig.onTapOutside,
+      onTapUpOutside: dateTextFieldConfig.onTapUpOutside,
+      mouseCursor: dateTextFieldConfig.mouseCursor,
+      autofillHints: dateTextFieldConfig.autofillHints,
+      restorationId: dateTextFieldConfig.restorationId,
+      stylusHandwritingEnabled: dateTextFieldConfig.stylusHandwritingEnabled,
+      enableIMEPersonalizedLearning: dateTextFieldConfig.enableIMEPersonalizedLearning,
+      contextMenuBuilder: dateTextFieldConfig.contextMenuBuilder,
+      canRequestFocus: dateTextFieldConfig.canRequestFocus,
+      spellCheckConfiguration: dateTextFieldConfig.spellCheckConfiguration,
+      magnifierConfiguration: dateTextFieldConfig.magnifierConfiguration,
+      hintLocales: dateTextFieldConfig.hintLocales,
     );
   }
 }

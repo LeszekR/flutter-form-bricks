@@ -1,30 +1,18 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/states_controller/double_widget_states_controller.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/states_controller/update_once_widget_states_controller.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/state_colored_icon_button.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_bordered_box.dart';
 
 class TextFieldConfig {
-  // // TextFieldBrick
-  final IconButtonParams? buttonParams;
-  final ValidateModeBrick validateMode;
-  //
   // Flutter TextField
   final TextMagnifierConfiguration? magnifierConfiguration;
   final Object groupId;
   final TextEditingController? controller;
   final FocusNode? focusNode;
   final InputDecoration? decoration;
-
   // TODO set constant for Datefield - number or datetime
   final TextInputType? keyboardType;
-
   // TODO set TextInputAction.newline? in multiline fields? Or it will be default there?
   final TextInputAction? textInputAction;
   final TextCapitalization textCapitalization;
@@ -33,19 +21,15 @@ class TextFieldConfig {
   final TextAlign textAlign;
   final TextAlignVertical? textAlignVertical;
   final TextDirection? textDirection;
-
   // final bool autofocus; => FormData takes over initial focus in form
   // final MaterialStatesController? statesController; => replaced with statesObserver and statesNotifier
   final String obscuringCharacter;
   final bool obscureText;
   final bool? autocorrect;
-
   // TODO turn off and lock it for strictly formatting fields like DateField
   final SmartDashesType? smartDashesType;
-
   // TODO turn off and lock it for strictly formatting fields like DateField
   final SmartQuotesType? smartQuotesType;
-
   // TODO turn off and lock it for strictly formatting fields like DateField
   final bool enableSuggestions;
   final int? maxLines;
@@ -90,7 +74,6 @@ class TextFieldConfig {
   final String? restorationId;
   final bool stylusHandwritingEnabled;
   final bool enableIMEPersonalizedLearning;
-
   // TODO turn off and lock it for strictly formatting fields like DateField
   final ContentInsertionConfiguration? contentInsertionConfiguration;
   final EditableTextContextMenuBuilder? contextMenuBuilder;
@@ -100,11 +83,6 @@ class TextFieldConfig {
   final List<Locale>? hintLocales;
 
   TextFieldConfig({
-    //
-    // TextFieldConfig
-    this.buttonParams,
-    this.validateMode = ValidateModeBrick.noValidator,
-    //
     // TextField
     this.groupId = EditableText,
     this.controller,

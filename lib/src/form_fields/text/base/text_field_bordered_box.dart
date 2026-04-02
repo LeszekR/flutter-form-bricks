@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/input_decoration_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/state_colored_icon_button.dart';
-
-import '../../../ui_params/ui_params_data.dart';
 
 class TextFieldBorderedBox {
   static Widget build({
     required UiParamsData uiParamsData,
+    required InputDecorationBrick decorationBrick,
     required double width,
     required double lineHeight,
     required int nLines,
     required TextField textField,
+    IconButtonConfig? buttonParams,
     StateColoredIconButton? button,
   }) {
+    assert((buttonParams == null) == (button == null),
+        'buttonParams and button must be declared together or both be null');
+
     if (button == null) {
       return _wrapTextField(uiParamsData, width, lineHeight, nLines, textField);
     }

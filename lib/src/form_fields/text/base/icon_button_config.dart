@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/input_decoration_brick.dart';
 
-class IconButtonParams {
+class IconButtonConfig {
   final IconData iconData;
   final VoidCallback onPressed;
-  final bool autofocus;
   final String? tooltip;
   final double? width;
   final double? height;
+  final bool autofocus;
 
-  const IconButtonParams({
+  const IconButtonConfig({
     required this.iconData,
     required this.onPressed,
-    required this.autofocus,
     this.tooltip,
     this.width,
     this.height,
+    this.autofocus = false,
   });
 }

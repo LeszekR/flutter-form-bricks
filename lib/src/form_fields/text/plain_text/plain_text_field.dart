@@ -35,7 +35,7 @@ class PlainTextField extends TextFieldBrick<String> {
     super.controller,
     super.focusNode,
     super.undoController,
-    super.decoration,
+    super.decorationBrick,
     super.keyboardType,
     super.textInputAction,
     super.textCapitalization = TextCapitalization.none,
@@ -98,7 +98,7 @@ class PlainTextField extends TextFieldBrick<String> {
     super.canRequestFocus = true,
     super.spellCheckConfiguration,
     super.magnifierConfiguration,
-    super.buttonParams,
+    super.buttonConfig,
     super.hintLocales,
   });
 

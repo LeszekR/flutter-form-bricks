@@ -8,6 +8,7 @@ import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/states_controller/update_once_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/input_decoration_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/state_colored_icon_button.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_bordered_box.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
@@ -15,7 +16,9 @@ import 'package:flutter_form_bricks/src/ui_params/theme_data/bricks_theme_data.d
 
 abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditingValue, V> {
   final double? width;
-  final TextFieldConfig config;
+  final InputDecorationBrick? decorationBrick;
+  final IconButtonConfig? buttonConfig;
+  final TextFieldConfig textFieldConfig;
 
   TextFieldBrick({
     super.key,
@@ -32,16 +35,15 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     //
     // TextFieldBrick
     this.width,
-    //
-    // TextFieldConfig
-    IconButtonParams? buttonParams,
+    this.decorationBrick,
+    this.buttonConfig,
     //
     // Flutter TextField
     TextMagnifierConfiguration? magnifierConfiguration,
     Object groupId = EditableText,
     TextEditingController? controller,
     FocusNode? focusNode,
-    InputDecoration? decoration,
+    // InputDecoration? decoration,  => replaced with decorationBrick
     // TODO set constant for Datefield - number or datetime
     TextInputType? keyboardType,
     // TODO set TextInputAction.newline? in multiline fields? Or it will be default there?
@@ -113,16 +115,12 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     List<Locale>? hintLocales,
   })  : assert((expands == true) != (maxLines != null || minLines != null,),
             'TextFieldBrick: when expands is true, both maxLines and minLines must be null'),
-        config = TextFieldConfig(
-          // // TextFieldConfig
-          buttonParams: buttonParams,
-          //
-          // Flutter TextField
+        textFieldConfig = TextFieldConfig(
           magnifierConfiguration: magnifierConfiguration,
           groupId: groupId,
           controller: controller,
           focusNode: focusNode,
-          decoration: decoration,
+          decoration: decorationBrick?.inputDecoration,
           keyboardType: keyboardType,
           textInputAction: textInputAction,
           textCapitalization: textCapitalization,
@@ -211,10 +209,10 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   void initState() {
     // TODO this strips the field from flutter's restoration - implement restoration pattern as in comments at the end of this file
     _setStatesController();
-    controller = widget.config.controller ?? TextEditingController();
+    controller = widget.textFieldConfig.controller ?? TextEditingController();
     setInput(formManager.getInitialInput(keyString));
     _errorText = formManager.getFieldError(keyString);
-    maxLines = widget.config.maxLines ?? 1;
+    maxLines = widget.textFieldConfig.maxLines ?? 1;
     super.initState();
 
     _statesListener = () {
@@ -233,31 +231,31 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
     var uiParams = UiParams.of(context);
 
-    if (widget.config.style == null) {
+    if (widget.textFieldConfig.style == null) {
       style = uiParams.appTheme.textStyle();
       lineHeight = uiParams.appTheme.getFontDimension(TextDimension.lineHeight);
     } else {
-      style = widget.config.style!;
-      lineHeight = uiParams.appTheme.computeFontDimension(widget.config.style!, TextDimension.lineHeight);
+      style = widget.textFieldConfig.style!;
+      lineHeight = uiParams.appTheme.computeFontDimension(widget.textFieldConfig.style!, TextDimension.lineHeight);
     }
 
     width = widget.width ?? uiParams.appSize.textFieldWidth;
     // TODO SizedBox still not tall correctly
     textHeight = lineHeight * maxLines;
 
-    if (widget.config.buttonParams != null) {
-      buttonWidth = widget.config.buttonParams!.width ?? uiParams.appSize.textFieldButtonWidth;
+    if (widget.buttonConfig != null) {
+      buttonWidth = widget.buttonConfig!.width ?? uiParams.appSize.textFieldButtonWidth;
       assert(buttonWidth <= width / 2, 'BrickTextField button must not be wider than half of the field width');
 
-      buttonHeight = widget.config.buttonParams!.height ?? uiParams.appSize.textFieldButtonHeight;
+      buttonHeight = widget.buttonConfig!.height ?? uiParams.appSize.textFieldButtonHeight;
       buttonHeight = min(buttonHeight, textHeight);
     }
   }
 
   @override
   void dispose() {
-    if (widget.config.controller == null) controller.dispose();
-    if (widget.config.focusNode == null) focusNode.dispose();
+    if (widget.textFieldConfig.controller == null) controller.dispose();
+    if (widget.textFieldConfig.focusNode == null) focusNode.dispose();
     statesNotifier.removeListener(_statesListener);
     if (statesObserver != statesNotifier) {
       statesObserver.dispose();
@@ -270,13 +268,16 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   Widget buildFieldWidget(BuildContext context) {
     var uiParams = UiParams.of(context);
 
+    final decoration = _makeInputDecoration(_errorText);
+
     final TextField textField = _makeTextField(
       controller,
       statesObserver,
+      decoration,
       style,
     );
 
-    final StateColoredIconButton? button = widget.config.buttonParams == null
+    final StateColoredIconButton? button = widget.buttonConfig == null
         ? null
         : _makeButton(
             statesObserver as UpdateOnceWidgetStatesController,
@@ -287,6 +288,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
     return TextFieldBorderedBox.build(
       uiParamsData: uiParams,
+      decorationBrick: widget.decorationBrick ?? InputDecorationBrick(keyString: keyString),
       width: width,
       lineHeight: lineHeight,
       nLines: maxLines,
@@ -298,44 +300,45 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   TextField _makeTextField(
     TextEditingController controller,
     WidgetStatesController statesController,
+    InputDecoration decoration,
     TextStyle style,
   ) {
     return TextField(
-      groupId: widget.config.groupId,
+      groupId: widget.textFieldConfig.groupId,
       controller: controller,
       focusNode: focusNode,
-      undoController: widget.config.undoController,
-      decoration: _makeInputDecoration(),
-      keyboardType: widget.config.keyboardType,
-      textInputAction: widget.config.textInputAction,
-      textCapitalization: widget.config.textCapitalization,
+      undoController: widget.textFieldConfig.undoController,
+      decoration: decoration,
+      keyboardType: widget.textFieldConfig.keyboardType,
+      textInputAction: widget.textFieldConfig.textInputAction,
+      textCapitalization: widget.textFieldConfig.textCapitalization,
       style: style,
-      strutStyle: widget.config.strutStyle,
-      textAlign: widget.config.textAlign,
-      textAlignVertical: widget.config.textAlignVertical,
-      textDirection: widget.config.textDirection,
-      readOnly: widget.config.readOnly,
+      strutStyle: widget.textFieldConfig.strutStyle,
+      textAlign: widget.textFieldConfig.textAlign,
+      textAlignVertical: widget.textFieldConfig.textAlignVertical,
+      textDirection: widget.textFieldConfig.textDirection,
+      readOnly: widget.textFieldConfig.readOnly,
       // Deprecated: toolbarOptions - not used
-      showCursor: widget.config.showCursor,
+      showCursor: widget.textFieldConfig.showCursor,
       // autofocus: widget.config.autofocus,
       statesController: statesController,
-      obscuringCharacter: widget.config.obscuringCharacter,
-      obscureText: widget.config.obscureText,
-      autocorrect: widget.config.autocorrect,
-      smartDashesType: widget.config.smartDashesType,
-      smartQuotesType: widget.config.smartQuotesType,
-      enableSuggestions: widget.config.enableSuggestions,
-      maxLines: widget.config.maxLines,
-      minLines: widget.config.minLines,
-      expands: widget.config.expands,
-      maxLength: widget.config.maxLength,
-      maxLengthEnforcement: widget.config.maxLengthEnforcement,
+      obscuringCharacter: widget.textFieldConfig.obscuringCharacter,
+      obscureText: widget.textFieldConfig.obscureText,
+      autocorrect: widget.textFieldConfig.autocorrect,
+      smartDashesType: widget.textFieldConfig.smartDashesType,
+      smartQuotesType: widget.textFieldConfig.smartQuotesType,
+      enableSuggestions: widget.textFieldConfig.enableSuggestions,
+      maxLines: widget.textFieldConfig.maxLines,
+      minLines: widget.textFieldConfig.minLines,
+      expands: widget.textFieldConfig.expands,
+      maxLength: widget.textFieldConfig.maxLength,
+      maxLengthEnforcement: widget.textFieldConfig.maxLengthEnforcement,
       onChanged: (_) => onInputChanged(),
       onEditingComplete: onEditingComplete,
-      onSubmitted: widget.config.onSubmitted,
-      onAppPrivateCommand: widget.config.onAppPrivateCommand,
-      inputFormatters: widget.config.inputFormatters,
-      enabled: widget.config.enabled,
+      onSubmitted: widget.textFieldConfig.onSubmitted,
+      onAppPrivateCommand: widget.textFieldConfig.onAppPrivateCommand,
+      inputFormatters: widget.textFieldConfig.inputFormatters,
+      enabled: widget.textFieldConfig.enabled,
 
       /// ignorePointers tells the TextField to ignore pointer events (taps, clicks, drags) for hit-testing. That means:
       /// user taps won’t focus it, selection/handles won’t respond, mouse interactions won’t apply.
@@ -344,47 +347,47 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       /// blunt “don’t react to / pointer input” switch.
       /// You’d use it for “overlay intercepts touches”, or when the field / is visually shown but / interaction is
       /// controlled elsewhere.
-      ignorePointers: widget.config.ignorePointers,
-      cursorWidth: widget.config.cursorWidth,
-      cursorHeight: widget.config.cursorHeight,
-      cursorRadius: widget.config.cursorRadius,
-      cursorOpacityAnimates: widget.config.cursorOpacityAnimates,
-      cursorColor: widget.config.cursorColor,
-      cursorErrorColor: widget.config.cursorErrorColor,
-      selectionHeightStyle: widget.config.selectionHeightStyle,
-      selectionWidthStyle: widget.config.selectionWidthStyle,
-      keyboardAppearance: widget.config.keyboardAppearance,
-      scrollPadding: widget.config.scrollPadding,
-      dragStartBehavior: widget.config.dragStartBehavior,
-      enableInteractiveSelection: widget.config.enableInteractiveSelection,
-      selectAllOnFocus: widget.config.selectAllOnFocus,
-      selectionControls: widget.config.selectionControls,
-      onTap: widget.config.onTap,
-      onTapAlwaysCalled: widget.config.onTapAlwaysCalled,
-      onTapOutside: widget.config.onTapOutside,
-      onTapUpOutside: widget.config.onTapUpOutside,
-      mouseCursor: widget.config.mouseCursor,
-      buildCounter: widget.config.buildCounter,
-      scrollController: widget.config.scrollController,
-      scrollPhysics: widget.config.scrollPhysics,
-      autofillHints: widget.config.autofillHints,
-      contentInsertionConfiguration: widget.config.contentInsertionConfiguration,
-      clipBehavior: widget.config.clipBehavior,
-      restorationId: widget.config.restorationId,
+      ignorePointers: widget.textFieldConfig.ignorePointers,
+      cursorWidth: widget.textFieldConfig.cursorWidth,
+      cursorHeight: widget.textFieldConfig.cursorHeight,
+      cursorRadius: widget.textFieldConfig.cursorRadius,
+      cursorOpacityAnimates: widget.textFieldConfig.cursorOpacityAnimates,
+      cursorColor: widget.textFieldConfig.cursorColor,
+      cursorErrorColor: widget.textFieldConfig.cursorErrorColor,
+      selectionHeightStyle: widget.textFieldConfig.selectionHeightStyle,
+      selectionWidthStyle: widget.textFieldConfig.selectionWidthStyle,
+      keyboardAppearance: widget.textFieldConfig.keyboardAppearance,
+      scrollPadding: widget.textFieldConfig.scrollPadding,
+      dragStartBehavior: widget.textFieldConfig.dragStartBehavior,
+      enableInteractiveSelection: widget.textFieldConfig.enableInteractiveSelection,
+      selectAllOnFocus: widget.textFieldConfig.selectAllOnFocus,
+      selectionControls: widget.textFieldConfig.selectionControls,
+      onTap: widget.textFieldConfig.onTap,
+      onTapAlwaysCalled: widget.textFieldConfig.onTapAlwaysCalled,
+      onTapOutside: widget.textFieldConfig.onTapOutside,
+      onTapUpOutside: widget.textFieldConfig.onTapUpOutside,
+      mouseCursor: widget.textFieldConfig.mouseCursor,
+      buildCounter: widget.textFieldConfig.buildCounter,
+      scrollController: widget.textFieldConfig.scrollController,
+      scrollPhysics: widget.textFieldConfig.scrollPhysics,
+      autofillHints: widget.textFieldConfig.autofillHints,
+      contentInsertionConfiguration: widget.textFieldConfig.contentInsertionConfiguration,
+      clipBehavior: widget.textFieldConfig.clipBehavior,
+      restorationId: widget.textFieldConfig.restorationId,
       // Deprecated: scribbleEnabled - not used
-      stylusHandwritingEnabled: widget.config.stylusHandwritingEnabled,
-      enableIMEPersonalizedLearning: widget.config.enableIMEPersonalizedLearning,
-      contextMenuBuilder: widget.config.contextMenuBuilder,
-      canRequestFocus: widget.config.canRequestFocus,
-      spellCheckConfiguration: widget.config.spellCheckConfiguration,
-      magnifierConfiguration: widget.config.magnifierConfiguration,
-      hintLocales: widget.config.hintLocales,
+      stylusHandwritingEnabled: widget.textFieldConfig.stylusHandwritingEnabled,
+      enableIMEPersonalizedLearning: widget.textFieldConfig.enableIMEPersonalizedLearning,
+      contextMenuBuilder: widget.textFieldConfig.contextMenuBuilder,
+      canRequestFocus: widget.textFieldConfig.canRequestFocus,
+      spellCheckConfiguration: widget.textFieldConfig.spellCheckConfiguration,
+      magnifierConfiguration: widget.textFieldConfig.magnifierConfiguration,
+      hintLocales: widget.textFieldConfig.hintLocales,
     );
   }
 
   void _setStatesController() {
     // TODO verify / test / fix passing-using ststesObserver - note: TextFieldBrick costructs it INSIDE - then what about the one in FormFieldBrick??
-    if (widget.config.buttonParams != null) {
+    if (widget.buttonConfig != null) {
       var statesController = DoubleWidgetStatesController();
       statesObserver = statesController.lateWidgetStatesController;
       statesNotifier = statesController.receiverStatesController;
@@ -402,31 +405,26 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     double height,
   ) {
     return StateColoredIconButton(
-      width: width,
-      height: height,
       statesObserver: statesObserver,
       statesNotifier: statesNotifier,
       colorMaker: widget.colorMaker,
-      iconData: widget.config.buttonParams!.iconData,
-      onPressed: widget.config.buttonParams!.onPressed,
-      autofocus: widget.config.buttonParams!.autofocus,
-      tooltip: widget.config.buttonParams!.tooltip,
+      config: widget.buttonConfig!,
     );
   }
 
   // TODO move helper methods to a singleton
 
-  InputDecoration _makeInputDecoration() {
-    if (widget.config.decoration != null) {
-      return widget.config.decoration!.copyWith(
-        errorText: _errorText,
+  InputDecoration _makeInputDecoration(String? errorText) {
+    if (widget.textFieldConfig.decoration != null) {
+      return widget.textFieldConfig.decoration!.copyWith(
+        errorText: errorText,
         fillColor: makeColor(),
       );
     } else {
       return InputDecoration(
         contentPadding: EdgeInsets.zero,
         border: InputBorder.none,
-        errorText: _errorText,
+        errorText: errorText,
         fillColor: makeColor(),
       );
     }
@@ -471,7 +469,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     _updateUi(fieldContent);
 
     // Run custom onEditingComplete callback if provided
-    widget.config.onEditingComplete?.call();
+    widget.textFieldConfig.onEditingComplete?.call();
   }
 
   void _updateUi(FieldContent<TextEditingValue, V> fieldContent) {

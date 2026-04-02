@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/states_controller/update_once_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/states_color_maker.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
@@ -6,27 +7,17 @@ import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
 class StateColoredIconButton extends StatefulWidget {
   final UpdateOnceWidgetStatesController statesObserver;
-  final double width;
-  final double height;
   final WidgetStatesController statesNotifier;
   final StatesColorMaker colorMaker;
-  final IconData iconData;
-  final VoidCallback? onPressed;
-  final String? tooltip;
-  final bool autofocus;
+  final IconButtonConfig config;
 
   // TODO complete with all other fields of Flutter IconButton
   const StateColoredIconButton({
     super.key,
-    required this.width,
-    required this.height,
     required this.statesObserver,
     required this.statesNotifier,
     required this.colorMaker,
-    required this.iconData,
-    required this.onPressed,
-    required this.autofocus,
-    this.tooltip,
+    required this.config,
   });
 
   @override
@@ -79,22 +70,22 @@ class _StateColoredIconButtonState extends State<StateColoredIconButton> {
       child: makeGestureDetector(
         child: makeFocus(
           child: Container(
-            width: widget.width,
-            height: widget.height,
+            width: widget.config.width,
+            height: widget.config.height,
             padding: EdgeInsets.zero,
             alignment: Alignment.center,
             color: widget.colorMaker.makeColor(context, _states),
             child: IconButton(
-              icon: Icon(widget.iconData),
+              icon: Icon(widget.config.iconData),
               iconSize: UiParams.of(context).appSize.iconSize,
               style: ButtonStyle(shape: UiParams.of(context).appStyle.makeShapeRectangleProperty(false)),
               padding: EdgeInsets.zero,
               alignment: Alignment.center,
-              autofocus: widget.autofocus,
+              autofocus: widget.config.autofocus,
               color: UiParams.of(context).appColor.iconColor,
-              tooltip: widget.tooltip,
+              tooltip: widget.config.tooltip,
               focusNode: _focusNode,
-              onPressed: widget.onPressed,
+              onPressed: widget.config.onPressed,
             ),
           ),
         ),

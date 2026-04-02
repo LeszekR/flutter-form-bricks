@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/string_extension.dart';
+import 'package:flutter_form_bricks/src/utils/string_extension.dart';
 
 import '../src/form_fields/text/date_time/tools/test_constants.dart';
 import 'mock_formatter_validator.dart';
