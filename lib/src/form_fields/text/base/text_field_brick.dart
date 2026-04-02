@@ -115,12 +115,18 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     List<Locale>? hintLocales,
   })  : assert((expands == true) != (maxLines != null || minLines != null,),
             'TextFieldBrick: when expands is true, both maxLines and minLines must be null'),
+        assert((buttonConfig == null) == (decorationBrick?.buttonPosition == null),
+            'buttonConfig and buttonPosition must be declared together or both be null'),
         textFieldConfig = TextFieldConfig(
           magnifierConfiguration: magnifierConfiguration,
           groupId: groupId,
           controller: controller,
           focusNode: focusNode,
-          decoration: decorationBrick?.inputDecoration,
+          decoration: buttonConfig == null
+              ? decorationBrick?.inputDecoration
+              : decorationBrick?.inputDecoration == null
+                  ? InputDecoration(border: InputBorder.none)
+                  : decorationBrick!.inputDecoration!.copyWith(border: InputBorder.none),
           keyboardType: keyboardType,
           textInputAction: textInputAction,
           textCapitalization: textCapitalization,
@@ -339,7 +345,6 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       onAppPrivateCommand: widget.textFieldConfig.onAppPrivateCommand,
       inputFormatters: widget.textFieldConfig.inputFormatters,
       enabled: widget.textFieldConfig.enabled,
-
       /// ignorePointers tells the TextField to ignore pointer events (taps, clicks, drags) for hit-testing. That means:
       /// user taps won’t focus it, selection/handles won’t respond, mouse interactions won’t apply.
       /// It’s different from / enabled: false / readOnly: true: enabled: false also affects styling and semantics like

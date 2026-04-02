@@ -123,6 +123,124 @@ class TextFieldBorderedBox {
       ),
     );
   }
+
+  // ==============================================================
+  static _buildNew({
+    required UiParamsData uiParamsData,
+    required InputDecorationBrick decorationBrick,
+    required double width,
+    required double lineHeight,
+    required int nLines,
+    required TextField textField,
+    IconButtonConfig? buttonConfig,
+    StateColoredIconButton? button,
+  }) {
+    InputBorder? border = decorationBrick.inputDecoration?.border;
+
+    Widget body = (button == null)
+        ? textField
+        : _buildTextFieldWithButton(
+            decorationBrick: decorationBrick,
+            nLines: nLines,
+            textField: textField,
+            button: button,
+          );
+
+    if (decorationBrick.outerLabel == null && decorationBrick.outerLabelText == null) {
+      return body;
+    } else {
+      return _buildBodyWit
+    }
+  }
+
+  static Widget _buildTextFieldWithButton({
+    required InputDecorationBrick decorationBrick,
+    required int nLines,
+    required TextField textField,
+    required button,
+  }) {
+    switch (decorationBrick.buttonPosition) {
+      case null:
+      case ButtonPosition.rightTop:
+        if (nLines == 1) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: textField),
+              button,
+            ],
+          );
+        } else {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: textField),
+              Column(
+                children: [
+                  button,
+                  const Expanded(child: SizedBox()),
+                ],
+              ),
+            ],
+          );
+        }
+
+      case ButtonPosition.leftTop:
+        if (nLines == 1) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              button,
+              Expanded(child: textField),
+            ],
+          );
+        } else {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                children: [
+                  button,
+                  const Expanded(child: SizedBox()),
+                ],
+              ),
+              Expanded(child: textField),
+            ],
+          );
+        }
+
+      case ButtonPosition.leftFullHeight:
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            button,
+            Expanded(child: textField),
+          ],
+        );
+
+      case ButtonPosition.rightFullHeight:
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(child: textField),
+            button,
+          ],
+        );
+    }
+  }
+
+  static Widget _buildBodyWithOuterLabel({
+    required InputDecorationBrick decorationBrick,
+  required double width,
+  required double lineHeight,
+  required int nLines,
+  required TextField textField,
+  }) {
+    switch (decorationBrick.outerLabelPosition) {
+
+  }
+
+
 }
 
 class _BorderSet {
