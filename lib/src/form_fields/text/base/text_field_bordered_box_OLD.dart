@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/input_decoration_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/decoration_config.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/state_colored_icon_button.dart';
 
 class TextFieldBorderedBoxOLD {
@@ -127,7 +127,7 @@ class TextFieldBorderedBoxOLD {
   // ==============================================================
   static build({
     required UiParamsData uiParamsData,
-    required InputDecorationBrick decorationBrick,
+    required DecorationConfig decorationBrick,
     required double width,
     required double lineHeight,
     required int nLines,
@@ -148,7 +148,7 @@ class TextFieldBorderedBoxOLD {
             button,
           );
 
-    if (decorationBrick.outerLabel == null && decorationBrick.outerLabelText == null) {
+    if (decorationBrick.outerLabelConfig?.outerLabel == null && decorationBrick.outerLabelConfig?.outerLabelText == null) {
       body = textFieldWithButton;
 
     } else {
@@ -171,12 +171,12 @@ class TextFieldBorderedBoxOLD {
   }
 
   static Widget _buildTextFieldWithButton(
-    InputDecorationBrick decorationBrick,
+    DecorationConfig decorationBrick,
     int nLines,
     TextField textField,
     button,
   ) {
-    switch (decorationBrick.buttonPosition) {
+    switch (decorationBrick.iconButtonConfig!.buttonPosition) {
       case null:
       case ButtonPosition.rightTop:
         if (nLines == 1) {
@@ -246,15 +246,15 @@ class TextFieldBorderedBoxOLD {
     }
   }
 
-  static Widget _makeOuterLabel(InputDecorationBrick decorationBrick) {
-    if (decorationBrick.outerLabel != null) {
-      return decorationBrick.outerLabel!;
+  static Widget _makeOuterLabel(DecorationConfig decorationBrick) {
+    if (decorationBrick.outerLabelConfig?.outerLabel != null) {
+      return decorationBrick.outerLabelConfig!.outerLabel!;
     }
-    return Text(decorationBrick.outerLabelText!);
+    return Text(decorationBrick.outerLabelConfig!.outerLabelText!);
   }
 
   static _Body _buildBodyWithOuterLabel(
-    InputDecorationBrick decorationBrick,
+    DecorationConfig decorationBrick,
     double width,
     double lineHeight,
     int nLines,
@@ -263,8 +263,7 @@ class TextFieldBorderedBoxOLD {
   ) {
     Widget body;
     double bodyWidth, bodyHeight;
-    switch (decorationBrick.outerLabelPosition) {
-      case null:
+    switch (decorationBrick.outerLabelConfig!.outerLabelPosition) {
       case OuterLabelPosition.top:
         body = Column(crossAxisAlignment: CrossAxisAlignment.start, children: [label, textField]);
         bodyWidth = width;

@@ -35,10 +35,19 @@ class ExampleFormState extends FormStateBrick {
               keyString: dateKeyString1,
               formManager: formManager,
               width: 150,
-              decorationBrick: InputDecorationBrick(
+              decorationConfig: DecorationConfig(
                 keyString: dateKeyString1,
-                outerLabelText: 'Data',
-                outerLabelPosition: OuterLabelPosition.top,
+                inputDecoration: InputDecoration(border: UnderlineInputBorder()),
+                outerLabelConfig: OuterLabelConfig(
+                  outerLabelText: 'Data',
+                  outerLabelPosition: OuterLabelPosition.top,
+                ),
+                iconButtonConfig: IconButtonConfig(
+                  context: context,
+                  iconData: Icons.arrow_drop_down,
+                  buttonPosition: ButtonPosition.rightTop,
+                  onPressed: () {},
+                ),
               ),
             ),
             appSize.spacerBoxVerticalMedium,

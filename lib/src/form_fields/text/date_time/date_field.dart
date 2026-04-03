@@ -45,14 +45,13 @@ class DateField extends TextFieldBrick<DateTime> {
     // TextFieldBrick
     super.width,
     // TODO implement button for date field
-    super.buttonConfig,
+    super.decorationConfig,
     //
     // TextField
     super.groupId = EditableText,
     super.controller,
     super.focusNode,
     super.undoController,
-    super.decorationBrick,
     super.keyboardType,
     super.textInputAction,
     super.style,

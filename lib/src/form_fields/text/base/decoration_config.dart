@@ -1,54 +1,24 @@
 import 'package:flutter/material.dart' show InputDecoration, Widget;
 import 'package:flutter_form_bricks/src/form_fields/text/base/icon_button_config.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/outer_label_config.dart';
 
-enum OuterLabelPosition { top, bottom, left, right }
-
-enum ButtonPosition { leftTop, leftFullHeight, rightTop, rightFullHeight }
-
-class InputDecorationBrick {
+class DecorationConfig {
   final String keyString;
-  final Widget? outerLabel;
-  final String? outerLabelText;
-  final OuterLabelPosition? outerLabelPosition;
-  final IconButtonConfig? buttonParams;
-  final ButtonPosition? buttonPosition;
   final InputDecoration? inputDecoration;
+  final OuterLabelConfig? outerLabelConfig;
+  final IconButtonConfig? iconButtonConfig;
 
-  InputDecorationBrick({
+  DecorationConfig({
     required this.keyString,
-    this.outerLabel,
-    this.outerLabelText,
-    this.outerLabelPosition,
-    this.buttonParams,
-    this.buttonPosition,
     this.inputDecoration,
+    this.outerLabelConfig,
+    this.iconButtonConfig,
   })  : assert(
-          (outerLabel != null ? 1 : 0) +
-                  (outerLabelText != null ? 1 : 0) +
+          (outerLabelConfig != null ? 1 : 0) +
                   (inputDecoration?.label != null ? 1 : 0) +
                   (inputDecoration?.labelText != null ? 1 : 0) <= 1,
           'Only one can be declared: outerLabel, outerLabelText, inputDecoration.label, or inputDecoration.labelText '
               'in "$keyString" field.',
-        ),
-        assert(
-          outerLabel == null || outerLabelText == null,
-          'Only one of outerLabel and outerLabelText can be declared in "$keyString" field.',
-        ),
-        assert(
-          outerLabelPosition == null || (inputDecoration?.label == null && inputDecoration?.labelText == null),
-          'If outerLabelPosition is declared, inputDecoration must not declare label or labelText in "$keyString" field.',
-        ),
-        assert(
-          (outerLabel == null && outerLabelText == null) || outerLabelPosition != null,
-          'If outerLabel or outerLabelText is declared, outerLabelPosition must also be declared in "$keyString" field.',
-        ),
-        assert(
-          outerLabelPosition == null || outerLabel != null || outerLabelText != null,
-          'If outerLabelPosition is declared, outerLabel or outerLabelText must also be declared in "$keyString" field.',
-        ),
-        assert(
-          (buttonParams == null) == (buttonPosition == null),
-          'buttonParams and buttonPosition must be declared together or both be null in "$keyString" field.',
         ),
         assert(
           inputDecoration?.error == null || inputDecoration?.errorText == null,

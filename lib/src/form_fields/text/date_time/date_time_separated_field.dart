@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/input_decoration_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/decoration_config.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_required_fields.dart';
@@ -79,8 +79,8 @@ class DateTimeSeparatedField extends StatelessWidget {
   final double? timeWidth;
   final TextFieldConfig dateTextFieldConfig;
   final TextFieldConfig timeTextFieldConfig;
-  final InputDecorationBrick? dateDecorationBrick;
-  final InputDecorationBrick? timeDecorationBrick;
+  final DecorationConfig? dateDecorationConfig;
+  final DecorationConfig? timeDecorationConfig;
   final IconButtonConfig? dateButtonConfig;
   final IconButtonConfig? timeButtonConfig;
 
@@ -96,8 +96,8 @@ class DateTimeSeparatedField extends StatelessWidget {
     this.dateWidth,
     this.timeWidth,
     // TODO implement buttons for date-time-separate fields
-    this.dateDecorationBrick,
-    this.timeDecorationBrick,
+    this.dateDecorationConfig,
+    this.timeDecorationConfig,
     bool copyDateDecorationToTime = true,
     this.dateButtonConfig,
     this.timeButtonConfig,
@@ -184,7 +184,7 @@ class DateTimeSeparatedField extends StatelessWidget {
           groupId: groupId,
           controller: controller,
           focusNode: focusNode,
-          decoration: dateDecorationBrick?.inputDecoration,
+          decoration: dateDecorationConfig?.inputDecoration,
           keyboardType: keyboardType,
           textInputAction: textInputAction,
           textCapitalization: TextCapitalization.none,
@@ -255,11 +255,11 @@ class DateTimeSeparatedField extends StatelessWidget {
           groupId: groupId,
           controller: controller,
           focusNode: focusNode,
-          decoration: timeDecorationBrick?.inputDecoration == null
+          decoration: timeDecorationConfig?.inputDecoration == null
               ? null
               : !copyDateDecorationToTime
-                  ? timeDecorationBrick!.inputDecoration!
-                  : timeDecorationBrick!.inputDecoration!.fillGapsFrom(dateDecorationBrick?.inputDecoration),
+                  ? timeDecorationConfig!.inputDecoration!
+                  : timeDecorationConfig!.inputDecoration!.fillGapsFrom(dateDecorationConfig?.inputDecoration),
           keyboardType: keyboardType,
           textInputAction: textInputAction,
           textCapitalization: TextCapitalization.none,
@@ -361,8 +361,7 @@ class DateTimeSeparatedField extends StatelessWidget {
       //
       // TextFieldBrick
       width: dateWidth ?? appTheme.getFontDimension(TextDimension.widthOfChar0) * 12,
-      decorationBrick: dateDecorationBrick,
-      buttonConfig: dateButtonConfig,
+      decorationConfig: dateDecorationConfig,
       //
       // TextField
       groupId: dateTextFieldConfig.groupId,
@@ -426,8 +425,7 @@ class DateTimeSeparatedField extends StatelessWidget {
       //
       // TextFieldBrick
       width: timeWidth ?? appTheme.getFontDimension(TextDimension.widthOfChar0) * 8,
-      decorationBrick: timeDecorationBrick,
-      buttonConfig: timeButtonConfig,
+      decorationConfig: timeDecorationConfig,
       //
       // TextField
       groupId: dateTextFieldConfig.groupId,

@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/input_decoration_brick.dart';
+import 'package:flutter_form_bricks/shelf.dart';
+
+enum ButtonPosition { leftTop, leftFullHeight, rightTop, rightFullHeight }
 
 class IconButtonConfig {
   final IconData iconData;
   final VoidCallback onPressed;
   final String? tooltip;
-  final double? width;
-  final double? height;
+  late final double width;
+  late final double height;
+  final ButtonPosition? buttonPosition;
   final bool autofocus;
 
-  const IconButtonConfig({
+  IconButtonConfig({
+    required BuildContext context,
     required this.iconData,
     required this.onPressed,
     this.tooltip,
-    this.width,
-    this.height,
+    double? width,
+    double? height,
+    this.buttonPosition = ButtonPosition.rightTop,
     this.autofocus = false,
-  });
+  }) {
+    this.width = width ?? UiParams.of(context).appSize.inputTextLineHeight;
+    this.height = width ?? UiParams.of(context).appSize.inputTextLineHeight;
+  }
 }

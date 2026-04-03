@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class TextFieldConfig {
-  // Flutter TextField
   final TextMagnifierConfiguration? magnifierConfiguration;
   final Object groupId;
   final TextEditingController? controller;
@@ -83,12 +82,11 @@ class TextFieldConfig {
   final List<Locale>? hintLocales;
 
   TextFieldConfig({
-    // TextField
     this.groupId = EditableText,
     this.controller,
     this.focusNode,
     this.undoController,
-    this.decoration = const InputDecoration(),
+    this.decoration,
     this.keyboardType,
     this.textInputAction,
     // TODO use instead of formatter-validator first-upper-then-lower

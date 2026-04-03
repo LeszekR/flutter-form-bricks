@@ -33,13 +33,13 @@ class LowerCaseField extends TextFieldBrick<String> {
     //
     // BrickTextField
     super.width,
+    super.decorationConfig,
     //
     // TextField
     super.groupId = EditableText,
     super.controller,
     super.focusNode,
     super.undoController,
-    super.decorationBrick,
     super.keyboardType,
     super.textInputAction,
     super.textCapitalization = TextCapitalization.none,
@@ -102,7 +102,6 @@ class LowerCaseField extends TextFieldBrick<String> {
     super.canRequestFocus = true,
     super.spellCheckConfiguration,
     super.magnifierConfiguration,
-    super.buttonConfig,
     super.hintLocales,
   }) : super(validateMode: ValidateModeBrick.onChange);
 

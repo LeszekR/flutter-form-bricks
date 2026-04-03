@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/decoration_config.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/icon_button_config.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/outer_label_config.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/state_colored_icon_button.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params_data.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/input_decoration_brick.dart';
 
 class TextFieldBorderedBox extends StatelessWidget {
   final UiParamsData uiParamsData;
-  final InputDecorationBrick decorationBrick;
+  final DecorationConfig decorationBrick;
   final double width;
   final TextField textField;
   final StateColoredIconButton? button;
@@ -24,10 +26,10 @@ class TextFieldBorderedBox extends StatelessWidget {
     final Widget textFieldWithButton = button == null
         ? textField
         : _buildTextFieldWithButton(
-      decorationBrick: decorationBrick,
-      textField: textField,
-      button: button!,
-    );
+            decorationBrick: decorationBrick,
+            textField: textField,
+            button: button!,
+          );
 
     final Widget body = _wrapWithOuterLabel(
       decorationBrick: decorationBrick,
@@ -41,11 +43,11 @@ class TextFieldBorderedBox extends StatelessWidget {
   }
 
   static Widget _buildTextFieldWithButton({
-    required InputDecorationBrick decorationBrick,
+    required DecorationConfig decorationBrick,
     required TextField textField,
     required Widget button,
   }) {
-    switch (decorationBrick.buttonPosition) {
+    switch (decorationBrick.iconButtonConfig!.buttonPosition) {
       case null:
       case ButtonPosition.rightTop:
         return Row(
@@ -90,14 +92,13 @@ class TextFieldBorderedBox extends StatelessWidget {
   }
 
   static Widget _wrapWithOuterLabel({
-    required InputDecorationBrick decorationBrick,
+    required DecorationConfig decorationBrick,
     required Widget fieldBody,
   }) {
     final Widget? label = _makeOuterLabel(decorationBrick);
     if (label == null) return fieldBody;
 
-    switch (decorationBrick.outerLabelPosition) {
-      case null:
+    switch (decorationBrick.outerLabelConfig!.outerLabelPosition) {
       case OuterLabelPosition.top:
         return Column(
           mainAxisSize: MainAxisSize.min,
@@ -138,12 +139,12 @@ class TextFieldBorderedBox extends StatelessWidget {
     }
   }
 
-  static Widget? _makeOuterLabel(InputDecorationBrick decorationBrick) {
-    if (decorationBrick.outerLabel != null) {
-      return decorationBrick.outerLabel!;
+  static Widget? _makeOuterLabel(DecorationConfig decorationBrick) {
+    if (decorationBrick.outerLabelConfig?.outerLabel != null) {
+      return decorationBrick.outerLabelConfig!.outerLabel!;
     }
-    if (decorationBrick.outerLabelText != null) {
-      return Text(decorationBrick.outerLabelText!);
+    if (decorationBrick.outerLabelConfig?.outerLabelText != null) {
+      return Text(decorationBrick.outerLabelConfig!.outerLabelText!);
     }
     return null;
   }
