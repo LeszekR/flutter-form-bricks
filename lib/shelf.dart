@@ -25,6 +25,7 @@ export 'src/form_fields/components/states_controller/formatter_helper.dart';
 export 'src/form_fields/text/base/icon_button_config.dart';
 export 'src/form_fields/text/base/states_color_maker.dart';
 export 'src/form_fields/text/base/text_field_brick.dart';
+export 'src/form_fields/text/base/input_decoration_brick.dart';
 export 'src/form_fields/text/date_time/date_field.dart';
 export 'src/form_fields/text/date_time/time_field.dart';
 export 'src/form_fields/text/date_time/date_time_separated_field.dart';

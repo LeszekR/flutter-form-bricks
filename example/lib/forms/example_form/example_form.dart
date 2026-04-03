@@ -35,6 +35,11 @@ class ExampleFormState extends FormStateBrick {
               keyString: dateKeyString1,
               formManager: formManager,
               width: 150,
+              decorationBrick: InputDecorationBrick(
+                keyString: dateKeyString1,
+                outerLabelText: 'Data',
+                outerLabelPosition: OuterLabelPosition.top,
+              ),
             ),
             appSize.spacerBoxVerticalMedium,
             TimeField(

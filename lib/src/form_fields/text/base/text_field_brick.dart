@@ -11,6 +11,7 @@ import 'package:flutter_form_bricks/src/form_fields/components/states_controller
 import 'package:flutter_form_bricks/src/form_fields/text/base/input_decoration_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/state_colored_icon_button.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_bordered_box.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_bordered_box_OLD.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
 import 'package:flutter_form_bricks/src/ui_params/theme_data/bricks_theme_data.dart';
 
@@ -292,15 +293,22 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
             buttonHeight,
           );
 
-    return TextFieldBorderedBox.build(
+    return TextFieldBorderedBox(
       uiParamsData: uiParams,
       decorationBrick: widget.decorationBrick ?? InputDecorationBrick(keyString: keyString),
       width: width,
-      lineHeight: lineHeight,
-      nLines: maxLines,
       textField: textField,
       button: button,
     );
+    // return TextFieldBorderedBox.build(
+    //   uiParamsData: uiParams,
+    //   decorationBrick: widget.decorationBrick ?? InputDecorationBrick(keyString: keyString),
+    //   width: width,
+    //   lineHeight: lineHeight,
+    //   nLines: maxLines,
+    //   textField: textField,
+    //   button: button,
+    // );
   }
 
   TextField _makeTextField(

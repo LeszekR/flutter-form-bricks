@@ -22,6 +22,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_va
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/icon_button_config.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/input_decoration_brick.dart';
 
 import 'package:flutter_form_bricks/src/forms/base/form_brick.dart';
 import 'package:flutter_form_bricks/src/forms/base/form_schema.dart';
