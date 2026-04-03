@@ -5,14 +5,14 @@ import 'package:flutter_form_bricks/src/form_fields/text/base/outer_label_config
 import 'package:flutter_form_bricks/src/form_fields/text/base/state_colored_icon_button.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params_data.dart';
 
-class TextFieldBorderedBox extends StatelessWidget {
+class TextFieldDecoratedBox extends StatelessWidget {
   final UiParamsData uiParamsData;
   final DecorationConfig decorationBrick;
   final double width;
   final TextField textField;
   final StateColoredIconButton? button;
 
-  const TextFieldBorderedBox({
+  const TextFieldDecoratedBox({
     super.key,
     required this.uiParamsData,
     required this.decorationBrick,
@@ -23,70 +23,53 @@ class TextFieldBorderedBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Widget textFieldWithButton = button == null
-        ? textField
-        : _buildTextFieldWithButton(
-            decorationBrick: decorationBrick,
-            textField: textField,
-            button: button!,
-          );
+    final Widget textFieldWithButton = _buildTextFieldWithButton(
+      decorationBrick: decorationBrick,
+      textField: textField,
+      button: button,
+    );
 
-    final Widget body = _wrapWithOuterLabel(
+    final Widget bodyWithLabel = _wrapWithOuterLabel(
       decorationBrick: decorationBrick,
       fieldBody: textFieldWithButton,
     );
 
     return SizedBox(
       width: width,
-      child: body,
+      child: bodyWithLabel,
     );
   }
 
   static Widget _buildTextFieldWithButton({
     required DecorationConfig decorationBrick,
     required TextField textField,
-    required Widget button,
+    required Widget? button,
   }) {
-    switch (decorationBrick.iconButtonConfig!.buttonPosition) {
-      case null:
-      case ButtonPosition.rightTop:
+    if (button == null) return textField;
+
+    CrossAxisAlignment crossAxisAlignment = switch (decorationBrick.iconButtonConfig!.buttonAlign) {
+      ButtonAlign.top => CrossAxisAlignment.start,
+      ButtonAlign.stretch => CrossAxisAlignment.stretch,
+      ButtonAlign.bottom => CrossAxisAlignment.end,
+    };
+
+    switch (decorationBrick.iconButtonConfig!.buttonSide) {
+      case ButtonSide.right:
         return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: crossAxisAlignment,
           children: [
             Expanded(child: textField),
             button,
           ],
         );
 
-      case ButtonPosition.leftTop:
+      case ButtonSide.left:
         return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: crossAxisAlignment,
           children: [
             button,
             Expanded(child: textField),
           ],
-        );
-
-      case ButtonPosition.leftFullHeight:
-        return IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              button,
-              Expanded(child: textField),
-            ],
-          ),
-        );
-
-      case ButtonPosition.rightFullHeight:
-        return IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(child: textField),
-              button,
-            ],
-          ),
         );
     }
   }
@@ -98,39 +81,45 @@ class TextFieldBorderedBox extends StatelessWidget {
     final Widget? label = _makeOuterLabel(decorationBrick);
     if (label == null) return fieldBody;
 
-    switch (decorationBrick.outerLabelConfig!.outerLabelPosition) {
-      case OuterLabelPosition.top:
+    CrossAxisAlignment crossAxisAlignment = switch (decorationBrick.outerLabelConfig!.outerLabelAlign) {
+      OuterLabelAlign.start => CrossAxisAlignment.start,
+      OuterLabelAlign.center => CrossAxisAlignment.center,
+      OuterLabelAlign.end => CrossAxisAlignment.end,
+    };
+
+    switch (decorationBrick.outerLabelConfig!.outerLabelSide) {
+      case OuterLabelSide.top:
         return Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: crossAxisAlignment,
           children: [
             label,
             fieldBody,
           ],
         );
 
-      case OuterLabelPosition.bottom:
+      case OuterLabelSide.bottom:
         return Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: crossAxisAlignment,
           children: [
             fieldBody,
             label,
           ],
         );
 
-      case OuterLabelPosition.left:
+      case OuterLabelSide.left:
         return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: crossAxisAlignment,
           children: [
             Flexible(flex: 0, child: label),
             Expanded(child: fieldBody),
           ],
         );
 
-      case OuterLabelPosition.right:
+      case OuterLabelSide.right:
         return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: crossAxisAlignment,
           children: [
             Expanded(child: fieldBody),
             Flexible(flex: 0, child: label),

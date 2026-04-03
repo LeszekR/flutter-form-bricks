@@ -3,13 +3,11 @@ import 'package:flutter_form_bricks/src/form_fields/text/base/icon_button_config
 import 'package:flutter_form_bricks/src/form_fields/text/base/outer_label_config.dart';
 
 class DecorationConfig {
-  final String keyString;
   final InputDecoration? inputDecoration;
   final OuterLabelConfig? outerLabelConfig;
   final IconButtonConfig? iconButtonConfig;
 
   DecorationConfig({
-    required this.keyString,
     this.inputDecoration,
     this.outerLabelConfig,
     this.iconButtonConfig,
@@ -17,31 +15,30 @@ class DecorationConfig {
           (outerLabelConfig != null ? 1 : 0) +
                   (inputDecoration?.label != null ? 1 : 0) +
                   (inputDecoration?.labelText != null ? 1 : 0) <= 1,
-          'Only one can be declared: outerLabel, outerLabelText, inputDecoration.label, or inputDecoration.labelText '
-              'in "$keyString" field.',
+          'Only one can be declared: outerLabel, outerLabelText, inputDecoration.label, or inputDecoration.labelText ',
         ),
         assert(
           inputDecoration?.error == null || inputDecoration?.errorText == null,
-          'Only one can be declared: inputDecoration.error or inputDecoration.errorText in "$keyString" field.',
+          'Only one can be declared: inputDecoration.error or inputDecoration.errorText.',
         ),
         assert(
           inputDecoration?.hint == null || inputDecoration?.hintText == null,
-          'Only one can be declared: inputDecoration.hint or inputDecoration.hintText in "$keyString" field.',
+          'Only one can be declared: inputDecoration.hint or inputDecoration.hintText.',
         ),
         assert(
           inputDecoration?.helper == null || inputDecoration?.helperText == null,
-          'Only one can be declared: inputDecoration.helper or inputDecoration.helperText in "$keyString" field.',
+          'Only one can be declared: inputDecoration.helper or inputDecoration.helperText.',
         ),
         assert(
           inputDecoration?.counter == null || inputDecoration?.counterText == null,
-          'Only one can be declared: inputDecoration.counter or inputDecoration.counterText in "$keyString" field.',
+          'Only one can be declared: inputDecoration.counter or inputDecoration.counterText.',
         ),
         assert(
           inputDecoration?.prefix == null || inputDecoration?.prefixText == null,
-          'Only one can be declared: inputDecoration.prefix or inputDecoration.prefixText in "$keyString" field.',
+          'Only one can be declared: inputDecoration.prefix or inputDecoration.prefixText.',
         ),
         assert(
           inputDecoration?.suffix == null || inputDecoration?.suffixText == null,
-          'Only one can be declared: inputDecoration.suffix or inputDecoration.suffixText in "$keyString" field.',
+          'Only one can be declared: inputDecoration.suffix or inputDecoration.suffixText.',
         );
 }

@@ -239,10 +239,10 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
     if (widget.textFieldConfig.style == null) {
       style = uiParams.appTheme.textStyle();
-      lineHeight = uiParams.appTheme.getFontDimension(TextDimension.lineHeight);
+      lineHeight = uiParams.appTheme.getFontDimension(TextDimension.lineHeight) *2;
     } else {
       style = widget.textFieldConfig.style!;
-      lineHeight = uiParams.appTheme.computeFontDimension(widget.textFieldConfig.style!, TextDimension.lineHeight);
+      lineHeight = uiParams.appTheme.computeFontDimension(widget.textFieldConfig.style!, TextDimension.lineHeight)*2;
     }
 
     width = widget.width ?? uiParams.appSize.textFieldWidth;
@@ -292,9 +292,9 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
             buttonHeight,
           );
 
-    return TextFieldBorderedBox(
+    return TextFieldDecoratedBox(
       uiParamsData: uiParams,
-      decorationBrick: widget.decorationConfig ?? DecorationConfig(keyString: keyString),
+      decorationBrick: widget.decorationConfig ?? DecorationConfig(),
       width: width,
       textField: textField,
       button: button,
@@ -434,8 +434,8 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       );
     } else {
       return InputDecoration(
-        contentPadding: EdgeInsets.zero,
-        border: InputBorder.none,
+        // contentPadding: EdgeInsets.zero,
+        // border: InputBorder.none,
         errorText: errorText,
         fillColor: makeColor(),
       );

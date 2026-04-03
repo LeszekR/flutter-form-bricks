@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/decoration_config.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/state_colored_icon_button.dart';
 
 class TextFieldBorderedBoxOLD {
@@ -148,9 +147,9 @@ class TextFieldBorderedBoxOLD {
             button,
           );
 
-    if (decorationBrick.outerLabelConfig?.outerLabel == null && decorationBrick.outerLabelConfig?.outerLabelText == null) {
+    if (decorationBrick.outerLabelConfig?.outerLabel == null &&
+        decorationBrick.outerLabelConfig?.outerLabelText == null) {
       body = textFieldWithButton;
-
     } else {
       Widget label = _makeOuterLabel(decorationBrick);
 
@@ -162,9 +161,9 @@ class TextFieldBorderedBoxOLD {
         textFieldWithButton,
         label,
       );
-      body=bodyWithOuterLabel.body;
-      width=bodyWithOuterLabel.width;
-      lineHeight=bodyWithOuterLabel.height;
+      body = bodyWithOuterLabel.body;
+      width = bodyWithOuterLabel.width;
+      lineHeight = bodyWithOuterLabel.height;
     }
 
     return SizedBox(width: width, height: nLines * lineHeight, child: body);
@@ -176,71 +175,28 @@ class TextFieldBorderedBoxOLD {
     TextField textField,
     button,
   ) {
-    switch (decorationBrick.iconButtonConfig!.buttonPosition) {
-      case null:
-      case ButtonPosition.rightTop:
-        if (nLines == 1) {
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(child: textField),
-              button,
-            ],
-          );
-        } else {
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(child: textField),
-              Column(
-                children: [
-                  button,
-                  const Expanded(child: SizedBox()),
-                ],
-              ),
-            ],
-          );
-        }
+    CrossAxisAlignment crossAxisAlignment = switch (decorationBrick.iconButtonConfig!.buttonAlign) {
+      ButtonAlign.top => CrossAxisAlignment.start,
+      ButtonAlign.stretch => CrossAxisAlignment.stretch,
+      ButtonAlign.bottom => CrossAxisAlignment.end,
+    };
 
-      case ButtonPosition.leftTop:
-        if (nLines == 1) {
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              button,
-              Expanded(child: textField),
-            ],
-          );
-        } else {
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                children: [
-                  button,
-                  const Expanded(child: SizedBox()),
-                ],
-              ),
-              Expanded(child: textField),
-            ],
-          );
-        }
-
-      case ButtonPosition.leftFullHeight:
+    switch (decorationBrick.iconButtonConfig!.buttonSide) {
+      case ButtonSide.right:
         return Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: crossAxisAlignment,
           children: [
-            button,
             Expanded(child: textField),
+            button,
           ],
         );
 
-      case ButtonPosition.rightFullHeight:
+      case ButtonSide.left:
         return Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: crossAxisAlignment,
           children: [
-            Expanded(child: textField),
             button,
+            Expanded(child: textField),
           ],
         );
     }
@@ -263,20 +219,20 @@ class TextFieldBorderedBoxOLD {
   ) {
     Widget body;
     double bodyWidth, bodyHeight;
-    switch (decorationBrick.outerLabelConfig!.outerLabelPosition) {
-      case OuterLabelPosition.top:
+    switch (decorationBrick.outerLabelConfig!.outerLabelSide) {
+      case OuterLabelSide.top:
         body = Column(crossAxisAlignment: CrossAxisAlignment.start, children: [label, textField]);
         bodyWidth = width;
         bodyHeight = lineHeight * nLines;
-      case OuterLabelPosition.bottom:
+      case OuterLabelSide.bottom:
         body = Column(crossAxisAlignment: CrossAxisAlignment.start, children: [textField, label]);
         bodyWidth = width;
         bodyHeight = lineHeight * nLines;
-      case OuterLabelPosition.left:
+      case OuterLabelSide.left:
         body = Row(crossAxisAlignment: CrossAxisAlignment.start, children: [label, textField]);
         bodyWidth = width;
         bodyHeight = lineHeight * nLines;
-      case OuterLabelPosition.right:
+      case OuterLabelSide.right:
         body = Row(crossAxisAlignment: CrossAxisAlignment.start, children: [textField, label]);
         bodyWidth = width;
         bodyHeight = lineHeight * nLines;
@@ -285,10 +241,11 @@ class TextFieldBorderedBoxOLD {
   }
 }
 
-class _Body{
+class _Body {
   final Widget body;
   final double width;
   final double height;
+
   const _Body(this.body, this.width, this.height);
 }
 

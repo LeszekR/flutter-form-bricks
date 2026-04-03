@@ -36,16 +36,16 @@ class ExampleFormState extends FormStateBrick {
               formManager: formManager,
               width: 150,
               decorationConfig: DecorationConfig(
-                keyString: dateKeyString1,
-                inputDecoration: InputDecoration(border: UnderlineInputBorder()),
                 outerLabelConfig: OuterLabelConfig(
                   outerLabelText: 'Data',
-                  outerLabelPosition: OuterLabelPosition.top,
+                  outerLabelSide: OuterLabelSide.top,
+                  outerLabelAlign: OuterLabelAlign.center,
                 ),
                 iconButtonConfig: IconButtonConfig(
                   context: context,
                   iconData: Icons.arrow_drop_down,
-                  buttonPosition: ButtonPosition.rightTop,
+                  buttonSide: ButtonSide.right,
+                  buttonAlign: ButtonAlign.top,
                   onPressed: () {},
                 ),
               ),
