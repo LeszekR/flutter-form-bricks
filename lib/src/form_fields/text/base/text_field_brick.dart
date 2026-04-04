@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_bordered_box.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_decorated_box.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
 

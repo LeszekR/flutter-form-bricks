@@ -18,6 +18,22 @@ class DecorationConfig {
           'Only one can be declared: outerLabel, outerLabelText, inputDecoration.label, or inputDecoration.labelText ',
         ),
         assert(
+          (inputDecoration?.suffix != null ? 1 : 0) +
+                  (inputDecoration?.suffixText != null ? 1 : 0) +
+                  (inputDecoration?.suffixIcon != null ? 1 : 0) +
+                  ((textFieldButtonConfig?.buttonSide == ButtonSide.right) ? 1 : 0) <= 1,
+          'Only one can be declared: textFieldButtonConfig.buttonSide.right, '
+              'inputDecoration.suffix, inputDecoration.suffixText, or inputDecoration.suffixIcon.',
+        ),
+        assert(
+          (inputDecoration?.prefix != null ? 1 : 0) +
+                  (inputDecoration?.prefixText != null ? 1 : 0) +
+                  (inputDecoration?.prefixIcon != null ? 1 : 0) +
+                  ((textFieldButtonConfig?.buttonSide == ButtonSide.left) ? 1 : 0) <= 1,
+          'Only one can be declared: textFieldButtonConfig.buttonSide.left, '
+              'inputDecoration.prefix, inputDecoration.prefixText, or inputDecoration.prefixIcon.',
+        ),
+        assert(
           inputDecoration?.error == null || inputDecoration?.errorText == null,
           'Only one can be declared: inputDecoration.error or inputDecoration.errorText.',
         ),
