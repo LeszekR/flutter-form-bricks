@@ -5,12 +5,12 @@ import 'package:flutter_form_bricks/src/form_fields/text/base/outer_label_config
 class DecorationConfig {
   final InputDecoration? inputDecoration;
   final OuterLabelConfig? outerLabelConfig;
-  final IconButtonConfig? iconButtonConfig;
+  final TextFieldButtonConfig? textFieldButtonConfig;
 
   DecorationConfig({
     this.inputDecoration,
     this.outerLabelConfig,
-    this.iconButtonConfig,
+    this.textFieldButtonConfig,
   })  : assert(
           (outerLabelConfig != null ? 1 : 0) +
                   (inputDecoration?.label != null ? 1 : 0) +

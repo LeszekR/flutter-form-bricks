@@ -31,6 +31,44 @@ class ExampleFormState extends FormStateBrick {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            TextField(
+              // controller: TextEditingController(text: 'Test text Field'),
+              decoration: InputDecoration(
+                // isDense: true,
+                // isCollapsed: true,
+                labelText: 'Label text',
+                // hintText: ' ',
+                // errorText: 'Error text',
+                error: SizedBox(),
+                // suffixIconConstraints: const BoxConstraints( maxHeight: double.infinity),
+                // suffixIconConstraints: const BoxConstraints(maxWidth: 100),
+                // contentPadding: EdgeInsets.zero,
+                visualDensity: VisualDensity(vertical: 0),
+                border: OutlineInputBorder(),
+                suffixIcon:SizedBox(
+                  width: 5,
+                  height: 5,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => const AlertDialog(
+                            title: Text('Title'),
+                            content: Text('Dialog content'),
+                          ),
+                        );
+                      },
+                      child: const Center(
+                        child: Icon(Icons.arrow_drop_down),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            appSize.spacerBoxVerticalMedium,
             DateField(
               keyString: dateKeyString1,
               formManager: formManager,
@@ -41,12 +79,10 @@ class ExampleFormState extends FormStateBrick {
                   outerLabelSide: OuterLabelSide.top,
                   outerLabelAlign: OuterLabelAlign.center,
                 ),
-                iconButtonConfig: IconButtonConfig(
-                  context: context,
+                textFieldButtonConfig: TextFieldButtonConfig(
                   iconData: Icons.arrow_drop_down,
                   buttonSide: ButtonSide.right,
-                  buttonAlign: ButtonAlign.top,
-                  onPressed: () {},
+                  onTap: () {},
                 ),
               ),
             ),

@@ -81,8 +81,8 @@ class DateTimeSeparatedField extends StatelessWidget {
   final TextFieldConfig timeTextFieldConfig;
   final DecorationConfig? dateDecorationConfig;
   final DecorationConfig? timeDecorationConfig;
-  final IconButtonConfig? dateButtonConfig;
-  final IconButtonConfig? timeButtonConfig;
+  final TextFieldButtonConfig? dateButtonConfig;
+  final TextFieldButtonConfig? timeButtonConfig;
 
   DateTimeSeparatedField({
     // FormFieldBrick

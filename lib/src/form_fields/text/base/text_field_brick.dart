@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
@@ -6,14 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/states_controller/double_widget_states_controller.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/states_controller/update_once_widget_states_controller.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/decoration_config.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/state_colored_icon_button.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_bordered_box.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_bordered_box_OLD.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
-import 'package:flutter_form_bricks/src/ui_params/theme_data/bricks_theme_data.dart';
 
 abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditingValue, V> {
   final double? width;
@@ -114,14 +108,14 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     List<Locale>? hintLocales,
   })  : assert((expands == true) != (maxLines != null || minLines != null,),
             'TextFieldBrick: when expands is true, both maxLines and minLines must be null'),
-        // assert((decorationBrick?.iconButtonConfig == null) == (decorationBrick?.buttonPosition == null),
+        // assert((decorationBrick?.textFieldButtonConfig == null) == (decorationBrick?.buttonPosition == null),
         //     'buttonConfig and buttonPosition must be declared together or both be null'),
         textFieldConfig = TextFieldConfig(
           magnifierConfiguration: magnifierConfiguration,
           groupId: groupId,
           controller: controller,
           focusNode: focusNode,
-          // decoration: decorationConfig?.iconButtonConfig == null
+          // decoration: decorationConfig?.textFieldButtonConfig == null
           //     ? decorationConfig?.inputDecoration
           //     : decorationConfig?.inputDecoration == null
           //         ? null //InputDecoration(border: InputBorder.none)
@@ -197,11 +191,10 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     extends FormFieldStateBrick<TextEditingValue, V, B> {
   //
   late final TextEditingController controller;
-  late final WidgetStatesController statesObserver;
-  late final WidgetStatesController statesNotifier;
+  late final WidgetStatesController statesController;
   late final VoidCallback _statesListener;
-  late final int maxLines;
-  late double lineHeight, textHeight, buttonWidth, buttonHeight, width;
+  late final TextFieldButton? button;
+  late double width;
   late TextStyle style;
   String? _errorText;
 
@@ -214,12 +207,16 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   @override
   void initState() {
     // TODO this strips the field from flutter's restoration - implement restoration pattern as in comments at the end of this file
-    _setStatesController();
+    statesController = widget.textFieldConfig.statesController ?? WidgetStatesController();
     controller = widget.textFieldConfig.controller ?? TextEditingController();
+
     setInput(formManager.getInitialInput(keyString));
     _errorText = formManager.getFieldError(keyString);
-    maxLines = widget.textFieldConfig.maxLines ?? 1;
     super.initState();
+
+    button = widget.decorationConfig?.textFieldButtonConfig == null
+        ? null
+        : TextFieldButton(textFieldButtonConfig: widget.decorationConfig!.textFieldButtonConfig!);
 
     _statesListener = () {
       if (formUiUpdateCoordinator != null) {
@@ -228,45 +225,23 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
       }
     };
-    statesNotifier.addListener(_statesListener);
+    statesController.addListener(_statesListener);
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
     var uiParams = UiParams.of(context);
-
-    if (widget.textFieldConfig.style == null) {
-      style = uiParams.appTheme.textStyle();
-      lineHeight = uiParams.appTheme.getFontDimension(TextDimension.lineHeight) *2;
-    } else {
-      style = widget.textFieldConfig.style!;
-      lineHeight = uiParams.appTheme.computeFontDimension(widget.textFieldConfig.style!, TextDimension.lineHeight)*2;
-    }
-
+    style = widget.textFieldConfig.style ?? uiParams.appTheme.textStyle();
     width = widget.width ?? uiParams.appSize.textFieldWidth;
-    // TODO SizedBox still not tall correctly
-    textHeight = lineHeight * maxLines;
-
-    if (widget.decorationConfig?.iconButtonConfig != null) {
-      buttonWidth = widget.decorationConfig!.iconButtonConfig!.width ?? uiParams.appSize.textFieldButtonWidth;
-      assert(buttonWidth <= width / 2, 'BrickTextField button must not be wider than half of the field width');
-
-      buttonHeight = widget.decorationConfig!.iconButtonConfig!.height ?? uiParams.appSize.textFieldButtonHeight;
-      buttonHeight = min(buttonHeight, textHeight);
-    }
   }
 
   @override
   void dispose() {
     if (widget.textFieldConfig.controller == null) controller.dispose();
     if (widget.textFieldConfig.focusNode == null) focusNode.dispose();
-    statesNotifier.removeListener(_statesListener);
-    if (statesObserver != statesNotifier) {
-      statesObserver.dispose();
-    }
-    statesNotifier.dispose();
+    statesController.removeListener(_statesListener);
+    statesController.dispose();
     super.dispose();
   }
 
@@ -274,40 +249,21 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   Widget buildFieldWidget(BuildContext context) {
     var uiParams = UiParams.of(context);
 
-    final decoration = _makeInputDecoration(_errorText);
+    final decoration = _makeInputDecorationWithButton(_errorText);
 
     final TextField textField = _makeTextField(
       controller,
-      statesObserver,
+      statesController,
       decoration,
       style,
     );
-
-    final StateColoredIconButton? button = widget.decorationConfig?.iconButtonConfig == null
-        ? null
-        : _makeButton(
-            statesObserver as UpdateOnceWidgetStatesController,
-            statesNotifier,
-            buttonWidth,
-            buttonHeight,
-          );
 
     return TextFieldDecoratedBox(
       uiParamsData: uiParams,
       decorationBrick: widget.decorationConfig ?? DecorationConfig(),
       width: width,
       textField: textField,
-      button: button,
     );
-    // return TextFieldBorderedBox.build(
-    //   uiParamsData: uiParams,
-    //   decorationBrick: widget.decorationBrick ?? InputDecorationBrick(keyString: keyString),
-    //   width: width,
-    //   lineHeight: lineHeight,
-    //   nLines: maxLines,
-    //   textField: textField,
-    //   button: button,
-    // );
   }
 
   TextField _makeTextField(
@@ -397,47 +353,28 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     );
   }
 
-  void _setStatesController() {
-    // TODO verify / test / fix passing-using ststesObserver - note: TextFieldBrick costructs it INSIDE - then what about the one in FormFieldBrick??
-    if (widget.decorationConfig?.iconButtonConfig != null) {
-      var statesController = DoubleWidgetStatesController();
-      statesObserver = statesController.lateWidgetStatesController;
-      statesNotifier = statesController.receiverStatesController;
-    } else {
-      var statesController = WidgetStatesController();
-      statesObserver = statesController;
-      statesNotifier = statesController;
-    }
-  }
-
-  StateColoredIconButton? _makeButton(
-    UpdateOnceWidgetStatesController statesObserver,
-    WidgetStatesController statesNotifier,
-    double width,
-    double height,
-  ) {
-    return StateColoredIconButton(
-      statesObserver: statesObserver,
-      statesNotifier: statesNotifier,
-      colorMaker: widget.colorMaker,
-      config: widget.decorationConfig!.iconButtonConfig!,
-    );
-  }
-
   // TODO move helper methods to a singleton
 
-  InputDecoration _makeInputDecoration(String? errorText) {
+  InputDecoration _makeInputDecorationWithButton(String? errorText) {
+    ButtonSide? buttonSide = widget.decorationConfig?.textFieldButtonConfig?.buttonSide;
+
     if (widget.textFieldConfig.decoration != null) {
       return widget.textFieldConfig.decoration!.copyWith(
         errorText: errorText,
         fillColor: makeColor(),
+        prefixIcon: buttonSide == null || buttonSide == ButtonSide.right
+            ? widget.textFieldConfig.decoration?.prefixIcon
+            : button,
+        suffixIcon: buttonSide == null || buttonSide == ButtonSide.left
+            ? widget.textFieldConfig.decoration?.prefixIcon
+            : button,
       );
     } else {
       return InputDecoration(
-        // contentPadding: EdgeInsets.zero,
-        // border: InputBorder.none,
         errorText: errorText,
         fillColor: makeColor(),
+        prefixIcon: buttonSide == ButtonSide.left ? button : null,
+        suffixIcon: buttonSide == ButtonSide.right ? button : null,
       );
     }
   }

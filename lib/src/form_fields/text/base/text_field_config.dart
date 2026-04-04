@@ -21,7 +21,7 @@ class TextFieldConfig {
   final TextAlignVertical? textAlignVertical;
   final TextDirection? textDirection;
   // final bool autofocus; => FormData takes over initial focus in form
-  // final MaterialStatesController? statesController; => replaced with statesObserver and statesNotifier
+  final WidgetStatesController? statesController;
   final String obscuringCharacter;
   final bool obscureText;
   final bool? autocorrect;
@@ -102,7 +102,7 @@ class TextFieldConfig {
     this.readOnly = false,
     this.showCursor,
     // this.autofocus = false, => FormData takes over in this
-    // this.statesController,  => replaced with statesObserver and statesNotifier
+    this.statesController,
     // TODO remove for all non-password fields
     this.obscuringCharacter = '•',
     // TODO remove for all non-password fields

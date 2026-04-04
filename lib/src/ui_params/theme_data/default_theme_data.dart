@@ -144,19 +144,22 @@ class DefaultThemeData extends BricksThemeData {
   get inputDecorationThemeData =>
       sourceTheme?.inputDecorationTheme ??
       InputDecorationTheme(
-        constraints: BoxConstraints(
-          minWidth: appSize.textFieldWidth,
-          minHeight: appSize.inputTextLineHeight,
-        ),
+        // constraints: BoxConstraints(
+        //   minWidth: appSize.textFieldWidth,
+        //   minHeight: appSize.inputTextLineHeight,
+        //   maxHeight: appSize.inputTextLineHeight,
+        // ),
         filled: true,
-        contentPadding: EdgeInsets.all(appSize.paddingInputText),
-        isDense: true,
+        visualDensity: VisualDensity(vertical: 0, horizontal: 0),
+        // contentPadding: EdgeInsets.zero,
+        // contentPadding: EdgeInsets.all(appSize.paddingInputText),
+        // isDense: true,
         fillColor: WidgetStateColor.resolveWith((Set<WidgetState> states) => appColor.fillColor(states)),
-        labelStyle: TextStyle(
-          color: WidgetStateColor.resolveWith((Set<WidgetState> states) => appColor.textColor(states)),
-          fontSize: appSize.fontSize4,
-        ),
-        errorStyle: const TextStyle(fontSize: 0),
+        // labelStyle: TextStyle(
+        //   color: WidgetStateColor.resolveWith((Set<WidgetState> states) => appColor.textColor(states)),
+        //   fontSize: appSize.fontSize4,
+        // ),
+        // errorStyle: const TextStyle(fontSize: 0),
       ).data;
 
   @override
