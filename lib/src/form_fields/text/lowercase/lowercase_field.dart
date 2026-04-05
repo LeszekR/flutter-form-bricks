@@ -28,8 +28,7 @@ class LowerCaseField extends TextFieldBrick<String> {
     required super.keyString,
     required super.formManager,
     super.colorMaker,
-    super.statesObserver,
-    super.statesNotifier,
+    super.statesController,
     //
     // BrickTextField
     super.width,

@@ -24,8 +24,7 @@ class PlainTextField extends TextFieldBrick<String> {
     required super.formManager,
     required super.validateMode,
     super.colorMaker,
-    super.statesObserver,
-    super.statesNotifier,
+    super.statesController,
     //
     // BrickTextField
     super.width,

@@ -13,8 +13,7 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
 
   final FormManager formManager;
   final StatesColorMaker colorMaker;
-  final WidgetStatesController? statesObserver;
-  final WidgetStatesController? statesNotifier;
+  final WidgetStatesController? statesController;
   final ValueChanged<I>? onChanged;
   final String? label;
   final LabelPosition labelPosition;
@@ -32,8 +31,7 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
     this.labelPosition = LabelPosition.topLeft,
     StatesColorMaker? colorMaker,
     // TODO verify / test / fix passing-using ststesObserver - note: TextFieldBrick costructs it INSIDE - bug?
-    this.statesObserver,
-    this.statesNotifier,
+    this.statesController,
     this.onChanged,
   })  : this.colorMaker = colorMaker ?? StatesColorMaker(),
         super(key: key ?? ValueKey(keyString));
@@ -88,7 +86,7 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
 
     // _states = widget.statesNotifier?.value;
     _onStatesChanged();
-    widget.statesNotifier?.addListener(_onStatesChanged);
+    widget.statesController?.addListener(_onStatesChanged);
 
     if (formManager.isFocusedOnStart(keyString)) focusNode.requestFocus();
 
@@ -108,14 +106,14 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   @mustCallSuper
   @override
   void dispose() {
-    widget.statesNotifier?.removeListener(_onStatesChanged);
+    widget.statesController?.removeListener(_onStatesChanged);
     focusNode.dispose();
     super.dispose();
   }
 
   void _onStatesChanged() {
     setState(() {
-      _states = widget.statesNotifier?.value;
+      _states = widget.statesController?.value;
     });
   }
 

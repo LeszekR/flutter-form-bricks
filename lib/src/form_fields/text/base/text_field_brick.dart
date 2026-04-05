@@ -24,8 +24,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     super.label,
     super.labelPosition,
     super.colorMaker,
-    super.statesObserver,
-    super.statesNotifier,
+    super.statesController,
     //
     // TextFieldBrick
     this.width,
