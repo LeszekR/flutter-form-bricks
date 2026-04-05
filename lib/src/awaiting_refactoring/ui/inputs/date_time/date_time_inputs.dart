@@ -6,7 +6,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/da
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_multi_initial_set.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_required_fields.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_span.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/extension_date_time.dart';
+import 'package:flutter_form_bricks/src/utils/date_time_extension.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/dateTimeRange_formatter_validator.dart';
 
 import '../../buttons/buttons.dart';
