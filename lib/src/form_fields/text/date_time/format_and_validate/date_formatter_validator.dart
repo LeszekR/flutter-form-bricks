@@ -144,7 +144,7 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
 
     if (nDelimiters < 2) return DateTimeFieldContent.transient(dateWithoutYear.txtEditVal());
 
-    String year = _currentDate.getDateNow().year.toString();
+    String year = _currentDate.now().year.toString();
     String yearElement = dateWithoutYear.split(dateDelimiter)[0];
     int yearElementLength = yearElement.length;
 

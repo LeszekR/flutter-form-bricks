@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/decoration_config.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_required_fields.dart';
@@ -77,12 +76,14 @@ class DateTimeSeparatedField extends StatelessWidget {
   final LabelPosition labelPosition;
   final double? dateWidth;
   final double? timeWidth;
+  final InputDecoration? dateInputDecoration;
+  final InputDecoration? timeInputDecoration;
+  final OuterLabelConfig? dateOuterLabelConfig;
+  final OuterLabelConfig? timeOuterLabelConfig;
+  final TextFieldButtonConfig? datePickerButtonConfig;
+  final TextFieldButtonConfig? timePickerButtonConfig;
   final TextFieldConfig dateTextFieldConfig;
   final TextFieldConfig timeTextFieldConfig;
-  final DecorationConfig? dateDecorationConfig;
-  final DecorationConfig? timeDecorationConfig;
-  final TextFieldButtonConfig? dateButtonConfig;
-  final TextFieldButtonConfig? timeButtonConfig;
 
   DateTimeSeparatedField({
     // FormFieldBrick
@@ -96,11 +97,13 @@ class DateTimeSeparatedField extends StatelessWidget {
     this.dateWidth,
     this.timeWidth,
     // TODO implement buttons for date-time-separate fields
-    this.dateDecorationConfig,
-    this.timeDecorationConfig,
+    this.dateInputDecoration,
+    this.timeInputDecoration,
     bool copyDateDecorationToTime = true,
-    this.dateButtonConfig,
-    this.timeButtonConfig,
+    this.dateOuterLabelConfig,
+    this.timeOuterLabelConfig,
+    this.datePickerButtonConfig,
+    this.timePickerButtonConfig,
     //
     // Flutter TextField
     TextMagnifierConfiguration? magnifierConfiguration,
@@ -184,7 +187,7 @@ class DateTimeSeparatedField extends StatelessWidget {
           groupId: groupId,
           controller: controller,
           focusNode: focusNode,
-          decoration: dateDecorationConfig?.inputDecoration,
+          decoration: dateInputDecoration,
           keyboardType: keyboardType,
           textInputAction: textInputAction,
           textCapitalization: TextCapitalization.none,
@@ -255,11 +258,11 @@ class DateTimeSeparatedField extends StatelessWidget {
           groupId: groupId,
           controller: controller,
           focusNode: focusNode,
-          decoration: timeDecorationConfig?.inputDecoration == null
+          decoration: timeInputDecoration == null
               ? null
               : !copyDateDecorationToTime
-                  ? timeDecorationConfig!.inputDecoration!
-                  : timeDecorationConfig!.inputDecoration!.fillGapsFrom(dateDecorationConfig?.inputDecoration),
+                  ? timeInputDecoration
+                  : timeInputDecoration.fillGapsFrom(dateInputDecoration),
           keyboardType: keyboardType,
           textInputAction: textInputAction,
           textCapitalization: TextCapitalization.none,
@@ -361,7 +364,9 @@ class DateTimeSeparatedField extends StatelessWidget {
       //
       // TextFieldBrick
       width: dateWidth ?? appTheme.getFontDimension(TextDimension.widthOfChar0) * 12,
-      decorationConfig: dateDecorationConfig,
+      inputDecoration: dateInputDecoration,
+      datePickerButtonConfig: datePickerButtonConfig,
+      outerLabelConfig: dateOuterLabelConfig,
       //
       // TextField
       groupId: dateTextFieldConfig.groupId,
@@ -424,8 +429,12 @@ class DateTimeSeparatedField extends StatelessWidget {
       colorMaker: colorMaker,
       //
       // TextFieldBrick
-      width: timeWidth ?? appTheme.getFontDimension(TextDimension.widthOfChar0) * 8,
-      decorationConfig: timeDecorationConfig,
+      width: timeWidth,
+      inputDecoration: timeInputDecoration,
+      outerLabelConfig: timeOuterLabelConfig,
+      //
+      // TimeField
+      timePickerButtonConfig: timePickerButtonConfig,
       //
       // TextField
       groupId: dateTextFieldConfig.groupId,

@@ -27,7 +27,7 @@ class ExampleFormState extends FormStateBrick {
     return Center(
       child: SizedBox(
         width: 400,
-        height: 300,
+        height: 500,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -45,7 +45,7 @@ class ExampleFormState extends FormStateBrick {
                 // contentPadding: EdgeInsets.zero,
                 visualDensity: VisualDensity(vertical: 0),
                 border: OutlineInputBorder(),
-                suffixIcon:SizedBox(
+                suffixIcon: SizedBox(
                   width: 5,
                   height: 5,
                   child: Material(
@@ -73,18 +73,8 @@ class ExampleFormState extends FormStateBrick {
               keyString: dateKeyString1,
               formManager: formManager,
               width: 150,
-              decorationConfig: DecorationConfig(
-                outerLabelConfig: OuterLabelConfig(
-                  outerLabelText: 'Data',
-                  outerLabelSide: OuterLabelSide.top,
-                  outerLabelAlign: OuterLabelAlign.center,
-                ),
-                textFieldButtonConfig: TextFieldButtonConfig(
-                  iconData: Icons.arrow_drop_down,
-                  buttonSide: ButtonSide.right,
-                  onTap: () {},
-                ),
-              ),
+              // inputDecoration: InputDecoration(labelText: 'data'),
+              outerLabelConfig: OuterLabelConfig(outerLabelText: 'Data',outerLabelSide: OuterLabelSide.bottom),
             ),
             appSize.spacerBoxVerticalMedium,
             TimeField(

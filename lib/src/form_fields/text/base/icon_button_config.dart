@@ -4,17 +4,17 @@ import 'package:flutter_form_bricks/shelf.dart';
 enum ButtonSide { left, right }
 
 class TextFieldButtonConfig {
-  final IconData iconData;
-  final VoidCallback onTap;
-  final String? tooltip;
+  final IconData iconDataMaker;
+  final void Function(BuildContext) onTapMaker;
   final ButtonSide buttonSide;
+  final String Function(BuildContext)? tooltipMaker;
   final bool autofocus;
 
   const TextFieldButtonConfig({
-    required this.iconData,
-    required this.onTap,
-    this.tooltip,
+    required this.iconDataMaker,
+    required this.onTapMaker,
     this.buttonSide = ButtonSide.right,
+    this.tooltipMaker,
     this.autofocus = false,
   });
 }

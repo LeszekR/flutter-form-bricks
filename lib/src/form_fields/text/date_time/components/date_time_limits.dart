@@ -36,7 +36,7 @@ class DateTimeLimits {
     return DateTime(minDT.year, minDT.month, minDT.day);
   }
 
-  DateTime _referencePoint() => fixedReferenceDateTime ?? currentDate!.getDateNow();
+  DateTime _referencePoint() => fixedReferenceDateTime ?? currentDate!.now();
 }
 
 class DateTimeRangeLimits {

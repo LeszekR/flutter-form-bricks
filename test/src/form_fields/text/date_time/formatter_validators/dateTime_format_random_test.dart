@@ -13,10 +13,10 @@ import '../tools/test_utils.dart';
 void main() {
   final dateTimeUtils = DateTimeUtils();
   final mockCurrentDate = MockCurrentDate();
-  when(mockCurrentDate.getDateNow()).thenReturn(DateTime.parse('2024-02-01 22:11'));
+  when(mockCurrentDate.now()).thenReturn(DateTime.parse('2024-02-01 22:11'));
 
   var dateTimeLimits = DateTimeLimits(
-    fixedReferenceDateTime: mockCurrentDate.getDateNow(),
+    fixedReferenceDateTime: mockCurrentDate.now(),
     maxMinutesBack: 5303520,  // 2014-01-01
     maxMinutesForward: 1008000,  // 2026-01-01
   );

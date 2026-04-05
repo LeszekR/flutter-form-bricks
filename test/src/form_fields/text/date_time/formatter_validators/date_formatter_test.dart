@@ -13,10 +13,10 @@ void main() {
   var dateTimeUtils = DateTimeUtils();
   final dateTimeInputUtils = dateTimeUtils;
   final mockCurrentDate = MockCurrentDate();
-  when(mockCurrentDate.getDateNow()).thenReturn(DateTime.parse('2024-02-01 22:11'));
+  when(mockCurrentDate.now()).thenReturn(DateTime.parse('2024-02-01 22:11'));
 
   var dateTimeLimits = DateTimeLimits(
-    fixedReferenceDateTime: mockCurrentDate.getDateNow(),
+    fixedReferenceDateTime: mockCurrentDate.now(),
     maxMinutesBack: 570240,  // 2023-01-01 22:11
     maxMinutesForward: 480960,  //  2024-12-31 22:11
   );

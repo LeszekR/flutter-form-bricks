@@ -28,7 +28,9 @@ class PlainTextField extends TextFieldBrick<String> {
     //
     // BrickTextField
     super.width,
-    super.decorationConfig,
+    super.inputDecoration,
+    super.outerLabelConfig,
+    super.textFieldButtonConfig,
     //
     // TextField
     super.groupId = EditableText,

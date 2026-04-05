@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/decoration_config.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/outer_label_config.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params_data.dart';
 
 class TextFieldDecoratedBox extends StatelessWidget {
   final UiParamsData uiParamsData;
-  final DecorationConfig decorationBrick;
+  final OuterLabelConfig? outerLabelConfig;
   final double width;
   final TextField textField;
 
   const TextFieldDecoratedBox({
     super.key,
     required this.uiParamsData,
-    required this.decorationBrick,
+    required this.outerLabelConfig,
     required this.width,
     required this.textField,
   });
@@ -20,7 +19,7 @@ class TextFieldDecoratedBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Widget bodyWithLabel = _wrapWithOuterLabel(
-      decorationBrick: decorationBrick,
+      outerLabelConfig: outerLabelConfig,
       fieldBody: textField,
     );
     return SizedBox(
@@ -30,19 +29,20 @@ class TextFieldDecoratedBox extends StatelessWidget {
   }
 
   static Widget _wrapWithOuterLabel({
-    required DecorationConfig decorationBrick,
+    required OuterLabelConfig? outerLabelConfig,
     required Widget fieldBody,
   }) {
-    final Widget? label = _makeOuterLabel(decorationBrick);
-    if (label == null) return fieldBody;
+    if (outerLabelConfig == null) return fieldBody;
 
-    CrossAxisAlignment crossAxisAlignment = switch (decorationBrick.outerLabelConfig!.outerLabelAlign) {
+    final Widget label = _makeOuterLabel(outerLabelConfig);
+
+    CrossAxisAlignment crossAxisAlignment = switch (outerLabelConfig.outerLabelAlign) {
       OuterLabelAlign.start => CrossAxisAlignment.start,
       OuterLabelAlign.center => CrossAxisAlignment.center,
       OuterLabelAlign.end => CrossAxisAlignment.end,
     };
 
-    switch (decorationBrick.outerLabelConfig!.outerLabelSide) {
+    switch (outerLabelConfig.outerLabelSide) {
       case OuterLabelSide.top:
         return Column(
           mainAxisSize: MainAxisSize.min,
@@ -83,13 +83,10 @@ class TextFieldDecoratedBox extends StatelessWidget {
     }
   }
 
-  static Widget? _makeOuterLabel(DecorationConfig decorationBrick) {
-    if (decorationBrick.outerLabelConfig?.outerLabel != null) {
-      return decorationBrick.outerLabelConfig!.outerLabel!;
+  static Widget _makeOuterLabel(OuterLabelConfig outerLabelConfig) {
+    if (outerLabelConfig.outerLabel != null) {
+      return outerLabelConfig.outerLabel!;
     }
-    if (decorationBrick.outerLabelConfig?.outerLabelText != null) {
-      return Text(decorationBrick.outerLabelConfig!.outerLabelText!);
-    }
-    return null;
+    return Text(outerLabelConfig.outerLabelText!);
   }
 }

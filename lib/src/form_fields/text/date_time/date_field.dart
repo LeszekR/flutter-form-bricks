@@ -4,8 +4,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/base/form_field_descriptor.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/base/validate_mode_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/icon_button_config.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/current_date.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_picker_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_utils.dart';
@@ -32,19 +34,23 @@ class DateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime
 }
 
 class DateField extends TextFieldBrick<DateTime> {
+  late final TextFieldButtonConfig? datePickerButtonConfig;
+
   DateField({
     // FormFieldBrick
     required super.keyString,
     required super.formManager,
-    super.label,
-    super.labelPosition,
     super.colorMaker,
     super.statesController,
     //
     // TextFieldBrick
     super.width,
-    // TODO implement button for date field
-    super.decorationConfig,
+    super.inputDecoration,
+    super.outerLabelConfig,
+    //
+    // DateField
+    this.datePickerButtonConfig,
+    CurrentDate? currentDate,
     //
     // TextField
     super.groupId = EditableText,
@@ -114,6 +120,15 @@ class DateField extends TextFieldBrick<DateTime> {
     super.magnifierConfiguration,
     super.hintLocales,
   }) : super(
+          textFieldButtonConfig: datePickerButtonConfig != null
+              ? datePickerButtonConfig
+              : TextFieldButtonConfig(
+                  iconDataMaker: Icons.arrow_drop_down,
+                  buttonSide: ButtonSide.right,
+                  onTapMaker: DatePicker(currentDate).open,
+                  tooltipMaker: DatePicker.datePickerTooltip,
+                  autofocus: true,
+                ),
           validateMode: ValidateModeBrick.onEditingComplete,
           textCapitalization: TextCapitalization.none,
           obscureText: false,

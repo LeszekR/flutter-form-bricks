@@ -17,9 +17,9 @@ class TextFieldButton extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: textFieldButtonConfig.onTap,
+          onTap: () => textFieldButtonConfig.onTapMaker(context),
           child: Center(
-            child: Icon(textFieldButtonConfig.iconData),
+            child: Icon(textFieldButtonConfig.iconDataMaker),
           ),
         ),
       ),
