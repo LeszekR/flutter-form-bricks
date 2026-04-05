@@ -41,7 +41,7 @@ abstract class TabulatedFormState<T extends TabulatedForm> extends AbstractFormS
       child: Column(
         children: [
           _createFormBody(context),
-          UiParams.of(context).appSize.spacerBoxVerticalSmall,
+          SizedBox(height: UiParams.of(context).appSize.spacerVerticalSmall),
           createFormControlPanel(context),
         ],
       ),

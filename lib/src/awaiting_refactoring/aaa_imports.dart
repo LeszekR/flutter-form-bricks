@@ -6,7 +6,7 @@ import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/app_size.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_color/app_color.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_style/app_style.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/labelled_box/label_position.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/label_position.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/states_color_maker.dart';
 
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
@@ -27,6 +27,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/da
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_picker.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button_config.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/labelled_box.dart';
 
 import 'package:flutter_form_bricks/src/form_fields/text/base/outer_label_config.dart';
 import 'package:flutter_form_bricks/src/forms/base/form_brick.dart';

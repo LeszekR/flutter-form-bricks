@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator_chain.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/labelled_box.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_required_fields.dart';
@@ -72,8 +73,7 @@ class DateTimeSeparatedField extends StatelessWidget {
   final String keyString;
   final FormManager formManager;
   final StatesColorMaker colorMaker;
-  final String? label;
-  final LabelPosition labelPosition;
+  final OuterLabelConfig? outerLabelConfig;
   final double? dateWidth;
   final double? timeWidth;
   final InputDecoration? dateInputDecoration;
@@ -90,8 +90,7 @@ class DateTimeSeparatedField extends StatelessWidget {
     required this.keyString,
     required this.formManager,
     StatesColorMaker? colorMaker,
-    this.label,
-    this.labelPosition = LabelPosition.topLeft,
+    this.outerLabelConfig,
     //
     // TextFieldBrick
     this.dateWidth,
@@ -330,32 +329,38 @@ class DateTimeSeparatedField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appSize = UiParams.of(context).appSize;
-    final appTheme = UiParams.of(context).appTheme;
+    final uiParams = UiParams.of(context);
+    final appSize = uiParams.appSize;
+    double effectiveDateWidth = dateWidth ?? uiParams.appTheme.getFontDimension(TextDimension.widthOfChar0) * 12;
+    double effectiveTimeWidth = timeWidth ?? uiParams.appTheme.getFontDimension(TextDimension.widthOfChar0) * 8;
 
     // TODO: use TextField.groupId to create shared tap region for the two fields
 
     List<Widget> elements = [
-      _makeDateField(appTheme),
-      appSize.spacerBoxHorizontalSmallest,
-      _makeTimeField(appTheme),
+      _makeDateField(uiParams.appTheme, effectiveDateWidth),
+      appSize.horizontalSpacer(appSize.spacerHorizontalSmallest),
+      _makeTimeField(uiParams.appTheme, effectiveTimeWidth),
     ];
-    if (label != null) {
-      elements = [
-        Text(label!),
-        appSize.spacerBoxHorizontalSmallest,
-        ...elements,
-      ];
-    }
 
-    return Row(
+    final body = Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: elements,
     );
+
+    if (outerLabelConfig != null) {
+      return body;
+    } else {
+      return LabelledBox(
+        uiParamsData: UiParams.of(context),
+        outerLabelConfig: outerLabelConfig,
+        width: effectiveDateWidth + effectiveTimeWidth + uiParams.appSize.spacerHorizontalSmallest,
+        textField: body,
+      );
+    }
   }
 
-  DateField _makeDateField(BricksThemeData appTheme) {
+  DateField _makeDateField(BricksThemeData appTheme, double effectiveDateWidth) {
     return DateField(
       // FormFieldBrick
       keyString: DateTimeUtils.makeDateKeyString(keyString),
@@ -363,7 +368,7 @@ class DateTimeSeparatedField extends StatelessWidget {
       colorMaker: colorMaker,
       //
       // TextFieldBrick
-      width: dateWidth ?? appTheme.getFontDimension(TextDimension.widthOfChar0) * 12,
+      width: effectiveDateWidth,
       inputDecoration: dateInputDecoration,
       datePickerButtonConfig: datePickerButtonConfig,
       outerLabelConfig: dateOuterLabelConfig,
@@ -421,7 +426,7 @@ class DateTimeSeparatedField extends StatelessWidget {
     );
   }
 
-  TimeField _makeTimeField(BricksThemeData appTheme) {
+  TimeField _makeTimeField(BricksThemeData appTheme, double effectiveTimeWidth) {
     return TimeField(
       // FormFieldBrick
       keyString: DateTimeUtils.makeTimeKeyString(keyString),
@@ -429,7 +434,7 @@ class DateTimeSeparatedField extends StatelessWidget {
       colorMaker: colorMaker,
       //
       // TextFieldBrick
-      width: timeWidth,
+      width: effectiveTimeWidth,
       inputDecoration: timeInputDecoration,
       outerLabelConfig: timeOuterLabelConfig,
       //

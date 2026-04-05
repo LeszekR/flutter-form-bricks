@@ -5,14 +5,12 @@ enum ButtonSide { left, right }
 
 class TextFieldButtonConfig {
   final IconData iconDataMaker;
-  final void Function(BuildContext) onTapMaker;
   final ButtonSide buttonSide;
   final String Function(BuildContext)? tooltipMaker;
   final bool autofocus;
 
   const TextFieldButtonConfig({
     required this.iconDataMaker,
-    required this.onTapMaker,
     this.buttonSide = ButtonSide.right,
     this.tooltipMaker,
     this.autofocus = false,

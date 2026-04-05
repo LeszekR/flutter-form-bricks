@@ -18,7 +18,7 @@ class ProgressInfo {
           mainAxisSize: MainAxisSize.max,
           children: [
             const Center(child: CircularProgressIndicator()),
-            appSize.spacerBoxVerticalMedium,
+            appSize.verticalSpacer(appSize.spacerVerticalMedium),
             Text(message),
           ],
         ),

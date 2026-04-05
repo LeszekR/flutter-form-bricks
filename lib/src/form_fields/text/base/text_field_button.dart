@@ -3,10 +3,12 @@ import 'package:flutter_form_bricks/shelf.dart';
 
 class TextFieldButton extends StatelessWidget {
   final TextFieldButtonConfig textFieldButtonConfig;
+  final void Function(BuildContext context) onTap;
 
   const TextFieldButton({
     super.key,
     required this.textFieldButtonConfig,
+    required this.onTap,
   });
 
   @override
@@ -17,7 +19,7 @@ class TextFieldButton extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () => textFieldButtonConfig.onTapMaker(context),
+          onTap: () => onTap(context),
           child: Center(
             child: Icon(textFieldButtonConfig.iconDataMaker),
           ),

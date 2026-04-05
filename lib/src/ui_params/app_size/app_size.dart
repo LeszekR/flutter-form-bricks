@@ -75,10 +75,13 @@ abstract class AppSize {
   double get spinnerInsets;
 
   // spacers
-  SizedBox get spacerBoxVerticalSmallest;
-  SizedBox get spacerBoxVerticalSmall;
-  SizedBox get spacerBoxVerticalMedium;
-  SizedBox get spacerBoxHorizontalSmallest;
-  SizedBox get spacerBoxHorizontalSmall;
-  SizedBox get spacerBoxHorizontalMedium;
+  double get spacerVerticalSmallest;
+  double get spacerVerticalSmall;
+  double get spacerVerticalMedium;
+  double get spacerHorizontalSmallest;
+  double get spacerHorizontalSmall;
+  double get spacerHorizontalMedium;
+  SizedBox verticalSpacer(double height) => SizedBox(height: height);
+  SizedBox horizontalSpacer(double width) => SizedBox(width: width);
+
 }

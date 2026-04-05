@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/date_time/date_time_inputs.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/labelled_box/label_position.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/label_position.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_span.dart';

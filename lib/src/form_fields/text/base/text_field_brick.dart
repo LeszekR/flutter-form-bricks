@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_decorated_box.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/labelled_box.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
 
@@ -13,7 +13,6 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
   final double? width;
   final TextFieldConfig textFieldConfig;
   final InputDecoration? inputDecoration;
-  final OuterLabelConfig? outerLabelConfig;
   final TextFieldButtonConfig? textFieldButtonConfig;
 
   TextFieldBrick({
@@ -25,12 +24,12 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     required super.validateMode,
     super.colorMaker,
     super.statesController,
+    super.outerLabelConfig,
     //
     // TextFieldBrick
     this.width,
     this.inputDecoration,
-    this.outerLabelConfig,
-    this.textFieldButtonConfig,    
+    this.textFieldButtonConfig,
     //
     // Flutter TextField
     TextMagnifierConfiguration? magnifierConfiguration,
@@ -240,6 +239,8 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   late TextStyle style;
   String? _errorText;
 
+  void onButtonTap(BuildContext context);
+
   @override
   TextEditingValue? getInput() => controller.value;
 
@@ -258,7 +259,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
     button = widget.textFieldButtonConfig == null
         ? null
-        : TextFieldButton(textFieldButtonConfig: widget.textFieldButtonConfig!);
+        : TextFieldButton(textFieldButtonConfig: widget.textFieldButtonConfig!, onTap: onButtonTap);
 
     _statesListener = () {
       if (formUiUpdateCoordinator != null) {
@@ -300,7 +301,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       style,
     );
 
-    return TextFieldDecoratedBox(
+    return LabelledBox(
       uiParamsData: uiParams,
       outerLabelConfig: widget.outerLabelConfig,
       width: width,

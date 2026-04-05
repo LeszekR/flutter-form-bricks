@@ -114,7 +114,7 @@ abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
         ),
       ),
       //
-      appSize.spacerBoxHorizontalMedium,
+      SizedBox(width: appSize.spacerHorizontalMedium),
       //
       Container(
         height: appSize.bottomPanelHeight,
@@ -141,11 +141,11 @@ abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
     return [
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         saveButton(),
-        appSize.spacerBoxHorizontalSmall,
+        SizedBox(width: appSize.spacerHorizontalSmall),
         resetButton(),
-        appSize.spacerBoxHorizontalSmall,
+        SizedBox(width: appSize.spacerHorizontalSmall),
         deleteButton(),
-        appSize.spacerBoxHorizontalSmall,
+        SizedBox(width: appSize.spacerHorizontalSmall),
         cancelButton(),
       ])
     ];

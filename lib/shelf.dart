@@ -17,7 +17,7 @@ export 'src/awaiting_refactoring/ui/inputs/input_validator_provider.dart';
 // DIALOGS
 export 'src/dialogs/dialogs.dart';
 export 'src/form_fields/components/base/form_field_brick.dart';
-export 'src/form_fields/components/labelled_box/label_position.dart';
+export 'src/awaiting_refactoring/ui/inputs/label_position.dart';
 
 // INPUTS
 export 'src/form_fields/components/state/form_field_data.dart';

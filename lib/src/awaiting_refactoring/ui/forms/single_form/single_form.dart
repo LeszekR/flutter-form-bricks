@@ -30,7 +30,7 @@ abstract class SingleFormState<T extends SingleForm> extends AbstractFormState<T
           //
           _createFormBody(context),
           //
-          appSize.spacerBoxVerticalSmall,
+          SizedBox(width: appSize.spacerVerticalSmall),
           //
           createFormControlPanel(context)
         ]));

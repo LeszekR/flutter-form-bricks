@@ -6,7 +6,7 @@ import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_for
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/input_validator_provider.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/text/text_inputs.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/base/form_field_brick.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/labelled_box/label_position.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/label_position.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/states_controller/formatter_helper.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_brick.dart';
 import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';

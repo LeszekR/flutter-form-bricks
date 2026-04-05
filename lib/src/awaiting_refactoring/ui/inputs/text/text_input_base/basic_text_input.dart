@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/labelled_box/label_position.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/label_position.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/text/text_input_base/double_widget_states_controller.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 

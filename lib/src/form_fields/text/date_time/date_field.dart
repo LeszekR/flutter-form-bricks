@@ -4,8 +4,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/base/form_field_descriptor.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/base/validate_mode_brick.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button_config.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_brick.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button_config.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/current_date.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_picker.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
@@ -34,7 +34,8 @@ class DateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime
 }
 
 class DateField extends TextFieldBrick<DateTime> {
-  late final TextFieldButtonConfig? datePickerButtonConfig;
+  final TextFieldButtonConfig? datePickerButtonConfig;
+  final CurrentDate? currentDate;
 
   DateField({
     // FormFieldBrick
@@ -50,7 +51,7 @@ class DateField extends TextFieldBrick<DateTime> {
     //
     // DateField
     this.datePickerButtonConfig,
-    CurrentDate? currentDate,
+    this.currentDate,
     //
     // TextField
     super.groupId = EditableText,
@@ -125,7 +126,6 @@ class DateField extends TextFieldBrick<DateTime> {
               : TextFieldButtonConfig(
                   iconDataMaker: Icons.arrow_drop_down,
                   buttonSide: ButtonSide.right,
-                  onTapMaker: DatePicker(currentDate).open,
                   tooltipMaker: DatePicker.datePickerTooltip,
                   autofocus: true,
                 ),
@@ -145,4 +145,18 @@ class DateField extends TextFieldBrick<DateTime> {
 class DateFieldState extends TextFieldStateBrick<DateTime, DateField> {
   @override
   DateTime? get defaultValue => null;
+
+  @override
+  void onButtonTap(BuildContext context) async {
+    DateTime? date = await DatePicker(widget.currentDate).open(context);
+    if (date != null) {
+      setState(() {
+        var formattedDate = DateTimeUtils.dateFormat.format(date);
+        controller.value = TextEditingValue(
+          text: formattedDate,
+          selection: TextSelection.collapsed(offset: formattedDate.length),
+        );
+      });
+    }
+  }
 }

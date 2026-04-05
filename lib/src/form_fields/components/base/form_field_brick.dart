@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/base/validate_mode_brick.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/labelled_box/label_position.dart';
+import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/states_color_maker.dart';
 import 'package:flutter_form_bricks/src/forms/base/form_ui_update_coordinator.dart';
 import 'package:flutter_form_bricks/src/forms/base/form_ui_update_scope.dart';
-import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
-import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 
 abstract class FormFieldBrick<I extends Object, V extends Object> extends StatefulWidget {
   final String keyString;
@@ -16,7 +12,7 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
   final WidgetStatesController? statesController;
   final ValueChanged<I>? onChanged;
   final String? label;
-  final LabelPosition labelPosition;
+  final OuterLabelConfig? outerLabelConfig;
 
   // TODO implement identical functionality as in flutter_form_builder using onChange, onEditingComplete, onSave
   final ValidateModeBrick validateMode;
@@ -28,7 +24,7 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
     required this.formManager,
     required this.validateMode,
     this.label,
-    this.labelPosition = LabelPosition.topLeft,
+    this.outerLabelConfig,
     StatesColorMaker? colorMaker,
     // TODO verify / test / fix passing-using ststesObserver - note: TextFieldBrick costructs it INSIDE - bug?
     this.statesController,
@@ -70,7 +66,7 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   Widget build(BuildContext context) {
     return ListenableBuilder(
       listenable: FormUiUpdateScope.of(context),
-      builder: (context, _) =>  buildFieldWidget(context),
+      builder: (context, _) => buildFieldWidget(context),
     );
   }
 

@@ -136,7 +136,6 @@ class TimeField extends TextFieldBrick<DateTime> {
               : TextFieldButtonConfig(
                   iconDataMaker: Icons.arrow_drop_down,
                   buttonSide: ButtonSide.right,
-                  onTapMaker: TimePicker().open,
                   tooltipMaker: DatePicker.datePickerTooltip,
                   autofocus: true,
                 ),
@@ -156,4 +155,17 @@ class TimeField extends TextFieldBrick<DateTime> {
 class TimeFieldState extends TextFieldStateBrick<DateTime, TimeField> {
   @override
   DateTime? get defaultValue => null;
-}
+
+  @override
+  void onButtonTap(BuildContext context) async {
+    TimeOfDay? time = await TimePicker().open(context);
+    if (time != null) {
+      setState(() {
+        var formattedTime = DateTimeUtils.timeFormatMinutePrecision.format(time);
+        controller.value = TextEditingValue(
+          text: formattedTime,
+          selection: TextSelection.collapsed(offset: formattedTime.length),
+        );
+      });
+    }
+  }}
