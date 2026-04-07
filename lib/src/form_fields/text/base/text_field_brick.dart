@@ -241,6 +241,8 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   void onButtonTap(BuildContext context);
 
+  double getWidth(AppSize appSize) => appSize.textFieldButtonWidth;
+
   @override
   TextEditingValue? getInput() => controller.value;
 
@@ -274,9 +276,16 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
     var uiParams = UiParams.of(context);
     style = widget.textFieldConfig.style ?? uiParams.appTheme.textStyle();
-    width = widget.width ?? uiParams.appSize.textFieldWidth;
+
+    if(widget.width != null){
+      width = widget.width! * uiParams.appSize.zoom;
+    } else {
+      double buttonWidth = (button == null) ? 0 : uiParams.appSize.textFieldButtonWidth;
+      width = getWidth(uiParams.appSize) + buttonWidth;
+    }
   }
 
   @override

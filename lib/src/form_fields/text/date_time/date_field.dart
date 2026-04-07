@@ -11,6 +11,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/da
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_utils.dart';
+import 'package:flutter_form_bricks/src/ui_params/app_size/app_size.dart';
 
 class DateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime, DateField> {
   DateFieldDescriptor({
@@ -34,7 +35,7 @@ class DateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime
 }
 
 class DateField extends TextFieldBrick<DateTime> {
-  final TextFieldButtonConfig? datePickerButtonConfig;
+  DatePickerConfig? datePickerConfig;
   final CurrentDate? currentDate;
 
   DateField({
@@ -50,7 +51,8 @@ class DateField extends TextFieldBrick<DateTime> {
     super.outerLabelConfig,
     //
     // DateField
-    this.datePickerButtonConfig,
+    TextFieldButtonConfig? datePickerButtonConfig,
+    this.datePickerConfig,
     this.currentDate,
     //
     // TextField
@@ -127,7 +129,6 @@ class DateField extends TextFieldBrick<DateTime> {
                   iconDataMaker: Icons.arrow_drop_down,
                   buttonSide: ButtonSide.right,
                   tooltipMaker: DatePicker.datePickerTooltip,
-                  autofocus: true,
                 ),
           validateMode: ValidateModeBrick.onEditingComplete,
           textCapitalization: TextCapitalization.none,
@@ -147,16 +148,17 @@ class DateFieldState extends TextFieldStateBrick<DateTime, DateField> {
   DateTime? get defaultValue => null;
 
   @override
+  double getWidth(AppSize appSize) => appSize.dateFieldWidth;
+
+  @override
   void onButtonTap(BuildContext context) async {
-    DateTime? date = await DatePicker(widget.currentDate).open(context);
-    if (date != null) {
-      setState(() {
-        var formattedDate = DateTimeUtils.dateFormat.format(date);
-        controller.value = TextEditingValue(
-          text: formattedDate,
-          selection: TextSelection.collapsed(offset: formattedDate.length),
-        );
-      });
-    }
+    DateTime? date = await DatePicker(widget.currentDate, datePickerConfig: widget.datePickerConfig).open(context);
+    if (date == null) return;
+
+    final formattedDate = DateTimeUtils.dateFormat.format(date);
+    controller.value = TextEditingValue(
+      text: formattedDate,
+      selection: TextSelection.collapsed(offset: formattedDate.length),
+    );
   }
 }

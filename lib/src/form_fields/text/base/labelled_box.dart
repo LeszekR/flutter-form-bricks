@@ -6,14 +6,14 @@ import 'package:flutter_form_bricks/src/ui_params/ui_params_data.dart';
 class LabelledBox extends StatelessWidget {
   final UiParamsData uiParamsData;
   final OuterLabelConfig? outerLabelConfig;
-  final double width;
+  final double? width;
   final Widget textField;
 
   const LabelledBox({
     super.key,
     required this.uiParamsData,
     required this.outerLabelConfig,
-    required this.width,
+    this.width,
     required this.textField,
   });
 
@@ -52,7 +52,7 @@ class LabelledBox extends StatelessWidget {
           crossAxisAlignment: crossAxisAlignment,
           children: [
             label,
-            appSize.horizontalSpacer(appSize.spacerHorizontalSmallest),
+            appSize.verticalSpacer(appSize.spacerHorizontalSmallest),
             fieldBody,
           ],
         );
@@ -62,7 +62,7 @@ class LabelledBox extends StatelessWidget {
           crossAxisAlignment: crossAxisAlignment,
           children: [
             Flexible(flex: 0, child: label),
-            appSize.verticalSpacer(appSize.spacerHorizontalSmallest),
+            appSize.horizontalSpacer(appSize.spacerHorizontalSmallest),
 
             Expanded(child: fieldBody),
           ],

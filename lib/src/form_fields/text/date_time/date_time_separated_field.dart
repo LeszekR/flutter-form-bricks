@@ -330,16 +330,15 @@ class DateTimeSeparatedField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final uiParams = UiParams.of(context);
-    final appSize = uiParams.appSize;
-    double effectiveDateWidth = dateWidth ?? uiParams.appTheme.getFontDimension(TextDimension.widthOfChar0) * 12;
-    double effectiveTimeWidth = timeWidth ?? uiParams.appTheme.getFontDimension(TextDimension.widthOfChar0) * 8;
+    // double effectiveDateWidth = dateWidth ?? uiParams.appTheme.getFontDimension(TextDimension.widthOfChar0) * 12;
+    // double effectiveTimeWidth = timeWidth ?? uiParams.appTheme.getFontDimension(TextDimension.widthOfChar0) * 8;
 
     // TODO: use TextField.groupId to create shared tap region for the two fields
 
     List<Widget> elements = [
-      _makeDateField(uiParams.appTheme, effectiveDateWidth),
-      appSize.horizontalSpacer(appSize.spacerHorizontalSmallest),
-      _makeTimeField(uiParams.appTheme, effectiveTimeWidth),
+      _makeDateField(),
+      uiParams.appSize.horizontalSpacer(uiParams.appSize.spacerHorizontalSmallest),
+      _makeTimeField(),
     ];
 
     final body = Row(
@@ -348,19 +347,19 @@ class DateTimeSeparatedField extends StatelessWidget {
       children: elements,
     );
 
-    if (outerLabelConfig != null) {
+    if (outerLabelConfig == null) {
       return body;
     } else {
       return LabelledBox(
         uiParamsData: UiParams.of(context),
         outerLabelConfig: outerLabelConfig,
-        width: effectiveDateWidth + effectiveTimeWidth + uiParams.appSize.spacerHorizontalSmallest,
+        // width: effectiveDateWidth + effectiveTimeWidth + uiParams.appSize.spacerHorizontalSmallest,
         textField: body,
       );
     }
   }
 
-  DateField _makeDateField(BricksThemeData appTheme, double effectiveDateWidth) {
+  DateField _makeDateField() {
     return DateField(
       // FormFieldBrick
       keyString: DateTimeUtils.makeDateKeyString(keyString),
@@ -368,7 +367,7 @@ class DateTimeSeparatedField extends StatelessWidget {
       colorMaker: colorMaker,
       //
       // TextFieldBrick
-      width: effectiveDateWidth,
+      width: dateWidth,
       inputDecoration: dateInputDecoration,
       datePickerButtonConfig: datePickerButtonConfig,
       outerLabelConfig: dateOuterLabelConfig,
@@ -426,7 +425,7 @@ class DateTimeSeparatedField extends StatelessWidget {
     );
   }
 
-  TimeField _makeTimeField(BricksThemeData appTheme, double effectiveTimeWidth) {
+  TimeField _makeTimeField() {
     return TimeField(
       // FormFieldBrick
       keyString: DateTimeUtils.makeTimeKeyString(keyString),
@@ -434,7 +433,7 @@ class DateTimeSeparatedField extends StatelessWidget {
       colorMaker: colorMaker,
       //
       // TextFieldBrick
-      width: effectiveTimeWidth,
+      width: timeWidth,
       inputDecoration: timeInputDecoration,
       outerLabelConfig: timeOuterLabelConfig,
       //

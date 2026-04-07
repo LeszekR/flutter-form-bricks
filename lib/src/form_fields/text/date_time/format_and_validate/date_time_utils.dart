@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
-import 'package:flutter_form_bricks/src/utils/string_extension.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
+import 'package:flutter_form_bricks/src/utils/string_extension.dart';
 import 'package:intl/intl.dart';
 
 enum DateTimeOrBoth {
@@ -117,6 +117,7 @@ class DateTimeUtils {
     return (errMsg.isEmpty ? '' : (errMsg + connector)) + nextErrorMessage;
   }
 
+  // TODO make all helper methods static, possibly abstract methods being part of formattervalidator to another class?
   DateTime fromDateTime(DateTime dt) {
     return DateTime(dt.year, dt.month, dt.day);
   }
@@ -131,6 +132,12 @@ class DateTimeUtils {
 
   DateTime timeSecondPrecisionFromString(String stringVal) {
     return timeFormatSecondPrecision.parseStrict(stringVal);
+  }
+
+  static String formatTimeOfDay(TimeOfDay time) {
+    final hour = time.hour.toString().padLeft(2, '0');
+    final minute = time.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
   }
 
   String minutesToSpanCondition(int nMinutes) {
@@ -197,8 +204,8 @@ class DateTimeUtils {
 
   static bool isEndTimeField(String keyString) => keyString.contains(endPostfix) && isTimeField(keyString);
 
-  // leave tilda as prefix for those to guarantee the postfixes to be app-unique.
-  // (the constructor here makes sure tilda will never be used in keyString itself)
+// leave tilda as prefix for those to guarantee the postfixes to be app-unique.
+// (the constructor here makes sure tilda will never be used in keyString itself)
   static const String startPostfix = '~start';
   static const String endPostfix = '~end';
   static const String datePostfix = '~date';

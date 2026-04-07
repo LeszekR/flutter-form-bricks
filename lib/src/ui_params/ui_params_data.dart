@@ -52,6 +52,7 @@ class UiParamsData {
   }
 }
 
+// TODO remove those when awaitingRefactoring is finally deleted
 AppStyle getAppStyle(BuildContext context) => UiParams.of(context).appStyle;
 
 AppSize getAppSize(BuildContext context) => UiParams.of(context).appSize;

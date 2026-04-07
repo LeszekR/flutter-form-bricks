@@ -68,7 +68,7 @@ class ExampleFormState extends FormStateBrick {
                 ),
               ),
             ),
-            SizedBox(width: appSize.spacerVerticalMedium),
+            SizedBox(height: appSize.spacerVerticalMedium),
             DateField(
               keyString: dateKeyString1,
               formManager: formManager,
@@ -76,13 +76,13 @@ class ExampleFormState extends FormStateBrick {
               // inputDecoration: InputDecoration(labelText: 'data'),
               outerLabelConfig: OuterLabelConfig(outerLabelText: 'Data', outerLabelSide: OuterLabelSide.bottom),
             ),
-            SizedBox(width: appSize.spacerVerticalMedium),
+            SizedBox(height: appSize.spacerVerticalMedium),
             TimeField(
               keyString: timeKeyString1,
               formManager: formManager,
               width: 100,
             ),
-            SizedBox(width: appSize.spacerVerticalMedium),
+            SizedBox(height: appSize.spacerVerticalMedium),
             PlainTextField(
               keyString: plainTextKeyString2,
               formManager: formManager,
@@ -90,16 +90,20 @@ class ExampleFormState extends FormStateBrick {
               maxLines: 3,
               validateMode: ValidateModeBrick.noValidator,
             ),
-            SizedBox(width: appSize.spacerVerticalMedium),
+            SizedBox(height: appSize.spacerVerticalMedium),
             LowerCaseField(
               keyString: lowerCaseKeyString3,
               formManager: formManager,
               width: 250,
             ),
-            SizedBox(width: appSize.spacerVerticalMedium),
+            SizedBox(height: appSize.spacerVerticalMedium),
             DateTimeSeparatedField(
               keyString: dateTimeSeparatedKeString1,
               formManager: formManager,
+              outerLabelConfig: OuterLabelConfig(
+                outerLabelText: 'Data i czas',
+                outerLabelSide: OuterLabelSide.left,
+              ),
             ),
             // BrickTheme.of(context).sizes.spacerBoxVerticalMedium,
             // BrickTextField(
