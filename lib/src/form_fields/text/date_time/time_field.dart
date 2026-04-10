@@ -120,7 +120,7 @@ class TimeField extends TextFieldBrick<DateTime> {
               ? timePickerButtonConfig
               : TextFieldButtonConfig(
                   iconDataMaker: Icons.arrow_drop_down,
-                  buttonSide: ButtonSide.right,
+                  buttonPosition: ButtonPosition.right,
                   tooltipMaker: TimePicker.timePickerTooltip,
                 ),
           validateMode: ValidateModeBrick.onEditingComplete,
@@ -148,14 +148,7 @@ class TimeFieldState extends TextFieldStateBrick<DateTime, TimeField> {
     TimeOfDay? time = await TimePicker(timePickerConfig: widget.timePickerConfig).open(context);
     if (time == null) return;
 
-    final formattedTime = DateTimeUtils.formatTimeOfDay(time);
-    // TU PRZERWALEM finish validation and formTTING
-    final DateTimeFieldContent fieldContent = formManager.onFieldChanged(
-      BricksLocalizations.of(context),
-      keyString,
-      formattedTime.txtEditVal(),
-      defaultValue,
-    );
-    controller.value = fieldContent.input!;
+    final String formattedTime = DateTimeUtils.formatTimeOfDay(time);
+    onEditingComplete(formattedTime.txtEditVal());
   }
 }

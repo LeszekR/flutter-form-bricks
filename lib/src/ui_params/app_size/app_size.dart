@@ -5,6 +5,7 @@ abstract class AppSize {
 
   /// Base scaling factor (from AppScale, or const 1.0 if no scaling)
   double zoom;
+  double get visualDensityValue;
 
   // fonts
   double calculateFontSize(double size) => zoom * (fontSmallest + fontIncrement * size);
@@ -41,7 +42,7 @@ abstract class AppSize {
   double get inputLabelWidth;
   double get inputTextLineHeight;
   double get textFieldButtonWidth;
-  double get textFieldButtonHeight;
+  // double get textFieldButtonHeight;
   double get iconSize;
   double get checkboxScaleSquare;
   double get checkboxScaleRound;
@@ -84,4 +85,8 @@ abstract class AppSize {
   SizedBox verticalSpacer(double height) => SizedBox(height: height);
   SizedBox horizontalSpacer(double width) => SizedBox(width: width);
 
+  double get textFieldButtonHeight {
+    assert (visualDensityValue <= 4 && visualDensityValue  >= -4, 'visualDensityValue must be between -4 and 4');
+    return 48 + 4 * visualDensityValue;
+  }
 }

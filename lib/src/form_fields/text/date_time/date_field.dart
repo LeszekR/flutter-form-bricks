@@ -12,6 +12,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/da
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_utils.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/app_size.dart';
+import 'package:flutter_form_bricks/src/utils/string_extension.dart';
 
 class DateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime, DateField> {
   DateFieldDescriptor({
@@ -127,7 +128,7 @@ class DateField extends TextFieldBrick<DateTime> {
               ? datePickerButtonConfig
               : TextFieldButtonConfig(
                   iconDataMaker: Icons.arrow_drop_down,
-                  buttonSide: ButtonSide.right,
+                  buttonPosition: ButtonPosition.right,
                   tooltipMaker: DatePicker.datePickerTooltip,
                 ),
           validateMode: ValidateModeBrick.onEditingComplete,
@@ -155,10 +156,7 @@ class DateFieldState extends TextFieldStateBrick<DateTime, DateField> {
     DateTime? date = await DatePicker(widget.currentDate, datePickerConfig: widget.datePickerConfig).open(context);
     if (date == null) return;
 
-    final formattedDate = DateTimeUtils.dateFormat.format(date);
-    controller.value = TextEditingValue(
-      text: formattedDate,
-      selection: TextSelection.collapsed(offset: formattedDate.length),
-    );
+    final String formattedDate = DateTimeUtils.dateFormat.format(date);
+    onEditingComplete(formattedDate.txtEditVal());
   }
 }

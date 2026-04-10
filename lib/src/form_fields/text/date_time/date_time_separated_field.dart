@@ -330,8 +330,6 @@ class DateTimeSeparatedField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final uiParams = UiParams.of(context);
-    // double effectiveDateWidth = dateWidth ?? uiParams.appTheme.getFontDimension(TextDimension.widthOfChar0) * 12;
-    // double effectiveTimeWidth = timeWidth ?? uiParams.appTheme.getFontDimension(TextDimension.widthOfChar0) * 8;
 
     // TODO: use TextField.groupId to create shared tap region for the two fields
 
@@ -343,7 +341,7 @@ class DateTimeSeparatedField extends StatelessWidget {
 
     final body = Row(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: elements,
     );
 
@@ -353,7 +351,6 @@ class DateTimeSeparatedField extends StatelessWidget {
       return LabelledBox(
         uiParamsData: UiParams.of(context),
         outerLabelConfig: outerLabelConfig,
-        // width: effectiveDateWidth + effectiveTimeWidth + uiParams.appSize.spacerHorizontalSmallest,
         textField: body,
       );
     }

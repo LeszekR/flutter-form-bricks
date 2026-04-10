@@ -43,11 +43,12 @@ class ExampleFormState extends FormStateBrick {
                 // suffixIconConstraints: const BoxConstraints( maxHeight: double.infinity),
                 // suffixIconConstraints: const BoxConstraints(maxWidth: 100),
                 // contentPadding: EdgeInsets.zero,
-                visualDensity: VisualDensity(vertical: 0),
+                visualDensity: VisualDensity(vertical: -4),
                 border: OutlineInputBorder(),
+                suffixIconConstraints: BoxConstraints(maxWidth: 50, maxHeight: 50),
                 suffixIcon: SizedBox(
-                  width: 5,
-                  height: 5,
+                  width: 20,
+                  height: 32,
                   child: Material(
                     color: Colors.transparent,
                     child: InkWell(

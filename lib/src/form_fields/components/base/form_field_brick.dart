@@ -124,11 +124,16 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   ///   displays error if the field uses `InputDecoration` for this (error alternatively it can be displayed in
   ///   dedicated `FormBrick` area by `FormManager`).
   @mustCallSuper
-  FieldContent<I, V>? onInputChanged() {
+  FieldContent<I, V>? onInputChanged([TextEditingValue? input]) {
     // Here FormManager:
     // - validates the input
     // - saves results of format and validation in FormData -> FormFieldData -> FieldContent
-    return formManager.onFieldChanged<I, V>(BricksLocalizations.of(context), keyString, getInput(), defaultValue);
+    return formManager.onFieldChanged<I, V>(
+      BricksLocalizations.of(context),
+      keyString,
+      input ?? getInput(),
+      defaultValue,
+    );
   }
 
   bool _hasFormatterValidator() => widget.validateMode != ValidateModeBrick.noValidator;
