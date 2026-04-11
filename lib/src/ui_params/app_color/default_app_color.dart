@@ -30,9 +30,9 @@ class DefaultAppColor extends AppColor {
   @override late final Color formButtonForeground = colorSchemeMain.onSecondaryFixed;
   @override late final Color formFieldFillOk = white;
   @override late final Color formFieldFillHovered = colorSchemeMain.surfaceContainerLow;
-  @override late final Color formFieldFillFocused = colorSchemeMain.surfaceContainerLow;
-  @override late final Color formFieldFillPressed = colorSchemeMain.surfaceContainerHigh;
-  @override late final Color formFieldFillSelected = colorSchemeMain.surfaceContainerHighest;
+  @override late final Color formFieldFillFocused = colorSchemeMain.surfaceContainerHighest; //colorSchemeMain.surfaceContainerLow;
+  @override late final Color formFieldFillPressed = colorSchemeMain.surfaceContainerHighest; //colorSchemeMain.surfaceContainerHigh;
+  @override late final Color formFieldFillSelected = white; //colorSchemeMain.surfaceContainerHighest;
   @override late final Color formFieldFillDisabled = greyLight;
   @override late final Color formFieldFillError = colorSchemeMain.errorContainer;
 

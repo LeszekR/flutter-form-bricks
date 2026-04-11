@@ -5,7 +5,7 @@ import 'app_size.dart';
 class DefaultAppSize extends AppSize {
 
   DefaultAppSize({super.zoom = 1.0});
-  @override final double visualDensityValue = -4.0;
+  @override final double visualDensityValue = 0.0;
 
   @override final double fontSmallest = 7;
   @override final  double fontIncrement = 1.5;
@@ -41,8 +41,6 @@ class DefaultAppSize extends AppSize {
   @override late final double inputLabelHeight = fontSize2 + paddingInputLabel * 2; // using fontSize2 as proxy
 
   @override late final double inputTextLineHeight = zoom * 25;
-  @override late final double textFieldButtonWidth = inputTextLineHeight;
-  @override late final double textFieldButtonHeight = inputTextLineHeight;
   @override late final double iconSize = inputTextLineHeight * 0.7;
   @override late final double checkboxScaleSquare = 0.7;
   @override late final double checkboxScaleRound = 0.8;

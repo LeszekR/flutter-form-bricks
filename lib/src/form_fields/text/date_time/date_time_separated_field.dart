@@ -335,7 +335,7 @@ class DateTimeSeparatedField extends StatelessWidget {
 
     List<Widget> elements = [
       _makeDateField(),
-      uiParams.appSize.horizontalSpacer(uiParams.appSize.spacerHorizontalSmallest),
+      uiParams.appSize.horizontalSpacer(uiParams.appSize.spacerHorizontalSmall),
       _makeTimeField(),
     ];
 

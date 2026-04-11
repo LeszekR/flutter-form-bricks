@@ -13,12 +13,7 @@ class TextFieldButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appSize = getAppSize(context);
-    return SizedBox(
-      // width: 1,
-      // height: 1,
-      width: appSize.textFieldButtonHeight,
-      height: appSize.textFieldButtonHeight,
+    return Container(
       child: Material(
         color: Colors.transparent,
         child: InkWell(
