@@ -106,20 +106,6 @@ class ExampleFormState extends FormStateBrick {
                 outerLabelSide: OuterLabelSide.left,
               ),
             ),
-            // BrickTheme.of(context).sizes.spacerBoxVerticalMedium,
-            // BrickTextField(
-            //   keyString: 'test_text_input_4',
-            //   formManager: formManager,
-            //   colorMaker: StatesColorMaker(),
-            //   width: 150,
-            //   maxLines: 3,
-            //   buttonParams: IconButtonParams(
-            //     iconData: Icons.arrow_drop_down,
-            //     tooltip: 'podpowiedź słuszna',
-            //     onPressed: () {},
-            //     autofocus: false,
-            //   ),
-            // ),
           ],
         ), // test your widget here
       ),

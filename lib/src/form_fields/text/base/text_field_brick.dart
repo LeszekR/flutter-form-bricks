@@ -266,15 +266,11 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         ? null
         : TextFieldButton(textFieldButtonConfig: widget.textFieldButtonConfig!, onTap: onButtonTap);
 
-    _statesListener = () {
-      if (formUiUpdateCoordinator != null) {
-        formUiUpdateCoordinator!.requestRefresh();
-      } else {
-        WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
-      }
-    };
+    _statesListener = setStateInNextFrame;
+
     statesController.addListener(_statesListener);
   }
+
 
   @override
   void didChangeDependencies() {

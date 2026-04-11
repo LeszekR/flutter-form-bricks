@@ -77,10 +77,10 @@ class DefaultAppSize extends AppSize {
   @override late final double dashboardTileShadowOffset = zoom * 2;
   @override late final double spinnerInsets = zoom * 20;
 
-  @override late final double spacerVerticalSmallest = zoom * 3.0;
-  @override late final double spacerVerticalSmall = zoom * 10.0;
-  @override late final double spacerVerticalMedium = zoom * 20;
-  @override late final double spacerHorizontalSmallest = zoom * 3.0;
-  @override late final double spacerHorizontalSmall = zoom * 10.0;
-  @override late final double spacerHorizontalMedium = zoom * 20;
+  @override late final double spacerVerticalSmallest = zoom * 4.0;
+  @override late final double spacerVerticalSmall = zoom * 8.0;
+  @override late final double spacerVerticalMedium = zoom * 16;
+  @override late final double spacerHorizontalSmallest = zoom * 4.0;
+  @override late final double spacerHorizontalSmall = zoom * 8.0;
+  @override late final double spacerHorizontalMedium = zoom * 16;
 }

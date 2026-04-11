@@ -36,7 +36,7 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
 abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends FormFieldBrick<I, V>>
     extends State<F> {
   FormUiUpdateCoordinator? formUiUpdateCoordinator;
-
+  late final FocusNode focusNode;
   Set<WidgetState>? _states;
 
   I? getInput();
@@ -55,8 +55,6 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
 
   /// Controls the field's color and is passed to `InputDecoration` if the field shows its error this way.
   String? _error;
-
-  late final FocusNode focusNode;
 
   FormManager get formManager => widget.formManager;
 
@@ -80,15 +78,19 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
 
     _input = formManager.getFieldContent(keyString).input as I?;
 
-    // _states = widget.statesNotifier?.value;
     _onStatesChanged();
     widget.statesController?.addListener(_onStatesChanged);
-
-    if (formManager.isFocusedOnStart(keyString)) focusNode.requestFocus();
 
     // TODO this strips the field from flutter's restoration - implement restoration pattern as in comments at the end of this file
     setInput(formManager.getInitialInput(keyString));
 
+    if (formManager.isFocusedOnStart(keyString)) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => setState(() {
+          focusNode.requestFocus();
+        }),
+      );
+    }
     super.initState();
   }
 
@@ -105,6 +107,18 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
     widget.statesController?.removeListener(_onStatesChanged);
     focusNode.dispose();
     super.dispose();
+  }
+
+  void setStateInNextFrame([void Function(BuildContext)? stateSetter]) {
+    if (formUiUpdateCoordinator != null) {
+      formUiUpdateCoordinator!.requestRefresh();
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => setState(() {
+          if (stateSetter != null) stateSetter(context);
+        }),
+      );
+    }
   }
 
   void _onStatesChanged() {
