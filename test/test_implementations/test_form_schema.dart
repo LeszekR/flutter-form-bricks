@@ -13,7 +13,7 @@ class TestFormSchema extends FormSchema {
           fieldDescriptors: [
             TestTextFieldDescriptor(
               keyString: fieldKeyString1,
-              initialInput: stringInput1.txtEditVal(),
+              initialInput: stringInput1.toTextEditingValue(),
             )
           ],
         );
@@ -33,7 +33,7 @@ class TestFormSchema extends FormSchema {
           fieldDescriptors: [
             TestTextFieldDescriptor(
               keyString: fieldKeyString,
-              initialInput: initialInput == null ? null : initialInput.txtEditVal(),
+              initialInput: initialInput == null ? null : initialInput.toTextEditingValue(),
             )
           ],
         );

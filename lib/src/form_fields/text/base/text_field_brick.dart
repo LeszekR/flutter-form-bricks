@@ -83,7 +83,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     Brightness? keyboardAppearance,
     EdgeInsets scrollPadding = const EdgeInsets.all(20.0),
     bool? enableInteractiveSelection,
-    bool? selectAllOnFocus,
+    bool? selectAllOnFocus = false,
     TextSelectionControls? selectionControls,
     DragStartBehavior dragStartBehavior = DragStartBehavior.start,
     GestureTapCallback? onTap,

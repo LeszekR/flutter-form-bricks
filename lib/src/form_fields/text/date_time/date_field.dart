@@ -102,7 +102,7 @@ class DateField extends TextFieldBrick<DateTime> {
     super.scrollPadding = const EdgeInsets.all(20.0),
     super.dragStartBehavior = DragStartBehavior.start,
     super.enableInteractiveSelection,
-    super.selectAllOnFocus,
+    super.selectAllOnFocus = false,
     super.selectionControls,
     super.onTap,
     super.onTapAlwaysCalled = false,
@@ -157,6 +157,6 @@ class DateFieldState extends TextFieldStateBrick<DateTime, DateField> {
     if (date == null) return;
 
     final String formattedDate = DateTimeUtils.dateFormat.format(date);
-    onEditingComplete(formattedDate.txtEditVal());
+    onEditingComplete(formattedDate.toTextEditingValue());
   }
 }

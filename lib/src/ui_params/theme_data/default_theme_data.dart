@@ -144,16 +144,10 @@ class DefaultThemeData extends BricksThemeData {
   get inputDecorationThemeData =>
       sourceTheme?.inputDecorationTheme ??
       InputDecorationTheme(
-        // constraints: BoxConstraints(
-        //   minWidth: appSize.textFieldWidth,
-        //   minHeight: appSize.inputTextLineHeight,
-        //   maxHeight: appSize.inputTextLineHeight,
-        // ),
         filled: true,
         isDense: true,
-        // suffixIconConstraints: BoxConstraints(maxWidth: 30, maxHeight: 18),
         suffixIconConstraints: BoxConstraints(
-          // minWidth: appSize.textFieldButtonHeight,
+          // minWidth: appSize.textFieldButtonWidth,
           // minHeight: appSize.textFieldButtonHeight,
           maxWidth: appSize.textFieldButtonWidth ,
           maxHeight: appSize.textFieldButtonHeight,

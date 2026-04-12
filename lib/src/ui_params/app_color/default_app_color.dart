@@ -36,7 +36,7 @@ class DefaultAppColor extends AppColor {
   @override late final Color formFieldFillDisabled = greyLight;
   @override late final Color formFieldFillError = colorSchemeMain.errorContainer;
 
-  // ========== Buttons ==========
+  // ========== Buttons =========
   @override late final Color buttonFontEnabled = black;
   @override late final Color buttonFontDisabled = greyDark;
 
@@ -58,6 +58,7 @@ class DefaultAppColor extends AppColor {
   @override late final Color iconColor = Colors.black;
   @override late final Color radioSelected = colorSchemeMain.surfaceContainerHighest;
   @override late final Color radioUnselected = formFieldFillOk;
+  @override late final Color dialogBarrier = colorSchemeMain.onPrimaryContainer.withValues(alpha: 0.2);
 
   // ========== Text ==========
   @override late final Color textError = red;

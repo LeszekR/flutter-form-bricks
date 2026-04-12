@@ -32,13 +32,13 @@ class DateTimeFormatterValidator extends FormatterValidator<TextEditingValue, Da
 
     var nSpaces = RegExp(' ').allMatches(textTrimmed).length;
     if (nSpaces == 0)
-      return DateTimeFieldContent.err(textTrimmed.txtEditVal(), localizations.datetimeStringErrorNoSpace);
+      return DateTimeFieldContent.err(textTrimmed.toTextEditingValue(), localizations.datetimeStringErrorNoSpace);
     if (nSpaces > 1)
-      return DateTimeFieldContent.err(textTrimmed.txtEditVal(), localizations.datetimeStringErrorTooManySpaces);
+      return DateTimeFieldContent.err(textTrimmed.toTextEditingValue(), localizations.datetimeStringErrorTooManySpaces);
 
     var elementsList = textTrimmed.split(RegExp(' '));
-    DateTimeFieldContent dateFieldContent = DateTimeFieldContent.transient(elementsList[0].txtEditVal());
-    DateTimeFieldContent timeFieldContent = DateTimeFieldContent.transient(elementsList[1].txtEditVal());
+    DateTimeFieldContent dateFieldContent = DateTimeFieldContent.transient(elementsList[0].toTextEditingValue());
+    DateTimeFieldContent timeFieldContent = DateTimeFieldContent.transient(elementsList[1].toTextEditingValue());
 
     DateTimeFieldContent parseResultDate = _dateFormatterValidator.run(localizations, keyString, input);
     DateTimeFieldContent parseResultTime = _timeFormatterValidator.run(localizations, keyString, input);
@@ -52,12 +52,12 @@ class DateTimeFormatterValidator extends FormatterValidator<TextEditingValue, Da
     // valid
     if (isStringValidDate && isStringValidTime) {
       DateTime dateTime = DateTime.parse(parsedString);
-      return DateTimeFieldContent.ok(parsedString.txtEditVal(), dateTime);
+      return DateTimeFieldContent.ok(parsedString.toTextEditingValue(), dateTime);
     }
 
     // invalid
     var connector = (!isStringValidDate && !isStringValidTime) ? '\n' : '';
     var errorMessage = '$errorMessageDate$connector$errorMessageTime';
-    return DateTimeFieldContent.err(parsedString.txtEditVal(), errorMessage);
+    return DateTimeFieldContent.err(parsedString.toTextEditingValue(), errorMessage);
   }
 }

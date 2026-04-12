@@ -89,7 +89,7 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
       }
       dateString = element + dateString;
     }
-    return DateTimeFieldContent.transient(dateString.txtEditVal());
+    return DateTimeFieldContent.transient(dateString.toTextEditingValue());
   }
 
   DateTimeFieldContent makeDateStringWithDelimiters(BricksLocalizations localizations, String text, int nDelimiters) {
@@ -134,15 +134,15 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
       }
     }
 
-    if (errMsg.isNotEmpty) return DateTimeFieldContent.err(dateString.txtEditVal(), errMsg);
-    return DateTimeFieldContent.transient(dateString.txtEditVal());
+    if (errMsg.isNotEmpty) return DateTimeFieldContent.err(dateString.toTextEditingValue(), errMsg);
+    return DateTimeFieldContent.transient(dateString.toTextEditingValue());
   }
 
   DateTimeFieldContent addYear(DateTimeFieldContent dateString, int nDelimiters) {
     String dateWithoutYear = dateString.input!.text;
     nDelimiters = RegExp(dateDelimiter).allMatches(dateWithoutYear).length;
 
-    if (nDelimiters < 2) return DateTimeFieldContent.transient(dateWithoutYear.txtEditVal());
+    if (nDelimiters < 2) return DateTimeFieldContent.transient(dateWithoutYear.toTextEditingValue());
 
     String year = _currentDate.now().year.toString();
     String yearElement = dateWithoutYear.split(dateDelimiter)[0];
@@ -154,7 +154,7 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
       yearElement = year.substring(0, 4 - yearElementLength);
       dateWithoutYear = '$yearElement$dateWithoutYear';
     }
-    return DateTimeFieldContent.transient(dateWithoutYear.txtEditVal());
+    return DateTimeFieldContent.transient(dateWithoutYear.toTextEditingValue());
   }
 
   DateTimeFieldContent validateDate(
@@ -222,9 +222,9 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
 
     if (errLimit.isNotEmpty) errMsg = _dateTimeUtils.addErrMsg(errMsg, connector, errLimit);
 
-    if (errMsg.isNotEmpty) return DateTimeFieldContent.err(dateString.txtEditVal(), errMsg);
+    if (errMsg.isNotEmpty) return DateTimeFieldContent.err(dateString.toTextEditingValue(), errMsg);
 
-    return DateTimeFieldContent.ok(dateString.txtEditVal(), parsedDate);
+    return DateTimeFieldContent.ok(dateString.toTextEditingValue(), parsedDate);
   }
 
   // DateTimeFieldContent _makeDateFCFromDateTimeFC(DateTimeFieldContent content) {

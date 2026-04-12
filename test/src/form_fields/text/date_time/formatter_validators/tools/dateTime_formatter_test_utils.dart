@@ -96,7 +96,7 @@ class TestDateFormatter implements ATestDateTimeFormatter {
     return dateFormatter.run(
       localizations,
       fieldKeyString,
-      inputString.txtEditVal(),
+      inputString.toTextEditingValue(),
     );
   }
 
@@ -117,7 +117,7 @@ class TestTimeFormatter implements ATestDateTimeFormatter {
     return timeFormatter.run(
       localizations,
       fieldKeyString,
-      inputString.txtEditVal(),
+      inputString.toTextEditingValue(),
     );
   }
 
@@ -138,7 +138,7 @@ class TestDateTimeFormatter implements ATestDateTimeFormatter {
     return dateTimeFormatter.run(
       localizations,
       fieldKeyString,
-      inputString.txtEditVal(),
+      inputString.toTextEditingValue(),
     );
   }
 }

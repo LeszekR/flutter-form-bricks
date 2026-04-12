@@ -17,7 +17,7 @@ abstract class AppSize {
 
   double get textFieldButtonHeight {
     assert(visualDensityValue >= -4 && visualDensityValue <= 4, 'visualDensityValue must be between -4 and 4');
-    return 32 + 4 * visualDensityValue;
+    return 34 + 4 * visualDensityValue;
   }
 
   // fonts

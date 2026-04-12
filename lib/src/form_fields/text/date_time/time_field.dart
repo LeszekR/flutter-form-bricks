@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/time_picker.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/time_formatter_validator.dart';
@@ -94,7 +93,7 @@ class TimeField extends TextFieldBrick<DateTime> {
     super.scrollPadding = const EdgeInsets.all(20.0),
     super.dragStartBehavior = DragStartBehavior.start,
     super.enableInteractiveSelection,
-    super.selectAllOnFocus,
+    super.selectAllOnFocus = false,
     super.selectionControls,
     super.onTap,
     super.onTapAlwaysCalled = false,
@@ -145,10 +144,32 @@ class TimeFieldState extends TextFieldStateBrick<DateTime, TimeField> {
 
   @override
   void onButtonTap(BuildContext context) async {
+    final TextSelection selectionBefore = controller.selection;
+
     TimeOfDay? time = await TimePicker(timePickerConfig: widget.timePickerConfig).open(context);
-    if (time == null) return;
+
+    if (!mounted) return;
+
+    if (time == null) {
+      // controller.selection = selectionBefore;
+      restoreSelection(selectionBefore);
+      return;
+    }
 
     final String formattedTime = DateTimeUtils.formatTimeOfDay(time);
-    onEditingComplete(formattedTime.txtEditVal());
+    onEditingComplete(formattedTime.toTextEditingValue());
+    restoreSelection(selectionBefore);
+    // controller.selection = selectionBefore;
+    //
+    //
+
+  }
+
+  void restoreSelection(TextSelection selectionBefore) {
+    controller.value = controller.value.copyWith(
+      selection: TextSelection.collapsed(offset: controller.text.length),
+      composing: TextRange.empty,
+    );
+    focusNode.requestFocus();
   }
 }

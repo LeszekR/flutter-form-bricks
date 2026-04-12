@@ -66,7 +66,7 @@ Future<void> _runInputChangeTest(
 
   final FormatterValidatorListMaker<TextEditingValue, String> mockTextFormatValidListMaker = () => [
         MockTextFormatterValidator(
-          returnInputTxEdVal: testCase.newInput.txtEditVal(),
+          returnInputTxEdVal: testCase.newInput.toTextEditingValue(),
           mockError: testCase.error,
         )
       ];
@@ -77,7 +77,7 @@ Future<void> _runInputChangeTest(
       fieldDescriptors: [
         TestTextFieldDescriptor(
           keyString: fieldKeyString,
-          initialInput: testCase.initialInput?.txtEditVal(),
+          initialInput: testCase.initialInput?.toTextEditingValue(),
           additionalFormatterValidatorsMaker: mockTextFormatValidListMaker,
         )
       ],

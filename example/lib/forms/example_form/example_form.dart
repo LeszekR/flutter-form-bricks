@@ -33,6 +33,7 @@ class ExampleFormState extends FormStateBrick {
           children: [
             TextField(
               // controller: TextEditingController(text: 'Test text Field'),
+              selectAllOnFocus: false,
               decoration: InputDecoration(
                 // isDense: true,
                 // isCollapsed: true,

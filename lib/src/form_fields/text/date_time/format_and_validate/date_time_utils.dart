@@ -68,7 +68,7 @@ class DateTimeUtils {
     if (nDigits > maxNDigits && nDelimiters == 0)
       return DateTimeFieldContent.err(textEditingValue, errMsgTooManyDigits(bricksLocalizations, dateTimeOrBoth));
 
-    return DateTimeFieldContent.transient(textClean.txtEditVal());
+    return DateTimeFieldContent.transient(textClean.toTextEditingValue());
   }
 
   // String removeBadChars(String text, String stringDelimiterPattern) {

@@ -56,14 +56,14 @@ class DateTimeSeparateFieldDescriptor extends FormFieldDescriptor<TextEditingVal
   Map<String, FormFieldData> get fieldDataMap => {
         _dateKeyString: FormFieldData(
           fieldType: DateField,
-          fieldContent: DateTimeFieldContent.transient(initialInputSet?.date.txtEditVal()),
-          initialInput: initialInputSet?.date.txtEditVal(),
+          fieldContent: DateTimeFieldContent.transient(initialInputSet?.date.toTextEditingValue()),
+          initialInput: initialInputSet?.date.toTextEditingValue(),
           isValidating: false,
         ),
         _timeKeyString: FormFieldData(
           fieldType: TimeField,
-          fieldContent: DateTimeFieldContent.transient(initialInputSet?.time.txtEditVal()),
-          initialInput: initialInputSet?.time.txtEditVal(),
+          fieldContent: DateTimeFieldContent.transient(initialInputSet?.time.toTextEditingValue()),
+          initialInput: initialInputSet?.time.toTextEditingValue(),
           isValidating: false,
         )
       };
@@ -156,7 +156,7 @@ class DateTimeSeparatedField extends StatelessWidget {
     Brightness? keyboardAppearance,
     EdgeInsets scrollPadding = const EdgeInsets.all(20.0),
     bool? enableInteractiveSelection,
-    bool? selectAllOnFocus,
+    bool selectAllOnFocus = false,
     TextSelectionControls? selectionControls,
     DragStartBehavior dragStartBehavior = DragStartBehavior.start,
     GestureTapCallback? onTap,

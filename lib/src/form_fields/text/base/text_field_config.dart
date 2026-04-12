@@ -139,7 +139,7 @@ class TextFieldConfig {
     this.scrollPadding = const EdgeInsets.all(20.0),
     this.dragStartBehavior = DragStartBehavior.start,
     this.enableInteractiveSelection,
-    this.selectAllOnFocus,
+    this.selectAllOnFocus = false,
     this.selectionControls,
     this.onTap,
     this.onTapAlwaysCalled = false,

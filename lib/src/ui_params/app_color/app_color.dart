@@ -60,6 +60,7 @@ abstract class AppColor {
   Color get iconColor;
   Color get radioSelected;
   Color get radioUnselected;
+  Color get dialogBarrier;
 
   // Text
   Color get textError;

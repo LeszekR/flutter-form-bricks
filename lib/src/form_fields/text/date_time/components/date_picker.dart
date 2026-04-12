@@ -111,7 +111,7 @@ class DatePickerStyle {
           foregroundColor: appColor.colorSchemeMain.primary,
         ),
       ),
-      barrierColor: appColor.colorSchemeMain.onSecondary,
+      barrierColor: appColor.dialogBarrier,
     );
   }
 }
