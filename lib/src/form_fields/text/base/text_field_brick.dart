@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/cursor_height_helper.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/error_config.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/labelled_box.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
@@ -14,6 +15,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
   final double? width;
   final TextFieldConfig textFieldConfig;
   final InputDecoration? inputDecoration;
+  final ErrorConfig errorConfig;
   final TextFieldButtonConfig? textFieldButtonConfig;
 
   TextFieldBrick({
@@ -30,6 +32,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     // TextFieldBrick
     this.width,
     this.inputDecoration,
+    this.errorConfig = const ErrorConfig(),
     this.textFieldButtonConfig,
     //
     // Flutter TextField
@@ -310,7 +313,6 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     );
 
     return LabelledBox(
-      uiParamsData: uiParams,
       outerLabelConfig: widget.outerLabelConfig,
       width: width,
       textField: textField,
@@ -411,12 +413,15 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   // TODO move helper methods to a singleton
 
   InputDecoration _makeInputDecorationWithButton(String? errorText) {
-    ButtonPosition? buttonPosition = widget.textFieldButtonConfig?.buttonPosition;
+    final String? errText = widget.errorConfig.errorLocation == ErrorLocation.withTextField ? errorText : null;
+    final Color? color = makeColor();
+    final ButtonPosition? buttonPosition = widget.textFieldButtonConfig?.buttonPosition;
 
     if (widget.textFieldConfig.decoration != null) {
+      // TU PRZERWALEM - finish error behaviour + support error widget in input decoration
       return widget.textFieldConfig.decoration!.copyWith(
-        errorText: errorText,
-        fillColor: makeColor(),
+        errorText: errText,
+        fillColor: color,
         prefixIcon: buttonPosition == null || buttonPosition == ButtonPosition.right
             ? widget.textFieldConfig.decoration?.prefixIcon
             : button,
@@ -426,8 +431,8 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       );
     } else {
       return InputDecoration(
-        errorText: errorText,
-        fillColor: makeColor(),
+        errorText: errText,
+        fillColor: color,
         prefixIcon: buttonPosition == ButtonPosition.left ? button : null,
         suffixIcon: buttonPosition == ButtonPosition.right ? button : null,
       );

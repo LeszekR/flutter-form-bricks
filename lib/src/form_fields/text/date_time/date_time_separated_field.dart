@@ -349,7 +349,6 @@ class DateTimeSeparatedField extends StatelessWidget {
       return body;
     } else {
       return LabelledBox(
-        uiParamsData: UiParams.of(context),
         outerLabelConfig: outerLabelConfig,
         textField: body,
       );

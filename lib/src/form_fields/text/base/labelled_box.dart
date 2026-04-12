@@ -4,14 +4,12 @@ import 'package:flutter_form_bricks/src/form_fields/text/base/outer_label_config
 import 'package:flutter_form_bricks/src/ui_params/ui_params_data.dart';
 
 class LabelledBox extends StatelessWidget {
-  final UiParamsData uiParamsData;
   final OuterLabelConfig? outerLabelConfig;
   final double? width;
   final Widget textField;
 
   const LabelledBox({
     super.key,
-    required this.uiParamsData,
     required this.outerLabelConfig,
     this.width,
     required this.textField,
@@ -37,7 +35,7 @@ class LabelledBox extends StatelessWidget {
   }) {
     if (outerLabelConfig == null) return fieldBody;
     final appSize = UiParams.of(context).appSize;
-    final Widget label = _makeOuterLabel(outerLabelConfig);
+    final Widget label = _makeOuterLabel(context, outerLabelConfig);
 
     CrossAxisAlignment crossAxisAlignment = switch (outerLabelConfig.outerLabelAlign) {
       OuterLabelAlign.start => CrossAxisAlignment.start,
@@ -91,10 +89,10 @@ class LabelledBox extends StatelessWidget {
     }
   }
 
-  static Widget _makeOuterLabel(OuterLabelConfig outerLabelConfig) {
+  static Widget _makeOuterLabel(BuildContext context, OuterLabelConfig outerLabelConfig) {
     if (outerLabelConfig.outerLabel != null) {
       return outerLabelConfig.outerLabel!;
     }
-    return Text(outerLabelConfig.outerLabelText!);
+    return Text(outerLabelConfig.outerLabelText!, style: TextStyle(fontSize: UiParams.of(context).appSize.fontSize3),);
   }
 }

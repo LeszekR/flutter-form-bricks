@@ -76,7 +76,7 @@ class ExampleFormState extends FormStateBrick {
               formManager: formManager,
               width: 150,
               // inputDecoration: InputDecoration(labelText: 'data'),
-              outerLabelConfig: OuterLabelConfig(outerLabelText: 'Data', outerLabelSide: OuterLabelSide.bottom),
+              outerLabelConfig: OuterLabelConfig(outerLabelText: 'Data', outerLabelSide: OuterLabelSide.top),
             ),
             SizedBox(height: appSize.spacerVerticalMedium),
             TimeField(
@@ -105,6 +105,7 @@ class ExampleFormState extends FormStateBrick {
               outerLabelConfig: OuterLabelConfig(
                 outerLabelText: 'Data i czas',
                 outerLabelSide: OuterLabelSide.left,
+                outerLabelAlign: OuterLabelAlign.end,
               ),
             ),
           ],
