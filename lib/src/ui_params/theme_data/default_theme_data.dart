@@ -147,8 +147,6 @@ class DefaultThemeData extends BricksThemeData {
         filled: true,
         isDense: true,
         suffixIconConstraints: BoxConstraints(
-          // minWidth: appSize.textFieldButtonWidth,
-          // minHeight: appSize.textFieldButtonHeight,
           maxWidth: appSize.textFieldButtonWidth ,
           maxHeight: appSize.textFieldButtonHeight,
         ),

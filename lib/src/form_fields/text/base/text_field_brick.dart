@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/cursor_height_helper.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/labelled_box.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
@@ -271,7 +272,6 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     statesController.addListener(_statesListener);
   }
 
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -323,6 +323,9 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     InputDecoration decoration,
     TextStyle style,
   ) {
+    double? cursorHeight = widget.textFieldConfig.cursorHeight ??
+        CursorHeightHelper.computeFromDecoration(context: context, decoration: decoration);
+
     return TextField(
       groupId: widget.textFieldConfig.groupId,
       controller: controller,
@@ -369,7 +372,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       /// controlled elsewhere.
       ignorePointers: widget.textFieldConfig.ignorePointers,
       cursorWidth: widget.textFieldConfig.cursorWidth,
-      cursorHeight: widget.textFieldConfig.cursorHeight,
+      cursorHeight: cursorHeight,
       cursorRadius: widget.textFieldConfig.cursorRadius,
       cursorOpacityAnimates: widget.textFieldConfig.cursorOpacityAnimates,
       cursorColor: widget.textFieldConfig.cursorColor,
