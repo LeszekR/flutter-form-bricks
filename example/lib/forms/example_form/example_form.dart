@@ -78,6 +78,7 @@ class ExampleFormState extends FormStateBrick {
               outerLabelConfig: OuterLabelConfig(
                 labelText: 'Data',
                 side: Side.left,
+                width: 100,
                 align: Alignment.center,
               ),
               errorConfig: const ErrorConfig(
@@ -112,6 +113,7 @@ class ExampleFormState extends FormStateBrick {
               outerLabelConfig: OuterLabelConfig(
                 labelText: 'Data i czas',
                 side: Side.right,
+                width: 80,
                 align: Alignment.bottomLeft,
               ),
             ),

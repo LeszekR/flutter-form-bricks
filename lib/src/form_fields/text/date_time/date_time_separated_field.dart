@@ -8,10 +8,11 @@ import 'package:flutter_form_bricks/src/form_fields/components/formatter_validat
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/labelled_box.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_picker.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_required_fields.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/time_picker.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_separate_fields_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/ui_params/theme_data/bricks_theme_data.dart';
 
 class DateTimeSeparateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime, DateTimeSeparatedField> {
   String _dateKeyString;
@@ -78,10 +79,13 @@ class DateTimeSeparatedField extends StatelessWidget {
   final double? timeWidth;
   final InputDecoration? dateInputDecoration;
   final InputDecoration? timeInputDecoration;
+  final bool copyDateDecorationToTime;
   final OuterLabelConfig? dateOuterLabelConfig;
   final OuterLabelConfig? timeOuterLabelConfig;
-  final TextFieldButtonConfig? datePickerButtonConfig;
-  final TextFieldButtonConfig? timePickerButtonConfig;
+  final bool copyDateOuterLabelConfigToTime;
+  final TextFieldButtonConfig datePickerButtonConfig;
+  final TextFieldButtonConfig timePickerButtonConfig;
+  final bool copyDatePickerButtonConfigToTime;
   final TextFieldConfig dateTextFieldConfig;
   final TextFieldConfig timeTextFieldConfig;
 
@@ -98,11 +102,23 @@ class DateTimeSeparatedField extends StatelessWidget {
     // TODO implement buttons for date-time-separate fields
     this.dateInputDecoration,
     this.timeInputDecoration,
-    bool copyDateDecorationToTime = true,
+    this.copyDateDecorationToTime = true,
     this.dateOuterLabelConfig,
     this.timeOuterLabelConfig,
-    this.datePickerButtonConfig,
-    this.timePickerButtonConfig,
+    this.copyDateOuterLabelConfigToTime = true,
+    this.datePickerButtonConfig = const TextFieldButtonConfig(
+      noButton: false,
+      iconData: Icons.arrow_drop_down,
+      buttonPosition: ButtonPosition.right,
+      tooltipMaker: DatePicker.datePickerTooltipMaker,
+    ),
+    this.timePickerButtonConfig = const TextFieldButtonConfig(
+      noButton: false,
+      iconData: Icons.arrow_drop_down,
+      buttonPosition: ButtonPosition.right,
+      tooltipMaker: TimePicker.timePickerTooltipMaker,
+    ),
+    this.copyDatePickerButtonConfigToTime = true,
     //
     // Flutter TextField
     TextMagnifierConfiguration? magnifierConfiguration,
@@ -179,7 +195,19 @@ class DateTimeSeparatedField extends StatelessWidget {
     UndoHistoryController? undoController,
     SpellCheckConfiguration? spellCheckConfiguration,
     List<Locale>? hintLocales,
-  })  : this.colorMaker = colorMaker ?? StatesColorMaker(),
+  })  : assert(
+          dateOuterLabelConfig == null ||
+              dateOuterLabelConfig.side == Side.top ||
+              dateOuterLabelConfig.side == Side.bottom,
+          'In DateTimeSeparatedField dateOuterLabelConfig.side can only be Side.top or Side.bottom',
+        ),
+        assert(
+          timeOuterLabelConfig == null ||
+              timeOuterLabelConfig.side == Side.top ||
+              timeOuterLabelConfig.side == Side.bottom,
+          'In DateTimeSeparatedField timeOuterLabelConfig.side can only be Side.top or Side.bottom',
+        ),
+        this.colorMaker = colorMaker ?? StatesColorMaker(),
         dateTextFieldConfig = TextFieldConfig(
           // Flutter TextField
           magnifierConfiguration: magnifierConfiguration,
@@ -257,11 +285,7 @@ class DateTimeSeparatedField extends StatelessWidget {
           groupId: groupId,
           controller: controller,
           focusNode: focusNode,
-          decoration: timeInputDecoration == null
-              ? null
-              : !copyDateDecorationToTime
-                  ? timeInputDecoration
-                  : timeInputDecoration.fillGapsFrom(dateInputDecoration),
+          decoration: timeInputDecoration,
           keyboardType: keyboardType,
           textInputAction: textInputAction,
           textCapitalization: TextCapitalization.none,
@@ -332,27 +356,36 @@ class DateTimeSeparatedField extends StatelessWidget {
     final uiParams = UiParams.of(context);
 
     // TODO: use TextField.groupId to create shared tap region for the two fields
+    double datWidth = dateWidth ?? uiParams.appSize.dateFieldWidth;
+    double timWidth = timeWidth ?? uiParams.appSize.timeFieldWidth;
+    double spacer = uiParams.appSize.spacerHorizontalSmall;
+    double dateButtonWidth = datePickerButtonConfig.noButton
+        ? 0
+        : AppSize.textFieldButtonWidth(context: context, inputDecoration: dateInputDecoration);
+    double timeButtonWidth = timePickerButtonConfig.noButton
+        ? 0
+        : copyDatePickerButtonConfigToTime
+            ? dateButtonWidth
+            : AppSize.textFieldButtonWidth(context: context, inputDecoration: timeInputDecoration);
 
     List<Widget> elements = [
       _makeDateField(),
-      uiParams.appSize.horizontalSpacer(uiParams.appSize.spacerHorizontalSmall),
+      uiParams.appSize.horizontalSpacer(spacer),
       _makeTimeField(),
     ];
 
     final body = Row(
       mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: elements,
     );
 
-    if (outerLabelConfig == null) {
-      return body;
-    } else {
-      return LabelledBox(
-        outerLabelConfig: outerLabelConfig,
-        fieldBody: body,
-      );
-    }
+    return LabelledBox(
+      fieldBody: body,
+      outerLabelConfig: outerLabelConfig,
+      width: datWidth + timWidth + spacer + dateButtonWidth + timeButtonWidth,
+    );
   }
 
   DateField _makeDateField() {
@@ -430,11 +463,21 @@ class DateTimeSeparatedField extends StatelessWidget {
       //
       // TextFieldBrick
       width: timeWidth,
-      inputDecoration: timeInputDecoration,
-      outerLabelConfig: timeOuterLabelConfig,
+      inputDecoration: timeInputDecoration == null
+          ? null
+          : !copyDateDecorationToTime
+              ? timeInputDecoration
+              : timeInputDecoration!.fillGapsFrom(dateInputDecoration),
+      outerLabelConfig: timeOuterLabelConfig == null
+          ? null
+          : copyDateOuterLabelConfigToTime
+              ? timeOuterLabelConfig!.fillFrom(dateOuterLabelConfig)
+              : timeOuterLabelConfig,
       //
       // TimeField
-      timePickerButtonConfig: timePickerButtonConfig,
+      timePickerButtonConfig: copyDatePickerButtonConfigToTime
+          ? timePickerButtonConfig.fillFrom(datePickerButtonConfig)
+          : timePickerButtonConfig,
       //
       // TextField
       groupId: dateTextFieldConfig.groupId,

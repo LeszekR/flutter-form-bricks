@@ -1,18 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/shelf.dart';
 
 enum ButtonPosition { left, right }
 
 class TextFieldButtonConfig {
-  final IconData iconDataMaker;
+  final bool noButton;
+  final IconData iconData;
   final ButtonPosition buttonPosition;
   final String Function(BuildContext)? tooltipMaker;
   final bool autofocus;
 
   const TextFieldButtonConfig({
-    required this.iconDataMaker,
+    this.noButton = true,
+    this.iconData = Icons.arrow_drop_down,
     this.buttonPosition = ButtonPosition.right,
     this.tooltipMaker,
     this.autofocus = false,
   });
+
+  TextFieldButtonConfig fillFrom(TextFieldButtonConfig? other) {
+    return TextFieldButtonConfig(
+      iconData: other?.iconData ?? iconData,
+      buttonPosition: other?.buttonPosition ?? buttonPosition,
+      tooltipMaker: tooltipMaker,
+      noButton: other?.noButton ?? noButton,
+      autofocus: other?.autofocus ?? autofocus,
+    );
+  }
 }

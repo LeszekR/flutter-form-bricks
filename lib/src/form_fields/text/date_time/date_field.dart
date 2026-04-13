@@ -36,7 +36,7 @@ class DateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime
 }
 
 class DateField extends TextFieldBrick<DateTime> {
-  DatePickerConfig? datePickerConfig;
+  final DatePickerConfig? datePickerConfig;
   final CurrentDate? currentDate;
 
   DateField({
@@ -53,7 +53,12 @@ class DateField extends TextFieldBrick<DateTime> {
     super.outerLabelConfig,
     //
     // DateField
-    TextFieldButtonConfig? datePickerButtonConfig,
+    TextFieldButtonConfig? datePickerButtonConfig = const TextFieldButtonConfig(
+      noButton: false,
+      iconData: Icons.arrow_drop_down,
+      buttonPosition: ButtonPosition.right,
+      tooltipMaker: DatePicker.datePickerTooltipMaker,
+    ),
     this.datePickerConfig,
     this.currentDate,
     //
@@ -125,13 +130,11 @@ class DateField extends TextFieldBrick<DateTime> {
     super.magnifierConfiguration,
     super.hintLocales,
   }) : super(
-          textFieldButtonConfig: datePickerButtonConfig != null
-              ? datePickerButtonConfig
-              : TextFieldButtonConfig(
-                  iconDataMaker: Icons.arrow_drop_down,
-                  buttonPosition: ButtonPosition.right,
-                  tooltipMaker: DatePicker.datePickerTooltip,
-                ),
+          textFieldButtonConfig: datePickerButtonConfig == null
+              ? null
+              : datePickerButtonConfig.noButton
+                  ? null
+                  : datePickerButtonConfig,
           validateMode: ValidateModeBrick.onEditingComplete,
           textCapitalization: TextCapitalization.none,
           obscureText: false,

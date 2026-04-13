@@ -8,7 +8,7 @@ class TimePicker {
     this.timePickerConfig,
   });
 
-  static String timePickerTooltip(BuildContext context) => BricksLocalizations.of(context).openTimePicker;
+  static String timePickerTooltipMaker(BuildContext context) => BricksLocalizations.of(context).openTimePicker;
 
   Future<TimeOfDay?> open(BuildContext context) async {
     final inheritedTheme = Theme.of(context);

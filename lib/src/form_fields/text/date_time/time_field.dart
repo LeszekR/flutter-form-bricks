@@ -44,7 +44,12 @@ class TimeField extends TextFieldBrick<DateTime> {
     super.outerLabelConfig,
     //
     // TimeField
-    TextFieldButtonConfig? timePickerButtonConfig,
+    TextFieldButtonConfig? timePickerButtonConfig = const TextFieldButtonConfig(
+      noButton: false,
+      iconData: Icons.arrow_drop_down,
+      buttonPosition: ButtonPosition.right,
+      tooltipMaker: TimePicker.timePickerTooltipMaker,
+    ),
     this.timePickerConfig,
     //
     // TextField
@@ -115,13 +120,11 @@ class TimeField extends TextFieldBrick<DateTime> {
     super.magnifierConfiguration,
     super.hintLocales,
   }) : super(
-          textFieldButtonConfig: timePickerButtonConfig != null
-              ? timePickerButtonConfig
-              : TextFieldButtonConfig(
-                  iconDataMaker: Icons.arrow_drop_down,
-                  buttonPosition: ButtonPosition.right,
-                  tooltipMaker: TimePicker.timePickerTooltip,
-                ),
+          textFieldButtonConfig: timePickerButtonConfig == null
+              ? null
+              : timePickerButtonConfig.noButton
+                  ? null
+                  : timePickerButtonConfig,
           validateMode: ValidateModeBrick.onEditingComplete,
           textCapitalization: TextCapitalization.none,
           obscureText: false,
@@ -162,7 +165,6 @@ class TimeFieldState extends TextFieldStateBrick<DateTime, TimeField> {
     // controller.selection = selectionBefore;
     //
     //
-
   }
 
   void restoreSelection(TextSelection selectionBefore) {

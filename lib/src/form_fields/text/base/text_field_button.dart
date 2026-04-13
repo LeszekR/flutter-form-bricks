@@ -19,7 +19,7 @@ class TextFieldButton extends StatelessWidget {
         child: InkWell(
           onTap: () => onTap(context),
           child: Center(
-            child: Icon(textFieldButtonConfig.iconDataMaker),
+            child: Icon(textFieldButtonConfig.iconData),
           ),
         ),
       ),

@@ -16,7 +16,7 @@ class DatePicker {
     this.datePickerConfig,
   });
 
-  static String datePickerTooltip(BuildContext context) => BricksLocalizations.of(context).openDatePicker;
+  static String datePickerTooltipMaker(BuildContext context) => BricksLocalizations.of(context).openDatePicker;
 
   Future<DateTime?> open(BuildContext context) async {
     final inheritedTheme = Theme.of(context);

@@ -62,7 +62,7 @@ abstract class AppSize {
       inputDecoration: inputDecoration,
     );
     assert(visualDensityValue >= -4 && visualDensityValue <= 4, 'verticalVisualDensity must be between -4 and 4');
-    return 34 + 4 * visualDensityValue;
+    return 28 + 4 * visualDensityValue;
   }
 
   // fonts
