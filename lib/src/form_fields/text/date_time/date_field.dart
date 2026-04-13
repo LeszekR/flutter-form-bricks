@@ -49,6 +49,7 @@ class DateField extends TextFieldBrick<DateTime> {
     // TextFieldBrick
     super.width,
     super.inputDecoration,
+    super.errorConfig,
     super.outerLabelConfig,
     //
     // DateField

@@ -350,7 +350,7 @@ class DateTimeSeparatedField extends StatelessWidget {
     } else {
       return LabelledBox(
         outerLabelConfig: outerLabelConfig,
-        textField: body,
+        fieldBody: body,
       );
     }
   }

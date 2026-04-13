@@ -303,7 +303,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   Widget buildFieldWidget(BuildContext context) {
     var uiParams = UiParams.of(context);
 
-    final decoration = _makeInputDecorationWithButton(_errorText);
+    final decoration = _makeInputDecorationWithButton();
 
     final TextField textField = _makeTextField(
       controller,
@@ -315,7 +315,8 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     return LabelledBox(
       outerLabelConfig: widget.outerLabelConfig,
       width: width,
-      textField: textField,
+      fieldBody: textField,
+      errorConfig: widget.errorConfig,
     );
   }
 
@@ -412,13 +413,12 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   // TODO move helper methods to a singleton
 
-  InputDecoration _makeInputDecorationWithButton(String? errorText) {
-    final String? errText = widget.errorConfig.errorLocation == ErrorLocation.withTextField ? errorText : null;
+  InputDecoration _makeInputDecorationWithButton() {
+    final String? errText = widget.errorConfig.errorLocation == ErrorLocation.withTextField ? _errorText : null;
     final Color? color = makeColor();
     final ButtonPosition? buttonPosition = widget.textFieldButtonConfig?.buttonPosition;
 
     if (widget.textFieldConfig.decoration != null) {
-      // TU PRZERWALEM - finish error behaviour + support error widget in input decoration
       return widget.textFieldConfig.decoration!.copyWith(
         errorText: errText,
         fillColor: color,

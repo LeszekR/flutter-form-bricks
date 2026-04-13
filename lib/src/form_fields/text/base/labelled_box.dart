@@ -1,26 +1,29 @@
-import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/error_config.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/outer_label_config.dart';
-import 'package:flutter_form_bricks/src/ui_params/ui_params_data.dart';
+import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
 class LabelledBox extends StatelessWidget {
-  final OuterLabelConfig? outerLabelConfig;
+  final Widget fieldBody;
   final double? width;
-  final Widget textField;
+  final OuterLabelConfig? outerLabelConfig;
+  final ErrorConfig errorConfig;
 
   const LabelledBox({
     super.key,
-    required this.outerLabelConfig,
+    required this.fieldBody,
     this.width,
-    required this.textField,
+    this.errorConfig = const ErrorConfig(),
+    this.outerLabelConfig,
   });
 
   @override
   Widget build(BuildContext context) {
     final Widget bodyWithLabel = _wrapWithOuterLabel(
       context: context,
+      fieldBody: fieldBody,
+      errorConfig: errorConfig,
       outerLabelConfig: outerLabelConfig,
-      fieldBody: textField,
     );
     return SizedBox(
       width: width,
@@ -30,24 +33,20 @@ class LabelledBox extends StatelessWidget {
 
   static Widget _wrapWithOuterLabel({
     required BuildContext context,
-    required OuterLabelConfig? outerLabelConfig,
     required Widget fieldBody,
+    required ErrorConfig errorConfig,
+    OuterLabelConfig? outerLabelConfig,
   }) {
     if (outerLabelConfig == null) return fieldBody;
     final appSize = UiParams.of(context).appSize;
     final Widget label = _makeOuterLabel(context, outerLabelConfig);
 
-    CrossAxisAlignment crossAxisAlignment = switch (outerLabelConfig.outerLabelAlign) {
-      OuterLabelAlign.start => CrossAxisAlignment.start,
-      OuterLabelAlign.center => CrossAxisAlignment.center,
-      OuterLabelAlign.end => CrossAxisAlignment.end,
-    };
-
+    Align alignedLabel = Align(alignment: outerLabelConfig.outerLabelAlign, child: label);
     switch (outerLabelConfig.outerLabelSide) {
       case OuterLabelSide.top:
         return Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: crossAxisAlignment,
+          crossAxisAlignment: _topOrBottomCrossAxisAlignment(outerLabelConfig),
           children: [
             label,
             appSize.verticalSpacer(appSize.spacerHorizontalSmallest),
@@ -57,11 +56,13 @@ class LabelledBox extends StatelessWidget {
 
       case OuterLabelSide.left:
         return Row(
-          crossAxisAlignment: crossAxisAlignment,
+          crossAxisAlignment: _leftOrRightCrossAxisAlignment(outerLabelConfig),
           children: [
-            Flexible(flex: 0, child: label),
+            SizedBox(
+              height: appSize.textFieldButtonHeight,
+              child: alignedLabel,
+            ),
             appSize.horizontalSpacer(appSize.spacerHorizontalSmallest),
-
             Expanded(child: fieldBody),
           ],
         );
@@ -69,7 +70,7 @@ class LabelledBox extends StatelessWidget {
       case OuterLabelSide.bottom:
         return Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: crossAxisAlignment,
+          crossAxisAlignment: _topOrBottomCrossAxisAlignment(outerLabelConfig),
           children: [
             fieldBody,
             appSize.verticalSpacer(appSize.spacerHorizontalSmallest),
@@ -79,9 +80,12 @@ class LabelledBox extends StatelessWidget {
 
       case OuterLabelSide.right:
         return Row(
-          crossAxisAlignment: crossAxisAlignment,
+          crossAxisAlignment: _leftOrRightCrossAxisAlignment(outerLabelConfig),
           children: [
-            Expanded(child: fieldBody),
+            SizedBox(
+              height: appSize.textFieldButtonHeight,
+              child: alignedLabel,
+            ),
             appSize.horizontalSpacer(appSize.spacerHorizontalSmallest),
             Flexible(flex: 0, child: label),
           ],
@@ -89,10 +93,43 @@ class LabelledBox extends StatelessWidget {
     }
   }
 
+  static CrossAxisAlignment _topOrBottomCrossAxisAlignment(OuterLabelConfig outerLabelConfig) {
+    return switch (outerLabelConfig.outerLabelAlign) {
+      Alignment.bottomLeft => CrossAxisAlignment.start,
+      Alignment.bottomCenter => CrossAxisAlignment.center,
+      Alignment.bottomRight => CrossAxisAlignment.end,
+      Alignment.centerLeft => CrossAxisAlignment.start,
+      Alignment.center => CrossAxisAlignment.center,
+      Alignment.centerRight => CrossAxisAlignment.end,
+      Alignment.topLeft => CrossAxisAlignment.start,
+      Alignment.topCenter => CrossAxisAlignment.center,
+      Alignment.topRight => CrossAxisAlignment.end,
+      Alignment() => throw UnimplementedError('Only alignment constant values are supported for outerLabelAlign'),
+    };
+  }
+
+  static CrossAxisAlignment _leftOrRightCrossAxisAlignment(OuterLabelConfig outerLabelConfig) {
+    return switch (outerLabelConfig.outerLabelAlign) {
+      Alignment.bottomLeft => CrossAxisAlignment.end,
+      Alignment.bottomCenter => CrossAxisAlignment.end,
+      Alignment.bottomRight => CrossAxisAlignment.end,
+      Alignment.centerLeft => CrossAxisAlignment.center,
+      Alignment.center => CrossAxisAlignment.center,
+      Alignment.centerRight => CrossAxisAlignment.center,
+      Alignment.topLeft => CrossAxisAlignment.start,
+      Alignment.topCenter => CrossAxisAlignment.start,
+      Alignment.topRight => CrossAxisAlignment.start,
+      Alignment() => throw UnimplementedError('Only alignment constant values are supported for outerLabelAlign'),
+    };
+  }
+
   static Widget _makeOuterLabel(BuildContext context, OuterLabelConfig outerLabelConfig) {
     if (outerLabelConfig.outerLabel != null) {
       return outerLabelConfig.outerLabel!;
     }
-    return Text(outerLabelConfig.outerLabelText!, style: TextStyle(fontSize: UiParams.of(context).appSize.fontSize3),);
+    return Text(
+      outerLabelConfig.outerLabelText!,
+      style: TextStyle(fontSize: UiParams.of(context).appSize.fontSize3),
+    );
   }
 }
