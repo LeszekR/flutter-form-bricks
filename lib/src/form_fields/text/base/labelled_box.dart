@@ -1,3 +1,4 @@
+import 'package:flutter_form_bricks/src/ui_params/app_size/app_size.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/error_config.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/outer_label_config.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 class LabelledBox extends StatelessWidget {
   final Widget fieldBody;
   final double? width;
+  final InputDecoration? inputDecoration;
   final OuterLabelConfig? outerLabelConfig;
   final ErrorConfig errorConfig;
 
@@ -13,6 +15,7 @@ class LabelledBox extends StatelessWidget {
     super.key,
     required this.fieldBody,
     this.width,
+    this.inputDecoration,
     this.errorConfig = const ErrorConfig(),
     this.outerLabelConfig,
   });
@@ -23,6 +26,7 @@ class LabelledBox extends StatelessWidget {
       context: context,
       fieldBody: fieldBody,
       errorConfig: errorConfig,
+      inputDecoration: inputDecoration,
       outerLabelConfig: outerLabelConfig,
     );
     return SizedBox(
@@ -35,15 +39,16 @@ class LabelledBox extends StatelessWidget {
     required BuildContext context,
     required Widget fieldBody,
     required ErrorConfig errorConfig,
+    InputDecoration? inputDecoration,
     OuterLabelConfig? outerLabelConfig,
   }) {
     if (outerLabelConfig == null) return fieldBody;
     final appSize = UiParams.of(context).appSize;
     final Widget label = _makeOuterLabel(context, outerLabelConfig);
 
-    Align alignedLabel = Align(alignment: outerLabelConfig.outerLabelAlign, child: label);
-    switch (outerLabelConfig.outerLabelSide) {
-      case OuterLabelSide.top:
+    Align alignedLabel = Align(alignment: outerLabelConfig.align, child: label);
+    switch (outerLabelConfig.side) {
+      case Side.top:
         return Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: _topOrBottomCrossAxisAlignment(outerLabelConfig),
@@ -54,12 +59,12 @@ class LabelledBox extends StatelessWidget {
           ],
         );
 
-      case OuterLabelSide.left:
+      case Side.left:
         return Row(
-          crossAxisAlignment: _leftOrRightCrossAxisAlignment(outerLabelConfig),
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: appSize.textFieldButtonHeight,
+              height: AppSize.textFieldButtonHeight(context: context, inputDecoration: inputDecoration),
               child: alignedLabel,
             ),
             appSize.horizontalSpacer(appSize.spacerHorizontalSmallest),
@@ -67,7 +72,7 @@ class LabelledBox extends StatelessWidget {
           ],
         );
 
-      case OuterLabelSide.bottom:
+      case Side.bottom:
         return Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: _topOrBottomCrossAxisAlignment(outerLabelConfig),
@@ -78,23 +83,23 @@ class LabelledBox extends StatelessWidget {
           ],
         );
 
-      case OuterLabelSide.right:
+      case Side.right:
         return Row(
-          crossAxisAlignment: _leftOrRightCrossAxisAlignment(outerLabelConfig),
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Expanded(child: fieldBody),
+            appSize.horizontalSpacer(appSize.spacerHorizontalSmallest),
             SizedBox(
-              height: appSize.textFieldButtonHeight,
+              height: AppSize.textFieldButtonHeight(context: context, inputDecoration: inputDecoration),
               child: alignedLabel,
             ),
-            appSize.horizontalSpacer(appSize.spacerHorizontalSmallest),
-            Flexible(flex: 0, child: label),
           ],
         );
     }
   }
 
   static CrossAxisAlignment _topOrBottomCrossAxisAlignment(OuterLabelConfig outerLabelConfig) {
-    return switch (outerLabelConfig.outerLabelAlign) {
+    return switch (outerLabelConfig.align) {
       Alignment.bottomLeft => CrossAxisAlignment.start,
       Alignment.bottomCenter => CrossAxisAlignment.center,
       Alignment.bottomRight => CrossAxisAlignment.end,
@@ -108,27 +113,12 @@ class LabelledBox extends StatelessWidget {
     };
   }
 
-  static CrossAxisAlignment _leftOrRightCrossAxisAlignment(OuterLabelConfig outerLabelConfig) {
-    return switch (outerLabelConfig.outerLabelAlign) {
-      Alignment.bottomLeft => CrossAxisAlignment.end,
-      Alignment.bottomCenter => CrossAxisAlignment.end,
-      Alignment.bottomRight => CrossAxisAlignment.end,
-      Alignment.centerLeft => CrossAxisAlignment.center,
-      Alignment.center => CrossAxisAlignment.center,
-      Alignment.centerRight => CrossAxisAlignment.center,
-      Alignment.topLeft => CrossAxisAlignment.start,
-      Alignment.topCenter => CrossAxisAlignment.start,
-      Alignment.topRight => CrossAxisAlignment.start,
-      Alignment() => throw UnimplementedError('Only alignment constant values are supported for outerLabelAlign'),
-    };
-  }
-
   static Widget _makeOuterLabel(BuildContext context, OuterLabelConfig outerLabelConfig) {
-    if (outerLabelConfig.outerLabel != null) {
-      return outerLabelConfig.outerLabel!;
+    if (outerLabelConfig.labelWidget != null) {
+      return outerLabelConfig.labelWidget!;
     }
     return Text(
-      outerLabelConfig.outerLabelText!,
+      outerLabelConfig.labelText!,
       style: TextStyle(fontSize: UiParams.of(context).appSize.fontSize3),
     );
   }

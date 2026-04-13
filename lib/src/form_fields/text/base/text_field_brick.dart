@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/cursor_height_helper.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/error_config.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/labelled_box.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
@@ -248,7 +247,9 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   void onButtonTap(BuildContext context);
 
-  double getWidth(AppSize appSize) => appSize.textFieldButtonWidth;
+  /// Override this method if the field should have its own predefined width.
+  /// If the width is to be in hardcoded pixels multiply it by `appSize.zoom` so it scales with the rest of the app.
+  double getWidth(AppSize appSize) => appSize.textFieldWidth;
 
   @override
   TextEditingValue? getInput() => controller.value;
@@ -258,10 +259,10 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   @override
   void initState() {
-    // TODO this strips the field from flutter's restoration - implement restoration pattern as in comments at the end of this file
     statesController = widget.textFieldConfig.statesController ?? WidgetStatesController();
     controller = widget.textFieldConfig.controller ?? TextEditingController();
 
+    // TODO this strips the field from flutter's restoration - implement restoration pattern as in comments at the end of this file
     setInput(formManager.getInitialInput(keyString));
     _errorText = formManager.getFieldError(keyString);
     super.initState();
@@ -285,7 +286,9 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     if (widget.width != null) {
       width = widget.width! * uiParams.appSize.zoom;
     } else {
-      double buttonWidth = (button == null) ? 0 : uiParams.appSize.textFieldButtonWidth;
+      double buttonWidth = (button == null)
+          ? 0
+          : AppSize.textFieldButtonWidth(context: context, inputDecoration: widget.inputDecoration);
       width = getWidth(uiParams.appSize) + buttonWidth;
     }
   }
@@ -414,7 +417,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   // TODO move helper methods to a singleton
 
   InputDecoration _makeInputDecorationWithButton() {
-    final String? errText = widget.errorConfig.errorLocation == ErrorLocation.withTextField ? _errorText : null;
+    final String? errText = widget.errorConfig.position == ErrorPosition.withTextField ? _errorText : null;
     final Color? color = makeColor();
     final ButtonPosition? buttonPosition = widget.textFieldButtonConfig?.buttonPosition;
 
@@ -422,11 +425,9 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       return widget.textFieldConfig.decoration!.copyWith(
         errorText: errText,
         fillColor: color,
-        prefixIcon: buttonPosition == null || buttonPosition == ButtonPosition.right
-            ? widget.textFieldConfig.decoration?.prefixIcon
-            : button,
-        suffixIcon: buttonPosition == null || buttonPosition == ButtonPosition.left
-            ? widget.textFieldConfig.decoration?.prefixIcon
+        prefixIcon: buttonPosition == ButtonPosition.left ? widget.textFieldConfig.decoration?.prefixIcon : button,
+        suffixIcon: buttonPosition == null || buttonPosition == ButtonPosition.right
+            ? widget.textFieldConfig.decoration?.suffixIcon
             : button,
       );
     } else {
@@ -434,7 +435,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         errorText: errText,
         fillColor: color,
         prefixIcon: buttonPosition == ButtonPosition.left ? button : null,
-        suffixIcon: buttonPosition == ButtonPosition.right ? button : null,
+        suffixIcon: buttonPosition == null || buttonPosition == ButtonPosition.right ? button : null,
       );
     }
   }

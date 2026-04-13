@@ -1,13 +1,13 @@
-enum ErrorLocation { withTextField, formErrorArea, both }
+enum ErrorPosition { withTextField, formErrorArea, both }
 
 enum ErrorBehaviour { dynamicSpaceBelowField, fixedSpaceBelowField, never }
 
 class ErrorConfig {
-  final ErrorLocation errorLocation;
-  final ErrorBehaviour errorBehaviour;
+  final ErrorPosition position;
+  final ErrorBehaviour behaviour;
 
   const ErrorConfig({
-    this.errorLocation = ErrorLocation.withTextField,
-    this.errorBehaviour = ErrorBehaviour.dynamicSpaceBelowField,
+    this.position = ErrorPosition.withTextField,
+    this.behaviour = ErrorBehaviour.dynamicSpaceBelowField,
   });
 }

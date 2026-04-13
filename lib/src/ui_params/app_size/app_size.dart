@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
 abstract class AppSize {
   AppSize({required this.zoom});
@@ -8,15 +9,59 @@ abstract class AppSize {
   /// Base scaling factor (from AppScale, or const 1.0 if no scaling)
   double zoom;
 
-  double get visualDensityValue;
+  double? get verticalVisualDensity;
 
-  double get textFieldButtonWidth {
-    assert(visualDensityValue >= -4 && visualDensityValue <= 4, 'visualDensityValue must be between -4 and 4');
+  double? get horizontalVisualDensity;
+
+  static double getVerticalVisualDensity({
+    double? visualDensity,
+    BuildContext? context,
+    InputDecoration? inputDecoration,
+  }) {
+    return visualDensity ??
+        inputDecoration?.visualDensity?.vertical ??
+        (context == null ? null : UiParams.of(context).appTheme.inputDecorationThemeData.visualDensity?.vertical) ??
+        (context == null ? null : UiParams.of(context).appSize.verticalVisualDensity) ??
+        0;
+  }
+
+  static double getHorizontalVisualDensity({
+    double? visualDensity,
+    BuildContext? context,
+    InputDecoration? inputDecoration,
+  }) {
+    return visualDensity ??
+        inputDecoration?.visualDensity?.horizontal ??
+        (context == null ? null : UiParams.of(context).appTheme.inputDecorationThemeData.visualDensity?.horizontal) ??
+        (context == null ? null : UiParams.of(context).appSize.horizontalVisualDensity) ??
+        0;
+  }
+
+  static double textFieldButtonWidth({
+    double? visualDensity,
+    BuildContext? context,
+    InputDecoration? inputDecoration,
+  }) {
+    double visualDensityValue = getHorizontalVisualDensity(
+      visualDensity: visualDensity,
+      context: context,
+      inputDecoration: inputDecoration,
+    );
+    assert(visualDensityValue >= -4 && visualDensityValue <= 4, 'horizontalVisualDensity must be between -4 and 4');
     return max(20, 32 + 4 * visualDensityValue);
   }
 
-  double get textFieldButtonHeight {
-    assert(visualDensityValue >= -4 && visualDensityValue <= 4, 'visualDensityValue must be between -4 and 4');
+  static double textFieldButtonHeight({
+    double? visualDensity,
+    BuildContext? context,
+    InputDecoration? inputDecoration,
+  }) {
+    double visualDensityValue = getVerticalVisualDensity(
+      visualDensity: visualDensity,
+      context: context,
+      inputDecoration: inputDecoration,
+    );
+    assert(visualDensityValue >= -4 && visualDensityValue <= 4, 'verticalVisualDensity must be between -4 and 4');
     return 34 + 4 * visualDensityValue;
   }
 

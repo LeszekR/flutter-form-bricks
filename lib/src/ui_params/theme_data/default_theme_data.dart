@@ -1,3 +1,4 @@
+import 'package:flutter_form_bricks/src/ui_params/app_size/app_size.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/ui_params/theme_data/bricks_theme_data.dart';
 
@@ -146,11 +147,18 @@ class DefaultThemeData extends BricksThemeData {
       InputDecorationTheme(
         filled: true,
         isDense: true,
-        suffixIconConstraints: BoxConstraints(
-          maxWidth: appSize.textFieldButtonWidth ,
-          maxHeight: appSize.textFieldButtonHeight,
+        prefixIconConstraints: BoxConstraints(
+          maxWidth: AppSize.textFieldButtonWidth(visualDensity: appSize.horizontalVisualDensity!),
+          maxHeight: AppSize.textFieldButtonHeight(visualDensity: appSize.verticalVisualDensity),
         ),
-        visualDensity: VisualDensity(vertical: appSize.visualDensityValue, horizontal: appSize.visualDensityValue),
+        suffixIconConstraints: BoxConstraints(
+          maxWidth: AppSize.textFieldButtonWidth(visualDensity: appSize.horizontalVisualDensity!),
+          maxHeight: AppSize.textFieldButtonHeight(visualDensity: appSize.verticalVisualDensity),
+        ),
+        visualDensity: VisualDensity(
+          vertical: appSize.verticalVisualDensity!,
+          horizontal: appSize.horizontalVisualDensity!,
+        ),
         // border: OutlineInputBorder(),
         // contentPadding: EdgeInsets.zero,
         // contentPadding: EdgeInsets.all(appSize.paddingInputText),
