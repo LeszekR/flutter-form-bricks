@@ -53,12 +53,8 @@ class DateField extends TextFieldBrick<DateTime> {
     super.outerLabelConfig,
     //
     // DateField
-    TextFieldButtonConfig? datePickerButtonConfig = const TextFieldButtonConfig(
-      noButton: false,
-      iconData: Icons.arrow_drop_down,
-      buttonPosition: ButtonPosition.right,
-      tooltipMaker: DatePicker.datePickerTooltipMaker,
-    ),
+    bool noDatePicker = false,
+    TextFieldButtonConfig? datePickerButtonConfig,
     this.datePickerConfig,
     this.currentDate,
     //
@@ -129,12 +125,18 @@ class DateField extends TextFieldBrick<DateTime> {
     super.spellCheckConfiguration,
     super.magnifierConfiguration,
     super.hintLocales,
-  }) : super(
-          textFieldButtonConfig: datePickerButtonConfig == null
+  })  : assert(noDatePicker ? (datePickerButtonConfig == null && datePickerConfig == null) : true,
+            'When noDatePicker == true then datePickerButtonConfig and datePickerConfig must be null or not declared'),
+        super(
+          textFieldButtonConfig: noDatePicker
               ? null
-              : datePickerButtonConfig.noButton
-                  ? null
-                  : datePickerButtonConfig,
+              : datePickerButtonConfig != null
+                  ? datePickerButtonConfig
+                  : const TextFieldButtonConfig(
+                      iconData: Icons.arrow_drop_down,
+                      buttonPosition: ButtonPosition.right,
+                      tooltipMaker: DatePicker.datePickerTooltipMaker,
+                    ),
           validateMode: ValidateModeBrick.onEditingComplete,
           textCapitalization: TextCapitalization.none,
           obscureText: false,

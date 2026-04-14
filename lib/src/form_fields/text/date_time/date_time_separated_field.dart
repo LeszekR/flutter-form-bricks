@@ -83,8 +83,12 @@ class DateTimeSeparatedField extends StatelessWidget {
   final OuterLabelConfig? dateOuterLabelConfig;
   final OuterLabelConfig? timeOuterLabelConfig;
   final bool copyDateOuterLabelConfigToTime;
-  final TextFieldButtonConfig datePickerButtonConfig;
-  final TextFieldButtonConfig timePickerButtonConfig;
+  final bool noDatePicker;
+  final bool noTimePicker;
+  final TextFieldButtonConfig? datePickerButtonConfig;
+  final TextFieldButtonConfig? timePickerButtonConfig;
+  final DatePickerConfig? datePickerConfig;
+  final TimePickerConfig? timePickerConfig;
   final bool copyDatePickerButtonConfigToTime;
   final TextFieldConfig dateTextFieldConfig;
   final TextFieldConfig timeTextFieldConfig;
@@ -106,18 +110,12 @@ class DateTimeSeparatedField extends StatelessWidget {
     this.dateOuterLabelConfig,
     this.timeOuterLabelConfig,
     this.copyDateOuterLabelConfigToTime = true,
-    this.datePickerButtonConfig = const TextFieldButtonConfig(
-      noButton: false,
-      iconData: Icons.arrow_drop_down,
-      buttonPosition: ButtonPosition.right,
-      tooltipMaker: DatePicker.datePickerTooltipMaker,
-    ),
-    this.timePickerButtonConfig = const TextFieldButtonConfig(
-      noButton: false,
-      iconData: Icons.arrow_drop_down,
-      buttonPosition: ButtonPosition.right,
-      tooltipMaker: TimePicker.timePickerTooltipMaker,
-    ),
+    this.noDatePicker = false,
+    this.datePickerButtonConfig,
+    this.datePickerConfig,
+    this.noTimePicker = false,
+    this.timePickerButtonConfig,
+    this.timePickerConfig,
     this.copyDatePickerButtonConfigToTime = true,
     //
     // Flutter TextField
@@ -207,6 +205,10 @@ class DateTimeSeparatedField extends StatelessWidget {
               timeOuterLabelConfig.side == Side.bottom,
           'In DateTimeSeparatedField timeOuterLabelConfig.side can only be Side.top or Side.bottom',
         ),
+        assert(noDatePicker ? (datePickerButtonConfig == null && datePickerConfig == null) : true,
+            'When noDatePicker == true then datePickerButtonConfig and datePickerConfig must be null or not declared'),
+        assert(noTimePicker ? (timePickerButtonConfig == null && timePickerConfig == null) : true,
+            'When noTimePicker == true then timePickerButtonConfig and timePickerConfig must be null or not declared'),
         this.colorMaker = colorMaker ?? StatesColorMaker(),
         dateTextFieldConfig = TextFieldConfig(
           // Flutter TextField
@@ -359,18 +361,16 @@ class DateTimeSeparatedField extends StatelessWidget {
     double datWidth = dateWidth ?? uiParams.appSize.dateFieldWidth;
     double timWidth = timeWidth ?? uiParams.appSize.timeFieldWidth;
     double spacer = uiParams.appSize.spacerHorizontalSmall;
-    double dateButtonWidth = datePickerButtonConfig.noButton
+    double dateButtonWidth = noDatePicker
         ? 0
         : AppSize.textFieldButtonWidth(context: context, inputDecoration: dateInputDecoration);
-    double timeButtonWidth = timePickerButtonConfig.noButton
+    double timeButtonWidth = noTimePicker
         ? 0
-        : copyDatePickerButtonConfigToTime
-            ? dateButtonWidth
-            : AppSize.textFieldButtonWidth(context: context, inputDecoration: timeInputDecoration);
+        : AppSize.textFieldButtonWidth(context: context, inputDecoration: timeInputDecoration);
 
     List<Widget> elements = [
       _makeDateField(),
-      uiParams.appSize.horizontalSpacer(spacer),
+      SizedBox(width: spacer),
       _makeTimeField(),
     ];
 
@@ -398,7 +398,15 @@ class DateTimeSeparatedField extends StatelessWidget {
       // TextFieldBrick
       width: dateWidth,
       inputDecoration: dateInputDecoration,
-      datePickerButtonConfig: datePickerButtonConfig,
+      datePickerButtonConfig: noDatePicker
+          ? null
+          : datePickerButtonConfig != null
+              ? datePickerButtonConfig
+              : const TextFieldButtonConfig(
+                  iconData: Icons.arrow_drop_down,
+                  buttonPosition: ButtonPosition.right,
+                  tooltipMaker: DatePicker.datePickerTooltipMaker,
+                ),
       outerLabelConfig: dateOuterLabelConfig,
       //
       // TextField
@@ -475,9 +483,17 @@ class DateTimeSeparatedField extends StatelessWidget {
               : timeOuterLabelConfig,
       //
       // TimeField
-      timePickerButtonConfig: copyDatePickerButtonConfigToTime
-          ? timePickerButtonConfig.fillFrom(datePickerButtonConfig)
-          : timePickerButtonConfig,
+      timePickerButtonConfig: noTimePicker
+          ? null
+          : timePickerButtonConfig != null
+              ? copyDatePickerButtonConfigToTime
+                  ? timePickerButtonConfig!.fillFrom(datePickerButtonConfig)
+                  : timePickerButtonConfig
+              : const TextFieldButtonConfig(
+                  iconData: Icons.arrow_drop_down,
+                  buttonPosition: ButtonPosition.right,
+                  tooltipMaker: TimePicker.timePickerTooltipMaker,
+                ),
       //
       // TextField
       groupId: dateTextFieldConfig.groupId,

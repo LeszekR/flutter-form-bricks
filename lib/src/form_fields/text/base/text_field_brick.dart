@@ -12,6 +12,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.
 
 abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditingValue, V> {
   final double? width;
+  // TODO docs for all my params added to flutter API
   final TextFieldConfig textFieldConfig;
   final InputDecoration? inputDecoration;
   final ErrorConfig errorConfig;

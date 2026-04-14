@@ -44,12 +44,8 @@ class TimeField extends TextFieldBrick<DateTime> {
     super.outerLabelConfig,
     //
     // TimeField
-    TextFieldButtonConfig? timePickerButtonConfig = const TextFieldButtonConfig(
-      noButton: false,
-      iconData: Icons.arrow_drop_down,
-      buttonPosition: ButtonPosition.right,
-      tooltipMaker: TimePicker.timePickerTooltipMaker,
-    ),
+    bool noTimePicker = false,
+    TextFieldButtonConfig? timePickerButtonConfig,
     this.timePickerConfig,
     //
     // TextField
@@ -119,12 +115,18 @@ class TimeField extends TextFieldBrick<DateTime> {
     super.spellCheckConfiguration,
     super.magnifierConfiguration,
     super.hintLocales,
-  }) : super(
-          textFieldButtonConfig: timePickerButtonConfig == null
+  })  : assert(noTimePicker ? (timePickerButtonConfig == null && timePickerConfig == null) : true,
+            'When noTimePicker == true then timePickerButtonConfig and timePickerConfig must be null or not declared'),
+        super(
+          textFieldButtonConfig: noTimePicker
               ? null
-              : timePickerButtonConfig.noButton
-                  ? null
-                  : timePickerButtonConfig,
+              : timePickerButtonConfig != null
+                  ? timePickerButtonConfig
+                  : const TextFieldButtonConfig(
+                      iconData: Icons.arrow_drop_down,
+                      buttonPosition: ButtonPosition.right,
+                      tooltipMaker: TimePicker.timePickerTooltipMaker,
+                    ),
           validateMode: ValidateModeBrick.onEditingComplete,
           textCapitalization: TextCapitalization.none,
           obscureText: false,

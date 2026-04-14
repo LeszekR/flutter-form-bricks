@@ -30,8 +30,8 @@ class LabelledBox extends StatelessWidget {
       outerLabelConfig: outerLabelConfig,
     );
 
-    double? sideLabelWidth = width == null
-        ? null
+    double sideLabelWidth = width == null
+        ? 0
         : outerLabelConfig == null
             ? 0
             : switch (outerLabelConfig!.side) {
@@ -40,7 +40,7 @@ class LabelledBox extends StatelessWidget {
               };
 
     return SizedBox(
-      width: width == null ? null : width! + sideLabelWidth!,
+      width: width == null ? null : width! + sideLabelWidth,
       child: bodyWithLabel,
     );
   }
@@ -53,10 +53,13 @@ class LabelledBox extends StatelessWidget {
     OuterLabelConfig? outerLabelConfig,
   }) {
     if (outerLabelConfig == null) return fieldBody;
-    final appSize = UiParams.of(context).appSize;
+
     final Widget label = _makeOuterLabel(context, outerLabelConfig);
 
+    final appSize = UiParams.of(context).appSize;
+
     Align alignedLabel = Align(alignment: outerLabelConfig.align, child: label);
+
     switch (outerLabelConfig.side) {
       case Side.top:
         return Column(
@@ -64,8 +67,8 @@ class LabelledBox extends StatelessWidget {
           crossAxisAlignment: _topOrBottomCrossAxisAlignment(outerLabelConfig),
           children: [
             label,
-            appSize.verticalSpacer(appSize.spacerHorizontalSmallest),
-            fieldBody,
+            SizedBox(height: appSize.spacerHorizontalSmallest),
+            Expanded(child: fieldBody),
           ],
         );
 
@@ -78,8 +81,8 @@ class LabelledBox extends StatelessWidget {
               height: AppSize.textFieldButtonHeight(context: context, inputDecoration: inputDecoration),
               child: alignedLabel,
             ),
-            appSize.horizontalSpacer(appSize.spacerHorizontalSmallest),
-            fieldBody,
+            SizedBox(width: appSize.spacerHorizontalSmallest),
+            Expanded(child: fieldBody),
           ],
         );
 
@@ -88,8 +91,8 @@ class LabelledBox extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: _topOrBottomCrossAxisAlignment(outerLabelConfig),
           children: [
-            fieldBody,
-            appSize.verticalSpacer(appSize.spacerHorizontalSmallest),
+            Expanded(child: fieldBody),
+            SizedBox(width: appSize.spacerHorizontalSmallest),
             label,
           ],
         );
@@ -100,10 +103,12 @@ class LabelledBox extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             fieldBody,
-            appSize.horizontalSpacer(appSize.spacerHorizontalSmallest),
-            SizedBox(
-              height: AppSize.textFieldButtonHeight(context: context, inputDecoration: inputDecoration),
-              child: alignedLabel,
+            SizedBox(width: appSize.spacerHorizontalSmallest),
+            Expanded(
+              child: SizedBox(
+                height: AppSize.textFieldButtonHeight(context: context, inputDecoration: inputDecoration),
+                child: alignedLabel,
+              ),
             ),
           ],
         );
