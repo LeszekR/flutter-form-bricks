@@ -14,12 +14,12 @@ import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/da
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/time_picker.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_separate_fields_formatter_validator.dart';
 
-class DateTimeSeparateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime, DateTimeSeparatedField> {
+class DateTimeSeparatedFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime, DateTimeSeparatedField> {
   String _dateKeyString;
   String _timeKeyString;
   DateTimeSeparatedInitialSet? initialInputSet;
 
-  DateTimeSeparateFieldDescriptor({
+  DateTimeSeparatedFieldDescriptor({
     required super.keyString,
     DateTimeRequiredFields requiredFields = const DateTimeRequiredFields(true, true),
     super.runValidatorsFullRun,
@@ -54,20 +54,28 @@ class DateTimeSeparateFieldDescriptor extends FormFieldDescriptor<TextEditingVal
   }
 
   @override
-  Map<String, FormFieldData> get fieldDataMap => {
+  Map<String, FormFieldData> get fieldDataMap {
+    TextEditingValue? initialDate = initialInputSet?.date == null
+              ? null
+              : initialInputSet!.date!.toTextEditingValue();
+    TextEditingValue? initialTime = initialInputSet?.time == null
+              ? null
+              : initialInputSet!.time!.toTextEditingValue();
+    return {
         _dateKeyString: FormFieldData(
           fieldType: DateField,
-          fieldContent: DateTimeFieldContent.transient(initialInputSet?.date.toTextEditingValue()),
-          initialInput: initialInputSet?.date.toTextEditingValue(),
+          fieldContent: DateTimeFieldContent.transient(initialDate),
+          initialInput: initialDate,
           isValidating: false,
         ),
         _timeKeyString: FormFieldData(
           fieldType: TimeField,
-          fieldContent: DateTimeFieldContent.transient(initialInputSet?.time.toTextEditingValue()),
-          initialInput: initialInputSet?.time.toTextEditingValue(),
+          fieldContent: DateTimeFieldContent.transient(initialTime),
+          initialInput: initialTime,
           isValidating: false,
         )
       };
+  }
 }
 
 class DateTimeSeparatedField extends StatelessWidget {

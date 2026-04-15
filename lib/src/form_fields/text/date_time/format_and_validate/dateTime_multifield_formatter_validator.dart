@@ -46,7 +46,7 @@ abstract class DateTimeMultiFieldFormatterValidator extends FormatterValidator<T
     TextEditingValue? input,
   ) {
     //
-    _validateField(localizations, keyString, input!);
+    _validateField(localizations, keyString, input);
 
     _validateOtherFields(localizations, keyString);
 
@@ -66,7 +66,7 @@ abstract class DateTimeMultiFieldFormatterValidator extends FormatterValidator<T
   void _validateField(
     BricksLocalizations localizations,
     String keyString,
-    TextEditingValue input,
+    TextEditingValue? input,
   ) {
     FormatterValidator fieldFormaterValidator = formatterValidators[keyString]!;
     DateTimeFieldContent validatedContent =
@@ -83,10 +83,10 @@ abstract class DateTimeMultiFieldFormatterValidator extends FormatterValidator<T
     BricksLocalizations localizations,
     String excludedKeyString,
   ) {
-    TextEditingValue input;
+    TextEditingValue? input;
     for (String keyString in _getOtherFieldsKeyStrings(excludedKeyString)) {
       if (_getFieldContent(keyString)?.isValid == null) {
-        input = (formManager.getFieldContent(keyString) as DateTimeFieldContent).input!;
+        input = (formManager.getFieldContent(keyString) as DateTimeFieldContent).input;
         _validateField(localizations, keyString, input);
       }
     }

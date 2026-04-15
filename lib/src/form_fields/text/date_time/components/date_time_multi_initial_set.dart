@@ -11,11 +11,11 @@ class DateTimeRangeInitialSet {
 }
 
 class DateTimeSeparatedInitialSet {
-  final String date;
-  final String time;
+  final String? date;
+  final String? time;
 
   const DateTimeSeparatedInitialSet({
-    required this.date,
-    required this.time,
+    this.date,
+    this.time,
   });
 }

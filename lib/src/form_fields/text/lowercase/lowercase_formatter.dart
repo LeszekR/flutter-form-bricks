@@ -16,7 +16,7 @@ class LowercaseFormatter extends FormatterValidator<TextEditingValue, String> {
     String keyString,
     TextEditingValue? input,
   ) {
-    if (input == null) return TextFieldContent.ok(TextEditingValue.empty, '');
+    if (input == null) return const TextFieldContent.ok(null, null);
 
     if (!input.text.contains(_upperCase)) return TextFieldContent.ok(input, input.text);
 
