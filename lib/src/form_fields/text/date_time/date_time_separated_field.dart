@@ -91,8 +91,8 @@ class DateTimeSeparatedField extends StatelessWidget {
   final OuterLabelConfig? dateOuterLabelConfig;
   final OuterLabelConfig? timeOuterLabelConfig;
   final bool copyDateOuterLabelConfigToTime;
-  final bool noDatePicker;
-  final bool noTimePicker;
+  final bool withDatePicker;
+  final bool withTimePicker;
   final TextFieldButtonConfig? datePickerButtonConfig;
   final TextFieldButtonConfig? timePickerButtonConfig;
   final DatePickerConfig? datePickerConfig;
@@ -118,10 +118,10 @@ class DateTimeSeparatedField extends StatelessWidget {
     this.dateOuterLabelConfig,
     this.timeOuterLabelConfig,
     this.copyDateOuterLabelConfigToTime = true,
-    this.noDatePicker = false,
+    this.withDatePicker = true,
     this.datePickerButtonConfig,
     this.datePickerConfig,
-    this.noTimePicker = false,
+    this.withTimePicker = true,
     this.timePickerButtonConfig,
     this.timePickerConfig,
     this.copyDatePickerButtonConfigToTime = true,
@@ -213,9 +213,9 @@ class DateTimeSeparatedField extends StatelessWidget {
               timeOuterLabelConfig.side == Side.bottom,
           'In DateTimeSeparatedField timeOuterLabelConfig.side can only be Side.top or Side.bottom',
         ),
-        assert(noDatePicker ? (datePickerButtonConfig == null && datePickerConfig == null) : true,
+        assert(withDatePicker ? (datePickerButtonConfig == null && datePickerConfig == null) : true,
             'When noDatePicker == true then datePickerButtonConfig and datePickerConfig must be null or not declared'),
-        assert(noTimePicker ? (timePickerButtonConfig == null && timePickerConfig == null) : true,
+        assert(withTimePicker ? (timePickerButtonConfig == null && timePickerConfig == null) : true,
             'When noTimePicker == true then timePickerButtonConfig and timePickerConfig must be null or not declared'),
         this.colorMaker = colorMaker ?? StatesColorMaker(),
         dateTextFieldConfig = TextFieldConfig(
@@ -369,10 +369,10 @@ class DateTimeSeparatedField extends StatelessWidget {
     double datWidth = dateWidth ?? uiParams.appSize.dateFieldWidth;
     double timWidth = timeWidth ?? uiParams.appSize.timeFieldWidth;
     double spacer = uiParams.appSize.spacerHorizontalSmall;
-    double dateButtonWidth = noDatePicker
+    double dateButtonWidth = !withDatePicker
         ? 0
         : AppSize.textFieldButtonWidth(context: context, inputDecoration: dateInputDecoration);
-    double timeButtonWidth = noTimePicker
+    double timeButtonWidth = !withTimePicker
         ? 0
         : AppSize.textFieldButtonWidth(context: context, inputDecoration: timeInputDecoration);
 
@@ -406,7 +406,7 @@ class DateTimeSeparatedField extends StatelessWidget {
       // TextFieldBrick
       width: dateWidth,
       inputDecoration: dateInputDecoration,
-      datePickerButtonConfig: noDatePicker
+      datePickerButtonConfig: !withDatePicker
           ? null
           : datePickerButtonConfig != null
               ? datePickerButtonConfig
@@ -491,7 +491,7 @@ class DateTimeSeparatedField extends StatelessWidget {
               : timeOuterLabelConfig,
       //
       // TimeField
-      timePickerButtonConfig: noTimePicker
+      timePickerButtonConfig: !withTimePicker
           ? null
           : timePickerButtonConfig != null
               ? copyDatePickerButtonConfigToTime
