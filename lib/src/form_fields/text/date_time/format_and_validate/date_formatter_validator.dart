@@ -29,6 +29,7 @@ class DateFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
     TextEditingValue? input,
   ) {
     if (input == null) return const DateTimeFieldContent.ok(null, null);
+    if (input.text.isEmpty) return DateTimeFieldContent.ok(''.toTextEditingValue(), null);
 
     DateTimeFieldContent dateTimeContent = _dateTimeUtils.cleanDateTimeString(
       bricksLocalizations: localizations,
