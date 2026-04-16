@@ -75,7 +75,7 @@ class ExampleFormState extends FormStateBrick {
               keyString: dateKeyString1,
               formManager: formManager,
               width: 150,
-              noDatePicker: true,
+              withDatePicker: true,
               outerLabelConfig: OuterLabelConfig(
                 labelText: 'Data',
                 side: Side.left,

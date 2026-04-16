@@ -44,7 +44,7 @@ class TimeField extends TextFieldBrick<DateTime> {
     super.outerLabelConfig,
     //
     // TimeField
-    bool noTimePicker = false,
+    bool withTimePicker = true,
     TextFieldButtonConfig? timePickerButtonConfig,
     this.timePickerConfig,
     //
@@ -115,10 +115,10 @@ class TimeField extends TextFieldBrick<DateTime> {
     super.spellCheckConfiguration,
     super.magnifierConfiguration,
     super.hintLocales,
-  })  : assert(noTimePicker ? (timePickerButtonConfig == null && timePickerConfig == null) : true,
-            'When noTimePicker == true then timePickerButtonConfig and timePickerConfig must be null or not declared'),
+  })  : assert(withTimePicker == false ? (timePickerButtonConfig == null && timePickerConfig == null) : true,
+            'When withTimePicker == false then timePickerButtonConfig and timePickerConfig must be null or not declared'),
         super(
-          textFieldButtonConfig: noTimePicker
+          textFieldButtonConfig: !withTimePicker
               ? null
               : timePickerButtonConfig != null
                   ? timePickerButtonConfig
