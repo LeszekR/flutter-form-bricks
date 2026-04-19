@@ -371,6 +371,7 @@ class DateTimeSeparatedField extends StatelessWidget {
     double dateButtonWidth = !withDatePicker ? 0 : height ?? appSize.textFieldHeight;
     double timeButtonWidth = !withTimePicker ? 0 : height ?? appSize.textFieldHeight;
 
+
     List<Widget> elements = [
       _makeDateField(),
       SizedBox(width: spacer),

@@ -23,7 +23,7 @@ class ExampleFormSchema extends FormSchema {
                 keyString: lowerCaseKeyString3,
               ),
               DateTimeSeparatedFieldDescriptor(
-                keyString: dateTimeSeparatedKeString1,
+                keyString: dateTimeSeparatedKeyString1,
                 initialInputSet: DateTimeSeparatedInitialSet(
                   date: "zenon",
                   time: "stefa",

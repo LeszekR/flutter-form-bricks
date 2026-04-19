@@ -148,6 +148,7 @@ class DefaultThemeData extends BricksThemeData {
       InputDecorationTheme(
         filled: true,
         isDense: true,
+        contentPadding: EdgeInsets.zero, //symmetric(horizontal: 1, vertical: 2),
         // prefixIconConstraints: BoxConstraints(
         //   maxWidth: AppSize.textFieldButtonWidth(visualDensity: appSize.horizontalVisualDensity!),
         //   maxHeight: AppSize.textFieldButtonHeight(visualDensity: appSize.verticalVisualDensity),

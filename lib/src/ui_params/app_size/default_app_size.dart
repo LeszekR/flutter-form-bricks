@@ -33,8 +33,8 @@ class DefaultAppSize extends AppSize {
   @override late final double tabBorderWidth = zoom * 1.5;
   @override late final double bottomPanelHeight = zoom * 120;
   @override late final double labelHeight = zoom * 20;
-  @override late final double dateFieldWidth = zoom * 125;
-  @override late final double timeFieldWidth = zoom * 100;
+  @override late final double dateFieldWidth = zoom * 95;
+  @override late final double timeFieldWidth = zoom * 55;
   @override late final double numberFieldWidth = zoom * 50;
 
   @override late final double inputLabelWidth = zoom * 180;

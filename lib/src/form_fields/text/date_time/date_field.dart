@@ -69,7 +69,7 @@ class DateField extends TextFieldBrick<DateTime> {
     super.textInputAction,
     super.style,
     super.strutStyle,
-    super.textAlign = TextAlign.center,
+    super.textAlign = TextAlign.right,
     super.textAlignVertical,
     super.textDirection = TextDirection.ltr,
     super.readOnly = false,

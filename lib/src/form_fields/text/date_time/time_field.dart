@@ -156,7 +156,6 @@ class TimeFieldState extends TextFieldStateBrick<DateTime, TimeField> {
     if (!mounted) return;
 
     if (time == null) {
-      // controller.selection = selectionBefore;
       restoreSelection(selectionBefore);
       return;
     }

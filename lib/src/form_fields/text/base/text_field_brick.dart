@@ -258,6 +258,9 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   void onButtonTap(BuildContext context);
 
+  ///  Inheriting fields can override this method to set their default width.
+  double getWidth(AppSize appSize) => appSize.textFieldWidth;
+
   @override
   TextEditingValue? getInput() => controller.value;
 
@@ -301,10 +304,10 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     if (widget.width != null) {
       width = widget.width! * appSize.zoom;
     } else {
-      double buttonWidth = (button == null)
-          ? 0
-          : appSize.textFieldHeight;
-      width = appSize.textFieldWidth + buttonWidth;
+      // double buttonWidth = (button == null)
+      //     ? 0
+      //     : appSize.textFieldHeight;
+      width = getWidth(appSize); // + buttonWidth;
     }
   }
 

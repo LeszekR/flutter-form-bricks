@@ -9,7 +9,7 @@ final String dateKeyString1 = 'dateKeyString1';
 final String timeKeyString1 = 'timeKeyString1';
 final String plainTextKeyString2 = 'plainKeyString1';
 final String lowerCaseKeyString3 = 'lowerCaseKeyString1';
-final String dateTimeSeparatedKeString1 = 'dateTimeSeparatedKeString1';
+final String dateTimeSeparatedKeyString1 = 'dateTimeSeparatedKeString1';
 
 // @AutoFormSchema()
 class ExampleForm extends FormBrick {
@@ -74,13 +74,13 @@ class ExampleFormState extends FormStateBrick {
             DateField(
               keyString: dateKeyString1,
               formManager: formManager,
-              width: 150,
+              width: 130,
               withDatePicker: false,
               outerLabelConfig: OuterLabelConfig(
                 labelText: 'Data',
                 side: Side.left,
-                width: 100,
-                align: Alignment.center,
+                width: 60,
+                align: Alignment.bottomLeft,
               ),
               errorConfig: const ErrorConfig(
                 position: ErrorPosition.withTextField,
@@ -109,7 +109,7 @@ class ExampleFormState extends FormStateBrick {
             ),
             SizedBox(height: appSize.spacerVerticalMedium),
             DateTimeSeparatedField(
-              keyString: dateTimeSeparatedKeString1,
+              keyString: dateTimeSeparatedKeyString1,
               formManager: formManager,
               outerLabelConfig: OuterLabelConfig(
                 labelText: 'Data i czas',
