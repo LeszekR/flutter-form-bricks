@@ -9,9 +9,11 @@ import 'package:flutter_form_bricks/src/form_fields/text/base/cursor_height_help
 import 'package:flutter_form_bricks/src/form_fields/text/base/labelled_box.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
+import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_estimator.dart';
 
 abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditingValue, V> {
   final double? width;
+
   // TODO docs for all my params added to flutter API
   final TextFieldConfig textFieldConfig;
   final InputDecoration? inputDecoration;
@@ -241,10 +243,11 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   late final TextEditingController controller;
   late final WidgetStatesController statesController;
   late final VoidCallback _statesListener;
-  late final TextFieldButton? button;
+  late TextFieldButton? button;
   late double width;
   late TextStyle style;
   String? _errorText;
+  late double estimatedHeight;
 
   void onButtonTap(BuildContext context);
 
@@ -268,10 +271,6 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     _errorText = formManager.getFieldError(keyString);
     super.initState();
 
-    button = widget.textFieldButtonConfig == null
-        ? null
-        : TextFieldButton(textFieldButtonConfig: widget.textFieldButtonConfig!, onTap: onButtonTap);
-
     _statesListener = setStateInNextFrame;
 
     statesController.addListener(_statesListener);
@@ -283,6 +282,25 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
     var uiParams = UiParams.of(context);
     style = widget.textFieldConfig.style ?? uiParams.appTheme.textStyle();
+
+    estimatedHeight = TextFieldHeightEstimator.estimate(
+      context: context,
+      decoration: widget.textFieldConfig.decoration,
+      style: style,
+      strutStyle: widget.textFieldConfig.strutStyle,
+      maxLines: widget.textFieldConfig.maxLines ?? 1,
+      expands: widget.textFieldConfig.expands,
+      useMaterial3: Theme.of(context).useMaterial3,
+      textScaleFactor: MediaQuery.textScalerOf(context).scale(1.0),
+    );
+
+    button = widget.textFieldButtonConfig == null
+        ? null
+        : TextFieldButton(
+            textFieldButtonConfig: widget.textFieldButtonConfig!,
+            onTap: onButtonTap,
+            size: estimatedHeight,
+          );
 
     if (widget.width != null) {
       width = widget.width! * uiParams.appSize.zoom;
@@ -305,8 +323,6 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   @override
   Widget buildFieldWidget(BuildContext context) {
-    var uiParams = UiParams.of(context);
-
     final decoration = _makeInputDecorationWithButton();
 
     final TextField textField = _makeTextField(
@@ -418,18 +434,30 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   // TODO move helper methods to a singleton
 
   InputDecoration _makeInputDecorationWithButton() {
+    final ThemeData appTheme = Theme.of(context);
     final String? errText = widget.errorConfig.position == ErrorPosition.withTextField ? _errorText : null;
     final Color? color = makeColor();
     final ButtonPosition? buttonPosition = widget.textFieldButtonConfig?.buttonPosition;
 
-    if (widget.textFieldConfig.decoration != null) {
-      return widget.textFieldConfig.decoration!.copyWith(
+    InputDecoration? decoration = widget.textFieldConfig.decoration;
+    double verticalVisualDensity =
+        decoration?.visualDensity?.vertical ?? appTheme.inputDecorationTheme.visualDensity?.vertical ?? 0;
+    double horizontalVisualDensity =
+        decoration?.visualDensity?.horizontal ?? appTheme.inputDecorationTheme.visualDensity?.horizontal ?? 0;
+
+    BoxConstraints prefixIconConstraints =
+        decoration?.prefixIconConstraints ?? BoxConstraints(maxWidth: estimatedHeight, maxHeight: estimatedHeight);
+    BoxConstraints suffixIconConstraints =
+        decoration?.suffixIconConstraints ?? BoxConstraints(maxWidth: estimatedHeight, maxHeight: estimatedHeight);
+
+    if (decoration != null) {
+      return decoration.copyWith(
         errorText: errText,
         fillColor: color,
-        prefixIcon: buttonPosition == ButtonPosition.left ? widget.textFieldConfig.decoration?.prefixIcon : button,
-        suffixIcon: buttonPosition == null || buttonPosition == ButtonPosition.right
-            ? widget.textFieldConfig.decoration?.suffixIcon
-            : button,
+        prefixIcon: buttonPosition == ButtonPosition.left ? decoration.prefixIcon : button,
+        suffixIcon: buttonPosition == null || buttonPosition == ButtonPosition.right ? decoration.suffixIcon : button,
+        prefixIconConstraints: prefixIconConstraints,
+        suffixIconConstraints: suffixIconConstraints,
       );
     } else {
       return InputDecoration(
@@ -437,6 +465,8 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         fillColor: color,
         prefixIcon: buttonPosition == ButtonPosition.left ? button : null,
         suffixIcon: buttonPosition == null || buttonPosition == ButtonPosition.right ? button : null,
+        prefixIconConstraints: prefixIconConstraints,
+        suffixIconConstraints: suffixIconConstraints,
       );
     }
   }

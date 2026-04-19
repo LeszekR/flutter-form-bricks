@@ -55,7 +55,6 @@ enum TextDimension { lineHeight, widthOfChar0 }
 /// ```
 abstract class BricksThemeData {
   bool get useMaterial3;
-  VisualDensity get visualDensity;
   ColorScheme get colorScheme;
   Color get scaffoldBackgroundColor;
   MenuBarThemeData get menuBarThemeData;
@@ -84,7 +83,6 @@ abstract class BricksThemeData {
   /// Final composer: builds ThemeData from abstract parts.
   ThemeData get themeData => ThemeData(
         useMaterial3: useMaterial3,
-        visualDensity: visualDensity,
         colorScheme: colorScheme,
         scaffoldBackgroundColor: scaffoldBackgroundColor,
         menuBarTheme: menuBarThemeData,

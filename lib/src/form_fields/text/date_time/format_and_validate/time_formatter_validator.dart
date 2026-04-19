@@ -32,7 +32,7 @@ class TimeFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
 
     DateTimeFieldContent dateTimeContent = _dateTimeUtils.cleanDateTimeString(
       bricksLocalizations: localizations,
-      textEditingValue: input!,
+      textEditingValue: input,
       dateTimeOrBoth: DateTimeOrBoth.time,
       stringDelimiterPattern: timeDelimiterPattern,
       stringDelimiter: timeDelimiter,
@@ -202,10 +202,6 @@ class TimeFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
       }
     }
     return DateTimeFieldContent.ok(timeString.toTextEditingValue(), parsedTime);
-  }
-
-  DateTimeFieldContent _makeTimeFCFromDateTimeFC(DateTimeFieldContent content) {
-    return DateTimeFieldContent.ok(content.input, _dateTimeUtils.fromDateTime(content.value!));
   }
 
   bool isValid(FieldContent dateContent) {

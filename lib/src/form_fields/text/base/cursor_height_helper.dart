@@ -48,7 +48,6 @@ class CursorHeightHelper {
     var uiParams = UiParams.of(context);
     final double visualDensityVertical = decoration?.visualDensity?.vertical ??
         uiParams.appTheme.inputDecorationThemeData.visualDensity?.vertical ??
-        uiParams.appSize.verticalVisualDensity ??
         defaultVisualDensityVertical;
 
     if (visualDensityVertical >= -1) return null;

@@ -5,8 +5,6 @@ import 'app_size.dart';
 class DefaultAppSize extends AppSize {
 
   DefaultAppSize({super.zoom = 1.0});
-  @override final double? verticalVisualDensity = -2.0;
-  @override final double? horizontalVisualDensity = -2.0;
 
   @override final double fontSmallest = 7;
   @override final double fontIncrement = 1.5;

@@ -20,6 +20,7 @@ class DefaultThemeData extends BricksThemeData {
 
   @override
   TextStyle textStyle() => textTheme.bodyLarge!;
+  // TextStyle textStyle() => textTheme.bodySmall!;
 
   @override
   get useMaterial3 => sourceTheme?.useMaterial3 ?? true;
@@ -147,17 +148,17 @@ class DefaultThemeData extends BricksThemeData {
       InputDecorationTheme(
         filled: true,
         isDense: true,
-        prefixIconConstraints: BoxConstraints(
-          maxWidth: AppSize.textFieldButtonWidth(visualDensity: appSize.horizontalVisualDensity!),
-          maxHeight: AppSize.textFieldButtonHeight(visualDensity: appSize.verticalVisualDensity),
-        ),
-        suffixIconConstraints: BoxConstraints(
-          maxWidth: AppSize.textFieldButtonWidth(visualDensity: appSize.horizontalVisualDensity!),
-          maxHeight: AppSize.textFieldButtonHeight(visualDensity: appSize.verticalVisualDensity),
-        ),
+        // prefixIconConstraints: BoxConstraints(
+        //   maxWidth: AppSize.textFieldButtonWidth(visualDensity: appSize.horizontalVisualDensity!),
+        //   maxHeight: AppSize.textFieldButtonHeight(visualDensity: appSize.verticalVisualDensity),
+        // ),
+        // suffixIconConstraints: BoxConstraints(
+        //   maxWidth: AppSize.textFieldButtonWidth(visualDensity: appSize.horizontalVisualDensity!),
+        //  maxHeight: AppSize.textFieldButtonHeight(visualDensity: appSize.verticalVisualDensity),
+        // ),
         visualDensity: VisualDensity(
-          vertical: appSize.verticalVisualDensity!,
-          horizontal: appSize.horizontalVisualDensity!,
+          vertical: -4,
+          horizontal: 0,
         ),
         // border: OutlineInputBorder(),
         // contentPadding: EdgeInsets.zero,

@@ -9,10 +9,6 @@ abstract class AppSize {
   /// Base scaling factor (from AppScale, or const 1.0 if no scaling)
   double zoom;
 
-  double? get verticalVisualDensity;
-
-  double? get horizontalVisualDensity;
-
   static double getVerticalVisualDensity({
     double? visualDensity,
     BuildContext? context,
@@ -21,7 +17,6 @@ abstract class AppSize {
     return visualDensity ??
         inputDecoration?.visualDensity?.vertical ??
         (context == null ? null : UiParams.of(context).appTheme.inputDecorationThemeData.visualDensity?.vertical) ??
-        (context == null ? null : UiParams.of(context).appSize.verticalVisualDensity) ??
         0;
   }
 
@@ -33,7 +28,6 @@ abstract class AppSize {
     return visualDensity ??
         inputDecoration?.visualDensity?.horizontal ??
         (context == null ? null : UiParams.of(context).appTheme.inputDecorationThemeData.visualDensity?.horizontal) ??
-        (context == null ? null : UiParams.of(context).appSize.horizontalVisualDensity) ??
         0;
   }
 
@@ -62,7 +56,19 @@ abstract class AppSize {
       inputDecoration: inputDecoration,
     );
     assert(visualDensityValue >= -4 && visualDensityValue <= 4, 'verticalVisualDensity must be between -4 and 4');
-    return 28 + 4 * visualDensityValue;
+    return switch (visualDensityValue) {
+      >= -4 && < -3 => 22,  // ok
+      >= -3 && < -2 => 20 + 4 * (visualDensityValue + 2),  // ok
+      >= -2 && < -1 => 26 + 4 * (visualDensityValue + 1),
+      >= -1 && < 0 => 30 + 4 * visualDensityValue,  // ok
+      >= 0 && < 1 => 30 + 4 * visualDensityValue,  //ok
+      >= 1 && < 2 => 34 + 4 * (visualDensityValue - 1),
+      >= 2 && < 3 => 38 + 4 * (visualDensityValue - 2),
+      >= 3 && <= 4 => 42 + 4 * (visualDensityValue - 3),
+      _ => throw 'visualDensityValue must be between -4 and 4',
+    };
+    // isDense = true
+    // return 28 + 2 * visualDensityValue;
   }
 
   // fonts
