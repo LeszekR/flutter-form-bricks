@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/error_config.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/outer_label_config.dart';
-import 'package:flutter_form_bricks/src/ui_params/app_size/app_size.dart';
-import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
+import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button.dart';
 
 class LabelledBox extends StatelessWidget {
   final Widget fieldBody;
   final double? width;
   final InputDecoration? inputDecoration;
   final OuterLabelConfig? outerLabelConfig;
+  final TextFieldButton? button;
+  final ButtonPosition? buttonPosition;
+  final double? height;
   final ErrorConfig errorConfig;
 
   const LabelledBox({
@@ -18,29 +19,44 @@ class LabelledBox extends StatelessWidget {
     this.inputDecoration,
     this.errorConfig = const ErrorConfig(),
     this.outerLabelConfig,
+    this.button,
+    this.buttonPosition,
+    this.height,
   });
 
   @override
   Widget build(BuildContext context) {
-    final Widget bodyWithLabel = _wrapWithOuterLabel(
+    double effectiveHeight = height ?? getAppSize(context).textFieldHeight;
+
+    final Widget bodyWithButton = _addButton(
       context: context,
       fieldBody: fieldBody,
+      height: effectiveHeight,
+      button: button,
+      buttonPosition: buttonPosition,
+    );
+    final Widget bodyWithLabel = _wrapWithOuterLabel(
+      context: context,
+      fieldBody: bodyWithButton,
+      height: effectiveHeight,
       errorConfig: errorConfig,
       inputDecoration: inputDecoration,
       outerLabelConfig: outerLabelConfig,
     );
 
-    double sideLabelWidth = width == null
+    double buttonWidth = button == null ? 0 : height!; // + getAppSize(context).spacerHorizontalSmallest;
+
+    double outerLabelWidth = outerLabelConfig == null
         ? 0
-        : outerLabelConfig == null
-            ? 0
-            : switch (outerLabelConfig!.side) {
-                Side.top || Side.bottom => 0,
-                Side.left || Side.right => outerLabelConfig!.width!
-              };
+        : switch (outerLabelConfig!.side) {
+            Side.top || Side.bottom => 0,
+            Side.left || Side.right => outerLabelConfig!.width!
+          };
+
+    double sideLabelWidth = width == null ? 0 : outerLabelWidth;
 
     return SizedBox(
-      width: width == null ? null : width! + sideLabelWidth,
+      width: width == null ? null : width! + buttonWidth + sideLabelWidth,
       child: bodyWithLabel,
     );
   }
@@ -49,6 +65,7 @@ class LabelledBox extends StatelessWidget {
     required BuildContext context,
     required Widget fieldBody,
     required ErrorConfig errorConfig,
+    required double? height,
     InputDecoration? inputDecoration,
     OuterLabelConfig? outerLabelConfig,
   }) {
@@ -78,7 +95,7 @@ class LabelledBox extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: AppSize.textFieldButtonHeight(context: context, inputDecoration: inputDecoration),
+              height: height!, // AppSize.textFieldButtonHeight(context: context, inputDecoration: inputDecoration),
               child: alignedLabel,
             ),
             SizedBox(width: appSize.spacerHorizontalSmallest),
@@ -106,13 +123,46 @@ class LabelledBox extends StatelessWidget {
             SizedBox(width: appSize.spacerHorizontalSmallest),
             Expanded(
               child: SizedBox(
-                height: AppSize.textFieldButtonHeight(context: context, inputDecoration: inputDecoration),
+                height: height!, // AppSize.textFieldButtonHeight(context: context, inputDecoration: inputDecoration),
                 child: alignedLabel,
               ),
             ),
           ],
         );
     }
+  }
+
+  static _addButton({
+    required BuildContext context,
+    required Widget fieldBody,
+    required double height,
+    TextFieldButton? button,
+    ButtonPosition? buttonPosition,
+  }) {
+    if (button == null) {
+      return fieldBody;
+    }
+
+    ButtonPosition effectiveButtonPosition = buttonPosition ?? ButtonPosition.right;
+
+    return switch (effectiveButtonPosition) {
+      ButtonPosition.right => Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: fieldBody),
+            // SizedBox(width: UiParams.of(context).appSize.spacerHorizontalSmallest),
+            SizedBox(width: height, height: height, child: button),
+          ],
+        ),
+      ButtonPosition.left => Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(width: height, height: height, child: button),
+            // SizedBox(width: UiParams.of(context).appSize.spacerHorizontalSmallest),
+            Expanded(child: fieldBody),
+          ],
+        )
+    };
   }
 
   static CrossAxisAlignment _topOrBottomCrossAxisAlignment(OuterLabelConfig outerLabelConfig) {

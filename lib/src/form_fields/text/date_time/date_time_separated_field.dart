@@ -55,26 +55,22 @@ class DateTimeSeparatedFieldDescriptor extends FormFieldDescriptor<TextEditingVa
 
   @override
   Map<String, FormFieldData> get fieldDataMap {
-    TextEditingValue? initialDate = initialInputSet?.date == null
-              ? null
-              : initialInputSet!.date!.toTextEditingValue();
-    TextEditingValue? initialTime = initialInputSet?.time == null
-              ? null
-              : initialInputSet!.time!.toTextEditingValue();
+    TextEditingValue? initialDate = initialInputSet?.date == null ? null : initialInputSet!.date!.toTextEditingValue();
+    TextEditingValue? initialTime = initialInputSet?.time == null ? null : initialInputSet!.time!.toTextEditingValue();
     return {
-        _dateKeyString: FormFieldData(
-          fieldType: DateField,
-          fieldContent: DateTimeFieldContent.transient(initialDate),
-          initialInput: initialDate,
-          isValidating: false,
-        ),
-        _timeKeyString: FormFieldData(
-          fieldType: TimeField,
-          fieldContent: DateTimeFieldContent.transient(initialTime),
-          initialInput: initialTime,
-          isValidating: false,
-        )
-      };
+      _dateKeyString: FormFieldData(
+        fieldType: DateField,
+        fieldContent: DateTimeFieldContent.transient(initialDate),
+        initialInput: initialDate,
+        isValidating: false,
+      ),
+      _timeKeyString: FormFieldData(
+        fieldType: TimeField,
+        fieldContent: DateTimeFieldContent.transient(initialTime),
+        initialInput: initialTime,
+        isValidating: false,
+      )
+    };
   }
 }
 
@@ -100,6 +96,7 @@ class DateTimeSeparatedField extends StatelessWidget {
   final bool copyDatePickerButtonConfigToTime;
   final TextFieldConfig dateTextFieldConfig;
   final TextFieldConfig timeTextFieldConfig;
+  final double? height;
 
   DateTimeSeparatedField({
     // FormFieldBrick
@@ -125,6 +122,7 @@ class DateTimeSeparatedField extends StatelessWidget {
     this.timePickerButtonConfig,
     this.timePickerConfig,
     this.copyDatePickerButtonConfigToTime = true,
+    this.height,
     //
     // Flutter TextField
     TextMagnifierConfiguration? magnifierConfiguration,
@@ -364,17 +362,14 @@ class DateTimeSeparatedField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final uiParams = UiParams.of(context);
+    final appSize = uiParams.appSize;
 
     // TODO: use TextField.groupId to create shared tap region for the two fields
-    double datWidth = dateWidth ?? uiParams.appSize.dateFieldWidth;
-    double timWidth = timeWidth ?? uiParams.appSize.timeFieldWidth;
-    double spacer = uiParams.appSize.spacerHorizontalSmall;
-    double dateButtonWidth = !withDatePicker
-        ? 0
-        : AppSize.textFieldButtonWidth(context: context, inputDecoration: dateInputDecoration);
-    double timeButtonWidth = !withTimePicker
-        ? 0
-        : AppSize.textFieldButtonWidth(context: context, inputDecoration: timeInputDecoration);
+    double datWidth = dateWidth ?? appSize.dateFieldWidth;
+    double timWidth = timeWidth ?? appSize.timeFieldWidth;
+    double spacer = appSize.spacerHorizontalSmall;
+    double dateButtonWidth = !withDatePicker ? 0 : height ?? appSize.textFieldHeight;
+    double timeButtonWidth = !withTimePicker ? 0 : height ?? appSize.textFieldHeight;
 
     List<Widget> elements = [
       _makeDateField(),

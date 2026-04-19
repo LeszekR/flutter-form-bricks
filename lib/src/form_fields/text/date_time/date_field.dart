@@ -38,6 +38,7 @@ class DateFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime
 class DateField extends TextFieldBrick<DateTime> {
   final DatePickerConfig? datePickerConfig;
   final CurrentDate? currentDate;
+  final double? height;
 
   DateField({
     // FormFieldBrick
@@ -57,6 +58,7 @@ class DateField extends TextFieldBrick<DateTime> {
     TextFieldButtonConfig? datePickerButtonConfig,
     this.datePickerConfig,
     this.currentDate,
+    this.height,
     //
     // TextField
     super.groupId = EditableText,

@@ -9,7 +9,6 @@ import 'package:flutter_form_bricks/src/form_fields/text/base/cursor_height_help
 import 'package:flutter_form_bricks/src/form_fields/text/base/labelled_box.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
-import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_estimator.dart';
 
 abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditingValue, V> {
   final double? width;
@@ -19,6 +18,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
   final InputDecoration? inputDecoration;
   final ErrorConfig errorConfig;
   final TextFieldButtonConfig? textFieldButtonConfig;
+  final double? height;
 
   TextFieldBrick({
     super.key,
@@ -36,6 +36,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     this.inputDecoration,
     this.errorConfig = const ErrorConfig(),
     this.textFieldButtonConfig,
+    this.height,
     //
     // Flutter TextField
     TextMagnifierConfiguration? magnifierConfiguration,
@@ -165,6 +166,12 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
           inputDecoration?.suffix == null || inputDecoration?.suffixText == null,
           'Only one can be declared: inputDecoration.suffix or inputDecoration.suffixText.',
         ),
+        // assert(height != null || (textFieldButtonConfig == null),
+        //     'TextField with textFieldButtonConfig must have its height declared'),
+        // assert(height != null || (outerLabelConfig == null),
+        //     'TextField with outerLabelConfig must have its height declared'),
+        // assert(height == null && textFieldButtonConfig == null && outerLabelConfig == null,
+        //     'height must be null when textFieldButtonConfig == null and outerLabelConfig == null'),
         textFieldConfig = TextFieldConfig(
           magnifierConfiguration: magnifierConfiguration,
           groupId: groupId,
@@ -246,14 +253,10 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   late TextFieldButton? button;
   late double width;
   late TextStyle style;
+  late double effectiveHeight;
   String? _errorText;
-  late double estimatedHeight;
 
   void onButtonTap(BuildContext context);
-
-  /// Override this method if the field should have its own predefined width.
-  /// If the width is to be in hardcoded pixels multiply it by `appSize.zoom` so it scales with the rest of the app.
-  double getWidth(AppSize appSize) => appSize.textFieldWidth;
 
   @override
   TextEditingValue? getInput() => controller.value;
@@ -281,34 +284,27 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     super.didChangeDependencies();
 
     var uiParams = UiParams.of(context);
+    var appSize = uiParams.appSize;
     style = widget.textFieldConfig.style ?? uiParams.appTheme.textStyle();
 
-    estimatedHeight = TextFieldHeightEstimator.estimate(
-      context: context,
-      decoration: widget.textFieldConfig.decoration,
-      style: style,
-      strutStyle: widget.textFieldConfig.strutStyle,
-      maxLines: widget.textFieldConfig.maxLines ?? 1,
-      expands: widget.textFieldConfig.expands,
-      useMaterial3: Theme.of(context).useMaterial3,
-      textScaleFactor: MediaQuery.textScalerOf(context).scale(1.0),
-    );
+    effectiveHeight =
+        widget.height != null ? widget.height! * appSize.zoom : appSize.textFieldHeight;
 
     button = widget.textFieldButtonConfig == null
         ? null
         : TextFieldButton(
             textFieldButtonConfig: widget.textFieldButtonConfig!,
             onTap: onButtonTap,
-            size: estimatedHeight,
+            size: effectiveHeight,
           );
 
     if (widget.width != null) {
-      width = widget.width! * uiParams.appSize.zoom;
+      width = widget.width! * appSize.zoom;
     } else {
       double buttonWidth = (button == null)
           ? 0
-          : AppSize.textFieldButtonWidth(context: context, inputDecoration: widget.inputDecoration);
-      width = getWidth(uiParams.appSize) + buttonWidth;
+          : appSize.textFieldHeight;
+      width = appSize.textFieldWidth + buttonWidth;
     }
   }
 
@@ -337,6 +333,8 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       width: width,
       fieldBody: textField,
       errorConfig: widget.errorConfig,
+      button: button,
+      height: effectiveHeight,
     );
   }
 
@@ -434,39 +432,35 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   // TODO move helper methods to a singleton
 
   InputDecoration _makeInputDecorationWithButton() {
-    final ThemeData appTheme = Theme.of(context);
+    // final ThemeData appTheme = Theme.of(context);
     final String? errText = widget.errorConfig.position == ErrorPosition.withTextField ? _errorText : null;
     final Color? color = makeColor();
-    final ButtonPosition? buttonPosition = widget.textFieldButtonConfig?.buttonPosition;
+    // final ButtonPosition? buttonPosition = widget.textFieldButtonConfig?.buttonPosition;
 
     InputDecoration? decoration = widget.textFieldConfig.decoration;
-    double verticalVisualDensity =
-        decoration?.visualDensity?.vertical ?? appTheme.inputDecorationTheme.visualDensity?.vertical ?? 0;
-    double horizontalVisualDensity =
-        decoration?.visualDensity?.horizontal ?? appTheme.inputDecorationTheme.visualDensity?.horizontal ?? 0;
 
-    BoxConstraints prefixIconConstraints =
-        decoration?.prefixIconConstraints ?? BoxConstraints(maxWidth: estimatedHeight, maxHeight: estimatedHeight);
-    BoxConstraints suffixIconConstraints =
-        decoration?.suffixIconConstraints ?? BoxConstraints(maxWidth: estimatedHeight, maxHeight: estimatedHeight);
+    // BoxConstraints prefixIconConstraints =
+    //     decoration?.prefixIconConstraints ?? BoxConstraints(maxWidth: estimatedHeight, maxHeight: estimatedHeight);
+    // BoxConstraints suffixIconConstraints =
+    //     decoration?.suffixIconConstraints ?? BoxConstraints(maxWidth: estimatedHeight, maxHeight: estimatedHeight);
 
     if (decoration != null) {
       return decoration.copyWith(
         errorText: errText,
         fillColor: color,
-        prefixIcon: buttonPosition == ButtonPosition.left ? decoration.prefixIcon : button,
-        suffixIcon: buttonPosition == null || buttonPosition == ButtonPosition.right ? decoration.suffixIcon : button,
-        prefixIconConstraints: prefixIconConstraints,
-        suffixIconConstraints: suffixIconConstraints,
+        // prefixIcon: buttonPosition == ButtonPosition.left ? decoration.prefixIcon : button,
+        // suffixIcon: buttonPosition == null || buttonPosition == ButtonPosition.right ? decoration.suffixIcon : button,
+        // prefixIconConstraints: prefixIconConstraints,
+        // suffixIconConstraints: suffixIconConstraints,
       );
     } else {
       return InputDecoration(
         errorText: errText,
         fillColor: color,
-        prefixIcon: buttonPosition == ButtonPosition.left ? button : null,
-        suffixIcon: buttonPosition == null || buttonPosition == ButtonPosition.right ? button : null,
-        prefixIconConstraints: prefixIconConstraints,
-        suffixIconConstraints: suffixIconConstraints,
+        // prefixIcon: buttonPosition == ButtonPosition.left ? button : null,
+        // suffixIcon: buttonPosition == null || buttonPosition == ButtonPosition.right ? button : null,
+        // prefixIconConstraints: prefixIconConstraints,
+        // suffixIconConstraints: suffixIconConstraints,
       );
     }
   }
