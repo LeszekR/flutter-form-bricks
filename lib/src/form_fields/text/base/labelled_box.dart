@@ -26,7 +26,8 @@ class LabelledBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double effectiveHeight = height ?? getAppSize(context).textFieldHeight;
+    AppSize appSize = UiParams.of(context).appSize;
+    double effectiveHeight = height ?? appSize.textFieldHeight;
 
     final Widget bodyWithButton = _addButton(
       context: context,
@@ -52,11 +53,11 @@ class LabelledBox extends StatelessWidget {
             ? 0
             : switch (outerLabelConfig!.side) {
                 Side.top || Side.bottom => 0,
-                Side.left || Side.right => outerLabelConfig!.width!
+                Side.left || Side.right => outerLabelConfig!.width! * appSize.zoom + UiParams.of(context).appSize.spacerHorizontalSmallest,
               };
 
     return SizedBox(
-      width: width == null ? null : width! + buttonWidth + sideLabelWidth,
+      width: width == null ? null : width! * appSize.zoom + buttonWidth + sideLabelWidth,
       child: bodyWithLabel,
     );
   }
@@ -82,8 +83,8 @@ class LabelledBox extends StatelessWidget {
           crossAxisAlignment: _topOrBottomCrossAxisAlignment(outerLabelConfig),
           children: [
             label,
-            SizedBox(height: appSize.spacerHorizontalSmallest),
-            Expanded(child: fieldBody),
+            // SizedBox(height: appSize.spacerHorizontalSmallest),
+            fieldBody,
           ],
         );
 
@@ -93,7 +94,7 @@ class LabelledBox extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             label,
-            SizedBox(width: appSize.spacerHorizontalSmallest),
+            // SizedBox(width: appSize.spacerHorizontalSmallest),
             Expanded(child: fieldBody),
           ],
         );
@@ -103,7 +104,7 @@ class LabelledBox extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: _topOrBottomCrossAxisAlignment(outerLabelConfig),
           children: [
-            Expanded(child: fieldBody),
+            fieldBody,
             SizedBox(width: appSize.spacerHorizontalSmallest),
             label,
           ],
@@ -114,7 +115,7 @@ class LabelledBox extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(child: fieldBody),
+          Expanded(child: fieldBody),
             SizedBox(width: appSize.spacerHorizontalSmallest),
             label,
           ],
@@ -168,15 +169,18 @@ class LabelledBox extends StatelessWidget {
     if (outerLabelConfig.labelWidget != null) {
       return outerLabelConfig.labelWidget!;
     }
+    
+    AppSize appSize = UiParams.of(context).appSize;
+    
     return SizedBox(
-      width: outerLabelConfig.width,
-      height: height!,
+      width: outerLabelConfig.width == null ? null : outerLabelConfig.width! * appSize.zoom,
+      height: outerLabelConfig.height == null ? null : outerLabelConfig.height! * appSize.zoom,
       child: Align(
         alignment: outerLabelConfig.align,
         child: Text(
           outerLabelConfig.labelText!,
           // TODO move this font size to appSize
-          style: TextStyle(fontSize: UiParams.of(context).appSize.fontSize3),
+          style: TextStyle(fontSize: appSize.fontSize3),
         ),
       ),
     );

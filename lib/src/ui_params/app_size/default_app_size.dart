@@ -19,8 +19,11 @@ class DefaultAppSize extends AppSize {
   @override late final fontSize8 = calculateFontSize(8);
   @override late final fontSize9 = calculateFontSize(9);
 
-  @override late final double textFieldHeight = zoom * 22;
-  @override late final double textFieldWidth = zoom * 200;
+  @override late final double textFieldHeight = 22;
+  @override late final double textFieldWidth = 200;
+  @override late final double dateFieldWidth = 95;
+  @override late final double timeFieldWidth = 55;
+
   @override late final double cornerRadius = 0;
   @override late final double appBarHeight = zoom * 34;
   @override late final double formBarHeight = zoom * 34;
@@ -33,8 +36,6 @@ class DefaultAppSize extends AppSize {
   @override late final double tabBorderWidth = zoom * 1.5;
   @override late final double bottomPanelHeight = zoom * 120;
   @override late final double labelHeight = zoom * 20;
-  @override late final double dateFieldWidth = zoom * 95;
-  @override late final double timeFieldWidth = zoom * 55;
   @override late final double numberFieldWidth = zoom * 50;
 
   @override late final double inputLabelWidth = zoom * 180;

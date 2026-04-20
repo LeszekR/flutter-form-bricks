@@ -291,14 +291,14 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     style = widget.textFieldConfig.style ?? uiParams.appTheme.textStyle();
 
     effectiveHeight =
-        widget.height != null ? widget.height! * appSize.zoom : appSize.textFieldHeight;
+        widget.height != null ? widget.height!: appSize.textFieldHeight;
 
     button = widget.textFieldButtonConfig == null
         ? null
         : TextFieldButton(
             textFieldButtonConfig: widget.textFieldButtonConfig!,
             onTap: onButtonTap,
-            size: effectiveHeight,
+            size: effectiveHeight * appSize.zoom ,
           );
 
     if (widget.width != null) {
