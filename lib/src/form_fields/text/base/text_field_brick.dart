@@ -311,7 +311,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   @override
   Widget buildFieldWidget(BuildContext context) {
-    final decoration = _makeInputDecorationWithButton();
+    final decoration = _makeInputDecoration();
 
     final TextField textField = _makeTextField(
       controller,
@@ -323,6 +323,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     return LabelledBox(
       outerLabelConfig: widget.outerLabelConfig,
       width: width,
+      inputDecoration: decoration,
       fieldBody: textField,
       errorConfig: widget.errorConfig,
       buttonConfig: widget.textFieldButtonConfig,
@@ -424,36 +425,21 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   // TODO move helper methods to a singleton
 
-  InputDecoration _makeInputDecorationWithButton() {
-    // final ThemeData appTheme = Theme.of(context);
+  InputDecoration _makeInputDecoration() {
     final String? errText = widget.errorConfig.position == ErrorPosition.withTextField ? _errorText : null;
     final Color? color = makeColor();
-    // final ButtonPosition? buttonPosition = widget.textFieldButtonConfig?.buttonPosition;
 
     InputDecoration? decoration = widget.textFieldConfig.decoration;
-
-    // BoxConstraints prefixIconConstraints =
-    //     decoration?.prefixIconConstraints ?? BoxConstraints(maxWidth: estimatedHeight, maxHeight: estimatedHeight);
-    // BoxConstraints suffixIconConstraints =
-    //     decoration?.suffixIconConstraints ?? BoxConstraints(maxWidth: estimatedHeight, maxHeight: estimatedHeight);
 
     if (decoration != null) {
       return decoration.copyWith(
         errorText: errText,
         fillColor: color,
-        // prefixIcon: buttonPosition == ButtonPosition.left ? decoration.prefixIcon : button,
-        // suffixIcon: buttonPosition == null || buttonPosition == ButtonPosition.right ? decoration.suffixIcon : button,
-        // prefixIconConstraints: prefixIconConstraints,
-        // suffixIconConstraints: suffixIconConstraints,
       );
     } else {
       return InputDecoration(
         errorText: errText,
         fillColor: color,
-        // prefixIcon: buttonPosition == ButtonPosition.left ? button : null,
-        // suffixIcon: buttonPosition == null || buttonPosition == ButtonPosition.right ? button : null,
-        // prefixIconConstraints: prefixIconConstraints,
-        // suffixIconConstraints: suffixIconConstraints,
       );
     }
   }

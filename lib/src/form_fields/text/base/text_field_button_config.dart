@@ -7,12 +7,14 @@ class TextFieldButtonConfig {
   final ButtonPosition buttonPosition;
   final String Function(BuildContext)? tooltipMaker;
   final bool autofocus;
+  final bool copyStyleFromTextField;
 
   const TextFieldButtonConfig({
     this.iconData = Icons.arrow_drop_down,
     this.buttonPosition = ButtonPosition.right,
     this.tooltipMaker,
     this.autofocus = false,
+    this.copyStyleFromTextField = true,
   });
 
   TextFieldButtonConfig fillFrom(TextFieldButtonConfig? other) {
@@ -21,6 +23,7 @@ class TextFieldButtonConfig {
       buttonPosition: other?.buttonPosition ?? buttonPosition,
       tooltipMaker: tooltipMaker,
       autofocus: other?.autofocus ?? autofocus,
+      copyStyleFromTextField: other?.copyStyleFromTextField ?? this.copyStyleFromTextField,
     );
   }
 }

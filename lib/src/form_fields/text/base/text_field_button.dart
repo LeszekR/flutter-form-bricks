@@ -3,21 +3,27 @@ import 'package:flutter_form_bricks/shelf.dart';
 
 class TextFieldButton extends StatelessWidget {
   final TextFieldButtonConfig textFieldButtonConfig;
-  final void Function(BuildContext context) onTap;
+  final Color? backgroundColor;
+  final InputBorder? border;
   final double size;
+  final void Function(BuildContext context) onTap;
 
   const TextFieldButton({
     super.key,
     required this.textFieldButtonConfig,
-    required this.onTap,
     required this.size,
+    required this.onTap,
+    this.backgroundColor,
+    this.border,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // height: 10,
-      // width: 15,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: backgroundColor ?? Colors.transparent,
+        border: _toBoxBorder(border),
+      ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -31,5 +37,20 @@ class TextFieldButton extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Convert InputBorder -> BoxBorder (best-effort)
+  static BoxBorder? _toBoxBorder(InputBorder? border) {
+    if (border == null || border == InputBorder.none) return null;
+
+    if (border is OutlineInputBorder) {
+      return Border.fromBorderSide(border.borderSide);
+    }
+    if (border is UnderlineInputBorder) {
+      return Border(
+        bottom: border.borderSide,
+      );
+    }
+    return Border.fromBorderSide(border.borderSide);
   }
 }

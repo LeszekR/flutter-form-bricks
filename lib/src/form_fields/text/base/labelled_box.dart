@@ -4,28 +4,28 @@ import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button.
 
 class LabelledBox extends StatelessWidget {
   final Widget fieldBody;
-  final double? width;
+  final ErrorConfig errorConfig;
   final InputDecoration? inputDecoration;
   final OuterLabelConfig? outerLabelConfig;
   final TextFieldButtonConfig? buttonConfig;
-  final void Function(BuildContext context)? onButtonTap;
-
-  // final TextFieldButton? button;
+  final double? width;
   final double? height;
-  final ErrorConfig errorConfig;
+  final void Function(BuildContext context)? onButtonTap;
 
   const LabelledBox({
     super.key,
     required this.fieldBody,
-    this.width,
-    this.inputDecoration,
     this.errorConfig = const ErrorConfig(),
+    this.inputDecoration,
     this.outerLabelConfig,
     this.buttonConfig,
-    this.onButtonTap,
+    this.width,
     this.height,
+    this.onButtonTap,
   }) : assert((buttonConfig == null) || (onButtonTap != null),
-            'When buttonConfig != null then onButtonTap must be declared');
+            'When buttonConfig != null then onButtonTap must be declared'),
+        assert((buttonConfig == null) || (inputDecoration != null),
+            'When buttonConfig != null then inputDecoration must be declared');
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +35,7 @@ class LabelledBox extends StatelessWidget {
     final Widget bodyWithButton = _addButton(
       context: context,
       fieldBody: fieldBody,
+      inputDecoration: inputDecoration,
       height: effectiveHeight,
       buttonConfig: buttonConfig,
       onButtonTap: onButtonTap,
@@ -134,21 +135,36 @@ class LabelledBox extends StatelessWidget {
     required Widget fieldBody,
     required double height,
     TextFieldButtonConfig? buttonConfig,
+    InputDecoration? inputDecoration,
     void Function(BuildContext context)? onButtonTap,
   }) {
     if (buttonConfig == null) {
       return fieldBody;
     }
 
-    final TextFieldButton? button = TextFieldButton(
-      textFieldButtonConfig: buttonConfig,
-      onTap: onButtonTap!,
-      size: height * UiParams.of(context).appSize.zoom,
-    );
+    TextFieldButton button;
 
-    ButtonPosition effectiveButtonPosition = buttonConfig.buttonPosition ?? ButtonPosition.right;
+    if (buttonConfig.copyStyleFromTextField) {
+      final style = _resolveDecorationStyle(context, inputDecoration);
 
-    return switch (effectiveButtonPosition) {
+      button = TextFieldButton(
+        textFieldButtonConfig: buttonConfig,
+        onTap: onButtonTap!,
+        size: height,
+        backgroundColor: style.fillColor,
+        border: style.border,
+      );
+    } else {
+      button = TextFieldButton(
+          textFieldButtonConfig: buttonConfig,
+          onTap: onButtonTap!,
+          size: height,
+      );
+    }
+
+    ButtonPosition buttonPosition = buttonConfig.buttonPosition ?? ButtonPosition.right;
+
+    return switch (buttonPosition) {
       ButtonPosition.right => Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -194,5 +210,21 @@ class LabelledBox extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  static ({Color? fillColor, InputBorder? border}) _resolveDecorationStyle(
+      BuildContext context, InputDecoration? decoration) {
+    final theme = Theme.of(context);
+    final inputTheme = theme.inputDecorationTheme;
+
+    final InputDecoration effective = (decoration ?? const InputDecoration()).applyDefaults(inputTheme);
+
+    final bool filled = effective.filled ?? false;
+    final Color? fillColor = filled ? effective.fillColor ?? inputTheme.fillColor : null;
+
+    final InputBorder? border =
+        effective.enabledBorder ?? effective.border ?? inputTheme.enabledBorder ?? inputTheme.border;
+
+    return (fillColor: fillColor, border: border);
   }
 }
