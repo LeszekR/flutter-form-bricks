@@ -9,6 +9,7 @@ class OuterLabelConfig {
   final Alignment align;
   final double? width;
   final double? height;
+  final bool copyStyleFromTextField;
 
   const OuterLabelConfig({
     this.labelWidget,
@@ -17,6 +18,7 @@ class OuterLabelConfig {
     this.align = Alignment.bottomLeft,
     this.width,
     this.height,
+    this.copyStyleFromTextField = true,
   })  : assert((labelWidget == null) != (labelText == null), 'Either labelWidget or labelText must be declared'),
         assert(
           (side == Side.left || side == Side.right) ? width != null : true,

@@ -7,8 +7,10 @@ class LabelledBox extends StatelessWidget {
   final double? width;
   final InputDecoration? inputDecoration;
   final OuterLabelConfig? outerLabelConfig;
-  final TextFieldButton? button;
-  final ButtonPosition? buttonPosition;
+  final TextFieldButtonConfig? buttonConfig;
+  final void Function(BuildContext context)? onButtonTap;
+
+  // final TextFieldButton? button;
   final double? height;
   final ErrorConfig errorConfig;
 
@@ -19,10 +21,11 @@ class LabelledBox extends StatelessWidget {
     this.inputDecoration,
     this.errorConfig = const ErrorConfig(),
     this.outerLabelConfig,
-    this.button,
-    this.buttonPosition,
+    this.buttonConfig,
+    this.onButtonTap,
     this.height,
-  });
+  }) : assert((buttonConfig == null) || (onButtonTap != null),
+            'When buttonConfig != null then onButtonTap must be declared');
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +36,10 @@ class LabelledBox extends StatelessWidget {
       context: context,
       fieldBody: fieldBody,
       height: effectiveHeight,
-      button: button,
-      buttonPosition: buttonPosition,
+      buttonConfig: buttonConfig,
+      onButtonTap: onButtonTap,
     );
+
     final Widget bodyWithLabel = _wrapWithOuterLabel(
       context: context,
       fieldBody: bodyWithButton,
@@ -45,7 +49,7 @@ class LabelledBox extends StatelessWidget {
       outerLabelConfig: outerLabelConfig,
     );
 
-    double buttonWidth = button == null ? 0 : height!;
+    double buttonWidth = buttonConfig == null ? 0 : height!;
 
     double sideLabelWidth = width == null
         ? 0
@@ -53,7 +57,9 @@ class LabelledBox extends StatelessWidget {
             ? 0
             : switch (outerLabelConfig!.side) {
                 Side.top || Side.bottom => 0,
-                Side.left || Side.right => outerLabelConfig!.width! * appSize.zoom + UiParams.of(context).appSize.spacerHorizontalSmallest,
+                Side.left ||
+                Side.right =>
+                  outerLabelConfig!.width! * appSize.zoom + UiParams.of(context).appSize.spacerHorizontalSmallest,
               };
 
     return SizedBox(
@@ -115,7 +121,7 @@ class LabelledBox extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          Expanded(child: fieldBody),
+            Expanded(child: fieldBody),
             SizedBox(width: appSize.spacerHorizontalSmallest),
             label,
           ],
@@ -127,21 +133,26 @@ class LabelledBox extends StatelessWidget {
     required BuildContext context,
     required Widget fieldBody,
     required double height,
-    TextFieldButton? button,
-    ButtonPosition? buttonPosition,
+    TextFieldButtonConfig? buttonConfig,
+    void Function(BuildContext context)? onButtonTap,
   }) {
-    if (button == null) {
+    if (buttonConfig == null) {
       return fieldBody;
     }
 
-    ButtonPosition effectiveButtonPosition = buttonPosition ?? ButtonPosition.right;
+    final TextFieldButton? button = TextFieldButton(
+      textFieldButtonConfig: buttonConfig,
+      onTap: onButtonTap!,
+      size: height * UiParams.of(context).appSize.zoom,
+    );
+
+    ButtonPosition effectiveButtonPosition = buttonConfig.buttonPosition ?? ButtonPosition.right;
 
     return switch (effectiveButtonPosition) {
       ButtonPosition.right => Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(child: fieldBody),
-            // SizedBox(width: UiParams.of(context).appSize.spacerHorizontalSmallest),
             SizedBox(width: height, height: height, child: button),
           ],
         ),
@@ -149,7 +160,6 @@ class LabelledBox extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(width: height, height: height, child: button),
-            // SizedBox(width: UiParams.of(context).appSize.spacerHorizontalSmallest),
             Expanded(child: fieldBody),
           ],
         )
@@ -169,9 +179,9 @@ class LabelledBox extends StatelessWidget {
     if (outerLabelConfig.labelWidget != null) {
       return outerLabelConfig.labelWidget!;
     }
-    
+
     AppSize appSize = UiParams.of(context).appSize;
-    
+
     return SizedBox(
       width: outerLabelConfig.width == null ? null : outerLabelConfig.width! * appSize.zoom,
       height: outerLabelConfig.height == null ? null : outerLabelConfig.height! * appSize.zoom,

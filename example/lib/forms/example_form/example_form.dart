@@ -75,7 +75,7 @@ class ExampleFormState extends FormStateBrick {
               keyString: dateKeyString1,
               formManager: formManager,
               width: 130,
-              withDatePicker: false,
+              withDatePicker: true,
               outerLabelConfig: OuterLabelConfig(
                 labelText: 'Data',
                 side: Side.left,
@@ -107,28 +107,28 @@ class ExampleFormState extends FormStateBrick {
             //   formManager: formManager,
             //   width: 250,
             // ),
-            SizedBox(height: appSize.spacerVerticalMedium),
-            DateTimeSeparatedField(
-              keyString: dateTimeSeparatedKeyString1,
-              formManager: formManager,
-              dateOuterLabelConfig: OuterLabelConfig(
-                labelText: 'Data',
-                side: Side.top,
-                height: 16,
-              ),
-              timeOuterLabelConfig: OuterLabelConfig(
-                labelText: 'Godzina',
-                side: Side.top,
-                height: 16,
-              ),
-              outerLabelConfig: OuterLabelConfig(
-                labelText: 'Data i czas',
-                side: Side.left,
-                height: appSize.textFieldHeight + 16,
-                width: 80,
-                align: Alignment.bottomLeft,
-              ),
-            ),
+            // SizedBox(height: appSize.spacerVerticalMedium),
+            // DateTimeSeparatedField(
+            //   keyString: dateTimeSeparatedKeyString1,
+            //   formManager: formManager,
+            //   dateOuterLabelConfig: OuterLabelConfig(
+            //     labelText: 'Data',
+            //     side: Side.top,
+            //     height: 16,
+            //   ),
+            //   timeOuterLabelConfig: OuterLabelConfig(
+            //     labelText: 'Godzina',
+            //     side: Side.top,
+            //     height: 16,
+            //   ),
+            //   outerLabelConfig: OuterLabelConfig(
+            //     labelText: 'Data i czas',
+            //     side: Side.left,
+            //     height: appSize.textFieldHeight + 16,
+            //     width: 80,
+            //     align: Alignment.bottomLeft,
+            //   ),
+            // ),
           ],
         ), // test your widget here
       ),

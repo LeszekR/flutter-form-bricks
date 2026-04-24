@@ -293,21 +293,10 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     effectiveHeight =
         widget.height != null ? widget.height!: appSize.textFieldHeight;
 
-    button = widget.textFieldButtonConfig == null
-        ? null
-        : TextFieldButton(
-            textFieldButtonConfig: widget.textFieldButtonConfig!,
-            onTap: onButtonTap,
-            size: effectiveHeight * appSize.zoom ,
-          );
-
     if (widget.width != null) {
       width = widget.width! * appSize.zoom;
     } else {
-      // double buttonWidth = (button == null)
-      //     ? 0
-      //     : appSize.textFieldHeight;
-      width = getWidth(appSize); // + buttonWidth;
+      width = getWidth(appSize);
     }
   }
 
@@ -336,7 +325,8 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       width: width,
       fieldBody: textField,
       errorConfig: widget.errorConfig,
-      button: button,
+      buttonConfig: widget.textFieldButtonConfig,
+      onButtonTap: onButtonTap,
       height: effectiveHeight,
     );
   }
