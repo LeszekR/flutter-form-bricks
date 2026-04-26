@@ -160,7 +160,7 @@ class DateFieldState extends TextFieldStateBrick<DateTime, DateField> {
   double getWidth(AppSize appSize) => appSize.dateFieldWidth;
 
   @override
-  void onButtonTap(BuildContext context) async {
+  void onButtonTap() async {
     DateTime? date = await DatePicker(widget.currentDate, datePickerConfig: widget.datePickerConfig).open(context);
     if (date == null) return;
 

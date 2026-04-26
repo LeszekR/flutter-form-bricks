@@ -81,6 +81,7 @@ class ExampleFormState extends FormStateBrick {
                 side: Side.left,
                 width: 60,
                 align: Alignment.bottomLeft,
+                height: 22,
               ),
               errorConfig: const ErrorConfig(
                 position: ErrorPosition.withTextField,

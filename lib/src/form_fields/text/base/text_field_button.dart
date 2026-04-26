@@ -2,41 +2,60 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 
 class TextFieldButton extends StatelessWidget {
-  final TextFieldButtonConfig textFieldButtonConfig;
-  final Color? backgroundColor;
+  final TextFieldButtonConfig buttonConfig;
   final InputBorder? border;
   final double size;
-  final void Function(BuildContext context) onTap;
+  final VoidCallback onTap;
+
+  // final void Function(BuildContext context) onTap;
 
   const TextFieldButton({
     super.key,
-    required this.textFieldButtonConfig,
+    required this.buttonConfig,
     required this.size,
     required this.onTap,
-    this.backgroundColor,
     this.border,
   });
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: backgroundColor ?? Colors.transparent,
-        border: _toBoxBorder(border),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () => onTap(context),
-          child: Center(
-            child: Icon(
-              textFieldButtonConfig.iconData,
-              size: size,
+    double zoomedSize = size * UiParams.of(context).appSize.zoom;
+    return SizedBox(
+      width: zoomedSize,
+      height: zoomedSize,
+      child: IconButton(
+        icon: Icon(buttonConfig.iconData),
+        onPressed: onTap,
+        padding: EdgeInsets.zero,
+        constraints: const BoxConstraints(),
+        style: buttonConfig.style ??
+            IconButtonTheme.of(context).style ??
+            const ButtonStyle().copyWith(
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              shape: const WidgetStatePropertyAll(
+                RoundedRectangleBorder(),
+              ),
             ),
-          ),
-        ),
       ),
     );
+    // return DecoratedBox(
+    //   decoration: BoxDecoration(
+    //     color: backgroundColor ?? Colors.transparent,
+    //     border: _toBoxBorder(border),
+    //   ),
+    //   child: Material(
+    //     color: Colors.yellow,
+    //     child: InkWell(
+    //       onTap: onTap,
+    //       child: Center(
+    //         child: Icon(
+    //           textFieldButtonConfig.iconData,
+    //           size: size,
+    //         ),
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 
   // Convert InputBorder -> BoxBorder (best-effort)

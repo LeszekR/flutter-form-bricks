@@ -256,7 +256,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   late double effectiveHeight;
   String? _errorText;
 
-  void onButtonTap(BuildContext context);
+  void onButtonTap();
 
   ///  Inheriting fields can override this method to set their default width.
   double getWidth(AppSize appSize) => appSize.textFieldWidth;

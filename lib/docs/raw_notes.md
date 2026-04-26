@@ -15,4 +15,14 @@
   `RangeController.errorsCacheMap`.
 
 - Creation of new specialised field: create the `FormFieldBrick` descendant, `FormFieldDescriptor`
-  descendant dedicated for the field, set default `FormatterValidator` list in the `FormFieldDescriptor`, 
+  descendant dedicated for the field, set default `FormatterValidator` list in the
+  `FormFieldDescriptor`,
+
+ZOOM
+By default, `flutter_form_bricks` does not require any scaling setup.
+
+Advanced users may set `BricksThemeData.zoom` to scale form controls managed by the library. This
+affects Bricks-controlled sizes such as field heights, labels, buttons, spacings and icon sizes.
+
+For whole-app visual scaling outside the Bricks design system, Flutter’s `Transform.scale` can be
+used at the application level, but it scales the rendered output rather than recomputing layout.

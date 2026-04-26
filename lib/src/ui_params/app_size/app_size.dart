@@ -27,6 +27,8 @@ abstract class AppSize {
   // dimensions
   double get textFieldWidth;
   double get textFieldHeight;
+  double get buttonDistanceFromTextField;
+
   double get cornerRadius;
   double get appBarHeight;
   double get formBarHeight;

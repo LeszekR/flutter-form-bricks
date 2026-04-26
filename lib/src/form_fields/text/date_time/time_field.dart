@@ -148,7 +148,7 @@ class TimeFieldState extends TextFieldStateBrick<DateTime, TimeField> {
   double getWidth(AppSize appSize) => appSize.timeFieldWidth;
 
   @override
-  void onButtonTap(BuildContext context) async {
+  void onButtonTap() async {
     final TextSelection selectionBefore = controller.selection;
 
     TimeOfDay? time = await TimePicker(timePickerConfig: widget.timePickerConfig).open(context);

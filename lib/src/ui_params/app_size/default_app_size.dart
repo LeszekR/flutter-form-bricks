@@ -23,6 +23,14 @@ class DefaultAppSize extends AppSize {
   @override late final double textFieldWidth = 200;
   @override late final double dateFieldWidth = 95;
   @override late final double timeFieldWidth = 55;
+  @override late final buttonDistanceFromTextField = 4;
+
+  @override late final double spacerVerticalSmallest =  4.0;
+  @override late final double spacerVerticalSmall =  8.0;
+  @override late final double spacerVerticalMedium =  16;
+  @override late final double spacerHorizontalSmallest =  4.0;
+  @override late final double spacerHorizontalSmall =  8.0;
+  @override late final double spacerHorizontalMedium =  16;
 
   @override late final double cornerRadius = 0;
   @override late final double appBarHeight = zoom * 34;
@@ -76,10 +84,4 @@ class DefaultAppSize extends AppSize {
   @override late final double dashboardTileShadowOffset = zoom * 2;
   @override late final double spinnerInsets = zoom * 20;
 
-  @override late final double spacerVerticalSmallest = zoom * 4.0;
-  @override late final double spacerVerticalSmall = zoom * 8.0;
-  @override late final double spacerVerticalMedium = zoom * 16;
-  @override late final double spacerHorizontalSmallest = zoom * 4.0;
-  @override late final double spacerHorizontalSmall = zoom * 8.0;
-  @override late final double spacerHorizontalMedium = zoom * 16;
 }
