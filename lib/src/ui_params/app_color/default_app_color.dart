@@ -36,6 +36,14 @@ class DefaultAppColor extends AppColor {
   @override late final Color formFieldFillDisabled = greyLight;
   @override late final Color formFieldFillError = colorSchemeMain.errorContainer;
 
+  @override late final Color formFieldBorderOk = Colors.black;
+  @override late final Color formFieldBorderHovered = Colors.black;
+  @override late final Color formFieldBorderFocused = Colors.black;
+  @override late final Color formFieldBorderPressed = Colors.black;
+  @override late final Color formFieldBorderSelected = Colors.black;
+  @override late final Color formFieldBorderDisabled = Colors.black;
+  @override late final Color formFieldBorderError = Colors.red;
+
   // ========== Buttons =========
   @override late final Color buttonFontEnabled = black;
   @override late final Color buttonFontDisabled = greyDark;

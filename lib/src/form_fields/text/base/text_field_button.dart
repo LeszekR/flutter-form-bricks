@@ -7,8 +7,6 @@ class TextFieldButton extends StatelessWidget {
   final double size;
   final VoidCallback onTap;
 
-  // final void Function(BuildContext context) onTap;
-
   const TextFieldButton({
     super.key,
     required this.buttonConfig,
@@ -28,48 +26,8 @@ class TextFieldButton extends StatelessWidget {
         onPressed: onTap,
         padding: EdgeInsets.zero,
         constraints: const BoxConstraints(),
-        style: buttonConfig.style ??
-            IconButtonTheme.of(context).style ??
-            const ButtonStyle().copyWith(
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              shape: const WidgetStatePropertyAll(
-                RoundedRectangleBorder(),
-              ),
-            ),
+        style: buttonConfig.style ?? IconButtonTheme.of(context).style
       ),
     );
-    // return DecoratedBox(
-    //   decoration: BoxDecoration(
-    //     color: backgroundColor ?? Colors.transparent,
-    //     border: _toBoxBorder(border),
-    //   ),
-    //   child: Material(
-    //     color: Colors.yellow,
-    //     child: InkWell(
-    //       onTap: onTap,
-    //       child: Center(
-    //         child: Icon(
-    //           textFieldButtonConfig.iconData,
-    //           size: size,
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    // );
-  }
-
-  // Convert InputBorder -> BoxBorder (best-effort)
-  static BoxBorder? _toBoxBorder(InputBorder? border) {
-    if (border == null || border == InputBorder.none) return null;
-
-    if (border is OutlineInputBorder) {
-      return Border.fromBorderSide(border.borderSide);
-    }
-    if (border is UnderlineInputBorder) {
-      return Border(
-        bottom: border.borderSide,
-      );
-    }
-    return Border.fromBorderSide(border.borderSide);
   }
 }

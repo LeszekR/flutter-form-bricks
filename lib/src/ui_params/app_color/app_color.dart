@@ -37,6 +37,14 @@ abstract class AppColor {
   Color get formFieldFillDisabled;
   Color get formFieldFillError;
 
+  Color get formFieldBorderOk;
+  Color get formFieldBorderHovered;
+  Color get formFieldBorderFocused;
+  Color get formFieldBorderPressed;
+  Color get formFieldBorderSelected;
+  Color get formFieldBorderDisabled;
+  Color get formFieldBorderError;
+
   // Buttons
   Color get buttonFontEnabled;
   Color get buttonFontDisabled;
@@ -65,12 +73,12 @@ abstract class AppColor {
   // Text
   Color get textError;
 
-  WidgetStateColor fillColor(Set<WidgetState> states) {
-    final stateColor = makeColor(states);
-    return WidgetStateColor.resolveWith((_) => stateColor);
-  }
+  // WidgetStateColor fillColor(Set<WidgetState> states) {
+  //   final stateColor = makeColor(states);
+  //   return WidgetStateColor.resolveWith((_) => stateColor);
+  // }
 
-  Color makeColor(Set<WidgetState> states) {
+  Color getFillColor(Set<WidgetState> states) {
     return switch (states) {
     _ when states.contains(WidgetState.disabled) => formFieldFillDisabled,
     _ when states.contains(WidgetState.error) => formFieldFillError,
@@ -79,6 +87,18 @@ abstract class AppColor {
     _ when states.contains(WidgetState.pressed) => formFieldFillPressed,
     _ when states.contains(WidgetState.selected) => formFieldFillSelected,
     _ => formFieldFillOk,
+    };
+  }
+
+  Color getBorderColor(Set<WidgetState> states) {
+    return switch (states) {
+    _ when states.contains(WidgetState.disabled) => formFieldBorderDisabled,
+    _ when states.contains(WidgetState.error) => formFieldBorderError,
+    _ when states.contains(WidgetState.focused) => formFieldBorderFocused,
+    _ when states.contains(WidgetState.hovered) => formFieldBorderHovered,
+    _ when states.contains(WidgetState.pressed) => formFieldBorderPressed,
+    _ when states.contains(WidgetState.selected) => formFieldBorderSelected,
+    _ => formFieldBorderOk,
     };
   }
 

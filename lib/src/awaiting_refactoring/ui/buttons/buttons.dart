@@ -79,7 +79,7 @@ class Buttons {
             height: appSize.inputTextLineHeight,
             padding: EdgeInsets.zero,
             alignment: Alignment.center,
-            color: appColor.makeColor(states).withOpacity(1),
+            color: appColor.getFillColor(states).withOpacity(1),
             child: IconButtonStateAware(
               iconData,
               onPressed,

@@ -1,7 +1,4 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
 abstract class AppSize {
   AppSize({required this.zoom});
@@ -9,9 +6,20 @@ abstract class AppSize {
   /// Base scaling factor (from AppScale, or const 1.0 if no scaling)
   double zoom;
 
+  double getBorderWidth(Set<WidgetState> states) {
+    return switch (states) {
+      _ when states.contains(WidgetState.disabled) => borderWidth,
+      _ when states.contains(WidgetState.focused) => borderWidth,
+      _ when states.contains(WidgetState.hovered) => borderWidth,
+      _ when states.contains(WidgetState.pressed) => borderWidth,
+      _ when states.contains(WidgetState.selected) => borderWidth,
+      _ when states.contains(WidgetState.error) => borderErrorWidth,
+      _ => borderWidth,
+    };
+  }
+
   // fonts
   double calculateFontSize(double size) => zoom * (fontSmallest + fontIncrement * size);
-
   double get fontSmallest;
   double get fontIncrement;
   double get fontSize1;
@@ -28,7 +36,6 @@ abstract class AppSize {
   double get textFieldWidth;
   double get textFieldHeight;
   double get buttonDistanceFromTextField;
-
   double get cornerRadius;
   double get appBarHeight;
   double get formBarHeight;
@@ -37,6 +44,7 @@ abstract class AppSize {
   double get tabHeight;
   double get tabWidth;
   double get borderWidth;
+  double get borderErrorWidth;
   BorderRadiusGeometry get borderRadius;
   double get tabBorderWidth;
   double get bottomPanelHeight;

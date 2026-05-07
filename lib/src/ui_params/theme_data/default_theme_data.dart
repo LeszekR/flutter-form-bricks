@@ -1,5 +1,5 @@
-import 'package:flutter_form_bricks/src/ui_params/app_size/app_size.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/decoration/bottom_border_top_rounded_shape.dart';
 import 'package:flutter_form_bricks/src/ui_params/theme_data/bricks_theme_data.dart';
 
 class DefaultThemeData extends BricksThemeData {
@@ -20,13 +20,11 @@ class DefaultThemeData extends BricksThemeData {
 
   @override
   TextStyle textStyle() => textTheme.bodyLarge!;
+
   // TextStyle textStyle() => textTheme.bodySmall!;
 
   @override
   get useMaterial3 => sourceTheme?.useMaterial3 ?? true;
-
-  @override
-  get visualDensity => sourceTheme?.visualDensity ?? VisualDensity.compact;
 
   @override
   get colorScheme => sourceTheme?.colorScheme ?? appColor.colorSchemeMain;
@@ -146,31 +144,41 @@ class DefaultThemeData extends BricksThemeData {
   get inputDecorationThemeData =>
       sourceTheme?.inputDecorationTheme ??
       InputDecorationTheme(
-        filled: true,
         isDense: true,
-        contentPadding: EdgeInsets.zero, //symmetric(horizontal: 1, vertical: 2),
-        // prefixIconConstraints: BoxConstraints(
-        //   maxWidth: AppSize.textFieldButtonWidth(visualDensity: appSize.horizontalVisualDensity!),
-        //   maxHeight: AppSize.textFieldButtonHeight(visualDensity: appSize.verticalVisualDensity),
-        // ),
-        // suffixIconConstraints: BoxConstraints(
-        //   maxWidth: AppSize.textFieldButtonWidth(visualDensity: appSize.horizontalVisualDensity!),
-        //  maxHeight: AppSize.textFieldButtonHeight(visualDensity: appSize.verticalVisualDensity),
-        // ),
         visualDensity: VisualDensity(
           vertical: -4,
           horizontal: 0,
         ),
-        // border: OutlineInputBorder(),
-        // contentPadding: EdgeInsets.zero,
-        // contentPadding: EdgeInsets.all(appSize.paddingInputText),
-        fillColor: WidgetStateColor.resolveWith((Set<WidgetState> states) => appColor.makeColor(states)),
-        // labelStyle: TextStyle(
-        //   color: WidgetStateColor.resolveWith((Set<WidgetState> states) => appColor.textColor(states)),
-        //   fontSize: appSize.fontSize4,
-        // ),
-        // errorStyle: const TextStyle(fontSize: 0),
+        contentPadding: EdgeInsets.zero,
+        filled: true,
+        fillColor: WidgetStateColor.resolveWith((Set<WidgetState> states) => appColor.getFillColor(states)),
       ).data;
+
+  // @override
+  // get iconButtonThemeData => null;
+  @override
+  get iconButtonThemeData =>
+      sourceTheme?.iconButtonTheme ??
+      IconButtonThemeData(
+        style: const ButtonStyle().copyWith(
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            shape: WidgetStatePropertyAll(
+              BottomBorderTopRoundedShape(
+                borderRadius: 3,
+                // color: WidgetStateColor.resolveWith(
+                //   (Set<WidgetState> states) => appColor.getBorderColor(states),
+                // ),
+                side: WidgetStateBorderSide.resolveWith(
+                  (Set<WidgetState> states) => BorderSide(
+                    color: appColor.getBorderColor(states),
+                    width: appSize.getBorderWidth(states),
+                  ),
+                ),
+              ),
+            ),
+            backgroundColor: WidgetStateColor.resolveWith((Set<WidgetState> states) => appColor.getFillColor(states)),
+            iconSize: WidgetStateProperty.all(appSize.iconSize)),
+      );
 
   @override
   get checkboxThemeData =>

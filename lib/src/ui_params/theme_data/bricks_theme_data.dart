@@ -66,6 +66,7 @@ abstract class BricksThemeData {
   DialogThemeData get dialogThemeData;
   TextTheme get textTheme;
   InputDecorationThemeData get inputDecorationThemeData;
+  IconButtonThemeData? get iconButtonThemeData;
   CheckboxThemeData get checkboxThemeData;
 
   final AppColor appColor;
@@ -95,6 +96,7 @@ abstract class BricksThemeData {
         textTheme: textTheme,
         inputDecorationTheme: inputDecorationThemeData,
         checkboxTheme: checkboxThemeData,
+        iconButtonTheme: iconButtonThemeData,
       );
 
   final Map<TextStyle, Map<TextDimension, double>> _textDimensionsMap = {};
