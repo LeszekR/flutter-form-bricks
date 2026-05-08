@@ -162,7 +162,7 @@ Future<FocusNode> getFocusNode(WidgetTester tester, String keyString) async {
 }
 
 Future<TextEditingController> getTextEditingController(WidgetTester tester, String keyString) async {
-  return (await tester.state(find.byKey(ValueKey(keyString))) as TextFieldStateBrick).controller;
+  return (await tester.state(find.byKey(ValueKey(keyString))) as TextFieldStateBrick).textEditingController;
 }
 
 Map<String, Future<void> Function()> getInputs(WidgetTester tester) {

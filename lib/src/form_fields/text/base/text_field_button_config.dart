@@ -8,6 +8,7 @@ class TextFieldButtonConfig {
   final String Function(BuildContext)? tooltipMaker;
   final ButtonStyle? style;
   final double? distanceFromTextField;
+  final bool syncStyleWithTextField;
   final bool autofocus;
 
   const TextFieldButtonConfig({
@@ -16,6 +17,7 @@ class TextFieldButtonConfig {
     this.tooltipMaker,
     this.style,
     this.distanceFromTextField,
+    this.syncStyleWithTextField = true,
     this.autofocus = false,
   });
 
@@ -25,6 +27,8 @@ class TextFieldButtonConfig {
       buttonPosition: other?.buttonPosition ?? buttonPosition,
       tooltipMaker: tooltipMaker,
       style: other?.style ?? style,
+      distanceFromTextField: other?.distanceFromTextField ?? distanceFromTextField,
+      syncStyleWithTextField: other?.syncStyleWithTextField ?? syncStyleWithTextField,
       autofocus: other?.autofocus ?? autofocus,
     );
   }

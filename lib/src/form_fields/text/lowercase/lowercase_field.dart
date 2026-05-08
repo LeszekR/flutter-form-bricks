@@ -112,7 +112,7 @@ class LowerCaseField extends TextFieldBrick<String> {
 
 class LowerCaseFieldState extends TextFieldStateBrick<String, LowerCaseField> {
   @override
-  String? get defaultValue => controller.text;
+  String? get defaultValue => textEditingController.text;
 
   @override
   void onButtonTap() {

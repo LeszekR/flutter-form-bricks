@@ -6,7 +6,6 @@ class LabelledBox extends StatelessWidget {
   final Widget fieldBody;
   final ErrorConfig errorConfig;
   final OuterLabelConfig? outerLabelConfig;
-  final InputDecoration? inputDecoration;
   final TextFieldButtonConfig? buttonConfig;
   final VoidCallback? onButtonTap;
   final double? width;
@@ -17,15 +16,12 @@ class LabelledBox extends StatelessWidget {
     required this.fieldBody,
     this.errorConfig = const ErrorConfig(),
     this.outerLabelConfig,
-    this.inputDecoration,
     this.buttonConfig,
     this.onButtonTap,
     this.width,
     this.height,
   })  : assert((buttonConfig == null) || (onButtonTap != null),
-            'When buttonConfig != null then onButtonTap must be declared'),
-        assert((buttonConfig == null) || (inputDecoration != null),
-            'When buttonConfig != null then inputDecoration must be declared');
+            'When buttonConfig != null then onButtonTap must be declared');
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +36,6 @@ class LabelledBox extends StatelessWidget {
         context: context,
         fieldBody: fieldBody,
         height: effectiveHeight,
-        inputDecoration: inputDecoration!,
         buttonConfig: buttonConfig!,
         onButtonTap: onButtonTap!,
       );
@@ -51,7 +46,6 @@ class LabelledBox extends StatelessWidget {
       fieldBody: bodyWithButton,
       height: effectiveHeight,
       errorConfig: errorConfig,
-      inputDecoration: inputDecoration,
       outerLabelConfig: outerLabelConfig,
     );
     double zoom = appSize.zoom;
@@ -77,7 +71,6 @@ class LabelledBox extends StatelessWidget {
     required BuildContext context,
     required Widget fieldBody,
     required double height,
-    required InputDecoration inputDecoration,
     required TextFieldButtonConfig buttonConfig,
     required VoidCallback onButtonTap,
   }) {
@@ -117,7 +110,6 @@ class LabelledBox extends StatelessWidget {
     required Widget fieldBody,
     required ErrorConfig errorConfig,
     required double? height,
-    InputDecoration? inputDecoration,
     OuterLabelConfig? outerLabelConfig,
   }) {
     if (outerLabelConfig == null) return fieldBody;

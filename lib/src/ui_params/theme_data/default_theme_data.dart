@@ -165,9 +165,6 @@ class DefaultThemeData extends BricksThemeData {
             shape: WidgetStatePropertyAll(
               BottomBorderTopRoundedShape(
                 borderRadius: 3,
-                // color: WidgetStateColor.resolveWith(
-                //   (Set<WidgetState> states) => appColor.getBorderColor(states),
-                // ),
                 side: WidgetStateBorderSide.resolveWith(
                   (Set<WidgetState> states) => BorderSide(
                     color: appColor.getBorderColor(states),

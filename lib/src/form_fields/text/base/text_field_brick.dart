@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/double_widget_states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/labelled_box.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
@@ -165,6 +166,8 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
           inputDecoration?.suffix == null || inputDecoration?.suffixText == null,
           'Only one can be declared: inputDecoration.suffix or inputDecoration.suffixText.',
         ),
+        assert(textFieldButtonConfig?.syncStyleWithTextField == true ? statesController == null : true,
+            'When syncStyleWithTextField is true, statesController must not be declared'),
         // assert(height != null || (textFieldButtonConfig == null),
         //     'TextField with textFieldButtonConfig must have its height declared'),
         // assert(height != null || (outerLabelConfig == null),
@@ -186,7 +189,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
           textAlignVertical: textAlignVertical,
           textDirection: textDirection,
           //  bool autofocus: //  bool autofocus, => FormData takes over initial focus in form
-          //  MaterialStatesController statesController: //  MaterialStatesController statesController, => replaced with statesObserver and statesNotifier
+          statesController: statesController,
           obscuringCharacter: obscuringCharacter,
           obscureText: obscureText,
           autocorrect: autocorrect,
@@ -246,8 +249,9 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
 abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>>
     extends FormFieldStateBrick<TextEditingValue, V, B> {
   //
-  late final TextEditingController controller;
-  late final WidgetStatesController statesController;
+  late final TextEditingController textEditingController;
+  late final WidgetStatesController _statesController;
+  late final WidgetStatesController _statesChangeListener;
   late final VoidCallback _statesListener;
   late TextFieldButton? button;
   late double width;
@@ -261,24 +265,37 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   double getWidth(AppSize appSize) => appSize.textFieldWidth;
 
   @override
-  TextEditingValue? getInput() => controller.value;
+  TextEditingValue? getInput() => textEditingController.value;
 
   @override
-  void setInput(TextEditingValue? formattedValue) => controller.value = formattedValue ?? TextEditingValue.empty;
+  void setInput(TextEditingValue? formattedValue) =>
+      textEditingController.value = formattedValue ?? TextEditingValue.empty;
 
   @override
   void initState() {
-    statesController = widget.textFieldConfig.statesController ?? WidgetStatesController();
-    controller = widget.textFieldConfig.controller ?? TextEditingController();
+    _statesController = widget.textFieldConfig.statesController != null
+        ? widget.textFieldConfig.statesController!
+        : widget.textFieldButtonConfig == null
+            ? WidgetStatesController()
+            : widget.textFieldButtonConfig!.syncStyleWithTextField
+                ? DoubleWidgetStatesController()
+                : WidgetStatesController();
+
+    _statesChangeListener = _statesController is DoubleWidgetStatesController
+        ? (_statesController as DoubleWidgetStatesController).receiverStatesController
+        : _statesController;
+
+    textEditingController = widget.textFieldConfig.controller ?? TextEditingController();
 
     // TODO this strips the field from flutter's restoration - implement restoration pattern as in comments at the end of this file
     setInput(formManager.getInitialInput(keyString));
     _errorText = formManager.getFieldError(keyString);
     super.initState();
 
+    // TU PRZERWAŁEM - reduce redundant use of statesController here and in FormFieldBrick
     _statesListener = setStateInNextFrame;
 
-    statesController.addListener(_statesListener);
+    _statesChangeListener.addListener(_statesListener);
   }
 
   @override
@@ -289,8 +306,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     var appSize = uiParams.appSize;
     style = widget.textFieldConfig.style ?? uiParams.appTheme.textStyle();
 
-    effectiveHeight =
-        widget.height != null ? widget.height!: appSize.textFieldHeight;
+    effectiveHeight = widget.height != null ? widget.height! : appSize.textFieldHeight;
 
     if (widget.width != null) {
       width = widget.width! * appSize.zoom;
@@ -301,33 +317,37 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   @override
   void dispose() {
-    if (widget.textFieldConfig.controller == null) controller.dispose();
+    if (widget.textFieldConfig.controller == null) textEditingController.dispose();
     if (widget.textFieldConfig.focusNode == null) focusNode.dispose();
-    statesController.removeListener(_statesListener);
-    statesController.dispose();
+    _statesChangeListener.removeListener(_statesListener);
+    _statesController.dispose();
     super.dispose();
   }
 
   @override
   Widget buildFieldWidget(BuildContext context) {
-    final decoration = _makeInputDecoration();
+    return ValueListenableBuilder(
+      valueListenable: _statesController,
+      builder: (context, states, _) {
+        final decoration = _makeInputDecoration();
 
-    final TextField textField = _makeTextField(
-      controller,
-      statesController,
-      decoration,
-      style,
-    );
+        final TextField textField = _makeTextField(
+          textEditingController,
+          _statesChangeListener,
+          decoration,
+          style,
+        );
 
-    return LabelledBox(
-      outerLabelConfig: widget.outerLabelConfig,
-      width: width,
-      inputDecoration: decoration,
-      fieldBody: textField,
-      errorConfig: widget.errorConfig,
-      buttonConfig: widget.textFieldButtonConfig,
-      onButtonTap: onButtonTap,
-      height: effectiveHeight,
+        return LabelledBox(
+          outerLabelConfig: widget.outerLabelConfig,
+          width: width,
+          fieldBody: textField,
+          errorConfig: widget.errorConfig,
+          buttonConfig: widget.textFieldButtonConfig,
+          onButtonTap: onButtonTap,
+          height: effectiveHeight,
+        );
+      },
     );
   }
 

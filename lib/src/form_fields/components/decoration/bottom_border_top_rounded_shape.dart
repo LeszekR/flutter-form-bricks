@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 
 class BottomBorderTopRoundedShape extends OutlinedBorder {
   final double borderRadius;
-  // final Color color;
 
   const BottomBorderTopRoundedShape({
     super.side = const BorderSide(),
     this.borderRadius = 4,
-    // this.color = const Color(0xFF000000),
   });
 
   BorderRadius get _radius => BorderRadius.only(

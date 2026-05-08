@@ -149,7 +149,7 @@ class TimeFieldState extends TextFieldStateBrick<DateTime, TimeField> {
 
   @override
   void onButtonTap() async {
-    final TextSelection selectionBefore = controller.selection;
+    final TextSelection selectionBefore = textEditingController.selection;
 
     TimeOfDay? time = await TimePicker(timePickerConfig: widget.timePickerConfig).open(context);
 
@@ -169,8 +169,8 @@ class TimeFieldState extends TextFieldStateBrick<DateTime, TimeField> {
   }
 
   void restoreSelection(TextSelection selectionBefore) {
-    controller.value = controller.value.copyWith(
-      selection: TextSelection.collapsed(offset: controller.text.length),
+    textEditingController.value = textEditingController.value.copyWith(
+      selection: TextSelection.collapsed(offset: textEditingController.text.length),
       composing: TextRange.empty,
     );
     focusNode.requestFocus();

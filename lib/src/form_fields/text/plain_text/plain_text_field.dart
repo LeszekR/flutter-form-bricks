@@ -108,7 +108,7 @@ class PlainTextField extends TextFieldBrick<String> {
 
 class PlainTextFieldStateBrick extends TextFieldStateBrick<String, PlainTextField> {
   @override
-  String? get defaultValue => controller.text;
+  String? get defaultValue => textEditingController.text;
 
   @override
   void onButtonTap() {

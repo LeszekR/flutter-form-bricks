@@ -30,8 +30,8 @@ class TestTextField extends TextFieldBrick<String> {
 }
 
 class TestTextFieldState extends TextFieldStateBrick<String, TestTextField> {
-  TextEditingValue get text => controller.value;
+  TextEditingValue get text => textEditingController.value;
 
   @override
-  String? get defaultValue => controller.text;
+  String? get defaultValue => textEditingController.text;
 }

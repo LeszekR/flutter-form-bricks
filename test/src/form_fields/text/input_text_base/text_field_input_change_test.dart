@@ -132,7 +132,7 @@ Future<void> _runInputChangeTest(
   expect(formManager.getFieldError(fieldKeyString), testCase.error);
 
   // --- Verify TextField controller sync ---
-  expect(state.controller.value, TextEditingValue(text: testCase.newInput));
+  expect(state.textEditingController.value, TextEditingValue(text: testCase.newInput));
 
   // --- Verify error notifier propagation ---
   expect(formManager.errorMessageNotifier.value, testCase.error);
