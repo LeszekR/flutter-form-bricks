@@ -135,6 +135,7 @@ class DateField extends TextFieldBrick<DateTime> {
               : datePickerButtonConfig != null
                   ? datePickerButtonConfig
                   : const TextFieldButtonConfig(
+                      syncStyleWithTextField: true,
                       iconData: Icons.arrow_drop_down,
                       buttonPosition: ButtonPosition.right,
                       tooltipMaker: DatePicker.datePickerTooltipMaker,

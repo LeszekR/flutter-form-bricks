@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/double_widget_states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button.dart';
 
 class LabelledBox extends StatelessWidget {
@@ -7,21 +8,24 @@ class LabelledBox extends StatelessWidget {
   final ErrorConfig errorConfig;
   final OuterLabelConfig? outerLabelConfig;
   final TextFieldButtonConfig? buttonConfig;
-  final VoidCallback? onButtonTap;
   final double? width;
   final double? height;
+  final DoubleWidgetStatesController? doubleWidgetStatesController;
+  final StatesColorMaker? statesColorMaker;
+  final VoidCallback? onButtonTap;
 
   const LabelledBox({
     super.key,
+    this.width,
+    this.height,
     required this.fieldBody,
     this.errorConfig = const ErrorConfig(),
     this.outerLabelConfig,
     this.buttonConfig,
+    this.doubleWidgetStatesController,
+    this.statesColorMaker,
     this.onButtonTap,
-    this.width,
-    this.height,
-  })  : assert((buttonConfig == null) || (onButtonTap != null),
-            'When buttonConfig != null then onButtonTap must be declared');
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +42,8 @@ class LabelledBox extends StatelessWidget {
         height: effectiveHeight,
         buttonConfig: buttonConfig!,
         onButtonTap: onButtonTap!,
+        doubleWidgetStatesController: doubleWidgetStatesController,
+        statesColorMaker: statesColorMaker,
       );
     }
 
@@ -73,6 +79,8 @@ class LabelledBox extends StatelessWidget {
     required double height,
     required TextFieldButtonConfig buttonConfig,
     required VoidCallback onButtonTap,
+    DoubleWidgetStatesController? doubleWidgetStatesController,
+    StatesColorMaker? statesColorMaker,
   }) {
     AppSize appSize = UiParams.of(context).appSize;
     double size = height * appSize.zoom;
@@ -81,6 +89,8 @@ class LabelledBox extends StatelessWidget {
       buttonConfig: buttonConfig,
       onTap: onButtonTap,
       size: size,
+      doubleWidgetStatesController: doubleWidgetStatesController,
+      statesColorMaker: statesColorMaker,
     );
 
     double padding = (buttonConfig.distanceFromTextField ?? appSize.buttonDistanceFromTextField) * appSize.zoom;

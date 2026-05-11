@@ -9,7 +9,7 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
 
   final FormManager formManager;
   final StatesColorMaker colorMaker;
-  final WidgetStatesController? statesController;
+  // final WidgetStatesController? statesController;
   final ValueChanged<I>? onChanged;
   final String? label;
   final OuterLabelConfig? outerLabelConfig;
@@ -27,7 +27,7 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
     this.outerLabelConfig,
     StatesColorMaker? colorMaker,
     // TODO verify / test / fix passing-using ststesObserver - note: TextFieldBrick costructs it INSIDE - bug?
-    this.statesController,
+    // this.statesController,
     this.onChanged,
   })  : this.colorMaker = colorMaker ?? StatesColorMaker(),
         super(key: key ?? ValueKey(keyString));
@@ -37,7 +37,7 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
     extends State<F> {
   FormUiUpdateCoordinator? formUiUpdateCoordinator;
   late final FocusNode focusNode;
-  Set<WidgetState>? _states;
+  // Set<WidgetState>? _states;
 
   I? getInput();
 
@@ -78,8 +78,8 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
 
     _input = formManager.getFieldContent(keyString).input as I?;
 
-    _onStatesChanged();
-    widget.statesController?.addListener(_onStatesChanged);
+    // _onStatesChanged();
+    // widget.statesController?.addListener(_onStatesChanged);
 
     // TODO this strips the field from flutter's restoration - implement restoration pattern as in comments at the end of this file
     setInput(formManager.getInitialInput(keyString));
@@ -104,7 +104,7 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   @mustCallSuper
   @override
   void dispose() {
-    widget.statesController?.removeListener(_onStatesChanged);
+    // widget.statesController?.removeListener(_onStatesChanged);
     focusNode.dispose();
     super.dispose();
   }
@@ -121,11 +121,11 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
     }
   }
 
-  void _onStatesChanged() {
-    setState(() {
-      _states = widget.statesController?.value;
-    });
-  }
+  // void _onStatesChanged() {
+  //   setState(() {
+  //     _states = widget.statesController?.value;
+  //   });
+  // }
 
   /// **Must be called** either in `onChanged` or `onEditingComplete`. If not called there neither of the below
   /// functions will be performed.
@@ -152,7 +152,7 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
 
   bool _hasFormatterValidator() => widget.validateMode != ValidateModeBrick.noValidator;
 
-  Color? makeColor() => widget.colorMaker.makeColor(context, _states);
+  // Color? makeColor() => widget.colorMaker.makeColor(context, _states);
 }
 
 // RESTORATION PATTERN

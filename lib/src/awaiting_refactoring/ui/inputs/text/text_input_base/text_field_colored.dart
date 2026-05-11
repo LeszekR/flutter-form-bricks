@@ -99,7 +99,7 @@ class _TextFieldColoredState extends State<TextFieldColored> /*with ErrorMessage
                     border: InputBorder.none,
                     fillColor: appColor.getFillColor(states),
                   ),
-                  statesController: widget.notifierDoubleStatesController!.receiverStatesController,
+                  statesController: widget.notifierDoubleStatesController!.statesObserver,
                   autovalidateMode: widget.autovalidateMode,
                   validator: widget.validator,
                   controller: textEditingController,

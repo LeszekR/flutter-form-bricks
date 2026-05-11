@@ -4,8 +4,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/double_widget_states_controller/update_once_widget_states_controller.dart';
 
 class DoubleWidgetStatesController extends WidgetStatesController implements ValueListenable<Set<WidgetState>> {
-  final WidgetStatesController receiverStatesController = WidgetStatesController();
-  final UpdateOnceWidgetStatesController lateWidgetStatesController = UpdateOnceWidgetStatesController();
+  final WidgetStatesController statesObserver = WidgetStatesController();
+  final UpdateOnceWidgetStatesController updateOnceStatesObserver = UpdateOnceWidgetStatesController();
 
   final Set<WidgetState> _newState1 = {};
   final Set<WidgetState> _newState2 = {};
@@ -16,19 +16,19 @@ class DoubleWidgetStatesController extends WidgetStatesController implements Val
   WidgetState? lastState;
 
   DoubleWidgetStatesController() {
-    receiverStatesController.addListener(() => setNewWidgetState(receiverStatesController));
-    lateWidgetStatesController.addListener(() => setNewWidgetState(lateWidgetStatesController));
+    statesObserver.addListener(() => setNewWidgetState(statesObserver));
+    updateOnceStatesObserver.addListener(() => setNewWidgetState(updateOnceStatesObserver));
   }
 
   // TODO check whether can't be simplified to only manipulating Set<WidgetState> of regular WidgetStatesController
   void setNewWidgetState(WidgetStatesController controller) {
     WidgetState? newState;
 
-    if (controller == receiverStatesController) {
+    if (controller == statesObserver) {
       _newState1.clear();
       _newState1.addAll(controller.value);
     }
-    if (controller == lateWidgetStatesController) {
+    if (controller == updateOnceStatesObserver) {
       _newState2.clear();
       _newState2.addAll(controller.value);
     }

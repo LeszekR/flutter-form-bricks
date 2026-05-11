@@ -26,3 +26,15 @@ affects Bricks-controlled sizes such as field heights, labels, buttons, spacings
 
 For whole-app visual scaling outside the Bricks design system, Flutter’s `Transform.scale` can be
 used at the application level, but it scales the rendered output rather than recomputing layout.
+
+TEXT FIELD BUTTON
+
+- `TextFieldButton` for a TextFieldBrick is created automatically when `TextFieldButtonConfig` is
+  supllied
+- `TextFieldButton` can react in sync with its color to its `TextFieldBrick` state. To make it work
+  you must declare `TextfieldButtonConfig` for the `TextFieldBrick` and NOT declare
+  `WidgetStatesController` for the `TextFieldBrick` - then the states controller will be created
+  automatically as `DoubleWidgetStatesController` which will then sync both elements - the field and
+  the button - color following their states. Since the states can be different tht
+  `DoubleWidgetStatesController` uses priorities to present color of the most important state at the
+  moment - e.g. "error", "disabled" - get priority over "focused", "hovered", etc 

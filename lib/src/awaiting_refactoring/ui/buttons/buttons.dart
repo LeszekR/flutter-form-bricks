@@ -85,7 +85,7 @@ class Buttons {
               onPressed,
               autofocus: true,
               tooltip: tooltip,
-              receiverColorController: statesController.lateWidgetStatesController,
+              receiverColorController: statesController.updateOnceStatesObserver,
             ),
           );
         });
