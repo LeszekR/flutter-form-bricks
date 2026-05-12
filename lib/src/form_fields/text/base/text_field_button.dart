@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/double_widget_states_controller/double_widget_states_controller.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/double_widget_states_controller/update_once_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/style_controller_kit.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/update_once_widget_states_controller.dart';
 
 class TextFieldButton extends StatelessWidget {
   final TextFieldButtonConfig buttonConfig;
-  final double size;
   final VoidCallback onTap;
-  final DoubleWidgetStatesController? doubleWidgetStatesController;
-  final StatesColorMaker? statesColorMaker;
+  final StyleControllerKit? styleControllerKit;
 
   final FocusNode _focusNode = FocusNode();
 
@@ -17,22 +15,22 @@ class TextFieldButton extends StatelessWidget {
   TextFieldButton({
     super.key,
     required this.buttonConfig,
-    required this.size,
     required this.onTap,
-    this.doubleWidgetStatesController,
-    this.statesColorMaker,
-  }) : assert((doubleWidgetStatesController == null) == (statesColorMaker == null),
-            'doubleWidgetStatesController and colorMaker must both be provided or both null');
+    this.styleControllerKit,
+  });
 
   @override
   Widget build(BuildContext context) {
-    double zoomedSize = size * UiParams.of(context).appSize.zoom;
+    AppSize appSize = UiParams.of(context).appSize;
+    double zoomedSize = buttonConfig.size ?? appSize.textFieldHeight  * appSize.zoom;
 
-    if (doubleWidgetStatesController == null) {
+    if (styleControllerKit == null) {
       return _makeButton(context, zoomedSize, null);
     } else {
-      final WidgetStatesController statesNotifier = doubleWidgetStatesController as WidgetStatesController;
-      final UpdateOnceWidgetStatesController statesReceiver = doubleWidgetStatesController!.updateOnceStatesObserver;
+      final WidgetStatesController statesNotifier =
+          styleControllerKit!.doubleWidgetStatesController as WidgetStatesController;
+      final UpdateOnceWidgetStatesController statesReceiver =
+          styleControllerKit!.doubleWidgetStatesController.updateOnceStatesObserver;
 
       return ValueListenableBuilder(
           valueListenable: statesNotifier,
@@ -47,9 +45,8 @@ class TextFieldButton extends StatelessWidget {
 
   SizedBox _makeButton(BuildContext context, double zoomedSize, Set<WidgetState>? states) {
     ButtonStyle? effectiveStyle = buttonConfig.style ??
-        IconButtonTheme.of(context)
-            .style
-            ?.copyWith(backgroundColor: WidgetStatePropertyAll(statesColorMaker?.makeColor(context, states)));
+        IconButtonTheme.of(context).style?.copyWith(
+            backgroundColor: WidgetStatePropertyAll(styleControllerKit?.statesColorMaker.makeColor(context, states)));
 
     return SizedBox(
       width: zoomedSize,

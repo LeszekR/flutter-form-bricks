@@ -8,7 +8,8 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
   final String keyString;
 
   final FormManager formManager;
-  final StatesColorMaker colorMaker;
+  final StatesColorMaker? colorMaker;
+
   // final WidgetStatesController? statesController;
   final ValueChanged<I>? onChanged;
   final String? label;
@@ -25,18 +26,18 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
     required this.validateMode,
     this.label,
     this.outerLabelConfig,
-    StatesColorMaker? colorMaker,
+    this.colorMaker,
     // TODO verify / test / fix passing-using ststesObserver - note: TextFieldBrick costructs it INSIDE - bug?
     // this.statesController,
     this.onChanged,
-  })  : this.colorMaker = colorMaker ?? StatesColorMaker(),
-        super(key: key ?? ValueKey(keyString));
+  }) : super(key: key ?? ValueKey(keyString));
 }
 
 abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends FormFieldBrick<I, V>>
     extends State<F> {
   FormUiUpdateCoordinator? formUiUpdateCoordinator;
   late final FocusNode focusNode;
+
   // Set<WidgetState>? _states;
 
   I? getInput();
@@ -152,7 +153,7 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
 
   bool _hasFormatterValidator() => widget.validateMode != ValidateModeBrick.noValidator;
 
-  // Color? makeColor() => widget.colorMaker.makeColor(context, _states);
+// Color? makeColor() => widget.colorMaker.makeColor(context, _states);
 }
 
 // RESTORATION PATTERN

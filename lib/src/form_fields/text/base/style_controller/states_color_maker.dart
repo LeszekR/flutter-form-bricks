@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../ui_params/ui_params.dart';
+import '../../../../ui_params/ui_params.dart';
 
 class StatesColorMaker {
   Color? makeColor(BuildContext context, Set<WidgetState>? states) {

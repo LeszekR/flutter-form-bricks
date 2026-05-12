@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/double_widget_states_controller/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/labelled_box.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/double_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/style_controller_kit.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
 
 abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditingValue, V> {
@@ -16,7 +17,9 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
   final TextFieldConfig textFieldConfig;
   final WidgetStatesController? statesController;
   final InputDecoration? inputDecoration;
-  final ErrorConfig errorConfig;
+  final ErrorPosition errorPosition;
+
+  // final ErrorConfig errorConfig;
   final TextFieldButtonConfig? textFieldButtonConfig;
   final double? height;
 
@@ -35,7 +38,8 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     this.width,
     this.statesController,
     this.inputDecoration,
-    this.errorConfig = const ErrorConfig(),
+    this.errorPosition = ErrorPosition.dynamicSpaceBelowField,
+    // this.errorBehaviour = const ErrorConfig(),
     this.textFieldButtonConfig,
     this.height,
     //
@@ -116,8 +120,6 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     List<Locale>? hintLocales,
   })  : assert((expands == true) != (maxLines != null || minLines != null,),
             'TextFieldBrick: when expands is true, both maxLines and minLines must be null'),
-        // assert((decorationBrick?.textFieldButtonConfig == null) == (decorationBrick?.buttonPosition == null),
-        //     'buttonConfig and buttonPosition must be declared together or both be null'),
         assert(
           (outerLabelConfig != null ? 1 : 0) +
                   (inputDecoration?.label != null ? 1 : 0) +
@@ -169,12 +171,6 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
         ),
         assert(textFieldButtonConfig?.syncStyleWithTextField == true ? statesController == null : true,
             'When syncStyleWithTextField is true, statesController must not be declared'),
-        // assert(height != null || (textFieldButtonConfig == null),
-        //     'TextField with textFieldButtonConfig must have its height declared'),
-        // assert(height != null || (outerLabelConfig == null),
-        //     'TextField with outerLabelConfig must have its height declared'),
-        // assert(height == null && textFieldButtonConfig == null && outerLabelConfig == null,
-        //     'height must be null when textFieldButtonConfig == null and outerLabelConfig == null'),
         textFieldConfig = TextFieldConfig(
           magnifierConfiguration: magnifierConfiguration,
           groupId: groupId,
@@ -253,14 +249,15 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   late double _width;
   late double _effectiveHeight;
   late final TextEditingController textEditingController;
+  late final StyleControllerKit? _styleControllerKit;
   late final WidgetStatesController _effectiveStatesController;
-  late final WidgetStatesController _textFieldStatesObserver;
+  late final WidgetStatesController? _textFieldStatesObserver;
+  late final StatesColorMaker _effectiveColorMaker;
   late final VoidCallback _statesListener;
-  late final TextFieldButtonConfig? _effectiveButtonConfig;
   late TextStyle _style;
   String? _errorText;
 
-  void onButtonTap();
+  void onButtonTap() => throw UnimplementedError('onButtonTap not implemented');
 
   ///  Inheriting fields can override this method to set their default width.
   double getWidth(AppSize appSize) => appSize.textFieldWidth;
@@ -288,21 +285,26 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         ? (_effectiveStatesController as DoubleWidgetStatesController).statesObserver
         : _effectiveStatesController;
 
+    _effectiveColorMaker = widget.colorMaker ?? StatesColorMaker();
+
+    if (widget.textFieldButtonConfig?.syncStyleWithTextField == true) {
+      _styleControllerKit = StyleControllerKit(
+        _effectiveStatesController as DoubleWidgetStatesController,
+        _effectiveColorMaker,
+      );
+    } else {
+      _styleControllerKit = null;
+    }
+
     // TODO this strips the field from flutter's restoration - implement restoration pattern as in comments at the end of this file
     setInput(formManager.getInitialInput(keyString));
     _errorText = formManager.getFieldError(keyString);
     super.initState();
 
-    _effectiveButtonConfig = widget.textFieldButtonConfig == null
-        ? null
-        : widget.textFieldButtonConfig!.syncStyleWithTextField == false
-            ? widget.textFieldButtonConfig
-            : widget.textFieldButtonConfig!
-                .copyWith(widgetStatesController: _effectiveStatesController as DoubleWidgetStatesController);
-
-    _statesListener = setStateInNextFrame;
-
-    _textFieldStatesObserver.addListener(_statesListener);
+    if (_textFieldStatesObserver != null) {
+      _statesListener = setStateInNextFrame;
+      _textFieldStatesObserver!.addListener(_statesListener);
+    }
   }
 
   @override
@@ -326,7 +328,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   void dispose() {
     if (widget.textFieldConfig.controller == null) textEditingController.dispose();
     if (widget.textFieldConfig.focusNode == null) focusNode.dispose();
-    _textFieldStatesObserver.removeListener(_statesListener);
+    _textFieldStatesObserver?.removeListener(_statesListener);
     _effectiveStatesController.dispose();
     super.dispose();
   }
@@ -349,13 +351,10 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
           width: _width,
           height: _effectiveHeight,
           fieldBody: textField,
-          errorConfig: widget.errorConfig,
+          // errorPosition: widget.errorPosition,
           outerLabelConfig: widget.outerLabelConfig,
-          buttonConfig: _effectiveButtonConfig,
-          doubleWidgetStatesController: _effectiveStatesController is DoubleWidgetStatesController
-              ? _effectiveStatesController as DoubleWidgetStatesController
-              : null,
-          statesColorMaker: widget.colorMaker,
+          buttonConfig: widget.textFieldButtonConfig,
+          styleControllerKit: _styleControllerKit,
           onButtonTap: onButtonTap,
         );
       },
@@ -366,7 +365,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     TextEditingController controller,
     InputDecoration decoration,
     TextStyle style,
-    WidgetStatesController statesController,
+    WidgetStatesController? statesController,
   ) {
     return TextField(
       groupId: widget.textFieldConfig.groupId,
@@ -453,8 +452,12 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   // TODO move helper methods to a singleton
 
   InputDecoration _makeInputDecoration(BuildContext context, Set<WidgetState>? states) {
-    final String? errText = widget.errorConfig.position == ErrorPosition.withTextField ? _errorText : null;
-    final Color? color = widget.colorMaker.makeColor(context, states);
+    final String? errText = widget.errorPosition == ErrorPosition.dynamicSpaceBelowField ||
+            widget.errorPosition == ErrorPosition.fixedSpaceBelowField
+        ? _errorText
+        : null;
+    // final String? errText = widget.errorBehaviour.position == ErrorPosition.withTextField ? _errorText : null;
+    final Color? color = _effectiveColorMaker.makeColor(context, states);
 
     InputDecoration? decoration = widget.textFieldConfig.decoration;
 

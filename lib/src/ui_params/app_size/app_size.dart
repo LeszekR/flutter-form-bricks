@@ -92,6 +92,7 @@ abstract class AppSize {
   double get spacerVerticalSmall;
   double get spacerVerticalMedium;
   double get spacerHorizontalSmallest;
+
   double get spacerHorizontalSmall;
   double get spacerHorizontalMedium;
 }

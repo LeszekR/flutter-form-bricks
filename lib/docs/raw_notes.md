@@ -37,4 +37,32 @@ TEXT FIELD BUTTON
   automatically as `DoubleWidgetStatesController` which will then sync both elements - the field and
   the button - color following their states. Since the states can be different tht
   `DoubleWidgetStatesController` uses priorities to present color of the most important state at the
-  moment - e.g. "error", "disabled" - get priority over "focused", "hovered", etc 
+  moment - e.g. "error", "disabled" - get priority over "focused", "hovered", etc
+
+ASSERTS
+
+Other than Flutter's practise to ignore params when they are irrelevant here numerous asserts guard
+against using not only contradictory but als redundant params. Initially it may be annoying but in
+the long run it reduces amount of debugging by preventing scenarios where params you declare seem
+not to work as expected - while they are actually redundant because of other params
+defining construction of given widget.  
+Example: `OuterLabelConfig.width` must not be declared when `OuterLabelConfig.side` is `Side.top` or
+`Side.bottom`. (Here because outer label placed over or below the text field must get its width from
+its parent Widget.)
+
+TEXTFIELDBRICK ADDED OUTER ELEMENTS HEIGHT
+
+Flutter offers no API to read actual Height of a `TextField`. Since `TextFieldBrick` under the hood
+actually creates a `TextField` it never knows the exact height of the field. But the height is
+necessary to correctly scale additional elements: `TextFieldButton` and outer label. The simplest,
+although not elegant workaround was to set the height of those elements manually.  
+The height you pass will be scaled with `AppSize.zoom` factor so it will follow zooming in and out
+of the UI.
+The correct ways to find out the height are
+
+- run the app with Flutter Dev Tools and read the actual height of the text field
+- if the outer label is placed on `Side.left` or `Side.right`set exactly the same height in
+  `OuterLabelConfig` .
+- set in your (or default) implementation of `AppSize.textFieldHeight` to the same height - this
+  will set `TextFieldButton` height (unless you set a different height in `TextFieldButtonConfig`)
+

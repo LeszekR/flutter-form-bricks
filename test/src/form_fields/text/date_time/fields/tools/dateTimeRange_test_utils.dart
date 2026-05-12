@@ -44,7 +44,7 @@ Future<TestSingleForm> prepDateTimeRangeTest(
             rangeKeyString: rangeKeyString,
             formManager: formManager,
             label: "Some range",
-            labelPosition: LabelPosition.topLeft,
+            side: LabelPosition.topLeft,
             currentDate: CurrentDate(),
             dateTimeLimits: dateTimeLimits,
             dateTimeRangeSpan: dateTimeRangeSpan,

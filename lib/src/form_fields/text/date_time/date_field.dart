@@ -50,7 +50,7 @@ class DateField extends TextFieldBrick<DateTime> {
     // TextFieldBrick
     super.width,
     super.inputDecoration,
-    super.errorConfig,
+    super.errorPosition,
     super.outerLabelConfig,
     //
     // DateField
@@ -157,15 +157,16 @@ class DateFieldState extends TextFieldStateBrick<DateTime, DateField> {
   @override
   DateTime? get defaultValue => null;
 
+  /// Overriding this method allows specialised fields to fix their default width.
   @override
   double getWidth(AppSize appSize) => appSize.dateFieldWidth;
 
-  @override
-  void onButtonTap() async {
-    DateTime? date = await DatePicker(widget.currentDate, datePickerConfig: widget.datePickerConfig).open(context);
-    if (date == null) return;
-
-    final String formattedDate = DateTimeUtils.dateFormat.format(date);
-    onEditingComplete(formattedDate.toTextEditingValue());
-  }
+  // @override
+  // void onButtonTap() async {
+  //   DateTime? date = await DatePicker(widget.currentDate, datePickerConfig: widget.datePickerConfig).open(context);
+  //   if (date == null) return;
+  //
+  //   final String formattedDate = DateTimeUtils.dateFormat.format(date);
+  //   onEditingComplete(formattedDate.toTextEditingValue());
+  // }
 }

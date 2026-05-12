@@ -1,36 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/double_widget_states_controller/double_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/style_controller_kit.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button.dart';
 
 class LabelledBox extends StatelessWidget {
   final Widget fieldBody;
-  final ErrorConfig errorConfig;
-  final OuterLabelConfig? outerLabelConfig;
-  final TextFieldButtonConfig? buttonConfig;
   final double? width;
   final double? height;
-  final DoubleWidgetStatesController? doubleWidgetStatesController;
-  final StatesColorMaker? statesColorMaker;
+  final OuterLabelConfig? outerLabelConfig;
+  final TextFieldButtonConfig? buttonConfig;
+  final StyleControllerKit? styleControllerKit;
   final VoidCallback? onButtonTap;
 
   const LabelledBox({
     super.key,
+    required this.fieldBody,
     this.width,
     this.height,
-    required this.fieldBody,
-    this.errorConfig = const ErrorConfig(),
     this.outerLabelConfig,
     this.buttonConfig,
-    this.doubleWidgetStatesController,
-    this.statesColorMaker,
+    this.styleControllerKit,
     this.onButtonTap,
-  });
+  }) :  assert(buttonConfig == null ? styleControllerKit == null : true,
+            'If buttonConfig is null styleControllerKit must be null');
 
   @override
   Widget build(BuildContext context) {
     AppSize appSize = UiParams.of(context).appSize;
-    double effectiveHeight = height ?? appSize.textFieldHeight;
+    double buttonHeight = height ?? appSize.textFieldHeight;
 
     final Widget bodyWithButton;
     if (buttonConfig == null) {
@@ -39,21 +36,19 @@ class LabelledBox extends StatelessWidget {
       bodyWithButton = _addButton(
         context: context,
         fieldBody: fieldBody,
-        height: effectiveHeight,
+        height: buttonHeight,
         buttonConfig: buttonConfig!,
         onButtonTap: onButtonTap!,
-        doubleWidgetStatesController: doubleWidgetStatesController,
-        statesColorMaker: statesColorMaker,
+        styleControllerKit: styleControllerKit,
       );
     }
 
     final Widget bodyWithLabel = _wrapWithOuterLabel(
       context: context,
       fieldBody: bodyWithButton,
-      height: effectiveHeight,
-      errorConfig: errorConfig,
       outerLabelConfig: outerLabelConfig,
     );
+
     double zoom = appSize.zoom;
     double buttonWidth = buttonConfig == null ? 0 : height!;
 
@@ -63,7 +58,8 @@ class LabelledBox extends StatelessWidget {
             ? 0
             : switch (outerLabelConfig!.side) {
                 Side.top || Side.bottom => 0,
-                Side.left || Side.right =>
+                Side.left ||
+                Side.right =>
                   (outerLabelConfig!.width! + UiParams.of(context).appSize.spacerHorizontalSmallest),
               };
 
@@ -79,18 +75,18 @@ class LabelledBox extends StatelessWidget {
     required double height,
     required TextFieldButtonConfig buttonConfig,
     required VoidCallback onButtonTap,
-    DoubleWidgetStatesController? doubleWidgetStatesController,
-    StatesColorMaker? statesColorMaker,
+    StyleControllerKit? styleControllerKit,
   }) {
     AppSize appSize = UiParams.of(context).appSize;
     double size = height * appSize.zoom;
 
+    TextFieldButtonConfig effectiveButtonConfig =
+        buttonConfig.size != null ? buttonConfig : buttonConfig.copyWith(size: size);
+
     TextFieldButton button = TextFieldButton(
-      buttonConfig: buttonConfig,
+      buttonConfig: effectiveButtonConfig,
       onTap: onButtonTap,
-      size: size,
-      doubleWidgetStatesController: doubleWidgetStatesController,
-      statesColorMaker: statesColorMaker,
+      styleControllerKit: styleControllerKit,
     );
 
     double padding = (buttonConfig.distanceFromTextField ?? appSize.buttonDistanceFromTextField) * appSize.zoom;
@@ -118,13 +114,11 @@ class LabelledBox extends StatelessWidget {
   static Widget _wrapWithOuterLabel({
     required BuildContext context,
     required Widget fieldBody,
-    required ErrorConfig errorConfig,
-    required double? height,
     OuterLabelConfig? outerLabelConfig,
   }) {
     if (outerLabelConfig == null) return fieldBody;
 
-    final Widget label = _makeOuterLabel(context, outerLabelConfig, height);
+    final Widget label = _makeOuterLabel(context, outerLabelConfig);
 
     final appSize = UiParams.of(context).appSize;
 
@@ -135,6 +129,7 @@ class LabelledBox extends StatelessWidget {
           crossAxisAlignment: _topOrBottomCrossAxisAlignment(outerLabelConfig),
           children: [
             label,
+            // TODO implement padding around outer label
             // SizedBox(height: appSize.spacerHorizontalSmallest),
             fieldBody,
           ],
@@ -184,7 +179,7 @@ class LabelledBox extends StatelessWidget {
     };
   }
 
-  static Widget _makeOuterLabel(BuildContext context, OuterLabelConfig outerLabelConfig, double? height) {
+  static Widget _makeOuterLabel(BuildContext context, OuterLabelConfig outerLabelConfig) {
     if (outerLabelConfig.labelWidget != null) {
       return outerLabelConfig.labelWidget!;
     }
