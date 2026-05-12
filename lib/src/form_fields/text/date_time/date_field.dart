@@ -162,11 +162,11 @@ class DateFieldState extends TextFieldStateBrick<DateTime, DateField> {
   double getWidth(AppSize appSize) => appSize.dateFieldWidth;
 
   // @override
-  // void onButtonTap() async {
-  //   DateTime? date = await DatePicker(widget.currentDate, datePickerConfig: widget.datePickerConfig).open(context);
-  //   if (date == null) return;
-  //
-  //   final String formattedDate = DateTimeUtils.dateFormat.format(date);
-  //   onEditingComplete(formattedDate.toTextEditingValue());
-  // }
+  void onButtonTap() async {
+    DateTime? date = await DatePicker(widget.currentDate, datePickerConfig: widget.datePickerConfig).open(context);
+    if (date == null) return;
+
+    final String formattedDate = DateTimeUtils.dateFormat.format(date);
+    onEditingComplete(formattedDate.toTextEditingValue());
+  }
 }

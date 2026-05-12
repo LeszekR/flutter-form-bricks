@@ -36,6 +36,11 @@ class DefaultAppColor extends AppColor {
   @override late final Color formFieldFillDisabled = greyLight;
   @override late final Color formFieldFillError = colorSchemeMain.errorContainer;
 
+  @override Color getFormFieldHovered() => Color.lerp(formFieldFillHovered, Colors.white, 0.95)!;
+  @override Color getFormFieldFocused() => Color.lerp(formFieldFillFocused, Colors.white, 0.95)!;
+  @override Color getFormFieldSelected() => Color.lerp(formFieldFillSelected, Colors.white, 0.95)!;
+  @override Color getFormFieldPressed() => Color.lerp(formFieldFillPressed, Colors.white, 0.95)!;
+  
   @override late final Color formFieldBorderOk = Colors.black;
   @override late final Color formFieldBorderHovered = Colors.black;
   @override late final Color formFieldBorderFocused = Colors.black;

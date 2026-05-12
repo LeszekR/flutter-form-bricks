@@ -45,6 +45,11 @@ abstract class AppColor {
   Color get formFieldBorderDisabled;
   Color get formFieldBorderError;
 
+  Color getFormFieldHovered();
+  Color getFormFieldSelected();
+  Color getFormFieldFocused();
+  Color getFormFieldPressed();
+
   // Buttons
   Color get buttonFontEnabled;
   Color get buttonFontDisabled;
