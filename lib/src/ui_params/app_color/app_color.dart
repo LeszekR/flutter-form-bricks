@@ -95,7 +95,9 @@ abstract class AppColor {
     };
   }
 
-  Color getBorderColor(Set<WidgetState> states) {
+  Color getBorderColor(Set<WidgetState>? states, Color defaultColor) {
+    if (states == null) return defaultColor;
+
     return switch (states) {
     _ when states.contains(WidgetState.disabled) => formFieldBorderDisabled,
     _ when states.contains(WidgetState.error) => formFieldBorderError,

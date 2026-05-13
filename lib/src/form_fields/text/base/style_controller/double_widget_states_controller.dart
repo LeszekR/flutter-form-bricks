@@ -4,8 +4,9 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/update_once_widget_states_controller.dart';
 
 class DoubleWidgetStatesController extends WidgetStatesController implements ValueListenable<Set<WidgetState>> {
+  // final WidgetStatesController statesObserver = UpdateOnceWidgetStatesController();
   final WidgetStatesController statesObserver = WidgetStatesController();
-  final UpdateOnceWidgetStatesController updateOnceStatesObserver = UpdateOnceWidgetStatesController();
+  final UpdateOnceWidgetStatesController updateOnceWidgetStatesController = UpdateOnceWidgetStatesController();
 
   final Set<WidgetState> _newState1 = {};
   final Set<WidgetState> _newState2 = {};
@@ -17,18 +18,20 @@ class DoubleWidgetStatesController extends WidgetStatesController implements Val
 
   DoubleWidgetStatesController() {
     statesObserver.addListener(() => setNewWidgetState(statesObserver));
-    updateOnceStatesObserver.addListener(() => setNewWidgetState(updateOnceStatesObserver));
+    updateOnceWidgetStatesController.addListener(() => setNewWidgetState(updateOnceWidgetStatesController));
   }
 
   // TODO check whether can't be simplified to only manipulating Set<WidgetState> of regular WidgetStatesController
   void setNewWidgetState(WidgetStatesController controller) {
+    if(controller.value.isEmpty) return;
+
     WidgetState? newState;
 
     if (controller == statesObserver) {
       _newState1.clear();
       _newState1.addAll(controller.value);
     }
-    if (controller == updateOnceStatesObserver) {
+    if (controller == updateOnceWidgetStatesController) {
       _newState2.clear();
       _newState2.addAll(controller.value);
     }
@@ -45,28 +48,38 @@ class DoubleWidgetStatesController extends WidgetStatesController implements Val
       scheduleUpdate(dummyState, false);
     } else {
       value.clear();
+      // for(WidgetState state in value) {
+      //   print('remove: ${state.toString()}');
+      //   update(state, false);
+      // }
+      value.addAll(_newValue);
+      // for(WidgetState state in value) {
+      //   print('add: ${state.toString()}');
+      //   update(state, true);
+      // }
+        print('controller value: ${value.toString()}');
       scheduleUpdate(newState, true);
     }
   }
 
-  WidgetState? extractDominantState(/*WidgetState? newState*/) {
+  WidgetState? extractDominantState() {
     WidgetState? newState;
     if (_newValue.contains(WidgetState.disabled)) {
       newState = WidgetState.disabled;
     } else if (_newValue.contains(WidgetState.error)) {
       newState = WidgetState.error;
-    } else if (_newValue.contains(WidgetState.focused) || _newValue.contains(WidgetState.pressed)) {
-      newState = WidgetState.focused;
     } else if (_newValue.contains(WidgetState.hovered)) {
       newState = WidgetState.hovered;
+    } else if (_newValue.contains(WidgetState.focused) || _newValue.contains(WidgetState.pressed)) {
+      newState = WidgetState.focused;
     }
     return newState;
   }
 
   void scheduleUpdate(WidgetState? newState, bool add) {
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+    // SchedulerBinding.instance.addPostFrameCallback((_) {
       super.update(newState!, add);
-    });
+    // });
   }
 }
 

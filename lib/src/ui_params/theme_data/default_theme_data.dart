@@ -162,13 +162,13 @@ class DefaultThemeData extends BricksThemeData {
       IconButtonThemeData(
         style: const ButtonStyle().copyWith(
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            shape: WidgetStatePropertyAll(
+            shape: WidgetStateProperty.resolveWith((Set<WidgetState> states) =>
               BottomBorderTopRoundedShape(
                 borderRadius: 3,
                 side: WidgetStateBorderSide.resolveWith(
                   (Set<WidgetState> states) => BorderSide(
-                    color: appColor.getBorderColor(states),
-                    width: appSize.getBorderWidth(states),
+                    color: appColor.getBorderColor(states, appColor.borderEnabled),
+                    width: appSize.getBorderWidth(states, appSize.borderWidth),
                   ),
                 ),
               ),

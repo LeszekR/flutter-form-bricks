@@ -451,13 +451,22 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   // TODO move helper methods to a singleton
 
+  Color? _lastColor;
+
   InputDecoration _makeInputDecoration(BuildContext context, Set<WidgetState>? states) {
     final String? errText = widget.errorPosition == ErrorPosition.dynamicSpaceBelowField ||
             widget.errorPosition == ErrorPosition.fixedSpaceBelowField
         ? _errorText
         : null;
     // final String? errText = widget.errorBehaviour.position == ErrorPosition.withTextField ? _errorText : null;
-    final Color? color = _effectiveColorMaker.makeColor(context, states);
+    Color? color;
+    // if (states == null || states.isEmpty) {
+    //   color = _lastColor;
+    // } else {
+      print('textField: ${_effectiveStatesController.value.toString()}');
+      color = _effectiveColorMaker.makeColor(context, states);
+    //   _lastColor = color;
+    // }
 
     InputDecoration? decoration = widget.textFieldConfig.decoration;
 

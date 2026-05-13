@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/decoration/bottom_border_top_rounded_shape.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/style_controller_kit.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/update_once_widget_states_controller.dart';
 
@@ -22,31 +23,39 @@ class TextFieldButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppSize appSize = UiParams.of(context).appSize;
-    double zoomedSize = buttonConfig.size ?? appSize.textFieldHeight  * appSize.zoom;
+    double zoomedSize = buttonConfig.size ?? appSize.textFieldHeight * appSize.zoom;
 
     if (styleControllerKit == null) {
       return _makeButton(context, zoomedSize, null);
     } else {
-      final WidgetStatesController statesNotifier =
-          styleControllerKit!.doubleWidgetStatesController as WidgetStatesController;
-      final UpdateOnceWidgetStatesController statesReceiver =
-          styleControllerKit!.doubleWidgetStatesController.updateOnceStatesObserver;
-
       return ValueListenableBuilder(
-          valueListenable: statesNotifier,
+          valueListenable: styleControllerKit!.doubleWidgetStatesController,
           builder: (context, states, _) {
             return _wrapWithStateDetectors(
               _makeButton(context, zoomedSize, states),
-              statesReceiver,
+              styleControllerKit!.doubleWidgetStatesController.updateOnceWidgetStatesController,
             );
           });
     }
   }
 
   SizedBox _makeButton(BuildContext context, double zoomedSize, Set<WidgetState>? states) {
+    print('button: ${states.toString()}');
+
+    UiParamsData uiParams = UiParams.of(context);
     ButtonStyle? effectiveStyle = buttonConfig.style ??
         IconButtonTheme.of(context).style?.copyWith(
-            backgroundColor: WidgetStatePropertyAll(styleControllerKit?.statesColorMaker.makeColor(context, states)));
+              backgroundColor: WidgetStatePropertyAll(styleControllerKit?.statesColorMaker.makeColor(context, states)),
+              shape: WidgetStatePropertyAll(
+                BottomBorderTopRoundedShape(
+                  borderRadius: 3,
+                  side: BorderSide(
+                    color: uiParams.appColor.getBorderColor(states, uiParams.appColor.borderEnabled),
+                    width: uiParams.appSize.getBorderWidth(states, uiParams.appSize.borderWidth),
+                  ),
+                ),
+              ),
+            );
 
     return SizedBox(
       width: zoomedSize,
@@ -88,6 +97,7 @@ class TextFieldButton extends StatelessWidget {
           // widget.receiverColorController.updateOnce(WidgetState.focused, true);
         },
         child: Focus(
+          focusNode: _focusNode,
           child: button,
         ),
       ),

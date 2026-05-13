@@ -32,6 +32,12 @@ class DefaultAppSize extends AppSize {
   @override late final double spacerHorizontalSmall =  8.0;
   @override late final double spacerHorizontalMedium =  16;
 
+  @override late final double borderWidth = zoom * 1;
+  @override late final double borderFocusedWidth = zoom * 2;
+  @override late final double borderErrorWidth = zoom * 2;
+
+  // USED? REMOVE?
+  // =========================================================
   @override late final double cornerRadius = 0;
   @override late final double appBarHeight = zoom * 34;
   @override late final double formBarHeight = zoom * 34;
@@ -39,8 +45,6 @@ class DefaultAppSize extends AppSize {
   @override late final double menuButtonWidth = zoom * 110;
   @override late final double tabHeight = zoom * 28;
   @override late final double tabWidth = zoom * 70;
-  @override late final double borderWidth = zoom * 0.5;
-  @override late final double borderErrorWidth = zoom * 1;
   @override late final BorderRadiusGeometry borderRadius = BorderRadius.zero;
   @override late final double tabBorderWidth = zoom * 1.5;
   @override late final double bottomPanelHeight = zoom * 120;
