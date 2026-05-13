@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/labelled_box.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/double_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/compound_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/style_controller_kit.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
 
@@ -15,7 +15,8 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
 
   // TODO docs for all my params added to flutter API
   final TextFieldConfig textFieldConfig;
-  final WidgetStatesController? statesController;
+
+  // final WidgetStatesController? statesController;
   final InputDecoration? inputDecoration;
   final ErrorPosition errorPosition;
 
@@ -36,7 +37,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     //
     // TextFieldBrick
     this.width,
-    this.statesController,
+    // this.statesController,
     this.inputDecoration,
     this.errorPosition = ErrorPosition.dynamicSpaceBelowField,
     // this.errorBehaviour = const ErrorConfig(),
@@ -61,7 +62,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     TextDirection? textDirection,
     bool readOnly = false,
     // bool autofocus, => FormData takes over initial focus in form
-    // MaterialStatesController? statesController, => replaced with statesObserver and statesNotifier
+    WidgetStatesController? statesController,
     String obscuringCharacter = '•',
     bool obscureText = false,
     bool? autocorrect,
@@ -250,8 +251,10 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   late double _effectiveHeight;
   late final TextEditingController textEditingController;
   late final StyleControllerKit? _styleControllerKit;
-  late final WidgetStatesController _effectiveStatesController;
-  late final WidgetStatesController? _textFieldStatesObserver;
+  final FocusNode _focusNode = FocusNode();
+
+  // late final WidgetStatesController _effectiveStatesController;
+  // late final WidgetStatesController? _textFieldStatesObserver;
   late final StatesColorMaker _effectiveColorMaker;
   late final VoidCallback _statesListener;
   late TextStyle _style;
@@ -273,23 +276,25 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   void initState() {
     textEditingController = widget.textFieldConfig.controller ?? TextEditingController();
 
-    _effectiveStatesController = widget.textFieldConfig.statesController != null
-        ? widget.textFieldConfig.statesController!
-        : widget.textFieldButtonConfig == null
-            ? WidgetStatesController()
-            : widget.textFieldButtonConfig!.syncStyleWithTextField
-                ? DoubleWidgetStatesController()
-                : WidgetStatesController();
-
-    _textFieldStatesObserver = _effectiveStatesController is DoubleWidgetStatesController
-        ? (_effectiveStatesController as DoubleWidgetStatesController).statesObserver
-        : _effectiveStatesController;
+    // _effectiveStatesController = widget.textFieldConfig.statesController != null
+    //     ? widget.textFieldConfig.statesController!
+    //     : widget.textFieldButtonConfig == null
+    //         ? WidgetStatesController()
+    //         : widget.textFieldButtonConfig!.syncStyleWithTextField
+    //             ? DoubleWidgetStatesController()
+    //             // ? DoubleWidgetStatesController()
+    //             : WidgetStatesController();
+    //
+    // _textFieldStatesObserver = _effectiveStatesController is DoubleWidgetStatesController
+    //     ? (_effectiveStatesController as DoubleWidgetStatesController).statesObserver
+    //     : _effectiveStatesController;
 
     _effectiveColorMaker = widget.colorMaker ?? StatesColorMaker();
 
     if (widget.textFieldButtonConfig?.syncStyleWithTextField == true) {
+      final CompoundWidgetStatesController compoundStatesController = CompoundWidgetStatesController();
       _styleControllerKit = StyleControllerKit(
-        _effectiveStatesController as DoubleWidgetStatesController,
+        compoundStatesController,
         _effectiveColorMaker,
       );
     } else {
@@ -301,10 +306,10 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     _errorText = formManager.getFieldError(keyString);
     super.initState();
 
-    if (_textFieldStatesObserver != null) {
-      _statesListener = setStateInNextFrame;
-      _textFieldStatesObserver!.addListener(_statesListener);
-    }
+    // if (_textFieldStatesObserver != null) {
+    //   _statesListener = setStateInNextFrame;
+    //   _textFieldStatesObserver!.addListener(_statesListener);
+    // }
   }
 
   @override
@@ -327,24 +332,33 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   @override
   void dispose() {
     if (widget.textFieldConfig.controller == null) textEditingController.dispose();
-    if (widget.textFieldConfig.focusNode == null) focusNode.dispose();
-    _textFieldStatesObserver?.removeListener(_statesListener);
-    _effectiveStatesController.dispose();
+    // _textFieldStatesObserver?.removeListener(_statesListener);
+    _styleControllerKit?.compoundWidgetStatesController.dispose();
     super.dispose();
   }
 
   @override
   Widget buildFieldWidget(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: _effectiveStatesController,
-      builder: (context, states, _) {
-        final decoration = _makeInputDecoration(context, states);
+    // return ValueListenableBuilder(
+    //   valueListenable: _effectiveStatesController,
+    //   builder: (context, states, _) {
+    return AnimatedBuilder(
+      //  TU PRZERWAŁEM make option with no styleControllerKit for fields without synced button
+      animation: _styleControllerKit!.compoundWidgetStatesController,
+      builder: (context, _) {
+        print('textField: ${_styleControllerKit!.compoundWidgetStatesController.states}');
+        final Set<WidgetState>? states = _styleControllerKit!.compoundWidgetStatesController.states;
 
-        final TextField textField = _makeTextField(
-          textEditingController,
-          decoration,
-          _style,
-          _textFieldStatesObserver,
+        final decoration = _makeInputDecoration(context, _styleControllerKit?.compoundWidgetStatesController);
+
+        final MouseRegion textField = CompoundWidgetStatesController.wrapWithStateDetectors(
+          _styleControllerKit!.compoundWidgetStatesController,
+          _focusNode,
+          _makeTextField(
+            textEditingController,
+            decoration,
+            _style,
+          ),
         );
 
         return LabelledBox(
@@ -365,8 +379,13 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     TextEditingController controller,
     InputDecoration decoration,
     TextStyle style,
-    WidgetStatesController? statesController,
   ) {
+    // TextField _makeTextField(
+    //   TextEditingController controller,
+    //   InputDecoration decoration,
+    //   TextStyle style,
+    //   WidgetStatesController? statesController,
+    // ) {
     return TextField(
       groupId: widget.textFieldConfig.groupId,
       controller: controller,
@@ -385,7 +404,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       // Deprecated: toolbarOptions - not used
       showCursor: widget.textFieldConfig.showCursor,
       // autofocus: widget.config.autofocus,
-      statesController: statesController,
+      statesController: widget.textFieldConfig.statesController,
       obscuringCharacter: widget.textFieldConfig.obscuringCharacter,
       obscureText: widget.textFieldConfig.obscureText,
       autocorrect: widget.textFieldConfig.autocorrect,
@@ -453,20 +472,21 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   Color? _lastColor;
 
-  InputDecoration _makeInputDecoration(BuildContext context, Set<WidgetState>? states) {
-    final String? errText = widget.errorPosition == ErrorPosition.dynamicSpaceBelowField ||
-            widget.errorPosition == ErrorPosition.fixedSpaceBelowField
-        ? _errorText
-        : null;
+  InputDecoration _makeInputDecoration(BuildContext context, CompoundWidgetStatesController? compoundStatesController) {
+    final bool errorWithFieldDynamic = widget.errorPosition == ErrorPosition.dynamicSpaceBelowField;
+    final bool errorWithFieldStatic = widget.errorPosition == ErrorPosition.fixedSpaceBelowField;
+
+    final String? errText = errorWithFieldDynamic || errorWithFieldStatic ? _errorText : null;
     // final String? errText = widget.errorBehaviour.position == ErrorPosition.withTextField ? _errorText : null;
     Color? color;
     // if (states == null || states.isEmpty) {
     //   color = _lastColor;
     // } else {
-      print('textField: ${_effectiveStatesController.value.toString()}');
-      color = _effectiveColorMaker.makeColor(context, states);
+    // print('textField: ${_compoundStatesController.value.toString()}');
+    color = _effectiveColorMaker.makeColor(context, compoundStatesController?.states);
     //   _lastColor = color;
     // }
+    compoundStatesController?.setFieldError(_errorText != null && _errorText!.isNotEmpty);
 
     InputDecoration? decoration = widget.textFieldConfig.decoration;
 
