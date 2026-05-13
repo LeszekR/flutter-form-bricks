@@ -45,6 +45,7 @@ class DoubleWidgetStatesController extends WidgetStatesController implements Val
       scheduleUpdate(dummyState, false);
     } else {
       value.clear();
+      scheduleUpdate(WidgetState.hovered, true);
       scheduleUpdate(newState, true);
     }
   }
