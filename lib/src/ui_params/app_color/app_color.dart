@@ -6,6 +6,46 @@ abstract class AppColor {
   // Base scheme
   ColorScheme get colorSchemeMain;
 
+  // WidgetStateColor fillColor(Set<WidgetState> states) {
+  //   final stateColor = makeColor(states);
+  //   return WidgetStateColor.resolveWith((_) => stateColor);
+  // }
+
+  Color getFillColor(Set<WidgetState> states) {
+    return switch (states) {
+      _ when states.contains(WidgetState.disabled) => formFieldFillDisabled,
+      _ when states.contains(WidgetState.error) => formFieldFillError,
+      _ when states.contains(WidgetState.selected) => formFieldFillSelected,
+      _ when states.contains(WidgetState.focused) => formFieldFillFocused,
+      _ when states.contains(WidgetState.hovered) => formFieldFillHovered,
+      _ when states.contains(WidgetState.pressed) => formFieldFillPressed,
+      _ => formFieldFillOk,
+    };
+  }
+
+  Color getBorderColor(Set<WidgetState>? states, Color defaultColor) {
+    if (states == null) return defaultColor;
+
+    return switch (states) {
+      _ when states.contains(WidgetState.disabled) => formFieldBorderDisabled,
+      _ when states.contains(WidgetState.error) => formFieldBorderError,
+      _ when states.contains(WidgetState.selected) => formFieldBorderSelected,
+      _ when states.contains(WidgetState.focused) => formFieldBorderFocused,
+      _ when states.contains(WidgetState.hovered) => formFieldBorderHovered,
+      _ when states.contains(WidgetState.pressed) => formFieldBorderPressed,
+      _ => formFieldBorderOk,
+    };
+  }
+
+  WidgetStateColor textColor(Set<WidgetState> states) {
+    final stateColor = switch (states) {
+      _ when states.contains(WidgetState.disabled) => tabFontDisabled,
+      _ when states.contains(WidgetState.error) => colorSchemeMain.onError,
+      _ => tabFontEnabled,
+    };
+    return WidgetStateColor.resolveWith((_) => stateColor);
+  }
+
   // Base palette
   final Color seedColor;
   Color get white;
@@ -78,45 +118,6 @@ abstract class AppColor {
   // Text
   Color get textError;
 
-  // WidgetStateColor fillColor(Set<WidgetState> states) {
-  //   final stateColor = makeColor(states);
-  //   return WidgetStateColor.resolveWith((_) => stateColor);
-  // }
-
-  Color getFillColor(Set<WidgetState> states) {
-    return switch (states) {
-    _ when states.contains(WidgetState.disabled) => formFieldFillDisabled,
-    _ when states.contains(WidgetState.error) => formFieldFillError,
-    _ when states.contains(WidgetState.focused) => formFieldFillFocused,
-    _ when states.contains(WidgetState.hovered) => formFieldFillHovered,
-    _ when states.contains(WidgetState.pressed) => formFieldFillPressed,
-    _ when states.contains(WidgetState.selected) => formFieldFillSelected,
-    _ => formFieldFillOk,
-    };
-  }
-
-  Color getBorderColor(Set<WidgetState>? states, Color defaultColor) {
-    if (states == null) return defaultColor;
-
-    return switch (states) {
-    _ when states.contains(WidgetState.disabled) => formFieldBorderDisabled,
-    _ when states.contains(WidgetState.error) => formFieldBorderError,
-    _ when states.contains(WidgetState.focused) => formFieldBorderFocused,
-    _ when states.contains(WidgetState.hovered) => formFieldBorderHovered,
-    _ when states.contains(WidgetState.pressed) => formFieldBorderPressed,
-    _ when states.contains(WidgetState.selected) => formFieldBorderSelected,
-    _ => formFieldBorderOk,
-    };
-  }
-
-  WidgetStateColor textColor(Set<WidgetState> states) {
-    final stateColor = switch (states) {
-    _ when states.contains(WidgetState.disabled) => tabFontDisabled,
-    _ when states.contains(WidgetState.error) => colorSchemeMain.onError,
-    _ => tabFontEnabled,
-    };
-    return WidgetStateColor.resolveWith((_) => stateColor);
-  }
 }
 
 

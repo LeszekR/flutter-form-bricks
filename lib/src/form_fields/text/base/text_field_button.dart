@@ -40,7 +40,7 @@ class TextFieldButton extends StatelessWidget {
   }
 
   SizedBox _makeButton(BuildContext context, double zoomedSize, Set<WidgetState>? states) {
-    print('button: ${states.toString()}');
+    print('button: ${styleControllerKit?.doubleWidgetStatesController.value.toString()}');
 
     UiParamsData uiParams = UiParams.of(context);
     ButtonStyle? effectiveStyle = buttonConfig.style ??
@@ -72,11 +72,15 @@ class TextFieldButton extends StatelessWidget {
 
   MouseRegion _wrapWithStateDetectors(Widget button, UpdateOnceWidgetStatesController statesReceiver) {
     return MouseRegion(
-      onEnter: (event) {
+      onHover:  (event) {
         statesReceiver.updateOnce(WidgetState.hovered, true);
+      },
+      onEnter: (event) {
+        statesReceiver.updateOnce(WidgetState.selected, true);
       },
       onExit: (event) {
         statesReceiver.updateOnce(WidgetState.hovered, false);
+        statesReceiver.updateOnce(WidgetState.selected, false);
       },
       child: GestureDetector(
         onTapDown: (_) {

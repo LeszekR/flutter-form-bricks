@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/update_once_widget_states_controller.dart';
 
 class DoubleWidgetStatesController extends WidgetStatesController implements ValueListenable<Set<WidgetState>> {
@@ -23,22 +22,25 @@ class DoubleWidgetStatesController extends WidgetStatesController implements Val
 
   // TODO check whether can't be simplified to only manipulating Set<WidgetState> of regular WidgetStatesController
   void setNewWidgetState(WidgetStatesController controller) {
-    if(controller.value.isEmpty) return;
+    if (controller.value.isEmpty) return;
 
     WidgetState? newState;
 
     if (controller == statesObserver) {
       _newState1.clear();
       _newState1.addAll(controller.value);
+      print('statesObserver add: ${controller.value.toString()}');
     }
     if (controller == updateOnceWidgetStatesController) {
       _newState2.clear();
       _newState2.addAll(controller.value);
+      print('updateOnceStatesController add: ${controller.value.toString()}');
     }
 
     _newValue.clear();
     _newValue.addAll(_newState1);
     _newValue.addAll(_newState2);
+    print('_newValue states: ${controller.value.toString()}');
 
     newState = extractDominantState();
 
@@ -47,19 +49,22 @@ class DoubleWidgetStatesController extends WidgetStatesController implements Val
       value.add(dummyState);
       scheduleUpdate(dummyState, false);
     } else {
-      value.clear();
-      // for(WidgetState state in value) {
-      //   print('remove: ${state.toString()}');
-      //   update(state, false);
-      // }
-      value.addAll(_newValue);
+      // value.clear();
+      for (WidgetState state in value) {
+        print('remove: ${state.toString()}');
+        update(state, false);
+      }
+      // value.addAll(_newValue);
       // for(WidgetState state in value) {
       //   print('add: ${state.toString()}');
       //   update(state, true);
       // }
-        print('controller value: ${value.toString()}');
+      value.add(newState);
+      print('newState: ${newState.toString()}');
+      print('controller before: ${value.toString()}');
       scheduleUpdate(newState, true);
     }
+    print('controller after: ${value.toString()}');
   }
 
   WidgetState? extractDominantState() {
@@ -78,8 +83,7 @@ class DoubleWidgetStatesController extends WidgetStatesController implements Val
 
   void scheduleUpdate(WidgetState? newState, bool add) {
     // SchedulerBinding.instance.addPostFrameCallback((_) {
-      super.update(newState!, add);
+    super.update(newState!, add);
     // });
   }
 }
-

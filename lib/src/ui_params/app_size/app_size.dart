@@ -11,11 +11,11 @@ abstract class AppSize {
 
     return switch (states) {
       _ when states.contains(WidgetState.disabled) => borderWidth,
+      _ when states.contains(WidgetState.error) => borderErrorWidth,
+      _ when states.contains(WidgetState.selected) => borderFocusedWidth,
       _ when states.contains(WidgetState.focused) => borderFocusedWidth,
       _ when states.contains(WidgetState.hovered) => borderWidth,
       _ when states.contains(WidgetState.pressed) => borderFocusedWidth,
-      _ when states.contains(WidgetState.selected) => borderFocusedWidth,
-      _ when states.contains(WidgetState.error) => borderErrorWidth,
       _ => borderWidth,
     };
   }

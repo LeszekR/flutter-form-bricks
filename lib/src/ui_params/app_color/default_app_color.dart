@@ -36,11 +36,31 @@ class DefaultAppColor extends AppColor {
   @override late final Color formFieldFillDisabled = greyLight;
   @override late final Color formFieldFillError = colorSchemeMain.errorContainer;
 
-  @override Color getFormFieldHovered() => Color.lerp(formFieldFillHovered, Colors.white, 0.95)!;
-  @override Color getFormFieldFocused() => Color.lerp(formFieldFillFocused, Colors.white, 0.95)!;
-  @override Color getFormFieldSelected() => Color.lerp(formFieldFillSelected, Colors.white, 0.95)!;
-  @override Color getFormFieldPressed() => Color.lerp(formFieldFillPressed, Colors.white, 0.95)!;
-  
+  // @override Color getFormFieldHovered() => Color.lerp(formFieldFillHovered, Colors.white, 0.95)!;
+  // @override Color getFormFieldFocused() => Color.lerp(formFieldFillFocused, Colors.white, 0.95)!;
+  // @override Color getFormFieldSelected() => Color.lerp(formFieldFillSelected, Colors.white, 0.95)!;
+  // @override Color getFormFieldPressed() => Color.lerp(formFieldFillPressed, Colors.white, 0.95)!;
+
+  @override Color getFormFieldHovered() => _lerp('formFieldFillHovered',formFieldFillHovered, Colors.white, 0.10);
+  @override Color getFormFieldFocused() => _lerp('formFieldFillFocused', formFieldFillFocused, Colors.white, 0.80);
+  @override Color getFormFieldSelected() => _lerp('formFieldFillSelected', formFieldFillSelected, formFieldFillSelected, 0.70);
+  @override Color getFormFieldPressed() => _lerp('formFieldFillPressed', formFieldFillPressed, formFieldFillPressed, 0.70);
+  // @override Color getFormFieldHovered() => _lerp('formFieldFillHovered',formFieldFillHovered, Colors.white, 0.20);
+  // @override Color getFormFieldFocused() => _lerp('formFieldFillFocused', formFieldFillFocused, Colors.white, 0.20);
+  // @override Color getFormFieldSelected() => _lerp('formFieldFillSelected', formFieldFillSelected, Colors.white, 0.20);
+  // @override Color getFormFieldPressed() => _lerp('formFieldFillPressed', formFieldFillPressed, Colors.white, 0.20);
+
+  Color _lerp(String name, Color from, Color to, double factor) {
+    Color? color = _lerpMap[name];
+    if (color == null) {
+      color = Color.lerp(from,to, factor)!;
+    }
+    _lerpMap[name] = color;
+    return color;
+  }
+
+  Map<String, Color> _lerpMap = {};
+
   @override late final Color formFieldBorderOk = Colors.black;
   @override late final Color formFieldBorderHovered = Colors.black;
   @override late final Color formFieldBorderFocused = Colors.black;
