@@ -35,7 +35,6 @@ class TimeField extends TextFieldBrick<DateTime> {
     // FormFieldBrick
     required super.keyString,
     required super.formManager,
-    super.colorMaker,
     super.statesController,
     //
     // TextFieldBrick

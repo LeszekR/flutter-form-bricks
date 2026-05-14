@@ -23,7 +23,6 @@ class PlainTextField extends TextFieldBrick<String> {
     required super.keyString,
     required super.formManager,
     required super.validateMode,
-    super.colorMaker,
     super.statesController,
     //
     // BrickTextField

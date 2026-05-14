@@ -8,7 +8,6 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
   final String keyString;
 
   final FormManager formManager;
-  final StatesColorMaker? colorMaker;
 
   // final WidgetStatesController? statesController;
   final ValueChanged<I>? onChanged;
@@ -26,7 +25,6 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
     required this.validateMode,
     this.label,
     this.outerLabelConfig,
-    this.colorMaker,
     // TODO verify / test / fix passing-using ststesObserver - note: TextFieldBrick costructs it INSIDE - bug?
     // this.statesController,
     this.onChanged,

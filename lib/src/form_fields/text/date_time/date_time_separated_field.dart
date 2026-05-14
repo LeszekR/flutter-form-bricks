@@ -77,7 +77,6 @@ class DateTimeSeparatedFieldDescriptor extends FormFieldDescriptor<TextEditingVa
 class DateTimeSeparatedField extends StatelessWidget {
   final String keyString;
   final FormManager formManager;
-  final StatesColorMaker colorMaker;
   final OuterLabelConfig? outerLabelConfig;
   final double? dateWidth;
   final double? timeWidth;
@@ -102,7 +101,6 @@ class DateTimeSeparatedField extends StatelessWidget {
     // FormFieldBrick
     required this.keyString,
     required this.formManager,
-    StatesColorMaker? colorMaker,
     this.outerLabelConfig,
     //
     // TextFieldBrick
@@ -215,7 +213,6 @@ class DateTimeSeparatedField extends StatelessWidget {
             'When noDatePicker == true then datePickerButtonConfig and datePickerConfig must be null or not declared'),
         assert(withTimePicker ? (timePickerButtonConfig == null && timePickerConfig == null) : true,
             'When noTimePicker == true then timePickerButtonConfig and timePickerConfig must be null or not declared'),
-        this.colorMaker = colorMaker ?? StatesColorMaker(),
         dateTextFieldConfig = TextFieldConfig(
           // Flutter TextField
           magnifierConfiguration: magnifierConfiguration,
@@ -397,7 +394,6 @@ class DateTimeSeparatedField extends StatelessWidget {
       // FormFieldBrick
       keyString: DateTimeUtils.makeDateKeyString(keyString),
       formManager: formManager,
-      colorMaker: colorMaker,
       //
       // TextFieldBrick
       width: dateWidth,
@@ -471,7 +467,6 @@ class DateTimeSeparatedField extends StatelessWidget {
       // FormFieldBrick
       keyString: DateTimeUtils.makeTimeKeyString(keyString),
       formManager: formManager,
-      colorMaker: colorMaker,
       //
       // TextFieldBrick
       width: timeWidth,

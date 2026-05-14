@@ -7,7 +7,6 @@ import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/labelled_box.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/compound_widget_states_controller.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/style_controller_kit.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
 
 abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditingValue, V> {
@@ -17,8 +16,6 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
   final TextFieldConfig textFieldConfig;
   final InputDecoration? inputDecoration;
   final ErrorPosition errorPosition;
-
-  // final ErrorConfig errorConfig;
   final TextFieldButtonConfig? textFieldButtonConfig;
   final double? height;
 
@@ -29,15 +26,12 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     required super.keyString,
     required super.formManager,
     required super.validateMode,
-    super.colorMaker,
-    // super.statesController,
     super.outerLabelConfig,
     //
     // TextFieldBrick
     this.width,
     this.inputDecoration,
     this.errorPosition = ErrorPosition.dynamicSpaceBelowField,
-    // this.errorBehaviour = const ErrorConfig(),
     this.textFieldButtonConfig,
     this.height,
     //
@@ -250,8 +244,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   late double _width;
   late double _height;
   late TextStyle _style;
-  late final StatesColorMaker _colorMaker;
-  late final StyleControllerKit? _styleControllerKit;
+  late final CompoundWidgetStatesController? _compoundWidgetStatesController;
   final FocusNode _focusNode = FocusNode();
   String? _errorText;
 
@@ -271,16 +264,10 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   void initState() {
     textEditingController = widget.textFieldConfig.controller ?? TextEditingController();
 
-    _colorMaker = widget.colorMaker ?? StatesColorMaker();
-
     if (widget.textFieldButtonConfig?.syncStyleWithTextField == true) {
-      final CompoundWidgetStatesController compoundStatesController = CompoundWidgetStatesController();
-      _styleControllerKit = StyleControllerKit(
-        compoundStatesController,
-        _colorMaker,
-      );
+      _compoundWidgetStatesController = CompoundWidgetStatesController();
     } else {
-      _styleControllerKit = null;
+      _compoundWidgetStatesController = null;
     }
 
     // TODO this strips the field from flutter's restoration - implement restoration pattern as in comments at the end of this file
@@ -309,16 +296,16 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   @override
   void dispose() {
     if (widget.textFieldConfig.controller == null) textEditingController.dispose();
-    _styleControllerKit?.compoundWidgetStatesController.dispose();
+    _compoundWidgetStatesController?.dispose();
     super.dispose();
   }
 
   @override
   Widget buildFieldWidget(BuildContext context) {
-    if (_styleControllerKit == null) {
+    if (_compoundWidgetStatesController == null) {
       final decoration = _makeInputDecoration(context, null);
 
-      final TextField stateNotifyingTextField = _makeTextField(
+      final TextField textField = _makeTextField(
         textEditingController,
         decoration,
         _style,
@@ -327,20 +314,18 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       return LabelledBox(
         width: _width,
         height: _height,
-        fieldBody: stateNotifyingTextField,
+        fieldBody: textField,
         outerLabelConfig: widget.outerLabelConfig,
         buttonConfig: widget.textFieldButtonConfig,
-        styleControllerKit: _styleControllerKit,
+        compoundWidgetStatesController: _compoundWidgetStatesController,
         onButtonTap: onButtonTap,
       );
     } else {
-      var compoundWidgetStatesController = _styleControllerKit!.compoundWidgetStatesController;
+      var compoundWidgetStatesController = _compoundWidgetStatesController!;
 
       return AnimatedBuilder(
-        //  TU PRZERWAŁEM TODO make option with no styleControllerKit for fields without synced button
         animation: compoundWidgetStatesController,
         builder: (context, _) {
-          // print('textField: ${_styleControllerKit!.compoundWidgetStatesController.states}');
           final decoration = _makeInputDecoration(context, compoundWidgetStatesController);
 
           final MouseRegion stateNotifyingTextField = CompoundWidgetStatesController.wrapWithStateDetectors(
@@ -355,7 +340,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
             fieldBody: stateNotifyingTextField,
             outerLabelConfig: widget.outerLabelConfig,
             buttonConfig: widget.textFieldButtonConfig,
-            styleControllerKit: _styleControllerKit,
+            compoundWidgetStatesController: _compoundWidgetStatesController,
             onButtonTap: onButtonTap,
           );
         },
@@ -461,7 +446,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     // TODO support errorWidget
     final TextStyle? errorStyle = showErrorBelowText ? null : TextStyle(fontSize: 0);
 
-    Color? color = _colorMaker.makeColor(context, compoundStatesController?.states);
+    Color? color = UiParams.of(context).appColor.getFillColor(compoundStatesController?.states);
     compoundStatesController?.setFieldError(_errorText != null && _errorText!.isNotEmpty);
 
     InputDecoration? decoration = widget.textFieldConfig.decoration;

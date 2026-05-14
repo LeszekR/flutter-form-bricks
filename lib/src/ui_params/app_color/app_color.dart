@@ -6,19 +6,20 @@ abstract class AppColor {
   // Base scheme
   ColorScheme get colorSchemeMain;
 
-  // WidgetStateColor fillColor(Set<WidgetState> states) {
-  //   final stateColor = makeColor(states);
-  //   return WidgetStateColor.resolveWith((_) => stateColor);
-  // }
+  Color getFillColor(Set<WidgetState>? states) {
+    if (states == null) return formFieldFillOk;
 
-  Color getFillColor(Set<WidgetState> states) {
     return switch (states) {
       _ when states.contains(WidgetState.disabled) => formFieldFillDisabled,
       _ when states.contains(WidgetState.error) => formFieldFillError,
-      _ when states.contains(WidgetState.selected) => formFieldFillSelected,
-      _ when states.contains(WidgetState.focused) => formFieldFillFocused,
-      _ when states.contains(WidgetState.hovered) => formFieldFillHovered,
-      _ when states.contains(WidgetState.pressed) => formFieldFillPressed,
+      _ when states.contains(WidgetState.focused) => getFormFieldFocused(),
+      _ when states.contains(WidgetState.hovered) => getFormFieldHovered(),
+      _ when states.contains(WidgetState.pressed) => getFormFieldPressed(),
+      _ when states.contains(WidgetState.selected) => getFormFieldSelected(),
+      // _ when states.contains(WidgetState.selected) => formFieldFillSelected,
+      // _ when states.contains(WidgetState.focused) => formFieldFillFocused,
+      // _ when states.contains(WidgetState.hovered) => formFieldFillHovered,
+      // _ when states.contains(WidgetState.pressed) => formFieldFillPressed,
       _ => formFieldFillOk,
     };
   }

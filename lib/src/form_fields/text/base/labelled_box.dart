@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/style_controller_kit.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/compound_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button.dart';
 
 class LabelledBox extends StatelessWidget {
@@ -9,7 +9,7 @@ class LabelledBox extends StatelessWidget {
   final double? height;
   final OuterLabelConfig? outerLabelConfig;
   final TextFieldButtonConfig? buttonConfig;
-  final StyleControllerKit? styleControllerKit;
+  final CompoundWidgetStatesController? compoundWidgetStatesController;
   final VoidCallback? onButtonTap;
 
   const LabelledBox({
@@ -19,9 +19,9 @@ class LabelledBox extends StatelessWidget {
     this.height,
     this.outerLabelConfig,
     this.buttonConfig,
-    this.styleControllerKit,
+    this.compoundWidgetStatesController,
     this.onButtonTap,
-  }) :  assert(buttonConfig == null ? styleControllerKit == null : true,
+  }) : assert(buttonConfig == null ? compoundWidgetStatesController == null : true,
             'If buttonConfig is null styleControllerKit must be null');
 
   @override
@@ -39,7 +39,7 @@ class LabelledBox extends StatelessWidget {
         height: buttonHeight,
         buttonConfig: buttonConfig!,
         onButtonTap: onButtonTap!,
-        styleControllerKit: styleControllerKit,
+        compoundWidgetStatesController: compoundWidgetStatesController,
       );
     }
 
@@ -75,7 +75,7 @@ class LabelledBox extends StatelessWidget {
     required double height,
     required TextFieldButtonConfig buttonConfig,
     required VoidCallback onButtonTap,
-    StyleControllerKit? styleControllerKit,
+    CompoundWidgetStatesController? compoundWidgetStatesController,
   }) {
     AppSize appSize = UiParams.of(context).appSize;
     double size = height * appSize.zoom;
@@ -86,7 +86,7 @@ class LabelledBox extends StatelessWidget {
     TextFieldButton button = TextFieldButton(
       buttonConfig: effectiveButtonConfig,
       onTap: onButtonTap,
-      styleControllerKit: styleControllerKit,
+      compoundWidgetStatesController: compoundWidgetStatesController,
     );
 
     double padding = (buttonConfig.distanceFromTextField ?? appSize.buttonDistanceFromTextField) * appSize.zoom;
