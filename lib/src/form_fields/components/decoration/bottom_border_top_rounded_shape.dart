@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 
 class BottomBorderTopRoundedShape extends OutlinedBorder {
-  final double borderRadius;
+  final double radiusTopLeft;
+  final double radiusTopRight;
+  final double radiusBottomLeft;
+  final double radiusBottomRight;
 
   const BottomBorderTopRoundedShape({
     super.side = const BorderSide(),
-    this.borderRadius = 4,
+    this.radiusTopLeft = 0,
+    this.radiusTopRight = 0,
+    this.radiusBottomLeft = 0,
+    this.radiusBottomRight = 0,
   });
 
   BorderRadius get _radius => BorderRadius.only(
-    topLeft: Radius.circular(borderRadius),
-    topRight: Radius.circular(borderRadius),
+    topLeft: Radius.circular(radiusTopLeft),
+    topRight: Radius.circular(radiusTopRight),
+    bottomLeft: Radius.circular(radiusBottomLeft),
+    bottomRight: Radius.circular(radiusBottomRight),
   );
 
   @override
@@ -53,12 +61,18 @@ class BottomBorderTopRoundedShape extends OutlinedBorder {
   @override
   BottomBorderTopRoundedShape copyWith({
     BorderSide? side,
-    double? borderRadius,
+    double? radiusTopLeft,
+    double? radiusTopRight,
+    double? radiusBottomLeft,
+    double? radiusBottomRight,
     Color? color,
   }) {
     return BottomBorderTopRoundedShape(
       side: side ?? this.side,
-      borderRadius: borderRadius ?? this.borderRadius,
+      radiusTopLeft: radiusTopLeft ?? this.radiusTopLeft,
+      radiusTopRight: radiusTopRight ?? this.radiusTopRight,
+      radiusBottomLeft: radiusBottomLeft ?? this.radiusBottomLeft,
+      radiusBottomRight: radiusBottomRight ?? this.radiusBottomRight,
     );
   }
 
@@ -66,7 +80,10 @@ class BottomBorderTopRoundedShape extends OutlinedBorder {
   ShapeBorder scale(double t) {
     return BottomBorderTopRoundedShape(
       side: side.scale(t),
-      borderRadius: borderRadius * t,
+      radiusTopLeft: radiusTopLeft * t,
+      radiusTopRight: radiusTopRight * t,
+      radiusBottomLeft: radiusBottomLeft * t,
+      radiusBottomRight: radiusBottomRight * t,
     );
   }
 }

@@ -4,9 +4,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/decoration/bottom_border_top_rounded_input_border.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/compound_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/labelled_box.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/compound_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
 
 abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditingValue, V> {
@@ -446,6 +447,9 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     // TODO support errorWidget
     final TextStyle? errorStyle = showErrorBelowText ? null : TextStyle(fontSize: 0);
 
+    InputBorder? border =
+        widget.textFieldButtonConfig == null ? null : BottomBorderTopRoundedInputBorder(radiusTopRight: 0);
+
     Color? color = UiParams.of(context).appColor.getFillColor(compoundStatesController?.states);
     compoundStatesController?.setFieldError(_errorText != null && _errorText!.isNotEmpty);
 
@@ -456,12 +460,14 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         errorText: _errorText,
         errorStyle: errorStyle,
         fillColor: color,
+        border: border,
       );
     } else {
       return InputDecoration(
         errorText: _errorText,
         errorStyle: errorStyle,
         fillColor: color,
+        border: border,
       );
     }
   }

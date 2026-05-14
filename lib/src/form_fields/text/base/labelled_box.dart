@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/compound_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/compound_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button.dart';
 
 class LabelledBox extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/decoration/bottom_border_top_rounded_shape.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/compound_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/compound_widget_states_controller.dart';
 
 class TextFieldButton extends StatelessWidget {
   final TextFieldButtonConfig buttonConfig;
@@ -51,7 +51,7 @@ class TextFieldButton extends StatelessWidget {
               backgroundColor: WidgetStatePropertyAll(UiParams.of(context).appColor.getFillColor(states)),
               shape: WidgetStatePropertyAll(
                 BottomBorderTopRoundedShape(
-                  borderRadius: 3,
+                  radiusTopRight: 4,
                   side: BorderSide(
                     color: uiParams.appColor.getBorderColor(states, uiParams.appColor.borderEnabled),
                     width: uiParams.appSize.getBorderWidth(states, uiParams.appSize.borderWidth),

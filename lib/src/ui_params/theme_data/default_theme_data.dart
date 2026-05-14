@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/decoration/bottom_border_top_rounded_input_border.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/decoration/bottom_border_top_rounded_shape.dart';
 import 'package:flutter_form_bricks/src/ui_params/theme_data/bricks_theme_data.dart';
 
@@ -152,6 +153,7 @@ class DefaultThemeData extends BricksThemeData {
         contentPadding: EdgeInsets.zero,
         filled: true,
         fillColor: WidgetStateColor.resolveWith((Set<WidgetState> states) => appColor.getFillColor(states)),
+        border: BottomBorderTopRoundedInputBorder(),
       ).data;
 
   // @override
@@ -164,7 +166,7 @@ class DefaultThemeData extends BricksThemeData {
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             shape: WidgetStateProperty.resolveWith((Set<WidgetState> states) =>
               BottomBorderTopRoundedShape(
-                borderRadius: 3,
+                radiusTopRight: 3,
                 side: WidgetStateBorderSide.resolveWith(
                   (Set<WidgetState> states) => BorderSide(
                     color: appColor.getBorderColor(states, appColor.borderEnabled),
