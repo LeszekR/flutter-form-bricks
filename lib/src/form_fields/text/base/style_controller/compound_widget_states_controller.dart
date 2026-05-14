@@ -25,7 +25,6 @@ class CompoundWidgetStatesController extends ChangeNotifier {
   void setButtonFocused(bool value) => _set(() => _buttonFocused = value);
   void setButtonPressed(bool value) => _set(() => _buttonPressed = value);
   void setButtonDisabled(bool value) => _set(() => _buttonDisabled = value);
-
   void setFieldHovered(bool value) => _set(() => _fieldHovered = value);
   void setFieldFocused(bool value) => _set(() => _fieldFocused = value);
   void setFieldPressed(bool value) => _set(() => _fieldPressed = value);
@@ -41,9 +40,10 @@ class CompoundWidgetStatesController extends ChangeNotifier {
   }
 
   static MouseRegion wrapWithStateDetectors(
-      CompoundWidgetStatesController compoundController, FocusNode focusNode, Widget child) {
-    // MouseRegion _wrapWithStateDetectors(Widget button, UpdateOnceWidgetStatesController statesReceiver) {
-
+    CompoundWidgetStatesController compoundController,
+    FocusNode focusNode,
+    Widget child,
+  ) {
     focusNode.addListener(() {
       if (focusNode.hasFocus) {
         compoundController.setButtonFocused(true);
@@ -55,38 +55,26 @@ class CompoundWidgetStatesController extends ChangeNotifier {
     return MouseRegion(
       onHover: (event) {
         compoundController.setButtonHovered(true);
-        // compoundContrller.updateOnce(WidgetState.hovered, true);
       },
       onEnter: (event) {
         compoundController.setButtonHovered(false);
-        // compoundContrller.updateOnce(WidgetState.selected, true);
       },
       onExit: (event) {
         compoundController.setButtonHovered(false);
-        // compoundContrller.updateOnce(WidgetState.hovered, false);
-        // compoundContrller.updateOnce(WidgetState.selected, false);
       },
       child: GestureDetector(
         onTapDown: (_) {
           // TODO #101 make the field get focus after the button has been clicked
           compoundController.setButtonPressed(true);
-          // _focusNode.requestFocus();
-          // widget.receiverColorController.updateOnce(WidgetState.focused, true);
         },
         onDoubleTapDown: (_) {
           compoundController.setButtonPressed(true);
-          // _focusNode.requestFocus();
-          // widget.receiverColorController.updateOnce(WidgetState.focused, true);
         },
         onForcePressStart: (_) {
           compoundController.setButtonPressed(true);
-          // _focusNode.requestFocus();
-          // widget.receiverColorController.updateOnce(WidgetState.focused, true);
         },
         onLongPress: () {
           compoundController.setButtonPressed(true);
-          // _focusNode.requestFocus();
-          // widget.receiverColorController.updateOnce(WidgetState.focused, true);
         },
         child: Focus(
           focusNode: focusNode,

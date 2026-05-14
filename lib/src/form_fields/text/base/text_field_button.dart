@@ -28,26 +28,24 @@ class TextFieldButton extends StatelessWidget {
 
     if (_styleControllerKit == null) {
       return _makeButton(context, zoomedSize, null);
+
     } else {
+      var compoundWidgetStatesController = _styleControllerKit!.compoundWidgetStatesController;
+
       return AnimatedBuilder(
-          animation: _styleControllerKit!.compoundWidgetStatesController,
-          // valueListenable: styleControllerKit!.doubleWidgetStatesController,
+          animation: compoundWidgetStatesController,
           builder: (context, _) {
-            // builder: (context, states, _) {
-            final Set<WidgetState> states = _styleControllerKit!.compoundWidgetStatesController.states;
-            print('button: ${_styleControllerKit!.compoundWidgetStatesController.states}');
+            // print('button: ${_styleControllerKit!.compoundWidgetStatesController.states}');
             return CompoundWidgetStatesController.wrapWithStateDetectors(
-              _styleControllerKit!.compoundWidgetStatesController,
+              compoundWidgetStatesController,
               _focusNode,
-              _makeButton(context, zoomedSize, states),
-              // styleControllerKit!.doubleWidgetStatesController.updateOnceWidgetStatesController,
+              _makeButton(context, zoomedSize, compoundWidgetStatesController.states,),
             );
           });
     }
   }
 
   SizedBox _makeButton(BuildContext context, double zoomedSize, Set<WidgetState>? states) {
-    // print('button: ${styleControllerKit?.doubleWidgetStatesController.value.toString()}');
 
     UiParamsData uiParams = UiParams.of(context);
     ButtonStyle? effectiveStyle = buttonConfig.style ??
