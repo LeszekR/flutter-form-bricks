@@ -34,7 +34,7 @@ class DefaultAppSize extends AppSize {
 
   @override late final double borderWidth = zoom * 1;
   @override late final double borderFocusedWidth = zoom * 2;
-  @override late final double borderErrorWidth = zoom * 2;
+  @override late final double borderErrorWidth = zoom * 1;
 
   // USED? REMOVE?
   // =========================================================

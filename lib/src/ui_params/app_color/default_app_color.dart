@@ -51,14 +51,14 @@ class DefaultAppColor extends AppColor {
   }
 
   Map<String, Color> _lerpMap = {};
-
-  @override late final Color formFieldBorderOk = Colors.black;
-  @override late final Color formFieldBorderHovered = Colors.black;
-  @override late final Color formFieldBorderFocused = Colors.black;
-  @override late final Color formFieldBorderPressed = Colors.black;
-  @override late final Color formFieldBorderSelected = Colors.black;
+  
+  @override late final Color formFieldBorderOk = colorSchemeMain.primary;
+  @override late final Color formFieldBorderHovered = colorSchemeMain.primary;
+  @override late final Color formFieldBorderFocused = colorSchemeMain.primary;
+  @override late final Color formFieldBorderPressed = colorSchemeMain.primary;
+  @override late final Color formFieldBorderSelected = colorSchemeMain.primary;
   @override late final Color formFieldBorderDisabled = Colors.black;
-  @override late final Color formFieldBorderError = Colors.red;
+  @override late final Color formFieldBorderError = colorSchemeMain.error;
 
   // ========== Buttons =========
   @override late final Color buttonFontEnabled = black;
