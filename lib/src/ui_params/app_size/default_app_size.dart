@@ -19,7 +19,7 @@ class DefaultAppSize extends AppSize {
   @override late final fontSize8 = calculateFontSize(8);
   @override late final fontSize9 = calculateFontSize(9);
 
-  @override late final double textFieldHeight = 26;
+  @override late final double textFieldHeight = 22;
   @override late final double textFieldWidth = 200;
   @override late final double dateFieldWidth = 95;
   @override late final double timeFieldWidth = 55;

@@ -36,12 +36,13 @@ class TimeField extends TextFieldBrick<DateTime> {
     required super.keyString,
     required super.formManager,
     super.statesController,
+    super.outerLabelConfig,
     //
     // TextFieldBrick
     super.width,
     super.inputDecoration,
     super.errorPosition,
-    super.outerLabelConfig,
+    super.textFieldBorderType,
     //
     // TimeField
     bool withTimePicker = true,

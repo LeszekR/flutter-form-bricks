@@ -95,6 +95,7 @@ class DateTimeSeparatedField extends StatelessWidget {
   final bool copyDatePickerButtonConfigToTime;
   final TextFieldConfig dateTextFieldConfig;
   final TextFieldConfig timeTextFieldConfig;
+  final TextFieldBorderType textFieldBorderType;
   final double? height;
 
   DateTimeSeparatedField({
@@ -120,6 +121,7 @@ class DateTimeSeparatedField extends StatelessWidget {
     this.timePickerButtonConfig,
     this.timePickerConfig,
     this.copyDatePickerButtonConfigToTime = true,
+    this.textFieldBorderType = TextFieldBorderType.outline,
     this.height,
     //
     // Flutter TextField
@@ -408,6 +410,7 @@ class DateTimeSeparatedField extends StatelessWidget {
                   tooltipMaker: DatePicker.datePickerTooltipMaker,
                 ),
       outerLabelConfig: dateOuterLabelConfig,
+      textFieldBorderType: textFieldBorderType,
       //
       // TextField
       groupId: dateTextFieldConfig.groupId,
@@ -480,6 +483,7 @@ class DateTimeSeparatedField extends StatelessWidget {
           : copyDateOuterLabelConfigToTime
               ? timeOuterLabelConfig!.fillFrom(dateOuterLabelConfig)
               : timeOuterLabelConfig,
+      textFieldBorderType: textFieldBorderType,
       //
       // TimeField
       timePickerButtonConfig: !withTimePicker

@@ -88,8 +88,8 @@ class TextFieldButton extends StatelessWidget {
       },
       TextFieldBorderType.underline =>
       switch (buttonConfig.buttonPosition) {
-        ButtonPosition.left => UnderlineTopRoundedShape(side: borderSide, radiusTopLeft: 0),
-        ButtonPosition.right => UnderlineTopRoundedShape(side: borderSide, radiusTopRight: 0),
+        ButtonPosition.left => UnderlineTopRoundedShape(side: borderSide, radiusTopRight: 0),
+        ButtonPosition.right => UnderlineTopRoundedShape(side: borderSide, radiusTopLeft: 0),
       },
       TextFieldBorderType.other => null,
     };

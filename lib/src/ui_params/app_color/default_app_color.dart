@@ -38,7 +38,7 @@ class DefaultAppColor extends AppColor {
 
   @override Color getFormFieldHovered() => _lerp('formFieldFillHovered',formFieldFillHovered, Colors.white, 0.10);
   @override Color getFormFieldFocused() => _lerp('formFieldFillFocused', formFieldFillFocused, Colors.white, 0.80);
-  @override Color getFormFieldSelected() => _lerp('formFieldFillSelected', formFieldFillSelected, formFieldFillSelected, 0.70);
+  @override Color getFormFieldSelected() => _lerp('formFieldFillSelected', formFieldFillSelected, Colors.white, 0.70);
   @override Color getFormFieldPressed() => _lerp('formFieldFillPressed', formFieldFillPressed, formFieldFillPressed, 0.70);
 
   Color _lerp(String name, Color from, Color to, double factor) {

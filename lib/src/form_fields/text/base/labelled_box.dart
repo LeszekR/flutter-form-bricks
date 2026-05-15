@@ -23,7 +23,7 @@ class LabelledBox extends StatelessWidget {
     this.buttonConfig,
     this.compoundWidgetStatesController,
     this.onButtonTap,
-  })  : assert(buttonConfig == null ? compoundWidgetStatesController == null : true,
+  }) : assert(buttonConfig == null ? compoundWidgetStatesController == null : true,
             'If buttonConfig is null styleControllerKit must be null'),
         assert(buttonConfig != null ? textFieldBorderType != null : true,
             'If buttonConfig is declared textFieldBorderType must also be declared');
@@ -104,10 +104,7 @@ class LabelledBox extends StatelessWidget {
           children: [
             Expanded(child: fieldBody),
             SizedBox(width: padding),
-            Transform.translate(
-              offset: Offset(0, 0),
-              child: SizedBox(width: size, height: size, child: button),
-            )
+            SizedBox(width: size, height: size, child: button),
           ],
         ),
       ButtonPosition.left => Row(
