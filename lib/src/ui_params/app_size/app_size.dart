@@ -12,9 +12,9 @@ abstract class AppSize {
     return switch (states) {
       _ when states.contains(WidgetState.disabled) => borderWidth,
       _ when states.contains(WidgetState.selected) => borderWidth,
-      _ when states.contains(WidgetState.focused) => borderWidth,
-      _ when states.contains(WidgetState.pressed) => borderFocusedWidth,
-      _ when states.contains(WidgetState.error) => borderErrorWidth,
+      _ when states.contains(WidgetState.focused) => borderDoubleWidth,
+      _ when states.contains(WidgetState.pressed) => borderDoubleWidth,
+      _ when states.contains(WidgetState.error) => borderWidth,
       _ when states.contains(WidgetState.hovered) => borderWidth,
       _ => borderWidth,
     };
@@ -46,8 +46,7 @@ abstract class AppSize {
   double get tabHeight;
   double get tabWidth;
   double get borderWidth;
-  double get borderFocusedWidth;
-  double get borderErrorWidth;
+  double get borderDoubleWidth;
   BorderRadiusGeometry get borderRadius;
   double get tabBorderWidth;
   double get bottomPanelHeight;

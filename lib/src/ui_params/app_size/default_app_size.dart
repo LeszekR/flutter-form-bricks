@@ -19,7 +19,7 @@ class DefaultAppSize extends AppSize {
   @override late final fontSize8 = calculateFontSize(8);
   @override late final fontSize9 = calculateFontSize(9);
 
-  @override late final double textFieldHeight = 22;
+  @override late final double textFieldHeight = 26;
   @override late final double textFieldWidth = 200;
   @override late final double dateFieldWidth = 95;
   @override late final double timeFieldWidth = 55;
@@ -33,8 +33,7 @@ class DefaultAppSize extends AppSize {
   @override late final double spacerHorizontalMedium =  16;
 
   @override late final double borderWidth = zoom * 1;
-  @override late final double borderFocusedWidth = zoom * 2;
-  @override late final double borderErrorWidth = zoom * 1;
+  @override late final double borderDoubleWidth = zoom * 2;
 
   // USED? REMOVE?
   // =========================================================

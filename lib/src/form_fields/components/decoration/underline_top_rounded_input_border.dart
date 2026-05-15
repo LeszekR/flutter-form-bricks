@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class BottomBorderTopRoundedInputBorder extends InputBorder {
+class UnderlineTopRoundedInputBorder extends InputBorder {
   final double radiusTopLeft;
   final double radiusTopRight;
   final double radiusBottomLeft;
   final double radiusBottomRight;
 
-  const BottomBorderTopRoundedInputBorder({
+  const UnderlineTopRoundedInputBorder({
     super.borderSide = const BorderSide(),
     this.radiusTopLeft = 4,
     this.radiusTopRight = 4,
@@ -29,14 +29,14 @@ class BottomBorderTopRoundedInputBorder extends InputBorder {
       EdgeInsets.only(bottom: borderSide.width);
 
   @override
-  BottomBorderTopRoundedInputBorder copyWith({
+  UnderlineTopRoundedInputBorder copyWith({
     BorderSide? borderSide,
     double? radiusTopLeft,
     double? radiusTopRight,
     double? radiusBottomLeft,
     double? radiusBottomRight,
   }) {
-    return BottomBorderTopRoundedInputBorder(
+    return UnderlineTopRoundedInputBorder(
       borderSide: borderSide ?? this.borderSide,
       radiusTopLeft: radiusTopLeft ?? this.radiusTopLeft,
       radiusTopRight: radiusTopRight ?? this.radiusTopRight,
@@ -47,7 +47,7 @@ class BottomBorderTopRoundedInputBorder extends InputBorder {
 
   @override
   ShapeBorder scale(double t) {
-    return BottomBorderTopRoundedInputBorder(
+    return UnderlineTopRoundedInputBorder(
       borderSide: borderSide.scale(t),
       radiusTopLeft: radiusTopLeft * t,
       radiusTopRight: radiusTopRight * t,

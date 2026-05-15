@@ -84,6 +84,23 @@ class ExampleFormState extends FormStateBrick {
                 height: 22,
               ),
               errorPosition: ErrorPosition.dynamicSpaceBelowField,
+              // inputDecoration: InputDecoration(labelText: 'data'),
+            ),
+           SizedBox(height: appSize.spacerVerticalMedium),
+            TimeField(
+              keyString: timeKeyString1,
+              formManager: formManager,
+              width: 130,
+              withTimePicker: true,
+              outerLabelConfig: OuterLabelConfig(
+                labelText: 'Godzina',
+                align: Alignment.bottomLeft,
+                side: Side.left,
+                width: 60,
+                height: 22,
+              ),
+              errorPosition: ErrorPosition.dynamicSpaceBelowField,
+              // inputDecoration: InputDecoration(labelText: 'data'),
             ),
             SizedBox(height: appSize.spacerVerticalMedium),
             // TimeField(

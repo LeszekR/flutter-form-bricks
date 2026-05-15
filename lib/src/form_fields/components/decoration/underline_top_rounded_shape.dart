@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class BottomBorderTopRoundedShape extends OutlinedBorder {
+class UnderlineTopRoundedShape extends OutlinedBorder {
   final double radiusTopLeft;
   final double radiusTopRight;
   final double radiusBottomLeft;
   final double radiusBottomRight;
 
-  const BottomBorderTopRoundedShape({
+  const UnderlineTopRoundedShape({
     super.side = const BorderSide(),
     this.radiusTopLeft = 0,
     this.radiusTopRight = 0,
@@ -59,7 +59,7 @@ class BottomBorderTopRoundedShape extends OutlinedBorder {
   }
 
   @override
-  BottomBorderTopRoundedShape copyWith({
+  UnderlineTopRoundedShape copyWith({
     BorderSide? side,
     double? radiusTopLeft,
     double? radiusTopRight,
@@ -67,7 +67,7 @@ class BottomBorderTopRoundedShape extends OutlinedBorder {
     double? radiusBottomRight,
     Color? color,
   }) {
-    return BottomBorderTopRoundedShape(
+    return UnderlineTopRoundedShape(
       side: side ?? this.side,
       radiusTopLeft: radiusTopLeft ?? this.radiusTopLeft,
       radiusTopRight: radiusTopRight ?? this.radiusTopRight,
@@ -78,7 +78,7 @@ class BottomBorderTopRoundedShape extends OutlinedBorder {
 
   @override
   ShapeBorder scale(double t) {
-    return BottomBorderTopRoundedShape(
+    return UnderlineTopRoundedShape(
       side: side.scale(t),
       radiusTopLeft: radiusTopLeft * t,
       radiusTopRight: radiusTopRight * t,

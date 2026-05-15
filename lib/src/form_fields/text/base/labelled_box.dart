@@ -9,20 +9,24 @@ class LabelledBox extends StatelessWidget {
   final double? height;
   final OuterLabelConfig? outerLabelConfig;
   final TextFieldButtonConfig? buttonConfig;
+  final TextFieldBorderType? textFieldBorderType;
   final CompoundWidgetStatesController? compoundWidgetStatesController;
   final VoidCallback? onButtonTap;
 
   const LabelledBox({
     super.key,
     required this.fieldBody,
+    this.textFieldBorderType,
     this.width,
     this.height,
     this.outerLabelConfig,
     this.buttonConfig,
     this.compoundWidgetStatesController,
     this.onButtonTap,
-  }) : assert(buttonConfig == null ? compoundWidgetStatesController == null : true,
-            'If buttonConfig is null styleControllerKit must be null');
+  })  : assert(buttonConfig == null ? compoundWidgetStatesController == null : true,
+            'If buttonConfig is null styleControllerKit must be null'),
+        assert(buttonConfig != null ? textFieldBorderType != null : true,
+            'If buttonConfig is declared textFieldBorderType must also be declared');
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +42,7 @@ class LabelledBox extends StatelessWidget {
         fieldBody: fieldBody,
         height: buttonHeight,
         buttonConfig: buttonConfig!,
+        textFieldBorderType: textFieldBorderType!,
         onButtonTap: onButtonTap!,
         compoundWidgetStatesController: compoundWidgetStatesController,
       );
@@ -74,6 +79,7 @@ class LabelledBox extends StatelessWidget {
     required Widget fieldBody,
     required double height,
     required TextFieldButtonConfig buttonConfig,
+    required TextFieldBorderType textFieldBorderType,
     required VoidCallback onButtonTap,
     CompoundWidgetStatesController? compoundWidgetStatesController,
   }) {
@@ -85,6 +91,7 @@ class LabelledBox extends StatelessWidget {
 
     TextFieldButton button = TextFieldButton(
       buttonConfig: effectiveButtonConfig,
+      textFieldBorderType: textFieldBorderType,
       onTap: onButtonTap,
       compoundWidgetStatesController: compoundWidgetStatesController,
     );
@@ -97,7 +104,10 @@ class LabelledBox extends StatelessWidget {
           children: [
             Expanded(child: fieldBody),
             SizedBox(width: padding),
-            SizedBox(width: size, height: size, child: button),
+            Transform.translate(
+              offset: Offset(0, 0),
+              child: SizedBox(width: size, height: size, child: button),
+            )
           ],
         ),
       ButtonPosition.left => Row(

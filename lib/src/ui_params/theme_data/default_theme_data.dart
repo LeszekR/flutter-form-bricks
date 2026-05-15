@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/decoration/bottom_border_top_rounded_input_border.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/decoration/bottom_border_top_rounded_shape.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/decoration/underline_top_rounded_input_border.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/decoration/underline_top_rounded_shape.dart';
 import 'package:flutter_form_bricks/src/ui_params/theme_data/bricks_theme_data.dart';
 
 class DefaultThemeData extends BricksThemeData {
@@ -20,6 +20,7 @@ class DefaultThemeData extends BricksThemeData {
   );
 
   @override
+  // TextStyle textStyle() => textTheme.bodySmall!;
   TextStyle textStyle() => textTheme.bodyLarge!;
 
   // TextStyle textStyle() => textTheme.bodySmall!;
@@ -150,10 +151,11 @@ class DefaultThemeData extends BricksThemeData {
           vertical: -4,
           horizontal: 0,
         ),
-        contentPadding: EdgeInsets.zero,
+        contentPadding: const EdgeInsets.only(top: 12, bottom: 8),
+        // contentPadding: EdgeInsets.zero,
         filled: true,
         fillColor: WidgetStateColor.resolveWith((Set<WidgetState> states) => appColor.getFillColor(states)),
-        border: BottomBorderTopRoundedInputBorder(),
+        border: OutlineInputBorder(),
       ).data;
 
   // @override
@@ -165,7 +167,7 @@ class DefaultThemeData extends BricksThemeData {
         style: const ButtonStyle().copyWith(
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             shape: WidgetStateProperty.resolveWith((Set<WidgetState> states) =>
-              BottomBorderTopRoundedShape(
+              UnderlineTopRoundedShape(
                 radiusTopRight: 3,
                 side: WidgetStateBorderSide.resolveWith(
                   (Set<WidgetState> states) => BorderSide(

@@ -40,6 +40,7 @@ class TimeField extends TextFieldBrick<DateTime> {
     // TextFieldBrick
     super.width,
     super.inputDecoration,
+    super.errorPosition,
     super.outerLabelConfig,
     //
     // TimeField

@@ -4,11 +4,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/decoration/bottom_border_top_rounded_input_border.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/decoration/outline_sides_input_border.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/decoration/underline_top_rounded_input_border.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/compound_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/labelled_box.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
+
+enum TextFieldBorderType { outline, underline, other }
 
 abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditingValue, V> {
   final double? width;
@@ -18,6 +21,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
   final InputDecoration? inputDecoration;
   final ErrorPosition errorPosition;
   final TextFieldButtonConfig? textFieldButtonConfig;
+  final TextFieldBorderType textFieldBorderType;
   final double? height;
 
   TextFieldBrick({
@@ -34,6 +38,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     this.inputDecoration,
     this.errorPosition = ErrorPosition.dynamicSpaceBelowField,
     this.textFieldButtonConfig,
+    this.textFieldBorderType = TextFieldBorderType.outline,
     this.height,
     //
     // Flutter TextField
@@ -313,11 +318,12 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       );
 
       return LabelledBox(
+        fieldBody: textField,
         width: _width,
         height: _height,
-        fieldBody: textField,
         outerLabelConfig: widget.outerLabelConfig,
         buttonConfig: widget.textFieldButtonConfig,
+        textFieldBorderType: widget.textFieldBorderType,
         compoundWidgetStatesController: _compoundWidgetStatesController,
         onButtonTap: onButtonTap,
       );
@@ -336,11 +342,12 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
           );
 
           return LabelledBox(
+            fieldBody: stateNotifyingTextField,
             width: _width,
             height: _height,
-            fieldBody: stateNotifyingTextField,
             outerLabelConfig: widget.outerLabelConfig,
             buttonConfig: widget.textFieldButtonConfig,
+            textFieldBorderType: widget.textFieldBorderType,
             compoundWidgetStatesController: _compoundWidgetStatesController,
             onButtonTap: onButtonTap,
           );
@@ -447,9 +454,6 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     // TODO support errorWidget
     final TextStyle? errorStyle = showErrorBelowText ? null : TextStyle(fontSize: 0);
 
-    InputBorder? border =
-        widget.textFieldButtonConfig == null ? null : BottomBorderTopRoundedInputBorder(radiusTopRight: 0);
-
     Color? color = UiParams.of(context).appColor.getFillColor(compoundStatesController?.states);
     compoundStatesController?.setFieldError(_errorText != null && _errorText!.isNotEmpty);
 
@@ -460,16 +464,38 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         errorText: _errorText,
         errorStyle: errorStyle,
         fillColor: color,
-        border: border,
+        border: _makeInputDecorationBorder(),
       );
     } else {
       return InputDecoration(
         errorText: _errorText,
         errorStyle: errorStyle,
         fillColor: color,
-        border: border,
+        border: _makeInputDecorationBorder(),
       );
     }
+  }
+
+  InputBorder? _makeInputDecorationBorder() {
+      if (widget.textFieldButtonConfig == null) {
+        return switch (widget.textFieldBorderType) {
+          TextFieldBorderType.outline => OutlineInputBorder(),
+          TextFieldBorderType.underline => UnderlineInputBorder(),
+          TextFieldBorderType.other => null,
+        };
+      } else {
+        return switch (widget.textFieldBorderType) {
+          TextFieldBorderType.outline => switch (widget.textFieldButtonConfig!.buttonPosition) {
+            ButtonPosition.left => OutlineSidesInputBorder(sideLeft: false),
+            ButtonPosition.right => OutlineSidesInputBorder(sideRight: false),
+          },
+          TextFieldBorderType.underline =>  switch (widget.textFieldButtonConfig!.buttonPosition) {
+            ButtonPosition.left => UnderlineTopRoundedInputBorder(radiusTopLeft: 0),
+            ButtonPosition.right => UnderlineTopRoundedInputBorder(radiusTopRight: 0),
+          },
+          TextFieldBorderType.other => null,
+        };
+      }
   }
 
   bool _skipOnChanged = false;
