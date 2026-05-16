@@ -444,8 +444,6 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   }
 
   // TODO move helper methods to a singleton
-  Color? _lastColor;
-
   InputDecoration _makeInputDecoration(BuildContext context, CompoundWidgetStatesController? compoundStatesController) {
     bool showErrorBelowText = false ||
         widget.errorPosition == ErrorPosition.dynamicSpaceBelowField ||
@@ -477,25 +475,25 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   }
 
   InputBorder? _makeInputDecorationBorder() {
-      if (widget.buttonConfig == null) {
-        return switch (widget.textFieldBorderType) {
-          TextFieldBorderType.outline => OutlineInputBorder(),
-          TextFieldBorderType.underline => UnderlineInputBorder(),
-          TextFieldBorderType.other => null,
-        };
-      } else {
-        return switch (widget.textFieldBorderType) {
-          TextFieldBorderType.outline => switch (widget.buttonConfig!.buttonPosition) {
+    if (widget.buttonConfig == null) {
+      return switch (widget.textFieldBorderType) {
+        TextFieldBorderType.outline => OutlineInputBorder(),
+        TextFieldBorderType.underline => UnderlineInputBorder(),
+        TextFieldBorderType.other => null,
+      };
+    } else {
+      return switch (widget.textFieldBorderType) {
+        TextFieldBorderType.outline => switch (widget.buttonConfig!.buttonPosition) {
             ButtonPosition.left => OutlineSidesInputBorder(sideLeft: false),
             ButtonPosition.right => OutlineSidesInputBorder(sideRight: false),
           },
-          TextFieldBorderType.underline =>  switch (widget.buttonConfig!.buttonPosition) {
+        TextFieldBorderType.underline => switch (widget.buttonConfig!.buttonPosition) {
             ButtonPosition.left => UnderlineTopRoundedInputBorder(radiusTopLeft: 0),
             ButtonPosition.right => UnderlineTopRoundedInputBorder(radiusTopRight: 0),
           },
-          TextFieldBorderType.other => null,
-        };
-      }
+        TextFieldBorderType.other => null,
+      };
+    }
   }
 
   bool _skipOnChanged = false;
@@ -545,6 +543,8 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     setState(() {
       _errorText = fieldContent.error;
       setInput(fieldContent.input);
+      bool isError = _errorText != null && _errorText!.isNotEmpty;
+      if (_compoundWidgetStatesController != null) _compoundWidgetStatesController!.setFieldError(isError);
     });
     _skipOnChanged = false;
   }
