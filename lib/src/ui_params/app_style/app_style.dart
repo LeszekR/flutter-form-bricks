@@ -30,6 +30,4 @@ abstract class AppStyle {
   TextStyle inputLabelStyle();
 
   WidgetStateProperty<OutlinedBorder> makeShapeRectangleProperty(bool hasBorder);
-
-  BorderSide makeBorderSide(Set<WidgetState> states);
 }

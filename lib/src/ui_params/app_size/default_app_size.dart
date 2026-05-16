@@ -21,8 +21,8 @@ class DefaultAppSize extends AppSize {
 
   @override late final double textFieldHeight = 22;
   @override late final double textFieldWidth = 200;
-  @override late final double dateFieldWidth = 95;
-  @override late final double timeFieldWidth = 55;
+  @override late final double dateFieldWidth = 130;
+  @override late final double timeFieldWidth = 80;
   @override late final buttonDistanceFromTextField = 0;
 
   @override late final double spacerVerticalSmallest =  4.0;
@@ -32,6 +32,11 @@ class DefaultAppSize extends AppSize {
   @override late final double spacerHorizontalSmall =  8.0;
   @override late final double spacerHorizontalMedium =  16;
 
+  @override late final double borderWidth = zoom * 1;
+  @override late final double borderDoubleWidth = zoom * 2;
+
+  // USED? REMOVE?
+  // =========================================================
   @override late final double cornerRadius = 0;
   @override late final double appBarHeight = zoom * 34;
   @override late final double formBarHeight = zoom * 34;
@@ -39,8 +44,6 @@ class DefaultAppSize extends AppSize {
   @override late final double menuButtonWidth = zoom * 110;
   @override late final double tabHeight = zoom * 28;
   @override late final double tabWidth = zoom * 70;
-  @override late final double borderWidth = zoom * 0.5;
-  @override late final double borderErrorWidth = zoom * 1;
   @override late final BorderRadiusGeometry borderRadius = BorderRadius.zero;
   @override late final double tabBorderWidth = zoom * 1.5;
   @override late final double bottomPanelHeight = zoom * 120;

@@ -4,23 +4,24 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/decoration/outline_sides_input_border.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/decoration/underline_top_rounded_input_border.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/field_content.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/compound_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/labelled_box.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/double_widget_states_controller.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/style_controller_kit.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
+
+enum TextFieldBorderType { outline, underline, other }
 
 abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditingValue, V> {
   final double? width;
 
   // TODO docs for all my params added to flutter API
   final TextFieldConfig textFieldConfig;
-  final WidgetStatesController? statesController;
   final InputDecoration? inputDecoration;
   final ErrorPosition errorPosition;
-
-  // final ErrorConfig errorConfig;
-  final TextFieldButtonConfig? textFieldButtonConfig;
+  final TextFieldButtonConfig? buttonConfig;
+  final TextFieldBorderType textFieldBorderType;
   final double? height;
 
   TextFieldBrick({
@@ -30,17 +31,14 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     required super.keyString,
     required super.formManager,
     required super.validateMode,
-    super.colorMaker,
-    // super.statesController,
     super.outerLabelConfig,
     //
     // TextFieldBrick
     this.width,
-    this.statesController,
     this.inputDecoration,
     this.errorPosition = ErrorPosition.dynamicSpaceBelowField,
-    // this.errorBehaviour = const ErrorConfig(),
-    this.textFieldButtonConfig,
+    this.buttonConfig,
+    this.textFieldBorderType = TextFieldBorderType.outline,
     this.height,
     //
     // Flutter TextField
@@ -61,7 +59,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     TextDirection? textDirection,
     bool readOnly = false,
     // bool autofocus, => FormData takes over initial focus in form
-    // MaterialStatesController? statesController, => replaced with statesObserver and statesNotifier
+    WidgetStatesController? statesController,
     String obscuringCharacter = '•',
     bool obscureText = false,
     bool? autocorrect,
@@ -131,7 +129,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
           (inputDecoration?.suffix != null ? 1 : 0) +
                   (inputDecoration?.suffixText != null ? 1 : 0) +
                   (inputDecoration?.suffixIcon != null ? 1 : 0) +
-                  ((textFieldButtonConfig?.buttonPosition == ButtonPosition.right) ? 1 : 0) <=
+                  ((buttonConfig?.buttonPosition == ButtonPosition.right) ? 1 : 0) <=
               1,
           'Only one can be declared: textFieldButtonConfig.buttonPosition.right, '
           'inputDecoration.suffix, inputDecoration.suffixText, or inputDecoration.suffixIcon.',
@@ -140,7 +138,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
           (inputDecoration?.prefix != null ? 1 : 0) +
                   (inputDecoration?.prefixText != null ? 1 : 0) +
                   (inputDecoration?.prefixIcon != null ? 1 : 0) +
-                  ((textFieldButtonConfig?.buttonPosition == ButtonPosition.left) ? 1 : 0) <=
+                  ((buttonConfig?.buttonPosition == ButtonPosition.left) ? 1 : 0) <=
               1,
           'Only one can be declared: textFieldButtonConfig.buttonPosition.left, '
           'inputDecoration.prefix, inputDecoration.prefixText, or inputDecoration.prefixIcon.',
@@ -169,7 +167,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
           inputDecoration?.suffix == null || inputDecoration?.suffixText == null,
           'Only one can be declared: inputDecoration.suffix or inputDecoration.suffixText.',
         ),
-        assert(textFieldButtonConfig?.syncStyleWithTextField == true ? statesController == null : true,
+        assert(buttonConfig?.syncStyleWithTextField == true ? statesController == null : true,
             'When syncStyleWithTextField is true, statesController must not be declared'),
         textFieldConfig = TextFieldConfig(
           magnifierConfiguration: magnifierConfiguration,
@@ -246,15 +244,14 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
 abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>>
     extends FormFieldStateBrick<TextEditingValue, V, B> {
   //
-  late double _width;
-  late double _effectiveHeight;
+  @visibleForTesting
   late final TextEditingController textEditingController;
-  late final StyleControllerKit? _styleControllerKit;
-  late final WidgetStatesController _effectiveStatesController;
-  late final WidgetStatesController? _textFieldStatesObserver;
-  late final StatesColorMaker _effectiveColorMaker;
-  late final VoidCallback _statesListener;
+
+  late double _width;
+  late double _height;
   late TextStyle _style;
+  late final CompoundWidgetStatesController? _compoundWidgetStatesController;
+  final FocusNode _focusNode = FocusNode();
   String? _errorText;
 
   void onButtonTap() => throw UnimplementedError('onButtonTap not implemented');
@@ -273,38 +270,16 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   void initState() {
     textEditingController = widget.textFieldConfig.controller ?? TextEditingController();
 
-    _effectiveStatesController = widget.textFieldConfig.statesController != null
-        ? widget.textFieldConfig.statesController!
-        : widget.textFieldButtonConfig == null
-            ? WidgetStatesController()
-            : widget.textFieldButtonConfig!.syncStyleWithTextField
-                ? DoubleWidgetStatesController()
-                : WidgetStatesController();
-
-    _textFieldStatesObserver = _effectiveStatesController is DoubleWidgetStatesController
-        ? (_effectiveStatesController as DoubleWidgetStatesController).statesObserver
-        : _effectiveStatesController;
-
-    _effectiveColorMaker = widget.colorMaker ?? StatesColorMaker();
-
-    if (widget.textFieldButtonConfig?.syncStyleWithTextField == true) {
-      _styleControllerKit = StyleControllerKit(
-        _effectiveStatesController as DoubleWidgetStatesController,
-        _effectiveColorMaker,
-      );
+    if (widget.buttonConfig?.syncStyleWithTextField == true) {
+      _compoundWidgetStatesController = CompoundWidgetStatesController();
     } else {
-      _styleControllerKit = null;
+      _compoundWidgetStatesController = null;
     }
 
     // TODO this strips the field from flutter's restoration - implement restoration pattern as in comments at the end of this file
     setInput(formManager.getInitialInput(keyString));
     _errorText = formManager.getFieldError(keyString);
     super.initState();
-
-    if (_textFieldStatesObserver != null) {
-      _statesListener = setStateInNextFrame;
-      _textFieldStatesObserver!.addListener(_statesListener);
-    }
   }
 
   @override
@@ -315,7 +290,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     var appSize = uiParams.appSize;
     _style = widget.textFieldConfig.style ?? uiParams.appTheme.textStyle();
 
-    _effectiveHeight = widget.height != null ? widget.height! : appSize.textFieldHeight;
+    _height = widget.height != null ? widget.height! : appSize.textFieldHeight;
 
     if (widget.width != null) {
       _width = widget.width! * appSize.zoom;
@@ -327,45 +302,64 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   @override
   void dispose() {
     if (widget.textFieldConfig.controller == null) textEditingController.dispose();
-    if (widget.textFieldConfig.focusNode == null) focusNode.dispose();
-    _textFieldStatesObserver?.removeListener(_statesListener);
-    _effectiveStatesController.dispose();
+    _compoundWidgetStatesController?.dispose();
     super.dispose();
   }
 
   @override
   Widget buildFieldWidget(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: _effectiveStatesController,
-      builder: (context, states, _) {
-        final decoration = _makeInputDecoration(context, states);
+    if (_compoundWidgetStatesController == null) {
+      final decoration = _makeInputDecoration(context, null);
 
-        final TextField textField = _makeTextField(
-          textEditingController,
-          decoration,
-          _style,
-          _textFieldStatesObserver,
-        );
+      final TextField textField = _makeTextField(
+        textEditingController,
+        decoration,
+        _style,
+      );
 
-        return LabelledBox(
-          width: _width,
-          height: _effectiveHeight,
-          fieldBody: textField,
-          // errorPosition: widget.errorPosition,
-          outerLabelConfig: widget.outerLabelConfig,
-          buttonConfig: widget.textFieldButtonConfig,
-          styleControllerKit: _styleControllerKit,
-          onButtonTap: onButtonTap,
-        );
-      },
-    );
+      return LabelledBox(
+        fieldBody: textField,
+        width: _width,
+        height: _height,
+        outerLabelConfig: widget.outerLabelConfig,
+        buttonConfig: widget.buttonConfig,
+        textFieldBorderType: widget.textFieldBorderType,
+        compoundWidgetStatesController: _compoundWidgetStatesController,
+        onButtonTap: onButtonTap,
+      );
+    } else {
+      var compoundWidgetStatesController = _compoundWidgetStatesController!;
+
+      return AnimatedBuilder(
+        animation: compoundWidgetStatesController,
+        builder: (context, _) {
+          final decoration = _makeInputDecoration(context, compoundWidgetStatesController);
+
+          final MouseRegion stateNotifyingTextField = CompoundWidgetStatesController.wrapWithStateDetectors(
+            compoundWidgetStatesController,
+            _focusNode,
+            _makeTextField(textEditingController, decoration, _style),
+          );
+
+          return LabelledBox(
+            fieldBody: stateNotifyingTextField,
+            width: _width,
+            height: _height,
+            outerLabelConfig: widget.outerLabelConfig,
+            buttonConfig: widget.buttonConfig,
+            textFieldBorderType: widget.textFieldBorderType,
+            compoundWidgetStatesController: _compoundWidgetStatesController,
+            onButtonTap: onButtonTap,
+          );
+        },
+      );
+    }
   }
 
   TextField _makeTextField(
     TextEditingController controller,
     InputDecoration decoration,
     TextStyle style,
-    WidgetStatesController? statesController,
   ) {
     return TextField(
       groupId: widget.textFieldConfig.groupId,
@@ -385,7 +379,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       // Deprecated: toolbarOptions - not used
       showCursor: widget.textFieldConfig.showCursor,
       // autofocus: widget.config.autofocus,
-      statesController: statesController,
+      statesController: widget.textFieldConfig.statesController,
       obscuringCharacter: widget.textFieldConfig.obscuringCharacter,
       obscureText: widget.textFieldConfig.obscureText,
       autocorrect: widget.textFieldConfig.autocorrect,
@@ -450,27 +444,55 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   }
 
   // TODO move helper methods to a singleton
+  InputDecoration _makeInputDecoration(BuildContext context, CompoundWidgetStatesController? compoundStatesController) {
+    bool showErrorBelowText = false ||
+        widget.errorPosition == ErrorPosition.dynamicSpaceBelowField ||
+        widget.errorPosition == ErrorPosition.fixedSpaceBelowField;
 
-  InputDecoration _makeInputDecoration(BuildContext context, Set<WidgetState>? states) {
-    final String? errText = widget.errorPosition == ErrorPosition.dynamicSpaceBelowField ||
-            widget.errorPosition == ErrorPosition.fixedSpaceBelowField
-        ? _errorText
-        : null;
-    // final String? errText = widget.errorBehaviour.position == ErrorPosition.withTextField ? _errorText : null;
-    final Color? color = _effectiveColorMaker.makeColor(context, states);
+    // TODO support errorWidget
+    final TextStyle? errorStyle = showErrorBelowText ? null : TextStyle(fontSize: 0);
+
+    Color? color = UiParams.of(context).appColor.getFillColor(compoundStatesController?.states);
+    compoundStatesController?.setFieldError(_errorText != null && _errorText!.isNotEmpty);
 
     InputDecoration? decoration = widget.textFieldConfig.decoration;
 
     if (decoration != null) {
       return decoration.copyWith(
-        errorText: errText,
+        errorText: _errorText,
+        errorStyle: errorStyle,
         fillColor: color,
+        border: _makeInputDecorationBorder(),
       );
     } else {
       return InputDecoration(
-        errorText: errText,
+        errorText: _errorText,
+        errorStyle: errorStyle,
         fillColor: color,
+        border: _makeInputDecorationBorder(),
       );
+    }
+  }
+
+  InputBorder? _makeInputDecorationBorder() {
+    if (widget.buttonConfig == null) {
+      return switch (widget.textFieldBorderType) {
+        TextFieldBorderType.outline => OutlineInputBorder(),
+        TextFieldBorderType.underline => UnderlineInputBorder(),
+        TextFieldBorderType.other => null,
+      };
+    } else {
+      return switch (widget.textFieldBorderType) {
+        TextFieldBorderType.outline => switch (widget.buttonConfig!.buttonPosition) {
+            ButtonPosition.left => OutlineSidesInputBorder(sideLeft: false),
+            ButtonPosition.right => OutlineSidesInputBorder(sideRight: false),
+          },
+        TextFieldBorderType.underline => switch (widget.buttonConfig!.buttonPosition) {
+            ButtonPosition.left => UnderlineTopRoundedInputBorder(radiusTopLeft: 0),
+            ButtonPosition.right => UnderlineTopRoundedInputBorder(radiusTopRight: 0),
+          },
+        TextFieldBorderType.other => null,
+      };
     }
   }
 
@@ -521,6 +543,8 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     setState(() {
       _errorText = fieldContent.error;
       setInput(fieldContent.input);
+      bool isError = _errorText != null && _errorText!.isNotEmpty;
+      if (_compoundWidgetStatesController != null) _compoundWidgetStatesController!.setFieldError(isError);
     });
     _skipOnChanged = false;
   }

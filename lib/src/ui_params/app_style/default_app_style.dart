@@ -61,12 +61,4 @@ class DefaultAppStyle extends AppStyle {
           : const BeveledRectangleBorder(side: BorderSide(width: 0, style: BorderStyle.none)),
     );
   }
-
-  @override
-  BorderSide makeBorderSide(Set<WidgetState> states) {
-    return BorderSide(
-      width: appSize.borderWidth,
-      color: appColor.getBorderColor(states),
-    );
-  }
 }

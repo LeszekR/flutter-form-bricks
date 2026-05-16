@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/update_once_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/state/update_once_widget_states_controller.dart';
 
 class DoubleWidgetStatesController extends WidgetStatesController implements ValueListenable<Set<WidgetState>> {
-  final WidgetStatesController statesObserver = WidgetStatesController();
-  final UpdateOnceWidgetStatesController updateOnceStatesObserver = UpdateOnceWidgetStatesController();
+  final WidgetStatesController receiverStatesController = WidgetStatesController();
+  final UpdateOnceWidgetStatesController updateOnceWidgetStatesController = UpdateOnceWidgetStatesController();
 
   final Set<WidgetState> _newState1 = {};
   final Set<WidgetState> _newState2 = {};
@@ -16,19 +16,19 @@ class DoubleWidgetStatesController extends WidgetStatesController implements Val
   WidgetState? lastState;
 
   DoubleWidgetStatesController() {
-    statesObserver.addListener(() => setNewWidgetState(statesObserver));
-    updateOnceStatesObserver.addListener(() => setNewWidgetState(updateOnceStatesObserver));
+    receiverStatesController.addListener(() => setNewWidgetState(receiverStatesController));
+    updateOnceWidgetStatesController.addListener(() => setNewWidgetState(updateOnceWidgetStatesController));
   }
 
   // TODO check whether can't be simplified to only manipulating Set<WidgetState> of regular WidgetStatesController
   void setNewWidgetState(WidgetStatesController controller) {
     WidgetState? newState;
 
-    if (controller == statesObserver) {
+    if (controller == receiverStatesController) {
       _newState1.clear();
       _newState1.addAll(controller.value);
     }
-    if (controller == updateOnceStatesObserver) {
+    if (controller == updateOnceWidgetStatesController) {
       _newState2.clear();
       _newState2.addAll(controller.value);
     }

@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 
-class BottomBorderTopRoundedShape extends OutlinedBorder {
-  final double borderRadius;
+class UnderlineTopRoundedShape extends OutlinedBorder {
+  final double radiusTopLeft;
+  final double radiusTopRight;
+  final double radiusBottomLeft;
+  final double radiusBottomRight;
 
-  const BottomBorderTopRoundedShape({
+  const UnderlineTopRoundedShape({
     super.side = const BorderSide(),
-    this.borderRadius = 4,
+    this.radiusTopLeft = 4,
+    this.radiusTopRight = 4,
+    this.radiusBottomLeft = 4,
+    this.radiusBottomRight = 4,
   });
 
   BorderRadius get _radius => BorderRadius.only(
-    topLeft: Radius.circular(borderRadius),
-    topRight: Radius.circular(borderRadius),
+    topLeft: Radius.circular(radiusTopLeft),
+    topRight: Radius.circular(radiusTopRight),
+    bottomLeft: Radius.circular(radiusBottomLeft),
+    bottomRight: Radius.circular(radiusBottomRight),
   );
 
   @override
@@ -51,22 +59,31 @@ class BottomBorderTopRoundedShape extends OutlinedBorder {
   }
 
   @override
-  BottomBorderTopRoundedShape copyWith({
+  UnderlineTopRoundedShape copyWith({
     BorderSide? side,
-    double? borderRadius,
+    double? radiusTopLeft,
+    double? radiusTopRight,
+    double? radiusBottomLeft,
+    double? radiusBottomRight,
     Color? color,
   }) {
-    return BottomBorderTopRoundedShape(
+    return UnderlineTopRoundedShape(
       side: side ?? this.side,
-      borderRadius: borderRadius ?? this.borderRadius,
+      radiusTopLeft: radiusTopLeft ?? this.radiusTopLeft,
+      radiusTopRight: radiusTopRight ?? this.radiusTopRight,
+      radiusBottomLeft: radiusBottomLeft ?? this.radiusBottomLeft,
+      radiusBottomRight: radiusBottomRight ?? this.radiusBottomRight,
     );
   }
 
   @override
   ShapeBorder scale(double t) {
-    return BottomBorderTopRoundedShape(
+    return UnderlineTopRoundedShape(
       side: side.scale(t),
-      borderRadius: borderRadius * t,
+      radiusTopLeft: radiusTopLeft * t,
+      radiusTopRight: radiusTopRight * t,
+      radiusBottomLeft: radiusBottomLeft * t,
+      radiusBottomRight: radiusBottomRight * t,
     );
   }
 }

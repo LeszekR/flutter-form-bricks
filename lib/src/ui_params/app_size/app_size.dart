@@ -6,14 +6,16 @@ abstract class AppSize {
   /// Base scaling factor (from AppScale, or const 1.0 if no scaling)
   double zoom;
 
-  double getBorderWidth(Set<WidgetState> states) {
+  double getBorderWidth(Set<WidgetState>? states, double defaultWidth) {
+    if (states == null) return defaultWidth;
+
     return switch (states) {
       _ when states.contains(WidgetState.disabled) => borderWidth,
-      _ when states.contains(WidgetState.focused) => borderWidth,
-      _ when states.contains(WidgetState.hovered) => borderWidth,
-      _ when states.contains(WidgetState.pressed) => borderWidth,
       _ when states.contains(WidgetState.selected) => borderWidth,
-      _ when states.contains(WidgetState.error) => borderErrorWidth,
+      _ when states.contains(WidgetState.focused) => borderDoubleWidth,
+      _ when states.contains(WidgetState.pressed) => borderDoubleWidth,
+      _ when states.contains(WidgetState.error) => borderWidth,
+      _ when states.contains(WidgetState.hovered) => borderWidth,
       _ => borderWidth,
     };
   }
@@ -44,7 +46,7 @@ abstract class AppSize {
   double get tabHeight;
   double get tabWidth;
   double get borderWidth;
-  double get borderErrorWidth;
+  double get borderDoubleWidth;
   BorderRadiusGeometry get borderRadius;
   double get tabBorderWidth;
   double get bottomPanelHeight;

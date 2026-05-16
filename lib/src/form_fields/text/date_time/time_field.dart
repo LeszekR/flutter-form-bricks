@@ -35,13 +35,14 @@ class TimeField extends TextFieldBrick<DateTime> {
     // FormFieldBrick
     required super.keyString,
     required super.formManager,
-    super.colorMaker,
     super.statesController,
+    super.outerLabelConfig,
     //
     // TextFieldBrick
     super.width,
     super.inputDecoration,
-    super.outerLabelConfig,
+    super.errorPosition,
+    super.textFieldBorderType,
     //
     // TimeField
     bool withTimePicker = true,
@@ -118,7 +119,7 @@ class TimeField extends TextFieldBrick<DateTime> {
   })  : assert(withTimePicker == false ? (timePickerButtonConfig == null && timePickerConfig == null) : true,
             'When withTimePicker == false then timePickerButtonConfig and timePickerConfig must be null or not declared'),
         super(
-          textFieldButtonConfig: !withTimePicker
+          buttonConfig: !withTimePicker
               ? null
               : timePickerButtonConfig != null
                   ? timePickerButtonConfig

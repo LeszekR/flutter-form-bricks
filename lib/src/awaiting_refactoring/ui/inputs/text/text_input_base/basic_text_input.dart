@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/label_position.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/double_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/state/double_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../../../../../ui_params/ui_params.dart';
-import '../../../forms/form_manager/form_manager_OLD.dart';
 import 'text_field_colored.dart';
-import 'package:flutter_form_bricks/src/forms/form_manager/form_manager.dart';
 
 class BasicTextInput {
   BasicTextInput._();
@@ -494,8 +493,8 @@ class BasicTextInput {
     );
   }
 
-  static Widget label(String text,double? fontSize,
-      {final FontWeight? fontWeight = FontWeight.bold,Color? color = Colors.black}) {
+  static Widget label(String text, double? fontSize,
+      {final FontWeight? fontWeight = FontWeight.bold, Color? color = Colors.black}) {
     return SizedBox(
         height: fontSize,
         child: Text(text,

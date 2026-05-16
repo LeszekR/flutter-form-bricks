@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/style_controller_kit.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/compound_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button.dart';
 
 class LabelledBox extends StatelessWidget {
@@ -9,20 +9,24 @@ class LabelledBox extends StatelessWidget {
   final double? height;
   final OuterLabelConfig? outerLabelConfig;
   final TextFieldButtonConfig? buttonConfig;
-  final StyleControllerKit? styleControllerKit;
+  final TextFieldBorderType? textFieldBorderType;
+  final CompoundWidgetStatesController? compoundWidgetStatesController;
   final VoidCallback? onButtonTap;
 
   const LabelledBox({
     super.key,
     required this.fieldBody,
+    this.textFieldBorderType,
     this.width,
     this.height,
     this.outerLabelConfig,
     this.buttonConfig,
-    this.styleControllerKit,
+    this.compoundWidgetStatesController,
     this.onButtonTap,
-  }) :  assert(buttonConfig == null ? styleControllerKit == null : true,
-            'If buttonConfig is null styleControllerKit must be null');
+  }) : assert(buttonConfig == null ? compoundWidgetStatesController == null : true,
+            'If buttonConfig is null styleControllerKit must be null'),
+        assert(buttonConfig != null ? textFieldBorderType != null : true,
+            'If buttonConfig is declared textFieldBorderType must also be declared');
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +42,9 @@ class LabelledBox extends StatelessWidget {
         fieldBody: fieldBody,
         height: buttonHeight,
         buttonConfig: buttonConfig!,
+        textFieldBorderType: textFieldBorderType!,
         onButtonTap: onButtonTap!,
-        styleControllerKit: styleControllerKit,
+        compoundWidgetStatesController: compoundWidgetStatesController,
       );
     }
 
@@ -74,19 +79,20 @@ class LabelledBox extends StatelessWidget {
     required Widget fieldBody,
     required double height,
     required TextFieldButtonConfig buttonConfig,
+    required TextFieldBorderType textFieldBorderType,
     required VoidCallback onButtonTap,
-    StyleControllerKit? styleControllerKit,
+    CompoundWidgetStatesController? compoundWidgetStatesController,
   }) {
     AppSize appSize = UiParams.of(context).appSize;
-    double size = height * appSize.zoom;
 
     TextFieldButtonConfig effectiveButtonConfig =
-        buttonConfig.size != null ? buttonConfig : buttonConfig.copyWith(size: size);
+        buttonConfig.size != null ? buttonConfig : buttonConfig.copyWith(size:  height * appSize.zoom);
 
     TextFieldButton button = TextFieldButton(
       buttonConfig: effectiveButtonConfig,
+      textFieldBorderType: textFieldBorderType,
       onTap: onButtonTap,
-      styleControllerKit: styleControllerKit,
+      compoundWidgetStatesController: compoundWidgetStatesController,
     );
 
     double padding = (buttonConfig.distanceFromTextField ?? appSize.buttonDistanceFromTextField) * appSize.zoom;
@@ -97,13 +103,13 @@ class LabelledBox extends StatelessWidget {
           children: [
             Expanded(child: fieldBody),
             SizedBox(width: padding),
-            SizedBox(width: size, height: size, child: button),
+            SizedBox(width: effectiveButtonConfig.size, height: effectiveButtonConfig.size, child: button),
           ],
         ),
       ButtonPosition.left => Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(width: size, height: size, child: button),
+            SizedBox(width: effectiveButtonConfig.size, height: effectiveButtonConfig.size, child: button),
             SizedBox(width: padding),
             Expanded(child: fieldBody),
           ],

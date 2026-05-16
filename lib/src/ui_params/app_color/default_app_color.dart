@@ -31,15 +31,15 @@ class DefaultAppColor extends AppColor {
   @override late final Color formFieldFillOk = white;
   @override late final Color formFieldFillHovered = colorSchemeMain.surfaceContainerLow;
   @override late final Color formFieldFillFocused = colorSchemeMain.surfaceContainerHighest; //colorSchemeMain.surfaceContainerLow;
-  @override late final Color formFieldFillPressed = colorSchemeMain.onPrimaryContainer; //colorSchemeMain.surfaceContainerHigh;
+  @override late final Color formFieldFillPressed = colorSchemeMain.surfaceContainerHighest; //colorSchemeMain.surfaceContainerHigh;
   @override late final Color formFieldFillSelected = white; //colorSchemeMain.surfaceContainerHighest;
   @override late final Color formFieldFillDisabled = greyLight;
   @override late final Color formFieldFillError = colorSchemeMain.errorContainer;
 
-  @override Color getFormFieldHovered() => _lerp('formFieldFillHovered',formFieldFillHovered, Colors.white, 0.50);
-  @override Color getFormFieldFocused() => _lerp('formFieldFillFocused', formFieldFillFocused, Colors.white, 0.50);
-  @override Color getFormFieldSelected() => _lerp('formFieldFillSelected', formFieldFillSelected, Colors.white, 0.50);
-  @override Color getFormFieldPressed() => _lerp('formFieldFillPressed', formFieldFillPressed, Colors.white, 0.50);
+  @override Color getFormFieldHovered() => _lerp('formFieldFillHovered',formFieldFillHovered, Colors.white, 0.10);
+  @override Color getFormFieldFocused() => _lerp('formFieldFillFocused', formFieldFillFocused, Colors.white, 0.80);
+  @override Color getFormFieldSelected() => _lerp('formFieldFillSelected', formFieldFillSelected, Colors.white, 0.70);
+  @override Color getFormFieldPressed() => _lerp('formFieldFillPressed', formFieldFillPressed, formFieldFillPressed, 0.70);
 
   Color _lerp(String name, Color from, Color to, double factor) {
     Color? color = _lerpMap[name];
@@ -51,14 +51,14 @@ class DefaultAppColor extends AppColor {
   }
 
   Map<String, Color> _lerpMap = {};
-
-  @override late final Color formFieldBorderOk = Colors.black;
-  @override late final Color formFieldBorderHovered = Colors.black;
-  @override late final Color formFieldBorderFocused = Colors.black;
-  @override late final Color formFieldBorderPressed = Colors.black;
-  @override late final Color formFieldBorderSelected = Colors.black;
+  
+  @override late final Color formFieldBorderOk = colorSchemeMain.primary;
+  @override late final Color formFieldBorderHovered = colorSchemeMain.primary;
+  @override late final Color formFieldBorderFocused = colorSchemeMain.primary;
+  @override late final Color formFieldBorderPressed = colorSchemeMain.primary;
+  @override late final Color formFieldBorderSelected = colorSchemeMain.primary;
   @override late final Color formFieldBorderDisabled = Colors.black;
-  @override late final Color formFieldBorderError = Colors.red;
+  @override late final Color formFieldBorderError = colorSchemeMain.error;
 
   // ========== Buttons =========
   @override late final Color buttonFontEnabled = black;

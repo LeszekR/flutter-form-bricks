@@ -7,7 +7,6 @@ import 'package:flutter_form_bricks/src/ui_params/app_size/app_size.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_color/app_color.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_style/app_style.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/label_position.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/states_color_maker.dart';
 
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 

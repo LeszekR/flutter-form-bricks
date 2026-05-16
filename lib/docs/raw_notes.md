@@ -60,7 +60,7 @@ The height you pass will be scaled with `AppSize.zoom` factor so it will follow 
 of the UI.
 The correct ways to find out the height are
 
-- run the app with Flutter Dev Tools and read the actual height of the text field
+- run the app with Flutter Inspector and read the actual height of the text field
 - if the outer label is placed on `Side.left` or `Side.right`set exactly the same height in
   `OuterLabelConfig` .
 - set in your (or default) implementation of `AppSize.textFieldHeight` to the same height - this

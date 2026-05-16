@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/style_controller_kit.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/style_controller/update_once_widget_states_controller.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/decoration/outline_sides_shape.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/decoration/underline_top_rounded_shape.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/compound_widget_states_controller.dart';
 
 class TextFieldButton extends StatelessWidget {
   final TextFieldButtonConfig buttonConfig;
+  final TextFieldBorderType textFieldBorderType;
   final VoidCallback onTap;
-  final StyleControllerKit? styleControllerKit;
+  final CompoundWidgetStatesController? _compoundWidgetStatesController;
 
+  // TODO refactor to StatefulWidget and destroy the FocusNode manually
   final FocusNode _focusNode = FocusNode();
 
   // final FocusNode _focusNode = FocusNode(onKeyEvent: _handleKeyPress);
@@ -15,38 +18,40 @@ class TextFieldButton extends StatelessWidget {
   TextFieldButton({
     super.key,
     required this.buttonConfig,
+    required this.textFieldBorderType,
     required this.onTap,
-    this.styleControllerKit,
-  });
+    CompoundWidgetStatesController? compoundWidgetStatesController,
+  }) : _compoundWidgetStatesController = compoundWidgetStatesController;
 
   @override
   Widget build(BuildContext context) {
     AppSize appSize = UiParams.of(context).appSize;
-    double zoomedSize = buttonConfig.size ?? appSize.textFieldHeight  * appSize.zoom;
+    double zoomedSize = buttonConfig.size ?? appSize.textFieldHeight * appSize.zoom;
 
-    if (styleControllerKit == null) {
+    if (_compoundWidgetStatesController == null) {
       return _makeButton(context, zoomedSize, null);
     } else {
-      final WidgetStatesController statesNotifier =
-          styleControllerKit!.doubleWidgetStatesController as WidgetStatesController;
-      final UpdateOnceWidgetStatesController statesReceiver =
-          styleControllerKit!.doubleWidgetStatesController.updateOnceStatesObserver;
+      CompoundWidgetStatesController compoundWidgetStatesController = _compoundWidgetStatesController!;
 
-      return ValueListenableBuilder(
-          valueListenable: statesNotifier,
-          builder: (context, states, _) {
-            return _wrapWithStateDetectors(
-              _makeButton(context, zoomedSize, states),
-              statesReceiver,
+      return AnimatedBuilder(
+          animation: compoundWidgetStatesController,
+          builder: (context, _) {
+            return CompoundWidgetStatesController.wrapWithStateDetectors(
+              compoundWidgetStatesController,
+              _focusNode,
+              _makeButton(context, zoomedSize, compoundWidgetStatesController.states),
             );
           });
     }
   }
 
   SizedBox _makeButton(BuildContext context, double zoomedSize, Set<WidgetState>? states) {
+    UiParamsData uiParams = UiParams.of(context);
     ButtonStyle? effectiveStyle = buttonConfig.style ??
         IconButtonTheme.of(context).style?.copyWith(
-            backgroundColor: WidgetStatePropertyAll(styleControllerKit?.statesColorMaker.makeColor(context, states)));
+              backgroundColor: WidgetStatePropertyAll(UiParams.of(context).appColor.getFillColor(states)),
+              shape: WidgetStatePropertyAll(_makeShape(uiParams, states)),
+            );
 
     return SizedBox(
       width: zoomedSize,
@@ -61,36 +66,22 @@ class TextFieldButton extends StatelessWidget {
     );
   }
 
-  MouseRegion _wrapWithStateDetectors(Widget button, UpdateOnceWidgetStatesController statesReceiver) {
-    return MouseRegion(
-      onEnter: (event) {
-        statesReceiver.updateOnce(WidgetState.hovered, true);
-      },
-      onExit: (event) {
-        statesReceiver.updateOnce(WidgetState.hovered, false);
-      },
-      child: GestureDetector(
-        onTapDown: (_) {
-          // TODO #101 make the field get focus after the button has been clicked
-          _focusNode.requestFocus();
-          // widget.receiverColorController.updateOnce(WidgetState.focused, true);
-        },
-        onDoubleTapDown: (_) {
-          _focusNode.requestFocus();
-          // widget.receiverColorController.updateOnce(WidgetState.focused, true);
-        },
-        onForcePressStart: (_) {
-          _focusNode.requestFocus();
-          // widget.receiverColorController.updateOnce(WidgetState.focused, true);
-        },
-        onLongPress: () {
-          _focusNode.requestFocus();
-          // widget.receiverColorController.updateOnce(WidgetState.focused, true);
-        },
-        child: Focus(
-          child: button,
-        ),
-      ),
+  OutlinedBorder? _makeShape(UiParamsData uiParams, Set<WidgetState>? states) {
+    BorderSide borderSide = BorderSide(
+      color: uiParams.appColor.getBorderColor(states, uiParams.appColor.borderEnabled),
+      width: uiParams.appSize.getBorderWidth(states, uiParams.appSize.borderWidth),
     );
+
+    return switch (textFieldBorderType) {
+      TextFieldBorderType.outline => switch (buttonConfig.buttonPosition) {
+          ButtonPosition.left => OutlineSidesShape(side: borderSide, sideRight: false),
+          ButtonPosition.right => OutlineSidesShape(side: borderSide, sideLeft: false),
+        },
+      TextFieldBorderType.underline => switch (buttonConfig.buttonPosition) {
+          ButtonPosition.left => UnderlineTopRoundedShape(side: borderSide, radiusTopRight: 0),
+          ButtonPosition.right => UnderlineTopRoundedShape(side: borderSide, radiusTopLeft: 0),
+        },
+      TextFieldBorderType.other => null,
+    };
   }
 }

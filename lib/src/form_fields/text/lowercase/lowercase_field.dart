@@ -27,14 +27,13 @@ class LowerCaseField extends TextFieldBrick<String> {
     // FormFieldBrick
     required super.keyString,
     required super.formManager,
-    super.colorMaker,
     super.statesController,
     //
     // BrickTextField
     super.width,
     super.inputDecoration,
     super.outerLabelConfig,
-    super.textFieldButtonConfig,
+    super.buttonConfig,
     //
     // TextField
     super.groupId = EditableText,
