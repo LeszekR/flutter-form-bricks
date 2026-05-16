@@ -55,7 +55,7 @@ class DateField extends TextFieldBrick<DateTime> {
     //
     // DateField
     bool withDatePicker = true,
-    TextFieldButtonConfig? datePickerButtonConfig,
+    TextFieldButtonConfig? buttonConfig,
     this.datePickerConfig,
     this.currentDate,
     this.height,
@@ -127,13 +127,13 @@ class DateField extends TextFieldBrick<DateTime> {
     super.spellCheckConfiguration,
     super.magnifierConfiguration,
     super.hintLocales,
-  })  : assert(withDatePicker == false ? (datePickerButtonConfig == null && datePickerConfig == null) : true,
+  })  : assert(withDatePicker == false ? (buttonConfig == null && datePickerConfig == null) : true,
             'When withDatePicker == false then datePickerButtonConfig and datePickerConfig must be null or not declared'),
         super(
-          textFieldButtonConfig: !withDatePicker
+          buttonConfig: !withDatePicker
               ? null
-              : datePickerButtonConfig != null
-                  ? datePickerButtonConfig
+              : buttonConfig != null
+                  ? buttonConfig
                   : const TextFieldButtonConfig(
                       syncStyleWithTextField: true,
                       iconData: Icons.arrow_drop_down,

@@ -84,10 +84,9 @@ class LabelledBox extends StatelessWidget {
     CompoundWidgetStatesController? compoundWidgetStatesController,
   }) {
     AppSize appSize = UiParams.of(context).appSize;
-    double size = height * appSize.zoom;
 
     TextFieldButtonConfig effectiveButtonConfig =
-        buttonConfig.size != null ? buttonConfig : buttonConfig.copyWith(size: size);
+        buttonConfig.size != null ? buttonConfig : buttonConfig.copyWith(size:  height * appSize.zoom);
 
     TextFieldButton button = TextFieldButton(
       buttonConfig: effectiveButtonConfig,
@@ -104,13 +103,13 @@ class LabelledBox extends StatelessWidget {
           children: [
             Expanded(child: fieldBody),
             SizedBox(width: padding),
-            SizedBox(width: size, height: size, child: button),
+            SizedBox(width: effectiveButtonConfig.size, height: effectiveButtonConfig.size, child: button),
           ],
         ),
       ButtonPosition.left => Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(width: size, height: size, child: button),
+            SizedBox(width: effectiveButtonConfig.size, height: effectiveButtonConfig.size, child: button),
             SizedBox(width: padding),
             Expanded(child: fieldBody),
           ],

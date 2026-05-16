@@ -25,9 +25,7 @@ class TextFieldButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppSize appSize = UiParams
-        .of(context)
-        .appSize;
+    AppSize appSize = UiParams.of(context).appSize;
     double zoomedSize = buttonConfig.size ?? appSize.textFieldHeight * appSize.zoom;
 
     if (_compoundWidgetStatesController == null) {
@@ -41,7 +39,7 @@ class TextFieldButton extends StatelessWidget {
             return CompoundWidgetStatesController.wrapWithStateDetectors(
               compoundWidgetStatesController,
               _focusNode,
-              _makeButton(context, zoomedSize, compoundWidgetStatesController.states,),
+              _makeButton(context, zoomedSize, compoundWidgetStatesController.states),
             );
           });
     }
@@ -50,16 +48,10 @@ class TextFieldButton extends StatelessWidget {
   SizedBox _makeButton(BuildContext context, double zoomedSize, Set<WidgetState>? states) {
     UiParamsData uiParams = UiParams.of(context);
     ButtonStyle? effectiveStyle = buttonConfig.style ??
-        IconButtonTheme
-            .of(context)
-            .style
-            ?.copyWith(
-          backgroundColor: WidgetStatePropertyAll(UiParams
-              .of(context)
-              .appColor
-              .getFillColor(states)),
-          shape: WidgetStatePropertyAll(_makeShape(uiParams, states)),
-        );
+        IconButtonTheme.of(context).style?.copyWith(
+              backgroundColor: WidgetStatePropertyAll(UiParams.of(context).appColor.getFillColor(states)),
+              shape: WidgetStatePropertyAll(_makeShape(uiParams, states)),
+            );
 
     return SizedBox(
       width: zoomedSize,
@@ -81,16 +73,14 @@ class TextFieldButton extends StatelessWidget {
     );
 
     return switch (textFieldBorderType) {
-      TextFieldBorderType.outline =>
-      switch (buttonConfig.buttonPosition) {
-        ButtonPosition.left => OutlineSidesShape(side: borderSide, sideRight: false),
-        ButtonPosition.right => OutlineSidesShape(side: borderSide, sideLeft: false),
-      },
-      TextFieldBorderType.underline =>
-      switch (buttonConfig.buttonPosition) {
-        ButtonPosition.left => UnderlineTopRoundedShape(side: borderSide, radiusTopRight: 0),
-        ButtonPosition.right => UnderlineTopRoundedShape(side: borderSide, radiusTopLeft: 0),
-      },
+      TextFieldBorderType.outline => switch (buttonConfig.buttonPosition) {
+          ButtonPosition.left => OutlineSidesShape(side: borderSide, sideRight: false),
+          ButtonPosition.right => OutlineSidesShape(side: borderSide, sideLeft: false),
+        },
+      TextFieldBorderType.underline => switch (buttonConfig.buttonPosition) {
+          ButtonPosition.left => UnderlineTopRoundedShape(side: borderSide, radiusTopRight: 0),
+          ButtonPosition.right => UnderlineTopRoundedShape(side: borderSide, radiusTopLeft: 0),
+        },
       TextFieldBorderType.other => null,
     };
   }

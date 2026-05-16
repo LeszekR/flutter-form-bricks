@@ -21,8 +21,8 @@ class DefaultAppSize extends AppSize {
 
   @override late final double textFieldHeight = 22;
   @override late final double textFieldWidth = 200;
-  @override late final double dateFieldWidth = 95;
-  @override late final double timeFieldWidth = 55;
+  @override late final double dateFieldWidth = 130;
+  @override late final double timeFieldWidth = 80;
   @override late final buttonDistanceFromTextField = 0;
 
   @override late final double spacerVerticalSmallest =  4.0;

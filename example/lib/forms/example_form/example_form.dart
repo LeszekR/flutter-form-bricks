@@ -74,8 +74,9 @@ class ExampleFormState extends FormStateBrick {
             DateField(
               keyString: dateKeyString1,
               formManager: formManager,
-              width: 130,
+              width: 160,
               withDatePicker: true,
+              // buttonConfig: TextFieldButtonConfig(size: 30),
               outerLabelConfig: OuterLabelConfig(
                 labelText: 'Data',
                 align: Alignment.bottomLeft,
@@ -86,6 +87,31 @@ class ExampleFormState extends FormStateBrick {
               errorPosition: ErrorPosition.dynamicSpaceBelowField,
               textFieldBorderType: TextFieldBorderType.underline,
               // inputDecoration: InputDecoration(labelText: 'data'),
+            ),
+            SizedBox(height: appSize.spacerVerticalMedium),
+            DateTimeSeparatedField(
+              keyString: dateTimeSeparatedKeyString1,
+              formManager: formManager,
+              dateWidth: 150,
+              datePickerButtonConfig: TextFieldButtonConfig(size: 30),
+              timePickerButtonConfig: TextFieldButtonConfig(size: 30),
+              dateOuterLabelConfig: OuterLabelConfig(
+                labelText: 'Data',
+                side: Side.top,
+                height: 16,
+              ),
+              timeOuterLabelConfig: OuterLabelConfig(
+                labelText: 'Godzina',
+                side: Side.top,
+                height: 16,
+              ),
+              outerLabelConfig: OuterLabelConfig(
+                labelText: 'Data i czas',
+                side: Side.left,
+                height: 46 * appSize.zoom,
+                width: 80,
+                align: Alignment.bottomLeft,
+              ),
             ),
            SizedBox(height: appSize.spacerVerticalMedium),
             TimeField(
@@ -123,29 +149,6 @@ class ExampleFormState extends FormStateBrick {
               keyString: lowerCaseKeyString3,
               formManager: formManager,
               width: 250,
-            ),
-            SizedBox(height: appSize.spacerVerticalMedium),
-            DateTimeSeparatedField(
-              keyString: dateTimeSeparatedKeyString1,
-              formManager: formManager,
-              // TU PRZERWAŁEM add height overriding global textFieldHeight to compensate for outlineinputborder
-              dateOuterLabelConfig: OuterLabelConfig(
-                labelText: 'Data',
-                side: Side.top,
-                height: 16,
-              ),
-              timeOuterLabelConfig: OuterLabelConfig(
-                labelText: 'Godzina',
-                side: Side.top,
-                height: 16,
-              ),
-              outerLabelConfig: OuterLabelConfig(
-                labelText: 'Data i czas',
-                side: Side.left,
-                height: appSize.textFieldHeight + 16,
-                width: 80,
-                align: Alignment.bottomLeft,
-              ),
             ),
           ],
         ), // test your widget here

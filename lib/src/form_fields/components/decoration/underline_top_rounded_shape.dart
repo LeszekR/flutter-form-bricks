@@ -8,10 +8,10 @@ class UnderlineTopRoundedShape extends OutlinedBorder {
 
   const UnderlineTopRoundedShape({
     super.side = const BorderSide(),
-    this.radiusTopLeft = 3,
-    this.radiusTopRight = 3,
-    this.radiusBottomLeft = 3,
-    this.radiusBottomRight = 3,
+    this.radiusTopLeft = 4,
+    this.radiusTopRight = 4,
+    this.radiusBottomLeft = 4,
+    this.radiusBottomRight = 4,
   });
 
   BorderRadius get _radius => BorderRadius.only(

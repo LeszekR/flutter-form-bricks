@@ -20,7 +20,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
   final TextFieldConfig textFieldConfig;
   final InputDecoration? inputDecoration;
   final ErrorPosition errorPosition;
-  final TextFieldButtonConfig? textFieldButtonConfig;
+  final TextFieldButtonConfig? buttonConfig;
   final TextFieldBorderType textFieldBorderType;
   final double? height;
 
@@ -37,7 +37,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     this.width,
     this.inputDecoration,
     this.errorPosition = ErrorPosition.dynamicSpaceBelowField,
-    this.textFieldButtonConfig,
+    this.buttonConfig,
     this.textFieldBorderType = TextFieldBorderType.outline,
     this.height,
     //
@@ -129,7 +129,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
           (inputDecoration?.suffix != null ? 1 : 0) +
                   (inputDecoration?.suffixText != null ? 1 : 0) +
                   (inputDecoration?.suffixIcon != null ? 1 : 0) +
-                  ((textFieldButtonConfig?.buttonPosition == ButtonPosition.right) ? 1 : 0) <=
+                  ((buttonConfig?.buttonPosition == ButtonPosition.right) ? 1 : 0) <=
               1,
           'Only one can be declared: textFieldButtonConfig.buttonPosition.right, '
           'inputDecoration.suffix, inputDecoration.suffixText, or inputDecoration.suffixIcon.',
@@ -138,7 +138,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
           (inputDecoration?.prefix != null ? 1 : 0) +
                   (inputDecoration?.prefixText != null ? 1 : 0) +
                   (inputDecoration?.prefixIcon != null ? 1 : 0) +
-                  ((textFieldButtonConfig?.buttonPosition == ButtonPosition.left) ? 1 : 0) <=
+                  ((buttonConfig?.buttonPosition == ButtonPosition.left) ? 1 : 0) <=
               1,
           'Only one can be declared: textFieldButtonConfig.buttonPosition.left, '
           'inputDecoration.prefix, inputDecoration.prefixText, or inputDecoration.prefixIcon.',
@@ -167,7 +167,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
           inputDecoration?.suffix == null || inputDecoration?.suffixText == null,
           'Only one can be declared: inputDecoration.suffix or inputDecoration.suffixText.',
         ),
-        assert(textFieldButtonConfig?.syncStyleWithTextField == true ? statesController == null : true,
+        assert(buttonConfig?.syncStyleWithTextField == true ? statesController == null : true,
             'When syncStyleWithTextField is true, statesController must not be declared'),
         textFieldConfig = TextFieldConfig(
           magnifierConfiguration: magnifierConfiguration,
@@ -270,7 +270,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   void initState() {
     textEditingController = widget.textFieldConfig.controller ?? TextEditingController();
 
-    if (widget.textFieldButtonConfig?.syncStyleWithTextField == true) {
+    if (widget.buttonConfig?.syncStyleWithTextField == true) {
       _compoundWidgetStatesController = CompoundWidgetStatesController();
     } else {
       _compoundWidgetStatesController = null;
@@ -322,7 +322,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         width: _width,
         height: _height,
         outerLabelConfig: widget.outerLabelConfig,
-        buttonConfig: widget.textFieldButtonConfig,
+        buttonConfig: widget.buttonConfig,
         textFieldBorderType: widget.textFieldBorderType,
         compoundWidgetStatesController: _compoundWidgetStatesController,
         onButtonTap: onButtonTap,
@@ -346,7 +346,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
             width: _width,
             height: _height,
             outerLabelConfig: widget.outerLabelConfig,
-            buttonConfig: widget.textFieldButtonConfig,
+            buttonConfig: widget.buttonConfig,
             textFieldBorderType: widget.textFieldBorderType,
             compoundWidgetStatesController: _compoundWidgetStatesController,
             onButtonTap: onButtonTap,
@@ -477,7 +477,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   }
 
   InputBorder? _makeInputDecorationBorder() {
-      if (widget.textFieldButtonConfig == null) {
+      if (widget.buttonConfig == null) {
         return switch (widget.textFieldBorderType) {
           TextFieldBorderType.outline => OutlineInputBorder(),
           TextFieldBorderType.underline => UnderlineInputBorder(),
@@ -485,11 +485,11 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         };
       } else {
         return switch (widget.textFieldBorderType) {
-          TextFieldBorderType.outline => switch (widget.textFieldButtonConfig!.buttonPosition) {
+          TextFieldBorderType.outline => switch (widget.buttonConfig!.buttonPosition) {
             ButtonPosition.left => OutlineSidesInputBorder(sideLeft: false),
             ButtonPosition.right => OutlineSidesInputBorder(sideRight: false),
           },
-          TextFieldBorderType.underline =>  switch (widget.textFieldButtonConfig!.buttonPosition) {
+          TextFieldBorderType.underline =>  switch (widget.buttonConfig!.buttonPosition) {
             ButtonPosition.left => UnderlineTopRoundedInputBorder(radiusTopLeft: 0),
             ButtonPosition.right => UnderlineTopRoundedInputBorder(radiusTopRight: 0),
           },
