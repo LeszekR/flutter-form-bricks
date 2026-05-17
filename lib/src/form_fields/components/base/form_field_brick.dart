@@ -53,7 +53,7 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   late I? _input;
 
   /// Controls the field's color and is passed to `InputDecoration` if the field shows its error this way.
-  String? _error;
+  String? errorText;
 
   FormManager get formManager => widget.formManager;
 
@@ -72,23 +72,15 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   void initState() {
     formManager.registerField<F>(keyString, _hasFormatterValidator());
 
-    focusNode = FocusNode();
-    formManager.setFocusListener(focusNode, keyString);
-
-    _input = formManager.getFieldContent(keyString).input as I?;
-
-    // _onStatesChanged();
-    // widget.statesController?.addListener(_onStatesChanged);
-
     // TODO this strips the field from flutter's restoration - implement restoration pattern as in comments at the end of this file
     setInput(formManager.getInitialInput(keyString));
 
+    errorText = formManager.getFieldError(keyString);
+
+    focusNode = FocusNode();
+    formManager.setFocusListener(focusNode, keyString);
     if (formManager.isFocusedOnStart(keyString)) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => setState(() {
-          focusNode.requestFocus();
-        }),
-      );
+      setStateInNextFrame((_) => focusNode.requestFocus());
     }
     super.initState();
   }

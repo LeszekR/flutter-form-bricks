@@ -75,7 +75,7 @@ class ExampleFormState extends FormStateBrick {
               keyString: dateKeyString1,
               formManager: formManager,
               width: 160,
-              withDatePicker: true,
+              withDatePicker: false,
               // buttonConfig: TextFieldButtonConfig(size: 30),
               outerLabelConfig: OuterLabelConfig(
                 labelText: 'Data',
@@ -127,6 +127,7 @@ class ExampleFormState extends FormStateBrick {
                 height: 22,
               ),
               errorPosition: ErrorPosition.dynamicSpaceBelowField,
+              // TU PRZERWAŁEM TODO make sure textFieldBorderType is other when/and only when the border is declared in inputDecoration
               textFieldBorderType: TextFieldBorderType.underline,
               // inputDecoration: InputDecoration(labelText: 'data'),
             ),

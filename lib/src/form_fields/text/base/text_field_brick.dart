@@ -252,7 +252,9 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   late TextStyle _style;
   late final CompoundWidgetStatesController? _compoundWidgetStatesController;
   final FocusNode _focusNode = FocusNode();
-  String? _errorText;
+  TextEditingValue? oldValue;
+
+  // String? errorText;
 
   void onButtonTap() => throw UnimplementedError('onButtonTap not implemented');
 
@@ -264,7 +266,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   @override
   void setInput(TextEditingValue? formattedValue) =>
-      textEditingController.value = formattedValue ?? TextEditingValue.empty;
+    textEditingController.value = formattedValue ?? TextEditingValue.empty;
 
   @override
   void initState() {
@@ -277,9 +279,9 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     }
 
     // TODO this strips the field from flutter's restoration - implement restoration pattern as in comments at the end of this file
-    setInput(formManager.getInitialInput(keyString));
-    _errorText = formManager.getFieldError(keyString);
     super.initState();
+
+    focusNode.addListener(_onFocusLost);
   }
 
   @override
@@ -448,25 +450,23 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     bool showErrorBelowText = false ||
         widget.errorPosition == ErrorPosition.dynamicSpaceBelowField ||
         widget.errorPosition == ErrorPosition.fixedSpaceBelowField;
-
     // TODO support errorWidget
     final TextStyle? errorStyle = showErrorBelowText ? null : TextStyle(fontSize: 0);
 
+    compoundStatesController?.setFieldError(errorText != null && errorText!.isNotEmpty);
     Color? color = UiParams.of(context).appColor.getFillColor(compoundStatesController?.states);
-    compoundStatesController?.setFieldError(_errorText != null && _errorText!.isNotEmpty);
 
     InputDecoration? decoration = widget.textFieldConfig.decoration;
-
     if (decoration != null) {
       return decoration.copyWith(
-        errorText: _errorText,
+        errorText: errorText,
         errorStyle: errorStyle,
         fillColor: color,
         border: _makeInputDecorationBorder(),
       );
     } else {
       return InputDecoration(
-        errorText: _errorText,
+        errorText: errorText,
         errorStyle: errorStyle,
         fillColor: color,
         border: _makeInputDecorationBorder(),
@@ -538,12 +538,21 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     widget.textFieldConfig.onEditingComplete?.call();
   }
 
+  void _onFocusLost() {
+    if (!focusNode.hasFocus) {
+      if (textEditingController.value != oldValue) {
+        oldValue = textEditingController.value;
+        onEditingComplete(textEditingController.value);
+      }
+    }
+  }
+
   void _updateUi(FieldContent<TextEditingValue, V> fieldContent) {
     _skipOnChanged = true;
     setState(() {
-      _errorText = fieldContent.error;
+      errorText = fieldContent.error;
       setInput(fieldContent.input);
-      bool isError = _errorText != null && _errorText!.isNotEmpty;
+      bool isError = errorText != null && errorText!.isNotEmpty;
       if (_compoundWidgetStatesController != null) _compoundWidgetStatesController!.setFieldError(isError);
     });
     _skipOnChanged = false;

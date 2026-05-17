@@ -200,7 +200,7 @@ abstract class FormManager extends ChangeNotifier {
       );
       storeFieldContent(keyString, fieldContent);
     }
-
+    // TU PRZERWAŁEM show error in color/border in each validated field here (it does not show now)
     _showFieldErrorMessage(_formData.initiallyFocusedKeyString);
   }
 
