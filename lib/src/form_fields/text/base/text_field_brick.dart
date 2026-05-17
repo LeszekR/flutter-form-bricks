@@ -315,7 +315,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   @override
   Widget buildFieldWidget(BuildContext context) {
     if (_compoundWidgetStatesController == null) {
-      final decoration = _makeInputDecoration(context, null);
+      final decoration = _makeInputDecoration(context);
 
       final TextField textField = _makeTextField(
         textEditingController,
@@ -334,15 +334,13 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         onButtonTap: onButtonTap,
       );
     } else {
-      var compoundWidgetStatesController = _compoundWidgetStatesController!;
-
       return AnimatedBuilder(
-        animation: compoundWidgetStatesController,
+        animation: _compoundWidgetStatesController!,
         builder: (context, _) {
-          final decoration = _makeInputDecoration(context, compoundWidgetStatesController);
+          final decoration = _makeInputDecoration(context);
 
           final MouseRegion stateNotifyingTextField = CompoundWidgetStatesController.wrapWithStateDetectors(
-            compoundWidgetStatesController,
+            _compoundWidgetStatesController!,
             _focusNode,
             _makeTextField(textEditingController, decoration, _style),
           );
@@ -449,42 +447,44 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     );
   }
 
-  // TODO move helper methods to a singleton
-  InputDecoration _makeInputDecoration(BuildContext context, CompoundWidgetStatesController? compoundStatesController) {
+  InputDecoration _makeInputDecoration(BuildContext context) {
     bool showErrorBelowText = false ||
         widget.errorPosition == ErrorPosition.dynamicSpaceBelowField ||
         widget.errorPosition == ErrorPosition.fixedSpaceBelowField;
     // TODO support errorWidget
     final TextStyle? errorStyle = showErrorBelowText ? null : TextStyle(fontSize: 0);
 
-    // TU PRZERWAŁEM - with no button (no CompoundStatesController) DateField does not change color on error/no error
+    Color? fillColor = UiParams.of(context).appColor.getFillColor(_getStates());
+
+    InputBorder? border = _makeInputDecorationBorder();
+
     InputDecoration? decoration = widget.textFieldConfig.decoration;
+
     if (decoration != null) {
       return decoration.copyWith(
         errorText: errorText,
         errorStyle: errorStyle,
-        fillColor: UiParams.of(context).appColor.getFillColor(_getStates(compoundStatesController)),
-        border: _makeInputDecorationBorder(),
+        fillColor: fillColor,
+        border: border,
       );
     } else {
       return InputDecoration(
         errorText: errorText,
         errorStyle: errorStyle,
-        fillColor: UiParams.of(context).appColor.getFillColor(_getStates(compoundStatesController)),
-        border: _makeInputDecorationBorder(),
+        fillColor: fillColor,
+        border: border,
       );
     }
   }
 
-  Set<WidgetState>? _getStates(CompoundWidgetStatesController? compoundStatesController) {
-    Set<WidgetState>? states;
-    if (compoundStatesController == null) {
-      states = _statesController!.value;
+  Set<WidgetState>? _getStates() {
+    if (_compoundWidgetStatesController != null) {
+      _compoundWidgetStatesController!.setFieldError(errorText != null && errorText!.isNotEmpty);
+      return _compoundWidgetStatesController!.states;
     } else {
-      compoundStatesController.setFieldError(errorText != null && errorText!.isNotEmpty);
-      states = compoundStatesController.states;
+      _statesController!.update(WidgetState.error, errorText != null && errorText!.isNotEmpty);
+      return _statesController!.value;
     }
-    return states;
   }
 
   InputBorder? _makeInputDecorationBorder() {

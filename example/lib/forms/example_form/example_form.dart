@@ -31,46 +31,6 @@ class ExampleFormState extends FormStateBrick {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // TextField(
-            //   // controller: TextEditingController(text: 'Test text Field'),
-            //   selectAllOnFocus: false,
-            //   decoration: InputDecoration(
-            //     // isDense: true,
-            //     // isCollapsed: true,
-            //     labelText: 'Label text',
-            //     // hintText: ' ',
-            //     // errorText: 'Error text',
-            //     error: SizedBox(),
-            //     // suffixIconConstraints: const BoxConstraints( maxHeight: double.infinity),
-            //     // suffixIconConstraints: const BoxConstraints(maxWidth: 100),
-            //     // contentPadding: EdgeInsets.zero,
-            //     visualDensity: VisualDensity(vertical: -4),
-            //     border: OutlineInputBorder(),
-            //     suffixIconConstraints: BoxConstraints(maxWidth: 50, maxHeight: 50),
-            //     suffixIcon: SizedBox(
-            //       width: 20,
-            //       height: 32,
-            //       child: Material(
-            //         color: Colors.transparent,
-            //         child: InkWell(
-            //           onTap: () {
-            //             showDialog(
-            //               context: context,
-            //               builder: (context) => const AlertDialog(
-            //                 title: Text('Title'),
-            //                 content: Text('Dialog content'),
-            //               ),
-            //             );
-            //           },
-            //           child: const Center(
-            //             child: Icon(Icons.arrow_drop_down),
-            //           ),
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            SizedBox(height: appSize.spacerVerticalMedium),
             DateField(
               keyString: dateKeyString1,
               formManager: formManager,
@@ -88,6 +48,7 @@ class ExampleFormState extends FormStateBrick {
               textFieldBorderType: TextFieldBorderType.underline,
               // inputDecoration: InputDecoration(labelText: 'data'),
             ),
+            //
             SizedBox(height: appSize.spacerVerticalMedium),
             DateTimeSeparatedField(
               keyString: dateTimeSeparatedKeyString1,
@@ -113,44 +74,41 @@ class ExampleFormState extends FormStateBrick {
                 align: Alignment.bottomLeft,
               ),
             ),
-           SizedBox(height: appSize.spacerVerticalMedium),
-            TimeField(
-              keyString: timeKeyString1,
-              formManager: formManager,
-              width: 130,
-              withTimePicker: true,
-              outerLabelConfig: OuterLabelConfig(
-                labelText: 'Godzina',
-                align: Alignment.bottomLeft,
-                side: Side.left,
-                width: 60,
-                height: 22,
-              ),
-              errorPosition: ErrorPosition.dynamicSpaceBelowField,
-              // TU PRZERWAŁEM TODO make sure textFieldBorderType is other when/and only when the border is declared in inputDecoration
-              textFieldBorderType: TextFieldBorderType.underline,
-              // inputDecoration: InputDecoration(labelText: 'data'),
-            ),
-            SizedBox(height: appSize.spacerVerticalMedium),
-            // TimeField(
-            //   keyString: timeKeyString1,
-            //   formManager: formManager,
-            //   width: 100,
-            // ),
-            SizedBox(height: appSize.spacerVerticalMedium),
-            PlainTextField(
-              keyString: plainTextKeyString2,
-              formManager: formManager,
-              width: 200,
-              maxLines: 3,
-              validateMode: ValidateModeBrick.noValidator,
-            ),
-            SizedBox(height: appSize.spacerVerticalMedium),
-            LowerCaseField(
-              keyString: lowerCaseKeyString3,
-              formManager: formManager,
-              width: 250,
-            ),
+           //
+           // SizedBox(height: appSize.spacerVerticalMedium),
+           //  TimeField(
+           //    keyString: timeKeyString1,
+           //    formManager: formManager,
+           //    width: 130,
+           //    withTimePicker: true,
+           //    outerLabelConfig: OuterLabelConfig(
+           //      labelText: 'Godzina',
+           //      align: Alignment.bottomLeft,
+           //      side: Side.left,
+           //      width: 60,
+           //      height: 22,
+           //    ),
+           //    errorPosition: ErrorPosition.dynamicSpaceBelowField,
+           //    // TU PRZERWAŁEM TODO make sure textFieldBorderType is other when/and only when the border is declared in inputDecoration
+           //    textFieldBorderType: TextFieldBorderType.underline,
+           //    // inputDecoration: InputDecoration(labelText: 'data'),
+           //  ),
+           //  //
+           //  SizedBox(height: appSize.spacerVerticalMedium),
+           //  PlainTextField(
+           //    keyString: plainTextKeyString2,
+           //    formManager: formManager,
+           //    width: 200,
+           //    maxLines: 3,
+           //    validateMode: ValidateModeBrick.noValidator,
+           //  ),
+           //  //
+           //  SizedBox(height: appSize.spacerVerticalMedium),
+           //  LowerCaseField(
+           //    keyString: lowerCaseKeyString3,
+           //    formManager: formManager,
+           //    width: 250,
+           //  ),
           ],
         ), // test your widget here
       ),
