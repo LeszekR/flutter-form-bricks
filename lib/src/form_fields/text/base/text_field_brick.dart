@@ -251,6 +251,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   late double _height;
   late TextStyle _style;
   late final CompoundWidgetStatesController? _compoundWidgetStatesController;
+  late final WidgetStatesController? _statesController;
   final FocusNode _focusNode = FocusNode();
   TextEditingValue? oldValue;
 
@@ -266,7 +267,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   @override
   void setInput(TextEditingValue? formattedValue) =>
-    textEditingController.value = formattedValue ?? TextEditingValue.empty;
+      textEditingController.value = formattedValue ?? TextEditingValue.empty;
 
   @override
   void initState() {
@@ -274,8 +275,10 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
     if (widget.buttonConfig?.syncStyleWithTextField == true) {
       _compoundWidgetStatesController = CompoundWidgetStatesController();
+      _statesController = null;
     } else {
       _compoundWidgetStatesController = null;
+      _statesController = widget.textFieldConfig.statesController ?? WidgetStatesController();
     }
 
     // TODO this strips the field from flutter's restoration - implement restoration pattern as in comments at the end of this file
@@ -304,6 +307,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   @override
   void dispose() {
     if (widget.textFieldConfig.controller == null) textEditingController.dispose();
+    if (widget.textFieldConfig.statesController == null) _statesController?.dispose();
     _compoundWidgetStatesController?.dispose();
     super.dispose();
   }
@@ -381,7 +385,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       // Deprecated: toolbarOptions - not used
       showCursor: widget.textFieldConfig.showCursor,
       // autofocus: widget.config.autofocus,
-      statesController: widget.textFieldConfig.statesController,
+      statesController: _statesController,
       obscuringCharacter: widget.textFieldConfig.obscuringCharacter,
       obscureText: widget.textFieldConfig.obscureText,
       autocorrect: widget.textFieldConfig.autocorrect,
@@ -453,25 +457,34 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     // TODO support errorWidget
     final TextStyle? errorStyle = showErrorBelowText ? null : TextStyle(fontSize: 0);
 
-    compoundStatesController?.setFieldError(errorText != null && errorText!.isNotEmpty);
-    Color? color = UiParams.of(context).appColor.getFillColor(compoundStatesController?.states);
-
+    // TU PRZERWAŁEM - with no button (no CompoundStatesController) DateField does not change color on error/no error
     InputDecoration? decoration = widget.textFieldConfig.decoration;
     if (decoration != null) {
       return decoration.copyWith(
         errorText: errorText,
         errorStyle: errorStyle,
-        fillColor: color,
+        fillColor: UiParams.of(context).appColor.getFillColor(_getStates(compoundStatesController)),
         border: _makeInputDecorationBorder(),
       );
     } else {
       return InputDecoration(
         errorText: errorText,
         errorStyle: errorStyle,
-        fillColor: color,
+        fillColor: UiParams.of(context).appColor.getFillColor(_getStates(compoundStatesController)),
         border: _makeInputDecorationBorder(),
       );
     }
+  }
+
+  Set<WidgetState>? _getStates(CompoundWidgetStatesController? compoundStatesController) {
+    Set<WidgetState>? states;
+    if (compoundStatesController == null) {
+      states = _statesController!.value;
+    } else {
+      compoundStatesController.setFieldError(errorText != null && errorText!.isNotEmpty);
+      states = compoundStatesController.states;
+    }
+    return states;
   }
 
   InputBorder? _makeInputDecorationBorder() {
