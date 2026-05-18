@@ -89,7 +89,6 @@ class ExampleFormState extends FormStateBrick {
            //      height: 22,
            //    ),
            //    errorPosition: ErrorPosition.dynamicSpaceBelowField,
-           //    // TU PRZERWAŁEM TODO make sure textFieldBorderType is other when/and only when the border is declared in inputDecoration
            //    textFieldBorderType: TextFieldBorderType.underline,
            //    // inputDecoration: InputDecoration(labelText: 'data'),
            //  ),

@@ -9,9 +9,8 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
 
   final FormManager formManager;
 
-  // final WidgetStatesController? statesController;
+  final WidgetStatesController? statesController;
   final ValueChanged<I>? onChanged;
-  final String? label;
   final OuterLabelConfig? outerLabelConfig;
 
   // TODO implement identical functionality as in flutter_form_builder using onChange, onEditingComplete, onSave
@@ -20,15 +19,13 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
   FormFieldBrick({
     Key? key,
     required this.keyString,
-    // TODO add field label, required if has validator so FormManager shows error for a named field
     required this.formManager,
     required this.validateMode,
-    this.label,
     this.outerLabelConfig,
     // TODO verify / test / fix passing-using ststesObserver - note: TextFieldBrick costructs it INSIDE - bug?
-    // this.statesController,
+    this.statesController,
     this.onChanged,
-  }) : super(key: key ?? ValueKey(keyString));
+  })  : super(key: key ?? ValueKey(keyString));
 }
 
 abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends FormFieldBrick<I, V>>

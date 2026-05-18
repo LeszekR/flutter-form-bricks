@@ -32,6 +32,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     required super.formManager,
     required super.validateMode,
     super.outerLabelConfig,
+    super.statesController,
     //
     // TextFieldBrick
     this.width,
@@ -59,7 +60,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     TextDirection? textDirection,
     bool readOnly = false,
     // bool autofocus, => FormData takes over initial focus in form
-    WidgetStatesController? statesController,
+    // WidgetStatesController? statesController,  => moved to FormFieldBrick
     String obscuringCharacter = '•',
     bool obscureText = false,
     bool? autocorrect,
@@ -169,6 +170,8 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
         ),
         assert(buttonConfig?.syncStyleWithTextField == true ? statesController == null : true,
             'When syncStyleWithTextField is true, statesController must not be declared'),
+        assert(inputDecoration == null || textFieldBorderType == TextFieldBorderType.other,
+            'When inputDecoration is not null, textFieldBorderType must be TextFieldBorderType.other'),
         textFieldConfig = TextFieldConfig(
           magnifierConfiguration: magnifierConfiguration,
           groupId: groupId,
