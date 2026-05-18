@@ -33,8 +33,6 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   FormUiUpdateCoordinator? formUiUpdateCoordinator;
   late final FocusNode focusNode;
 
-  // Set<WidgetState>? _states;
-
   I? getInput();
 
   void setInput(I? formattedValue);
@@ -109,12 +107,6 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
     }
   }
 
-  // void _onStatesChanged() {
-  //   setState(() {
-  //     _states = widget.statesController?.value;
-  //   });
-  // }
-
   /// **Must be called** either in `onChanged` or `onEditingComplete`. If not called there neither of the below
   /// functions will be performed.
   /// ---
@@ -139,8 +131,6 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   }
 
   bool _hasFormatterValidator() => widget.validateMode != ValidateModeBrick.noValidator;
-
-// Color? makeColor() => widget.colorMaker.makeColor(context, _states);
 }
 
 // RESTORATION PATTERN

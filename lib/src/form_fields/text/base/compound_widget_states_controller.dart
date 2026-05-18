@@ -22,13 +22,21 @@ class CompoundWidgetStatesController extends ChangeNotifier {
       };
 
   void setButtonHovered(bool value) => _set(() => _buttonHovered = value);
+
   void setButtonFocused(bool value) => _set(() => _buttonFocused = value);
+
   void setButtonPressed(bool value) => _set(() => _buttonPressed = value);
+
   void setButtonDisabled(bool value) => _set(() => _buttonDisabled = value);
+
   void setFieldHovered(bool value) => _set(() => _fieldHovered = value);
+
   void setFieldFocused(bool value) => _set(() => _fieldFocused = value);
+
   void setFieldPressed(bool value) => _set(() => _fieldPressed = value);
+
   void setFieldDisabled(bool value) => _set(() => _fieldDisabled = value);
+
   void setFieldError(bool value) => _set(() => _fieldError = value);
 
   void _set(VoidCallback change) {
@@ -64,7 +72,6 @@ class CompoundWidgetStatesController extends ChangeNotifier {
       },
       child: GestureDetector(
         onTapDown: (_) {
-          // TODO #101 make the field get focus after the button has been clicked
           compoundController.setButtonPressed(true);
         },
         onDoubleTapDown: (_) {
@@ -76,10 +83,7 @@ class CompoundWidgetStatesController extends ChangeNotifier {
         onLongPress: () {
           compoundController.setButtonPressed(true);
         },
-        child: Focus(
-          focusNode: focusNode,
-          child: child,
-        ),
+        child: child,
       ),
     );
   }

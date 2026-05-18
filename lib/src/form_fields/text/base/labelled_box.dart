@@ -10,6 +10,7 @@ class LabelledBox extends StatelessWidget {
   final OuterLabelConfig? outerLabelConfig;
   final TextFieldButtonConfig? buttonConfig;
   final TextFieldBorderType? textFieldBorderType;
+  final FocusNode? targetFocusNode;
   final CompoundWidgetStatesController? compoundWidgetStatesController;
   final VoidCallback? onButtonTap;
 
@@ -21,12 +22,15 @@ class LabelledBox extends StatelessWidget {
     this.height,
     this.outerLabelConfig,
     this.buttonConfig,
+    this.targetFocusNode,
     this.compoundWidgetStatesController,
     this.onButtonTap,
   }) : assert(buttonConfig == null ? compoundWidgetStatesController == null : true,
             'If buttonConfig is null styleControllerKit must be null'),
         assert(buttonConfig != null ? textFieldBorderType != null : true,
-            'If buttonConfig is declared textFieldBorderType must also be declared');
+            'If buttonConfig is declared textFieldBorderType must also be declared'),
+        assert(buttonConfig != null ? targetFocusNode != null : true,
+            'If buttonConfig is declared then targetFocusNode of the button\'s TextFieldBrick must be provided');
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +47,9 @@ class LabelledBox extends StatelessWidget {
         height: buttonHeight,
         buttonConfig: buttonConfig!,
         textFieldBorderType: textFieldBorderType!,
-        onButtonTap: onButtonTap!,
+        targetFocusNode: targetFocusNode!,
         compoundWidgetStatesController: compoundWidgetStatesController,
+        onButtonTap: onButtonTap!,
       );
     }
 
@@ -81,6 +86,7 @@ class LabelledBox extends StatelessWidget {
     required TextFieldButtonConfig buttonConfig,
     required TextFieldBorderType textFieldBorderType,
     required VoidCallback onButtonTap,
+    required FocusNode targetFocusNode,
     CompoundWidgetStatesController? compoundWidgetStatesController,
   }) {
     AppSize appSize = UiParams.of(context).appSize;
@@ -92,6 +98,7 @@ class LabelledBox extends StatelessWidget {
       buttonConfig: effectiveButtonConfig,
       textFieldBorderType: textFieldBorderType,
       onTap: onButtonTap,
+      targetFocusNode: targetFocusNode,
       compoundWidgetStatesController: compoundWidgetStatesController,
     );
 

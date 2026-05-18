@@ -4,50 +4,63 @@ import 'package:flutter_form_bricks/src/form_fields/components/decoration/outlin
 import 'package:flutter_form_bricks/src/form_fields/components/decoration/underline_top_rounded_shape.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/compound_widget_states_controller.dart';
 
-class TextFieldButton extends StatelessWidget {
+class TextFieldButton extends StatefulWidget {
   final TextFieldButtonConfig buttonConfig;
   final TextFieldBorderType textFieldBorderType;
   final VoidCallback onTap;
-  final CompoundWidgetStatesController? _compoundWidgetStatesController;
-
-  // TODO refactor to StatefulWidget and destroy the FocusNode manually
-  final FocusNode _focusNode = FocusNode();
-
-  // final FocusNode _focusNode = FocusNode(onKeyEvent: _handleKeyPress);
+  final CompoundWidgetStatesController? compoundWidgetStatesController;
+  final FocusNode targetFocusNode;
 
   TextFieldButton({
     super.key,
     required this.buttonConfig,
     required this.textFieldBorderType,
     required this.onTap,
-    CompoundWidgetStatesController? compoundWidgetStatesController,
-  }) : _compoundWidgetStatesController = compoundWidgetStatesController;
+    required this.targetFocusNode,
+    this.compoundWidgetStatesController,
+  });
+
+  @override
+  TextFieldButtonState createState() => TextFieldButtonState();
+}
+
+class TextFieldButtonState extends State<TextFieldButton> {
+  final FocusNode _focusNode = FocusNode();
+
+  // final FocusNode _focusNode = FocusNode(onKeyEvent: _handleKeyPress);
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     AppSize appSize = UiParams.of(context).appSize;
-    double zoomedSize = buttonConfig.size ?? appSize.textFieldHeight * appSize.zoom;
+    double zoomedSize = widget.buttonConfig.size ?? appSize.textFieldHeight * appSize.zoom;
 
-    if (_compoundWidgetStatesController == null) {
+    CompoundWidgetStatesController? compoundWidgetStatesController = widget.compoundWidgetStatesController;
+
+    if (compoundWidgetStatesController == null) {
       return _makeButton(context, zoomedSize, null);
     } else {
-      CompoundWidgetStatesController compoundWidgetStatesController = _compoundWidgetStatesController!;
-
       return AnimatedBuilder(
-          animation: compoundWidgetStatesController,
-          builder: (context, _) {
-            return CompoundWidgetStatesController.wrapWithStateDetectors(
-              compoundWidgetStatesController,
-              _focusNode,
-              _makeButton(context, zoomedSize, compoundWidgetStatesController.states),
-            );
-          });
+        animation: compoundWidgetStatesController,
+        builder: (context, _) {
+          return CompoundWidgetStatesController.wrapWithStateDetectors(
+            compoundWidgetStatesController,
+            _focusNode,
+            _makeButton(context, zoomedSize, compoundWidgetStatesController.states),
+          );
+        },
+      );
     }
   }
 
   SizedBox _makeButton(BuildContext context, double zoomedSize, Set<WidgetState>? states) {
     UiParamsData uiParams = UiParams.of(context);
-    ButtonStyle? effectiveStyle = buttonConfig.style ??
+    ButtonStyle? effectiveStyle = widget.buttonConfig.style ??
         IconButtonTheme.of(context).style?.copyWith(
               backgroundColor: WidgetStatePropertyAll(UiParams.of(context).appColor.getFillColor(states)),
               shape: WidgetStatePropertyAll(_makeShape(uiParams, states)),
@@ -57,8 +70,11 @@ class TextFieldButton extends StatelessWidget {
       width: zoomedSize,
       height: zoomedSize,
       child: IconButton(
-        icon: Icon(buttonConfig.iconData),
-        onPressed: onTap,
+        icon: Icon(widget.buttonConfig.iconData),
+        onPressed: () {
+          widget.onTap();
+          widget.targetFocusNode.requestFocus();
+        },
         padding: EdgeInsets.zero,
         constraints: const BoxConstraints(),
         style: effectiveStyle,
@@ -72,12 +88,12 @@ class TextFieldButton extends StatelessWidget {
       width: uiParams.appSize.getBorderWidth(states, uiParams.appSize.borderWidth),
     );
 
-    return switch (textFieldBorderType) {
-      TextFieldBorderType.outline => switch (buttonConfig.buttonPosition) {
+    return switch (widget.textFieldBorderType) {
+      TextFieldBorderType.outline => switch (widget.buttonConfig.buttonPosition) {
           ButtonPosition.left => OutlineSidesShape(side: borderSide, sideRight: false),
           ButtonPosition.right => OutlineSidesShape(side: borderSide, sideLeft: false),
         },
-      TextFieldBorderType.underline => switch (buttonConfig.buttonPosition) {
+      TextFieldBorderType.underline => switch (widget.buttonConfig.buttonPosition) {
           ButtonPosition.left => UnderlineTopRoundedShape(side: borderSide, radiusTopRight: 0),
           ButtonPosition.right => UnderlineTopRoundedShape(side: borderSide, radiusTopLeft: 0),
         },

@@ -255,7 +255,6 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   late TextStyle _style;
   late final CompoundWidgetStatesController? _compoundWidgetStatesController;
   late final WidgetStatesController? _statesController;
-  final FocusNode _focusNode = FocusNode();
   TextEditingValue? oldValue;
 
   // String? errorText;
@@ -333,6 +332,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         outerLabelConfig: widget.outerLabelConfig,
         buttonConfig: widget.buttonConfig,
         textFieldBorderType: widget.textFieldBorderType,
+        targetFocusNode: focusNode,
         compoundWidgetStatesController: _compoundWidgetStatesController,
         onButtonTap: onButtonTap,
       );
@@ -344,7 +344,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
           final MouseRegion stateNotifyingTextField = CompoundWidgetStatesController.wrapWithStateDetectors(
             _compoundWidgetStatesController!,
-            _focusNode,
+            focusNode,
             _makeTextField(textEditingController, decoration, _style),
           );
 
@@ -355,6 +355,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
             outerLabelConfig: widget.outerLabelConfig,
             buttonConfig: widget.buttonConfig,
             textFieldBorderType: widget.textFieldBorderType,
+            targetFocusNode: focusNode,
             compoundWidgetStatesController: _compoundWidgetStatesController,
             onButtonTap: onButtonTap,
           );
