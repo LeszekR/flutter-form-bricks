@@ -16,10 +16,6 @@ abstract class AppColor {
       _ when states.contains(WidgetState.hovered) => getFormFieldHovered(),
       _ when states.contains(WidgetState.pressed) => getFormFieldPressed(),
       _ when states.contains(WidgetState.selected) => getFormFieldSelected(),
-      // _ when states.contains(WidgetState.selected) => formFieldFillSelected,
-      // _ when states.contains(WidgetState.focused) => formFieldFillFocused,
-      // _ when states.contains(WidgetState.hovered) => formFieldFillHovered,
-      // _ when states.contains(WidgetState.pressed) => formFieldFillPressed,
       _ => formFieldFillOk,
     };
   }

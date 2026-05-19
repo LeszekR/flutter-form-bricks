@@ -45,11 +45,12 @@ class TextFieldButtonState extends State<TextFieldButton> {
     if (compoundWidgetStatesController == null) {
       return _makeButton(context, zoomedSize, null);
     } else {
+      print('button controller: ${compoundWidgetStatesController.hashCode}');
       return AnimatedBuilder(
         animation: compoundWidgetStatesController,
         builder: (context, _) {
           return CompoundWidgetStatesController.wrapWithStateDetectors(
-            compoundWidgetStatesController,
+            compoundWidgetStatesController.buttonStatesSink,
             _focusNode,
             _makeButton(context, zoomedSize, compoundWidgetStatesController.states),
           );
@@ -83,6 +84,8 @@ class TextFieldButtonState extends State<TextFieldButton> {
   }
 
   OutlinedBorder? _makeShape(UiParamsData uiParams, Set<WidgetState>? states) {
+    print('button states: ${states.toString()}');
+    print('button color: ${uiParams.appColor.getBorderColor(states, uiParams.appColor.borderEnabled)}');
     BorderSide borderSide = BorderSide(
       color: uiParams.appColor.getBorderColor(states, uiParams.appColor.borderEnabled),
       width: uiParams.appSize.getBorderWidth(states, uiParams.appSize.borderWidth),

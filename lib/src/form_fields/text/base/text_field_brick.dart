@@ -168,10 +168,12 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
           inputDecoration?.suffix == null || inputDecoration?.suffixText == null,
           'Only one can be declared: inputDecoration.suffix or inputDecoration.suffixText.',
         ),
-        assert(buttonConfig?.syncStyleWithTextField == true ? statesController == null : true,
-            'When syncStyleWithTextField is true, statesController must not be declared'),
         assert(inputDecoration == null || textFieldBorderType == TextFieldBorderType.other,
             'When inputDecoration is not null, textFieldBorderType must be TextFieldBorderType.other'),
+        assert(buttonConfig?.syncStyleWithTextField == true ? statesController == null : true,
+            'When syncStyleWithTextField is true, statesController must not be declared'),
+        assert(buttonConfig == null ? statesController == null : true,
+            'When buttonConfig is declared then statesController must not be declared, because it will be ignored'),
         textFieldConfig = TextFieldConfig(
           magnifierConfiguration: magnifierConfiguration,
           groupId: groupId,
@@ -286,7 +288,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     // TODO this strips the field from flutter's restoration - implement restoration pattern as in comments at the end of this file
     super.initState();
 
-    focusNode.addListener(_onFocusLost);
+    focusNode.addListener(_onFocusChange);
   }
 
   @override
@@ -317,7 +319,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   @override
   Widget buildFieldWidget(BuildContext context) {
     if (_compoundWidgetStatesController == null) {
-      final decoration = _makeInputDecoration(context);
+      final decoration = _makeInputDecoration(UiParams.of(context), _getStates());
 
       final TextField textField = _makeTextField(
         textEditingController,
@@ -337,13 +339,14 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         onButtonTap: onButtonTap,
       );
     } else {
+      print('button controller: ${_compoundWidgetStatesController.hashCode}');
       return AnimatedBuilder(
         animation: _compoundWidgetStatesController!,
         builder: (context, _) {
-          final decoration = _makeInputDecoration(context);
+          final decoration = _makeInputDecoration(UiParams.of(context), _compoundWidgetStatesController!.states);
 
           final MouseRegion stateNotifyingTextField = CompoundWidgetStatesController.wrapWithStateDetectors(
-            _compoundWidgetStatesController!,
+            _compoundWidgetStatesController!.fieldStatesSink,
             focusNode,
             _makeTextField(textEditingController, decoration, _style),
           );
@@ -451,16 +454,16 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     );
   }
 
-  InputDecoration _makeInputDecoration(BuildContext context) {
+  InputDecoration _makeInputDecoration(UiParamsData uiParams, Set<WidgetState>? states) {
+    // TODO support errorWidget
     bool showErrorBelowText = false ||
         widget.errorPosition == ErrorPosition.dynamicSpaceBelowField ||
         widget.errorPosition == ErrorPosition.fixedSpaceBelowField;
-    // TODO support errorWidget
     final TextStyle? errorStyle = showErrorBelowText ? null : TextStyle(fontSize: 0);
 
-    Color? fillColor = UiParams.of(context).appColor.getFillColor(_getStates());
+    Color? fillColor = uiParams.appColor.getFillColor(states);
 
-    InputBorder? border = _makeInputDecorationBorder();
+    InputBorder? border = _makeInputDecorationBorder(uiParams, states);
 
     InputDecoration? decoration = widget.textFieldConfig.decoration;
 
@@ -483,7 +486,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   Set<WidgetState>? _getStates() {
     if (_compoundWidgetStatesController != null) {
-      _compoundWidgetStatesController!.setFieldError(errorText != null && errorText!.isNotEmpty);
+      _compoundWidgetStatesController!.fieldStatesSink.setError(errorText != null && errorText!.isNotEmpty);
       return _compoundWidgetStatesController!.states;
     } else {
       _statesController!.update(WidgetState.error, errorText != null && errorText!.isNotEmpty);
@@ -491,7 +494,14 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     }
   }
 
-  InputBorder? _makeInputDecorationBorder() {
+  InputBorder? _makeInputDecorationBorder(UiParamsData uiParams, Set<WidgetState>? states) {
+    print('field states: ${states.toString()}');
+    print('field color: ${uiParams.appColor.getBorderColor(states, uiParams.appColor.borderEnabled)}');
+    BorderSide borderSide = BorderSide(
+      color: uiParams.appColor.getBorderColor(states, uiParams.appColor.borderEnabled),
+      width: uiParams.appSize.getBorderWidth(states, uiParams.appSize.borderWidth),
+    );
+
     if (widget.buttonConfig == null) {
       return switch (widget.textFieldBorderType) {
         TextFieldBorderType.outline => OutlineInputBorder(),
@@ -501,8 +511,8 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     } else {
       return switch (widget.textFieldBorderType) {
         TextFieldBorderType.outline => switch (widget.buttonConfig!.buttonPosition) {
-            ButtonPosition.left => OutlineSidesInputBorder(sideLeft: false),
-            ButtonPosition.right => OutlineSidesInputBorder(sideRight: false),
+            ButtonPosition.left => OutlineSidesInputBorder(borderSide: borderSide, sideLeft: false),
+            ButtonPosition.right => OutlineSidesInputBorder(borderSide: borderSide, sideRight: false),
           },
         TextFieldBorderType.underline => switch (widget.buttonConfig!.buttonPosition) {
             ButtonPosition.left => UnderlineTopRoundedInputBorder(radiusTopLeft: 0),
@@ -555,7 +565,8 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     widget.textFieldConfig.onEditingComplete?.call();
   }
 
-  void _onFocusLost() {
+  void _onFocusChange() {
+      print('focus: ${focusNode.hasFocus}');
     if (!focusNode.hasFocus) {
       if (textEditingController.value != oldValue) {
         oldValue = textEditingController.value;
@@ -570,7 +581,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       errorText = fieldContent.error;
       setInput(fieldContent.input);
       bool isError = errorText != null && errorText!.isNotEmpty;
-      if (_compoundWidgetStatesController != null) _compoundWidgetStatesController!.setFieldError(isError);
+      if (_compoundWidgetStatesController != null) _compoundWidgetStatesController!.fieldStatesSink.setError(isError);
     });
     _skipOnChanged = false;
   }

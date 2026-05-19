@@ -2,44 +2,23 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class CompoundWidgetStatesController extends ChangeNotifier {
-  bool _buttonHovered = false;
-  bool _buttonFocused = false;
-  bool _buttonPressed = false;
-  bool _buttonDisabled = false;
+  late final _WidgetStatesSink fieldStatesSink;
+  late final _WidgetStatesSink buttonStatesSink;
 
-  bool _fieldHovered = false;
-  bool _fieldFocused = false;
-  bool _fieldPressed = false;
-  bool _fieldDisabled = false;
-  bool _fieldError = false;
+  CompoundWidgetStatesController() {
+    fieldStatesSink = _WidgetStatesSink(this);
+    buttonStatesSink = _WidgetStatesSink(this);
+  }
 
   Set<WidgetState> get states => {
-        if (_buttonHovered || _fieldHovered) WidgetState.hovered,
-        if (_buttonFocused || _fieldFocused) WidgetState.focused,
-        if (_buttonPressed || _fieldPressed) WidgetState.pressed,
-        if (_buttonDisabled || _fieldDisabled) WidgetState.disabled,
-        if (_fieldError) WidgetState.error,
+        if (buttonStatesSink.disabled || fieldStatesSink.disabled) WidgetState.disabled,
+        if (fieldStatesSink.error) WidgetState.error,
+        if (buttonStatesSink.pressed || fieldStatesSink.pressed) WidgetState.pressed,
+        if (buttonStatesSink.focused || fieldStatesSink.focused) WidgetState.focused,
+        if (fieldStatesSink.hovered) WidgetState.hovered,
       };
 
-  void setButtonHovered(bool value) => _set(() => _buttonHovered = value);
-
-  void setButtonFocused(bool value) => _set(() => _buttonFocused = value);
-
-  void setButtonPressed(bool value) => _set(() => _buttonPressed = value);
-
-  void setButtonDisabled(bool value) => _set(() => _buttonDisabled = value);
-
-  void setFieldHovered(bool value) => _set(() => _fieldHovered = value);
-
-  void setFieldFocused(bool value) => _set(() => _fieldFocused = value);
-
-  void setFieldPressed(bool value) => _set(() => _fieldPressed = value);
-
-  void setFieldDisabled(bool value) => _set(() => _fieldDisabled = value);
-
-  void setFieldError(bool value) => _set(() => _fieldError = value);
-
-  void _set(VoidCallback change) {
+  void setWidgetState(VoidCallback change) {
     final oldStates = states;
     change();
     if (!setEquals(oldStates, states)) {
@@ -48,43 +27,61 @@ class CompoundWidgetStatesController extends ChangeNotifier {
   }
 
   static MouseRegion wrapWithStateDetectors(
-    CompoundWidgetStatesController compoundController,
-    FocusNode focusNode,
-    Widget child,
-  ) {
+      _WidgetStatesSink statesSink,
+      FocusNode focusNode,
+      Widget child,
+      ) {
     focusNode.addListener(() {
       if (focusNode.hasFocus) {
-        compoundController.setButtonFocused(true);
+        statesSink.setFocused(true);
       } else {
-        compoundController.setButtonFocused(false);
-        compoundController.setButtonPressed(false);
+        statesSink.setFocused(false);
+        statesSink.setPressed(false);
       }
     });
     return MouseRegion(
       onHover: (event) {
-        compoundController.setButtonHovered(true);
+        statesSink.setHovered(true);
       },
       onEnter: (event) {
-        compoundController.setButtonHovered(false);
+        statesSink.setHovered(true);
       },
       onExit: (event) {
-        compoundController.setButtonHovered(false);
+        statesSink.setHovered(false);
       },
       child: GestureDetector(
         onTapDown: (_) {
-          compoundController.setButtonPressed(true);
+          statesSink.setPressed(true);
         },
         onDoubleTapDown: (_) {
-          compoundController.setButtonPressed(true);
+          statesSink.setPressed(true);
         },
         onForcePressStart: (_) {
-          compoundController.setButtonPressed(true);
+          statesSink.setPressed(true);
         },
         onLongPress: () {
-          compoundController.setButtonPressed(true);
+          statesSink.setPressed(true);
         },
         child: child,
       ),
     );
   }
+}
+
+class _WidgetStatesSink {
+  CompoundWidgetStatesController controller;
+
+  bool hovered = false;
+  bool focused = false;
+  bool pressed = false;
+  bool disabled = false;
+  bool error = false;
+
+  _WidgetStatesSink(this.controller);
+
+  void setHovered(bool value) => controller.setWidgetState(() => hovered = value);
+  void setFocused(bool value) => controller.setWidgetState(() => focused = value);
+  void setPressed(bool value) => controller.setWidgetState(() => pressed = value);
+  void setDisabled(bool value) => controller.setWidgetState(() => disabled = value);
+  void setError(bool value) => controller.setWidgetState(() => error = value);
 }
