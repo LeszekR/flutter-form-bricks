@@ -6,6 +6,7 @@ part 'example_form_schema.dart';
 
 final GlobalKey<ExampleFormState> formKey1 = GlobalKey();
 final String dateKeyString1 = 'dateKeyString1';
+final String dateKeyString2 = 'dateKeyString2';
 final String timeKeyString1 = 'timeKeyString1';
 final String plainTextKeyString2 = 'plainKeyString1';
 final String lowerCaseKeyString3 = 'lowerCaseKeyString1';
@@ -36,6 +37,25 @@ class ExampleFormState extends FormStateBrick {
               formManager: formManager,
               width: 160,
               withDatePicker: false,
+              // buttonConfig: TextFieldButtonConfig(size: 30),
+              outerLabelConfig: OuterLabelConfig(
+                labelText: 'Data',
+                align: Alignment.bottomLeft,
+                side: Side.left,
+                width: 60,
+                height: 22,
+              ),
+              errorPosition: ErrorPosition.dynamicSpaceBelowField,
+              textFieldBorderType: TextFieldBorderType.underline,
+              // inputDecoration: InputDecoration(labelText: 'data'),
+            ),
+            //
+            SizedBox(height: appSize.spacerVerticalMedium),
+            DateField(
+              keyString: dateKeyString2,
+              formManager: formManager,
+              width: 160,
+              withDatePicker: true,
               // buttonConfig: TextFieldButtonConfig(size: 30),
               outerLabelConfig: OuterLabelConfig(
                 labelText: 'Data',

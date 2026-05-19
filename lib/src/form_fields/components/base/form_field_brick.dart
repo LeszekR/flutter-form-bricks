@@ -25,13 +25,14 @@ abstract class FormFieldBrick<I extends Object, V extends Object> extends Statef
     // TODO verify / test / fix passing-using ststesObserver - note: TextFieldBrick costructs it INSIDE - bug?
     this.statesController,
     this.onChanged,
-  })  : super(key: key ?? ValueKey(keyString));
+  }) : super(key: key ?? ValueKey(keyString));
 }
 
 abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends FormFieldBrick<I, V>>
     extends State<F> {
   FormUiUpdateCoordinator? formUiUpdateCoordinator;
   late final FocusNode focusNode;
+  late final VoidCallback _focusListener;
 
   I? getInput();
 
@@ -65,6 +66,7 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   @mustCallSuper
   @override
   void initState() {
+    super.initState();
     formManager.registerField<F>(keyString, _hasFormatterValidator());
 
     // TODO this strips the field from flutter's restoration - implement restoration pattern as in comments at the end of this file
@@ -73,11 +75,12 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
     errorText = formManager.getFieldError(keyString);
 
     focusNode = FocusNode();
-    formManager.setFocusListener(focusNode, keyString);
+    _focusListener = () => formManager.makeFocusListener(focusNode, keyString);
+    focusNode.addListener(_focusListener);
+
     if (formManager.isFocusedOnStart(keyString)) {
       setStateInNextFrame((_) => focusNode.requestFocus());
     }
-    super.initState();
   }
 
   @mustCallSuper
@@ -90,7 +93,7 @@ abstract class FormFieldStateBrick<I extends Object, V extends Object, F extends
   @mustCallSuper
   @override
   void dispose() {
-    // widget.statesController?.removeListener(_onStatesChanged);
+    focusNode.removeListener(_focusListener);
     focusNode.dispose();
     super.dispose();
   }

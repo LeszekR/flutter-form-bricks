@@ -26,43 +26,30 @@ class CompoundWidgetStatesController extends ChangeNotifier {
     }
   }
 
-  static MouseRegion wrapWithStateDetectors(
-      _WidgetStatesSink statesSink,
-      FocusNode focusNode,
-      Widget child,
-      ) {
-    focusNode.addListener(() {
-      if (focusNode.hasFocus) {
-        statesSink.setFocused(true);
-      } else {
-        statesSink.setFocused(false);
-        statesSink.setPressed(false);
-      }
-    });
-    return MouseRegion(
-      onHover: (event) {
-        statesSink.setHovered(true);
+  static Focus wrapWithStateDetectors(
+    _WidgetStatesSink statesSink,
+    FocusNode focusNode,
+    Widget child,
+  ) {
+    return Focus(
+      focusNode: focusNode,
+      onFocusChange: (_) {
+        if (focusNode.hasFocus) {
+          statesSink.setFocused(true);
+        } else {
+          statesSink.setFocused(false);
+          statesSink.setPressed(false);
+        }
       },
-      onEnter: (event) {
-        statesSink.setHovered(true);
-      },
-      onExit: (event) {
-        statesSink.setHovered(false);
-      },
-      child: GestureDetector(
-        onTapDown: (_) {
-          statesSink.setPressed(true);
-        },
-        onDoubleTapDown: (_) {
-          statesSink.setPressed(true);
-        },
-        onForcePressStart: (_) {
-          statesSink.setPressed(true);
-        },
-        onLongPress: () {
-          statesSink.setPressed(true);
-        },
-        child: child,
+      child: MouseRegion(
+        onEnter: (_) => statesSink.setHovered(true),
+        onExit: (_) => statesSink.setHovered(false),
+        child: GestureDetector(
+          onTapDown: (_) => statesSink.setPressed(true),
+          onTapUp: (_) => statesSink.setPressed(false),
+          onTapCancel: () => statesSink.setPressed(false),
+          child: child,
+        ),
       ),
     );
   }
@@ -80,8 +67,12 @@ class _WidgetStatesSink {
   _WidgetStatesSink(this.controller);
 
   void setHovered(bool value) => controller.setWidgetState(() => hovered = value);
+
   void setFocused(bool value) => controller.setWidgetState(() => focused = value);
+
   void setPressed(bool value) => controller.setWidgetState(() => pressed = value);
+
   void setDisabled(bool value) => controller.setWidgetState(() => disabled = value);
+
   void setError(bool value) => controller.setWidgetState(() => error = value);
 }

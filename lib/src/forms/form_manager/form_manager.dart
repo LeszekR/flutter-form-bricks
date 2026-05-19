@@ -51,7 +51,7 @@ abstract class FormManager extends ChangeNotifier {
   void _setFormManagerInDescriptors() {
     for (FormatterValidatorChain? fvc in _formatterValidatorChainMap.values) {
       if (fvc == null) continue;
-      for(final fv in fvc.steps) {
+      for (final fv in fvc.steps) {
         if (fv is DateTimeMultiFieldFormatterValidator) {
           fv.formManager = this;
         }
@@ -104,13 +104,11 @@ abstract class FormManager extends ChangeNotifier {
                 'there must be no FormatterValidatorChain in the map for every such field.');
   }
 
-  void setFocusListener(FocusNode focusNode, String keyString) {
-    focusNode.addListener(() {
-      if (focusNode.hasFocus) {
-        _setFocusedKeyString(keyString);
-        _showFieldErrorMessage(keyString);
-      }
-    });
+  void makeFocusListener(FocusNode focusNode, String keyString) {
+    if (focusNode.hasFocus) {
+      _setFocusedKeyString(keyString);
+      _showFieldErrorMessage(keyString);
+    }
   }
 
   // getting and updating saved field state

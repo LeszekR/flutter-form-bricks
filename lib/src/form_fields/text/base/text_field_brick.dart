@@ -275,20 +275,23 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   @override
   void initState() {
+    // must be called before super.initState()
     textEditingController = widget.textFieldConfig.controller ?? TextEditingController();
+
+    // uses textEditingController, sets focusNode
+    super.initState();
+
+    // must be called after super.initState()
+    focusNode.addListener(_onFocusChange);
 
     if (widget.buttonConfig?.syncStyleWithTextField == true) {
       _compoundWidgetStatesController = CompoundWidgetStatesController();
       _statesController = null;
+      _compoundWidgetStatesController!.fieldStatesSink.setError(errorText != null && errorText!.isNotEmpty);
     } else {
       _compoundWidgetStatesController = null;
       _statesController = widget.textFieldConfig.statesController ?? WidgetStatesController();
     }
-
-    // TODO this strips the field from flutter's restoration - implement restoration pattern as in comments at the end of this file
-    super.initState();
-
-    focusNode.addListener(_onFocusChange);
   }
 
   @override
@@ -313,6 +316,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     if (widget.textFieldConfig.controller == null) textEditingController.dispose();
     if (widget.textFieldConfig.statesController == null) _statesController?.dispose();
     _compoundWidgetStatesController?.dispose();
+    focusNode.removeListener(_onFocusChange);
     super.dispose();
   }
 
@@ -339,30 +343,29 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         onButtonTap: onButtonTap,
       );
     } else {
-      print('button controller: ${_compoundWidgetStatesController.hashCode}');
-      return AnimatedBuilder(
-        animation: _compoundWidgetStatesController!,
-        builder: (context, _) {
-          final decoration = _makeInputDecoration(UiParams.of(context), _compoundWidgetStatesController!.states);
+      return CompoundWidgetStatesController.wrapWithStateDetectors(
+        _compoundWidgetStatesController!.fieldStatesSink,
+        focusNode,
+        AnimatedBuilder(
+          animation: _compoundWidgetStatesController!,
+          builder: (context, _) {
 
-          final MouseRegion stateNotifyingTextField = CompoundWidgetStatesController.wrapWithStateDetectors(
-            _compoundWidgetStatesController!.fieldStatesSink,
-            focusNode,
-            _makeTextField(textEditingController, decoration, _style),
-          );
+            final decoration = _makeInputDecoration(UiParams.of(context), _compoundWidgetStatesController!.states);
+            final textField = _makeTextField(textEditingController, decoration, _style);
 
-          return LabelledBox(
-            fieldBody: stateNotifyingTextField,
-            width: _width,
-            height: _height,
-            outerLabelConfig: widget.outerLabelConfig,
-            buttonConfig: widget.buttonConfig,
-            textFieldBorderType: widget.textFieldBorderType,
-            targetFocusNode: focusNode,
-            compoundWidgetStatesController: _compoundWidgetStatesController,
-            onButtonTap: onButtonTap,
-          );
-        },
+            return LabelledBox(
+              fieldBody: textField,
+              width: _width,
+              height: _height,
+              outerLabelConfig: widget.outerLabelConfig,
+              buttonConfig: widget.buttonConfig,
+              textFieldBorderType: widget.textFieldBorderType,
+              targetFocusNode: focusNode,
+              compoundWidgetStatesController: _compoundWidgetStatesController,
+              onButtonTap: onButtonTap,
+            );
+          },
+        ),
       );
     }
   }
@@ -375,7 +378,8 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     return TextField(
       groupId: widget.textFieldConfig.groupId,
       controller: controller,
-      focusNode: focusNode,
+      focusNode: widget.buttonConfig == null ? focusNode : null,
+      // focus node becomes parent when button is present
       undoController: widget.textFieldConfig.undoController,
       decoration: decoration,
       keyboardType: widget.textFieldConfig.keyboardType,
@@ -473,6 +477,11 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         errorStyle: errorStyle,
         fillColor: fillColor,
         border: border,
+        enabledBorder: border,
+        focusedBorder: border,
+        errorBorder: border,
+        focusedErrorBorder: border,
+        disabledBorder: border,
       );
     } else {
       return InputDecoration(
@@ -480,6 +489,11 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         errorStyle: errorStyle,
         fillColor: fillColor,
         border: border,
+        enabledBorder: border,
+        focusedBorder: border,
+        errorBorder: border,
+        focusedErrorBorder: border,
+        disabledBorder: border,
       );
     }
   }
@@ -495,8 +509,6 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   }
 
   InputBorder? _makeInputDecorationBorder(UiParamsData uiParams, Set<WidgetState>? states) {
-    print('field states: ${states.toString()}');
-    print('field color: ${uiParams.appColor.getBorderColor(states, uiParams.appColor.borderEnabled)}');
     BorderSide borderSide = BorderSide(
       color: uiParams.appColor.getBorderColor(states, uiParams.appColor.borderEnabled),
       width: uiParams.appSize.getBorderWidth(states, uiParams.appSize.borderWidth),
@@ -515,8 +527,8 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
             ButtonPosition.right => OutlineSidesInputBorder(borderSide: borderSide, sideRight: false),
           },
         TextFieldBorderType.underline => switch (widget.buttonConfig!.buttonPosition) {
-            ButtonPosition.left => UnderlineTopRoundedInputBorder(radiusTopLeft: 0),
-            ButtonPosition.right => UnderlineTopRoundedInputBorder(radiusTopRight: 0),
+            ButtonPosition.left => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopLeft: 0),
+            ButtonPosition.right => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopRight: 0),
           },
         TextFieldBorderType.other => null,
       };
@@ -566,7 +578,6 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   }
 
   void _onFocusChange() {
-      print('focus: ${focusNode.hasFocus}');
     if (!focusNode.hasFocus) {
       if (textEditingController.value != oldValue) {
         oldValue = textEditingController.value;
