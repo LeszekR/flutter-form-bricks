@@ -59,12 +59,33 @@ class TextFieldButtonState extends State<TextFieldButton> {
 
   SizedBox _makeButton(BuildContext context, double zoomedSize, Set<WidgetState>? states) {
     UiParamsData uiParams = UiParams.of(context);
-    ButtonStyle? effectiveStyle = widget.buttonConfig.style ??
+
+    WidgetStateProperty<BorderSide?>? side;
+    WidgetStateProperty<Color>? backgroundColor, overlayColor, shadowColor, surfaceTintColor;
+    WidgetStateProperty<double>? elevation;
+
+    if (widget.buttonConfig.transparentBackground) {
+      side = const WidgetStatePropertyAll(BorderSide.none);
+      backgroundColor = WidgetStatePropertyAll(Colors.transparent);
+      overlayColor = const WidgetStatePropertyAll(Colors.transparent);
+      shadowColor = const WidgetStatePropertyAll(Colors.transparent);
+      surfaceTintColor = const WidgetStatePropertyAll(Colors.transparent);
+      elevation = const WidgetStatePropertyAll(0);
+    } else {
+      backgroundColor = WidgetStatePropertyAll(UiParams.of(context).appColor.getFillColor(states));
+    }
+
+    ButtonStyle? effectiveStyle = widget.buttonConfig.buttonStyle ??
         IconButtonTheme.of(context).style?.copyWith(
               animationDuration: const Duration(milliseconds: 150),
-              // attempt to sync this animation with field border animation,
-              backgroundColor: WidgetStatePropertyAll(UiParams.of(context).appColor.getFillColor(states)),
+              // attempt at syncing this animation with field border animation,
               shape: WidgetStatePropertyAll(_makeShape(uiParams, states)),
+              side: side,
+              backgroundColor: backgroundColor,
+              overlayColor: overlayColor,
+              shadowColor: shadowColor,
+              surfaceTintColor: surfaceTintColor,
+              elevation: elevation,
             );
 
     return SizedBox(
