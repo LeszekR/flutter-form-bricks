@@ -25,7 +25,7 @@ class LabelledBox extends StatelessWidget {
     this.targetFocusNode,
     this.compoundWidgetStatesController,
     this.onButtonTap,
-  }) : assert(buttonConfig == null ? compoundWidgetStatesController == null : true,
+  })  : assert(buttonConfig == null ? compoundWidgetStatesController == null : true,
             'If buttonConfig is null styleControllerKit must be null'),
         assert(buttonConfig != null ? textFieldBorderType != null : true,
             'If buttonConfig is declared textFieldBorderType must also be declared'),
@@ -91,8 +91,8 @@ class LabelledBox extends StatelessWidget {
   }) {
     AppSize appSize = UiParams.of(context).appSize;
 
-    TextFieldButtonConfig effectiveButtonConfig =
-        buttonConfig.size != null ? buttonConfig : buttonConfig.copyWith(size:  height * appSize.zoom);
+    double size = (buttonConfig.size ?? height) * appSize.zoom;
+    TextFieldButtonConfig effectiveButtonConfig = buttonConfig.copyWith(size: size);
 
     TextFieldButton button = TextFieldButton(
       buttonConfig: effectiveButtonConfig,
@@ -110,13 +110,13 @@ class LabelledBox extends StatelessWidget {
           children: [
             Expanded(child: fieldBody),
             SizedBox(width: padding),
-            SizedBox(width: effectiveButtonConfig.size, height: effectiveButtonConfig.size, child: button),
+            SizedBox(width: size, height: size, child: button),
           ],
         ),
       ButtonPosition.left => Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(width: effectiveButtonConfig.size, height: effectiveButtonConfig.size, child: button),
+            SizedBox(width: size, height: size, child: button),
             SizedBox(width: padding),
             Expanded(child: fieldBody),
           ],
@@ -205,7 +205,7 @@ class LabelledBox extends StatelessWidget {
         alignment: outerLabelConfig.align,
         child: Text(
           outerLabelConfig.labelText!,
-          // TODO move this font size to appSize
+          // TODO make this style declarable in params of OuterLabelConfig
           style: TextStyle(fontSize: appSize.fontSize3),
         ),
       ),

@@ -9,6 +9,7 @@ class OuterLabelConfig {
   final String? labelText;
   final Side side;
   final Alignment align;
+  // TODO add style of the label - when it is not a widget but text
 
   const OuterLabelConfig({
     this.width,

@@ -349,7 +349,6 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         AnimatedBuilder(
           animation: _compoundWidgetStatesController!,
           builder: (context, _) {
-
             final decoration = _makeInputDecoration(UiParams.of(context), _compoundWidgetStatesController!.states);
             final textField = _makeTextField(textEditingController, decoration, _style);
 
@@ -471,6 +470,9 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
     InputDecoration? decoration = widget.textFieldConfig.decoration;
 
+    var appSize = uiParams.appSize;
+    double zoom = appSize.zoom;
+
     if (decoration != null) {
       return decoration.copyWith(
         errorText: errorText,
@@ -482,6 +484,10 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         errorBorder: border,
         focusedErrorBorder: border,
         disabledBorder: border,
+        contentPadding: decoration.contentPadding ?? EdgeInsets.symmetric(
+          horizontal: appSize.inputDecorationPaddingHorizontal * zoom,
+          vertical: appSize.inputDecorationPaddingVertical * zoom,
+        ),
       );
     } else {
       return InputDecoration(
@@ -494,6 +500,10 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         errorBorder: border,
         focusedErrorBorder: border,
         disabledBorder: border,
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: appSize.inputDecorationPaddingHorizontal * zoom,
+          vertical: appSize.inputDecorationPaddingVertical * zoom,
+        ),
       );
     }
   }

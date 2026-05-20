@@ -21,7 +21,20 @@ abstract class AppSize {
   }
 
   // fonts
-  double calculateFontSize(double size) => zoom * (fontSmallest + fontIncrement * size);
+  final Map<double, Map<double, double>> _fontSizesMap = {};
+
+  double calculateFontSize(double size) {
+    if (!_fontSizesMap.containsKey(zoom)) {
+      _fontSizesMap[zoom] = {};
+    }
+    if (_fontSizesMap[zoom]!.containsKey(size)) {
+      return _fontSizesMap[zoom]![size]!;
+    }
+    double fontSize = (fontSmallest + fontIncrement * size) * zoom;
+    _fontSizesMap[zoom]![size] = fontSize;
+    return fontSize;
+  }
+
   double get fontSmallest;
   double get fontIncrement;
   double get fontSize1;
@@ -37,7 +50,24 @@ abstract class AppSize {
   // dimensions
   double get textFieldWidth;
   double get textFieldHeight;
+  double get dateFieldWidth;
+  double get timeFieldWidth;
   double get buttonDistanceFromTextField;
+  double get inputDecorationPaddingHorizontal;
+  double get inputDecorationPaddingVertical;
+  double get borderWidth;
+  double get borderDoubleWidth;
+
+  // spacers
+  double get spacerVerticalSmallest;
+  double get spacerVerticalSmall;
+  double get spacerVerticalMedium;
+  double get spacerHorizontalSmallest;
+  double get spacerHorizontalSmall;
+  double get spacerHorizontalMedium;
+
+  // USED? REMOVE?
+  // =========================================================
   double get cornerRadius;
   double get appBarHeight;
   double get formBarHeight;
@@ -45,15 +75,11 @@ abstract class AppSize {
   double get menuButtonWidth;
   double get tabHeight;
   double get tabWidth;
-  double get borderWidth;
-  double get borderDoubleWidth;
   BorderRadiusGeometry get borderRadius;
   double get tabBorderWidth;
   double get bottomPanelHeight;
   double get labelHeight;
   double get inputLabelHeight;
-  double get dateFieldWidth;
-  double get timeFieldWidth;
   double get numberFieldWidth;
   double get inputLabelWidth;
   double get inputTextLineHeight;
@@ -88,13 +114,4 @@ abstract class AppSize {
   double get dashboardTileInsets;
   double get dashboardTileShadowOffset;
   double get spinnerInsets;
-
-  // spacers
-  double get spacerVerticalSmallest;
-  double get spacerVerticalSmall;
-  double get spacerVerticalMedium;
-  double get spacerHorizontalSmallest;
-
-  double get spacerHorizontalSmall;
-  double get spacerHorizontalMedium;
 }

@@ -4,11 +4,12 @@ import 'app_size.dart';
 
 class DefaultAppSize extends AppSize {
 
-  DefaultAppSize({super.zoom = 1.0});
+  DefaultAppSize({super.zoom = 1.2});
 
+
+  // fonts
   @override final double fontSmallest = 7;
   @override final double fontIncrement = 1.5;
-
   @override late final fontSize1 = calculateFontSize(1);
   @override late final fontSize2 = calculateFontSize(2);
   @override late final fontSize3 = calculateFontSize(3);
@@ -19,12 +20,18 @@ class DefaultAppSize extends AppSize {
   @override late final fontSize8 = calculateFontSize(8);
   @override late final fontSize9 = calculateFontSize(9);
 
+  // dimensions
   @override late final double textFieldHeight = 22;
   @override late final double textFieldWidth = 200;
   @override late final double dateFieldWidth = 130;
   @override late final double timeFieldWidth = 80;
   @override late final buttonDistanceFromTextField = 0;
+  @override late final double inputDecorationPaddingHorizontal = 10;
+  @override late final double inputDecorationPaddingVertical = 10;
+  @override late final double borderWidth = 1;
+  @override late final double borderDoubleWidth = 2;
 
+  // spacers
   @override late final double spacerVerticalSmallest =  4.0;
   @override late final double spacerVerticalSmall =  8.0;
   @override late final double spacerVerticalMedium =  16;
@@ -32,8 +39,6 @@ class DefaultAppSize extends AppSize {
   @override late final double spacerHorizontalSmall =  8.0;
   @override late final double spacerHorizontalMedium =  16;
 
-  @override late final double borderWidth = zoom * 1;
-  @override late final double borderDoubleWidth = zoom * 2;
 
   // USED? REMOVE?
   // =========================================================

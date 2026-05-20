@@ -48,8 +48,8 @@ class TextFieldButtonConfig {
   /// - [AppSize.getBorderWidth]
   final bool syncStyleWithTextField;
 
-  /// If `true` then only the icon will be visible, the shape, background and border will be transparent showing window
-  /// background
+  /// If `true` then only the icon will be visible, the shape, background and border will be transparent showing
+  /// window background.
   ///
   /// When `buttonStyle` is not `null`  then `transparentBackground` must be `false` because otherwise
   /// the style will collide with the transparency requirement. (Guarded by `assert` in constructor.)
