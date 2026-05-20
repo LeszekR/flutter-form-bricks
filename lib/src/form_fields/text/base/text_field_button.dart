@@ -100,6 +100,7 @@ class TextFieldButtonState extends State<TextFieldButton> {
         padding: EdgeInsets.zero,
         constraints: const BoxConstraints(),
         style: effectiveStyle,
+        tooltip: widget.buttonConfig.tooltipMaker == null ? '' : widget.buttonConfig.tooltipMaker!(context),
       ),
     );
   }
