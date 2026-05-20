@@ -50,7 +50,7 @@ class ExampleFormState extends FormStateBrick {
                 //   elevation: const WidgetStatePropertyAll(0),
                 // ),
                 iconData: Icons.calendar_month,
-                tooltipMaker: (context) => 'Fajny przycisk',
+                tooltipMaker: (context) => 'Kalendarz',
               ),
               outerLabelConfig: OuterLabelConfig(
                 labelText: 'Data',
@@ -70,7 +70,10 @@ class ExampleFormState extends FormStateBrick {
               formManager: formManager,
               width: 160,
               withDatePicker: true,
-              buttonConfig: TextFieldButtonConfig(size: 30),
+              buttonConfig: TextFieldButtonConfig(
+                size: 30,
+                tooltipMaker: (context) => 'Kalendarz',
+              ),
               outerLabelConfig: OuterLabelConfig(
                 labelText: 'Data',
                 align: Alignment.bottomLeft,
