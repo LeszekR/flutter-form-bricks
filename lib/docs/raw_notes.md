@@ -44,10 +44,10 @@ ASSERTS
 Other than Flutter's practise to ignore params when they are irrelevant here numerous asserts guard
 against using not only contradictory but als redundant params. Initially it may be annoying but in
 the long run it reduces amount of debugging by preventing scenarios where params you declare seem
-not to work as expected - while they are actually redundant because of other params
+not to work as expected while they are actually either contradictory or redundant because of other params
 defining construction of given widget.  
 Example: `OuterLabelConfig.width` must not be declared when `OuterLabelConfig.side` is `Side.top` or
-`Side.bottom`. (Here because outer label placed over or below the text field must get its width from
+`Side.bottom`. (Here because outer label placed over or below the text field gets its width from
 its parent Widget.)
 
 TEXTFIELDBRICK ADDED OUTER ELEMENTS HEIGHT
