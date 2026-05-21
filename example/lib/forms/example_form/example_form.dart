@@ -51,14 +51,14 @@ class ExampleFormState extends FormStateBrick {
                 // ),
                 iconData: Icons.calendar_month,
                 tooltipMaker: (context) => 'Kalendarz',
-                size: 26,
+                size: 28.3333,
               ),
               outerLabelConfig: OuterLabelConfig(
                 labelText: 'Data',
                 align: Alignment.bottomLeft,
                 side: Side.left,
                 width: 60,
-                height: 26,
+                height: 28.3333,
               ),
               errorPosition: ErrorPosition.dynamicSpaceBelowField,
               textFieldBorderType: TextFieldBorderType.underline,
@@ -83,7 +83,9 @@ class ExampleFormState extends FormStateBrick {
               //   height: 26,
               // ),
               errorPosition: ErrorPosition.dynamicSpaceBelowField,
-              textFieldBorderType: TextFieldBorderType.other,
+              textFieldBorderType: TextFieldBorderType.outline,
+              // TU PRZERWAŁEM - when textFieldBorderType is declared - override the InputDecoration passed as param
+              //  and make the border as declared in textFieldBorderType
               inputDecoration: InputDecoration(labelText: 'data'),
             ),
             //
