@@ -151,15 +151,11 @@ class DefaultThemeData extends BricksThemeData {
           vertical: -4,
           horizontal: 0,
         ),
-        // contentPadding: const EdgeInsets.only(top: 12, bottom: 8),
-        // contentPadding: EdgeInsets.zero,
         filled: true,
         fillColor: WidgetStateColor.resolveWith((Set<WidgetState> states) => appColor.getFillColor(states)),
         border: OutlineInputBorder(),
       ).data;
 
-  // @override
-  // get iconButtonThemeData => null;
   @override
   get iconButtonThemeData =>
       sourceTheme?.iconButtonTheme ??

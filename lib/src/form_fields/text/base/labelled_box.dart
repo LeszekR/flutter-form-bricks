@@ -3,14 +3,12 @@ import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/compound_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_height_cache_key.dart';
-import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_heigth_probe.dart';
+import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_height_probe.dart';
 
 class LabelledBox extends StatefulWidget {
   final Widget fieldBody;
   final TextFieldHeightCacheKey? heightCacheKey;
   final double? width;
-
-  // final double? height;
   final OuterLabelConfig? outerLabelConfig;
   final TextFieldButtonConfig? buttonConfig;
   final TextFieldBorderType? textFieldBorderType;
@@ -18,13 +16,11 @@ class LabelledBox extends StatefulWidget {
   final CompoundWidgetStatesController? compoundWidgetStatesController;
   final VoidCallback? onButtonTap;
 
-  // TU PRZERWAŁEM finish measuring TextField height by TextFieldHeightResolver
   const LabelledBox({
     super.key,
     required this.fieldBody,
     this.heightCacheKey,
     this.width,
-    // this.height,
     this.outerLabelConfig,
     this.buttonConfig,
     this.textFieldBorderType,
@@ -97,15 +93,15 @@ class LabelledBoxState extends State<LabelledBox> {
     final Widget bodyWithLabel = _wrapWithOuterLabel(
       context: context,
       fieldBody: bodyWithButton,
-      height: _textEditingAreaHeight!,
+      height: _textEditingAreaHeight,
       outerLabelConfig: widget.outerLabelConfig,
     );
 
     double zoom = appSize.zoom;
     double buttonWidth = widget.buttonConfig == null
         ? 0
-        : widget.buttonConfig!.size != null
-            ? widget.buttonConfig!.size!
+        : widget.buttonConfig!.width != null
+            ? widget.buttonConfig!.width!
             : _textEditingAreaHeight!;
 
     double sideLabelWidth = widget.width == null
@@ -137,8 +133,8 @@ class LabelledBoxState extends State<LabelledBox> {
   }) {
     AppSize appSize = UiParams.of(context).appSize;
 
-    double size = (buttonConfig.size ?? height) * appSize.zoom;
-    TextFieldButtonConfig effectiveButtonConfig = buttonConfig.copyWith(size: size);
+    double width = buttonConfig.width ?? height;
+    TextFieldButtonConfig effectiveButtonConfig = buttonConfig.copyWith(width: width);
 
     TextFieldButton button = TextFieldButton(
       buttonConfig: effectiveButtonConfig,
@@ -156,13 +152,13 @@ class LabelledBoxState extends State<LabelledBox> {
           children: [
             Expanded(child: fieldBody),
             SizedBox(width: padding),
-            SizedBox(width: size, height: size, child: button),
+            SizedBox(width: width, height: width, child: button),
           ],
         ),
       ButtonPosition.left => Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(width: size, height: size, child: button),
+            SizedBox(width: width, height: width, child: button),
             SizedBox(width: padding),
             Expanded(child: fieldBody),
           ],
@@ -173,12 +169,12 @@ class LabelledBoxState extends State<LabelledBox> {
   static Widget _wrapWithOuterLabel({
     required BuildContext context,
     required Widget fieldBody,
-    required double height,
+    required double? height,
     OuterLabelConfig? outerLabelConfig,
   }) {
     if (outerLabelConfig == null) return fieldBody;
 
-    final Widget label = _makeOuterLabel(context, outerLabelConfig, height);
+    final Widget label = _makeOuterLabel(context, outerLabelConfig, height!);
 
     final appSize = UiParams.of(context).appSize;
 

@@ -1,28 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
+import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
 @immutable
 class TextFieldHeightCacheKey {
   final InputDecoration decoration;
   final TextStyle style;
-  final StrutStyle? strutStyle;
-  final double width;
-  final int? minLines;
-  final int? maxLines;
   final bool expands;
   final double textScaleFactor;
   final bool useMaterial3;
+  final StrutStyle? strutStyle;
+  final double? width;
+  final int? minLines;
+  final int? maxLines;
 
-  const TextFieldHeightCacheKey({
+  TextFieldHeightCacheKey._({
     required this.decoration,
     required this.style,
-    required this.strutStyle,
-    required this.width,
-    required this.minLines,
-    required this.maxLines,
     required this.expands,
     required this.textScaleFactor,
     required this.useMaterial3,
+    this.strutStyle = null,
+    this.width = null,
+    this.minLines = null,
+    this.maxLines = null,
   });
+
+  static TextFieldHeightCacheKey fromConfig({
+    required BuildContext context,
+    required TextFieldConfig config,
+    required InputDecoration decoration,
+    required double width,
+  }) {
+    // This reduces number of height measurements for fields with identical setup, single-lined and only different in width.
+    double? widthOrNull;
+    if ((config.minLines != null && config.minLines! > 1) || (config.maxLines != null && config.maxLines! > 1)) {
+      widthOrNull = width;
+    } else {
+      widthOrNull = null;
+    }
+
+    return TextFieldHeightCacheKey._(
+      decoration: decoration.copyWith(
+        errorText: null,
+        error: null,
+        helperText: null,
+        helper: null,
+        counterText: null,
+        counter: null,
+      ),
+      style: config.style ?? UiParams.of(context).appTheme.textStyle(),
+      strutStyle: config.strutStyle,
+      width: widthOrNull,
+      minLines: config.minLines,
+      maxLines: config.maxLines,
+      expands: config.expands,
+      textScaleFactor: MediaQuery.textScalerOf(context).scale(1.0),
+      useMaterial3: Theme.of(context).useMaterial3,
+    );
+  }
 
   @override
   bool operator ==(Object other) {
@@ -41,14 +77,14 @@ class TextFieldHeightCacheKey {
 
   @override
   int get hashCode => Object.hash(
-    decoration,
-    style,
-    strutStyle,
-    width,
-    minLines,
-    maxLines,
-    expands,
-    textScaleFactor,
-    useMaterial3,
-  );
+        decoration,
+        style,
+        strutStyle,
+        width,
+        minLines,
+        maxLines,
+        expands,
+        textScaleFactor,
+        useMaterial3,
+      );
 }

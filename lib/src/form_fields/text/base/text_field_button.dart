@@ -38,7 +38,7 @@ class TextFieldButtonState extends State<TextFieldButton> {
   @override
   Widget build(BuildContext context) {
     AppSize appSize = UiParams.of(context).appSize;
-    double zoomedSize = (widget.buttonConfig.size ?? appSize.textFieldHeight) * appSize.zoom;
+    double zoomedSize = (widget.buttonConfig.width ?? appSize.textFieldHeight) * appSize.zoom;
 
     CompoundWidgetStatesController? compoundWidgetStatesController = widget.compoundWidgetStatesController;
 

@@ -29,7 +29,7 @@ class _TextFieldHeightProbeState extends State<TextFieldHeightProbe> {
 
   @override
   Widget build(BuildContext context) {
-    final cacheKey = widget.cacheKey;
+    final TextFieldHeightCacheKey cacheKey = widget.cacheKey;
 
     if (TextFieldHeightCache.isMeasured(cacheKey)) {
       return Offstage(
@@ -45,16 +45,16 @@ class _TextFieldHeightProbeState extends State<TextFieldHeightProbe> {
           key: _probeKey,
           width: cacheKey.width,
           child: TextField(
-            style: cacheKey.style,
-            strutStyle: cacheKey.strutStyle,
-            minLines: cacheKey.minLines,
-            maxLines: cacheKey.maxLines,
-            expands: cacheKey.expands,
             decoration: cacheKey.decoration.copyWith(
               errorText: null,
               helperText: null,
               counterText: '',
             ),
+            style: cacheKey.style,
+            expands: cacheKey.expands,
+            strutStyle: cacheKey.strutStyle,
+            minLines: cacheKey.minLines,
+            maxLines: cacheKey.maxLines,
           ),
         ),
       ),

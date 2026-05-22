@@ -291,14 +291,10 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   late final TextEditingController textEditingController;
 
   late double _width;
-
-  // late double _height;
   late TextStyle _style;
   late final CompoundWidgetStatesController? _compoundWidgetStatesController;
   late final WidgetStatesController? _statesController;
   TextEditingValue? oldValue;
-
-  // String? errorText;
 
   void onButtonTap() => throw UnimplementedError('onButtonTap not implemented');
 
@@ -337,17 +333,9 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    var uiParams = UiParams.of(context);
-    var appSize = uiParams.appSize;
+    UiParamsData uiParams = UiParams.of(context);
     _style = widget.textFieldConfig.style ?? uiParams.appTheme.textStyle();
-
-    // _height = widget.heightOfTextArea != null ? widget.heightOfTextArea! : appSize.textFieldHeight;
-
-    if (widget.width != null) {
-      _width = widget.width! * appSize.zoom;
-    } else {
-      _width = getWidth(appSize);
-    }
+    _width = widget.width ?? getWidth(uiParams.appSize);
   }
 
   @override
@@ -361,20 +349,23 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   @override
   Widget buildFieldWidget(BuildContext context) {
+    // no button
     if (_compoundWidgetStatesController == null) {
       final decoration = _makeInputDecoration(UiParams.of(context), _getStates());
       final TextField textField = _makeTextField(textEditingController, decoration, _style);
       final TextFieldBorderType effectiveBorderType = _getEffectiveBorderType(decoration);
-      final TextFieldHeightCacheKey heightCacheKey = TextFieldHeightCacheKey(
+
+      final TextFieldHeightCacheKey heightCacheKey = TextFieldHeightCacheKey.fromConfig(
+        context: context,
         decoration: decoration,
-        width: widget.width,
-        // TU PRZERWAŁEM finish creating the heightCacheKey and test computing the height
+        config: widget.textFieldConfig,
+        width: _width,
       );
 
       return LabelledBox(
         fieldBody: textField,
         width: _width,
-        // height: _height,
+        heightCacheKey: heightCacheKey,
         outerLabelConfig: widget.outerLabelConfig,
         buttonConfig: widget.buttonConfig,
         textFieldBorderType: effectiveBorderType,
@@ -382,7 +373,10 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         compoundWidgetStatesController: _compoundWidgetStatesController,
         onButtonTap: onButtonTap,
       );
-    } else {
+    }
+
+    // with button
+    else {
       return CompoundWidgetStatesController.wrapWithStateDetectors(
         _compoundWidgetStatesController!.fieldStatesSink,
         focusNode,
@@ -394,10 +388,17 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
             final TextField textField = _makeTextField(textEditingController, decoration, _style);
             final TextFieldBorderType effectiveBorderType = _getEffectiveBorderType(decoration);
 
+            final TextFieldHeightCacheKey heightCacheKey = TextFieldHeightCacheKey.fromConfig(
+              context: context,
+              decoration: decoration,
+              config: widget.textFieldConfig,
+              width: _width,
+            );
+
             return LabelledBox(
               fieldBody: textField,
               width: _width,
-              height: _height,
+              heightCacheKey: heightCacheKey,
               outerLabelConfig: widget.outerLabelConfig,
               buttonConfig: widget.buttonConfig,
               textFieldBorderType: effectiveBorderType,
@@ -431,8 +432,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     return TextField(
       groupId: widget.textFieldConfig.groupId,
       controller: controller,
-      focusNode: widget.buttonConfig == null ? focusNode : null,
-      // focus node becomes parent when button is present
+      focusNode: widget.buttonConfig == null ? focusNode : null, // focus node becomes parent when button is present
       undoController: widget.textFieldConfig.undoController,
       decoration: decoration,
       keyboardType: widget.textFieldConfig.keyboardType,
@@ -465,7 +465,6 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       onAppPrivateCommand: widget.textFieldConfig.onAppPrivateCommand,
       inputFormatters: widget.textFieldConfig.inputFormatters,
       enabled: widget.textFieldConfig.enabled,
-
       /// ignorePointers tells the TextField to ignore pointer events (taps, clicks, drags) for hit-testing. That means:
       /// user taps won’t focus it, selection/handles won’t respond, mouse interactions won’t apply.
       /// It’s different from / enabled: false / readOnly: true: enabled: false also affects styling and semantics like
@@ -538,11 +537,6 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         errorBorder: border,
         focusedErrorBorder: border,
         disabledBorder: border,
-        contentPadding: decoration.contentPadding ??
-            EdgeInsets.symmetric(
-              horizontal: appSize.inputDecorationPaddingHorizontal * zoom,
-              vertical: appSize.inputDecorationPaddingVertical * zoom,
-            ),
       );
     } else {
       return InputDecoration(
@@ -555,10 +549,6 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         errorBorder: border,
         focusedErrorBorder: border,
         disabledBorder: border,
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: appSize.inputDecorationPaddingHorizontal * zoom,
-          vertical: appSize.inputDecorationPaddingVertical * zoom,
-        ),
       );
     }
   }

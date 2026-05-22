@@ -12,7 +12,6 @@ final String plainTextKeyString2 = 'plainKeyString1';
 final String lowerCaseKeyString3 = 'lowerCaseKeyString1';
 final String dateTimeSeparatedKeyString1 = 'dateTimeSeparatedKeString1';
 
-// @AutoFormSchema()
 class ExampleForm extends FormBrick {
   ExampleForm() : super(formManager: ExampleFormManager());
 
@@ -51,15 +50,14 @@ class ExampleFormState extends FormStateBrick {
                 // ),
                 iconData: Icons.calendar_month,
                 tooltipMaker: (context) => 'Kalendarz',
-                size: 28.3333,
               ),
-              outerLabelConfig: OuterLabelConfig(
-                labelText: 'Data',
-                align: Alignment.bottomLeft,
-                side: Side.left,
-                width: 60,
-                height: 28.3333,
-              ),
+              inputDecoration: InputDecoration(labelText: 'Data'),
+              // outerLabelConfig: OuterLabelConfig(
+              //   labelText: 'Data',
+              //   align: Alignment.bottomLeft,
+              //   side: Side.left,
+              //   width: 60,
+              // ),
               errorPosition: ErrorPosition.dynamicSpaceBelowField,
               textFieldBorderType: TextFieldBorderType.underline,
               // inputDecoration: InputDecoration(labelText: 'data'),
@@ -72,7 +70,6 @@ class ExampleFormState extends FormStateBrick {
               width: 160,
               withDatePicker: true,
               buttonConfig: TextFieldButtonConfig(
-                size: 28.3333,
                 tooltipMaker: (context) => 'Kalendarz',
               ),
               // outerLabelConfig: OuterLabelConfig(
@@ -88,66 +85,66 @@ class ExampleFormState extends FormStateBrick {
               //  and make the border as declared in textFieldBorderType
               inputDecoration: InputDecoration(labelText: 'data'),
             ),
-            //
-            // SizedBox(height: appSize.spacerVerticalMedium),
-            // DateTimeSeparatedField(
-            //   keyString: dateTimeSeparatedKeyString1,
-            //   formManager: formManager,
-            //   dateWidth: 150,
-            //   datePickerButtonConfig: TextFieldButtonConfig(size: 30),
-            //   timePickerButtonConfig: TextFieldButtonConfig(size: 30),
-            //   dateOuterLabelConfig: OuterLabelConfig(
-            //     labelText: 'Data',
-            //     side: Side.top,
-            //     height: 16,
-            //   ),
-            //   timeOuterLabelConfig: OuterLabelConfig(
-            //     labelText: 'Godzina',
-            //     side: Side.top,
-            //     height: 16,
-            //   ),
-            //   outerLabelConfig: OuterLabelConfig(
-            //     labelText: 'Data i czas',
-            //     side: Side.left,
-            //     height: 46 * appSize.zoom,
-            //     width: 80,
-            //     align: Alignment.bottomLeft,
-            //   ),
-            // ),
-            //
-            // SizedBox(height: appSize.spacerVerticalMedium),
-            //  TimeField(
-            //    keyString: timeKeyString1,
-            //    formManager: formManager,
-            //    width: 130,
-            //    withTimePicker: true,
-            //    outerLabelConfig: OuterLabelConfig(
-            //      labelText: 'Godzina',
-            //      align: Alignment.bottomLeft,
-            //      side: Side.left,
-            //      width: 60,
-            //      height: 22,
-            //    ),
-            //    errorPosition: ErrorPosition.dynamicSpaceBelowField,
-            //    textFieldBorderType: TextFieldBorderType.underline,
-            //    // inputDecoration: InputDecoration(labelText: 'data'),
-            //  ),
-            //  //
-            //  SizedBox(height: appSize.spacerVerticalMedium),
-            //  PlainTextField(
-            //    keyString: plainTextKeyString2,
-            //    formManager: formManager,
-            //    width: 200,
-            //    maxLines: 3,
-            //    validateMode: ValidateModeBrick.noValidator,
-            //  ),
-            //  //
-            //  SizedBox(height: appSize.spacerVerticalMedium),
-            //  LowerCaseField(
-            //    keyString: lowerCaseKeyString3,
-            //    formManager: formManager,
-            //    width: 250,
-            //  ),
+
+            SizedBox(height: appSize.spacerVerticalMedium),
+            DateTimeSeparatedField(
+              keyString: dateTimeSeparatedKeyString1,
+              formManager: formManager,
+              dateWidth: 150,
+              datePickerButtonConfig: TextFieldButtonConfig(width: 20),
+              timePickerButtonConfig: TextFieldButtonConfig(width: 20),
+              dateOuterLabelConfig: OuterLabelConfig(
+                labelText: 'Data',
+                side: Side.top,
+                height: 16,
+              ),
+              timeOuterLabelConfig: OuterLabelConfig(
+                labelText: 'Godzina',
+                side: Side.top,
+                height: 16,
+              ),
+              outerLabelConfig: OuterLabelConfig(
+                labelText: 'Data i czas',
+                side: Side.left,
+                height: 46 * appSize.zoom,
+                width: 80,
+                align: Alignment.bottomLeft,
+              ),
+            ),
+
+            SizedBox(height: appSize.spacerVerticalMedium),
+             TimeField(
+               keyString: timeKeyString1,
+               formManager: formManager,
+               width: 130,
+               withTimePicker: true,
+               outerLabelConfig: OuterLabelConfig(
+                 labelText: 'Godzina',
+                 align: Alignment.bottomLeft,
+                 side: Side.left,
+                 width: 60,
+                 height: 22,
+               ),
+               errorPosition: ErrorPosition.dynamicSpaceBelowField,
+               textFieldBorderType: TextFieldBorderType.underline,
+               // inputDecoration: InputDecoration(labelText: 'data'),
+             ),
+             //
+             SizedBox(height: appSize.spacerVerticalMedium),
+             PlainTextField(
+               keyString: plainTextKeyString2,
+               formManager: formManager,
+               width: 200,
+               maxLines: 3,
+               validateMode: ValidateModeBrick.noValidator,
+             ),
+             //
+             SizedBox(height: appSize.spacerVerticalMedium),
+             LowerCaseField(
+               keyString: lowerCaseKeyString3,
+               formManager: formManager,
+               width: 250,
+             ),
           ],
         ), // test your widget here
       ),

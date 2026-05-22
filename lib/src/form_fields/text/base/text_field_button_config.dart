@@ -3,13 +3,8 @@ import 'package:flutter/material.dart';
 enum ButtonPosition { left, right }
 
 class TextFieldButtonConfig {
-  /// Height and width of the `TextFieldButton` - supply unzoomed value, it will be zoomed (multiplied by `AppSize.zoom`).
-  ///
-  /// Since Flutter exposes no API for reading `InputDecorator's` height it was decided to use this parameter to
-  /// adjust the height of the button to match the height of its `TextFieldBrick`. Best way to achieve this: run your
-  /// app with FlutterInspector and `AppSize.zoom == 1`, then check the height of the text field and put the same
-  /// value as `size` here.
-  final double? size;
+  /// If null the button will be square, side length equal to height received in `LabelledBox._addButton()`.
+  final double? width;
 
   /// Default in this lib is `Icons.arrow_drop_down` as simple and not cluttering the UI. You can use any icon you want
   /// however. E.g. `Icons.calendar_today` for `DateField`, etc. Observe other params (`distanceFromTextField`,
@@ -60,7 +55,7 @@ class TextFieldButtonConfig {
   final bool autofocus;
 
   const TextFieldButtonConfig({
-    this.size,
+    this.width,
     this.iconData = Icons.arrow_drop_down,
     this.buttonPosition = ButtonPosition.right,
     this.tooltipMaker,
@@ -76,7 +71,7 @@ class TextFieldButtonConfig {
 
   TextFieldButtonConfig fillFrom(TextFieldButtonConfig? other) {
     return TextFieldButtonConfig(
-      size: other?.size ?? size,
+      width: other?.width ?? width,
       iconData: other?.iconData ?? iconData,
       buttonPosition: other?.buttonPosition ?? buttonPosition,
       tooltipMaker: tooltipMaker,
@@ -89,7 +84,7 @@ class TextFieldButtonConfig {
   }
 
   TextFieldButtonConfig copyWith({
-    double? size,
+    double? width,
     IconData? iconData,
     ButtonPosition? buttonPosition,
     String Function(BuildContext)? tooltipMaker,
@@ -100,7 +95,7 @@ class TextFieldButtonConfig {
     bool? autofocus,
   }) {
     return TextFieldButtonConfig(
-      size: size ?? this.size,
+      width: width ?? this.width,
       iconData: iconData ?? this.iconData,
       buttonPosition: buttonPosition ?? this.buttonPosition,
       tooltipMaker: tooltipMaker ?? this.tooltipMaker,
