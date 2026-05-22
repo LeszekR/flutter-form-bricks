@@ -13,13 +13,11 @@ class TextFieldHeightProbe extends StatefulWidget {
   });
 
   @override
-  State<TextFieldHeightProbe> createState() =>
-      _TextFieldHeightProbeState();
+  State<TextFieldHeightProbe> createState() => _TextFieldHeightProbeState();
 }
 
-class _TextFieldHeightProbeState
-    extends State<TextFieldHeightProbe> {
-  final GlobalKey _measureKey = GlobalKey();
+class _TextFieldHeightProbeState extends State<TextFieldHeightProbe> {
+  final GlobalKey _probeKey = GlobalKey();
 
   @override
   void initState() {
@@ -29,43 +27,30 @@ class _TextFieldHeightProbeState
     });
   }
 
-  void _measure() {
-    final BuildContext? context =
-        _measureKey.currentContext;
-
-    if (context == null) return;
-
-    final RenderBox? box =
-    context.findRenderObject() as RenderBox?;
-
-    if (box == null || !box.hasSize) return;
-
-    final double height = box.size.height;
-
-    TextFieldHeightCache.put(
-      widget.cacheKey,
-      height,
-    );
-
-    widget.onMeasured(height);
-  }
-
   @override
   Widget build(BuildContext context) {
-    final key = widget.cacheKey;
+    final cacheKey = widget.cacheKey;
+
+    if (TextFieldHeightCache.isMeasured(cacheKey)) {
+      return Offstage(
+        child: SizedBox(height: 1),
+      );
+    }
+
+    TextFieldHeightCache.startMeasuring(cacheKey);
 
     return Offstage(
       child: Material(
         child: SizedBox(
-          key: _measureKey,
-          width: key.width,
+          key: _probeKey,
+          width: cacheKey.width,
           child: TextField(
-            style: key.style,
-            strutStyle: key.strutStyle,
-            minLines: key.minLines,
-            maxLines: key.maxLines,
-            expands: key.expands,
-            decoration: key.decoration.copyWith(
+            style: cacheKey.style,
+            strutStyle: cacheKey.strutStyle,
+            minLines: cacheKey.minLines,
+            maxLines: cacheKey.maxLines,
+            expands: cacheKey.expands,
+            decoration: cacheKey.decoration.copyWith(
               errorText: null,
               helperText: null,
               counterText: '',
@@ -74,5 +59,32 @@ class _TextFieldHeightProbeState
         ),
       ),
     );
+  }
+
+  void _measure() {
+    // Check - another widget might have already finished the measure process
+    double? height = TextFieldHeightCache.getHeight(widget.cacheKey);
+
+    // Not measured yet - do it now
+    if (height == null ) {
+      height = _measureHeight();
+
+      if(height == null) return;
+
+      TextFieldHeightCache.putHeight(widget.cacheKey, height);
+    }
+
+    // set the height in the widget waiting for the value
+    widget.onMeasured(height);
+  }
+
+  double? _measureHeight() {
+    final BuildContext? context = _probeKey.currentContext;
+    if (context == null) return null;
+
+    final RenderBox? box = context.findRenderObject() as RenderBox?;
+    if (box == null || !box.hasSize) return null;
+
+    return box.size.height;
   }
 }

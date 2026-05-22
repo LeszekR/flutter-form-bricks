@@ -10,6 +10,7 @@ import 'package:flutter_form_bricks/src/form_fields/components/state/field_conte
 import 'package:flutter_form_bricks/src/form_fields/text/base/compound_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/labelled_box.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
+import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_height_cache_key.dart';
 
 enum TextFieldBorderType { outline, underline, other }
 
@@ -290,7 +291,8 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   late final TextEditingController textEditingController;
 
   late double _width;
-  late double _height;
+
+  // late double _height;
   late TextStyle _style;
   late final CompoundWidgetStatesController? _compoundWidgetStatesController;
   late final WidgetStatesController? _statesController;
@@ -339,7 +341,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     var appSize = uiParams.appSize;
     _style = widget.textFieldConfig.style ?? uiParams.appTheme.textStyle();
 
-    _height = widget.heightOfTextArea != null ? widget.heightOfTextArea! : appSize.textFieldHeight;
+    // _height = widget.heightOfTextArea != null ? widget.heightOfTextArea! : appSize.textFieldHeight;
 
     if (widget.width != null) {
       _width = widget.width! * appSize.zoom;
@@ -363,11 +365,16 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       final decoration = _makeInputDecoration(UiParams.of(context), _getStates());
       final TextField textField = _makeTextField(textEditingController, decoration, _style);
       final TextFieldBorderType effectiveBorderType = _getEffectiveBorderType(decoration);
+      final TextFieldHeightCacheKey heightCacheKey = TextFieldHeightCacheKey(
+        decoration: decoration,
+        width: widget.width,
+        // TU PRZERWAŁEM finish creating the heightCacheKey and test computing the height
+      );
 
       return LabelledBox(
         fieldBody: textField,
         width: _width,
-        height: _height,
+        // height: _height,
         outerLabelConfig: widget.outerLabelConfig,
         buttonConfig: widget.buttonConfig,
         textFieldBorderType: effectiveBorderType,
@@ -382,7 +389,8 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         AnimatedBuilder(
           animation: _compoundWidgetStatesController!,
           builder: (context, _) {
-            final InputDecoration decoration = _makeInputDecoration(UiParams.of(context), _compoundWidgetStatesController!.states);
+            final InputDecoration decoration =
+                _makeInputDecoration(UiParams.of(context), _compoundWidgetStatesController!.states);
             final TextField textField = _makeTextField(textEditingController, decoration, _style);
             final TextFieldBorderType effectiveBorderType = _getEffectiveBorderType(decoration);
 
@@ -409,8 +417,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     if (border is OutlineInputBorder || border is OutlineSidesInputBorder) {
       return TextFieldBorderType.outline;
     }
-    if (border is UnderlineInputBorder ||
-        border is UnderlineTopRoundedInputBorder) {
+    if (border is UnderlineInputBorder || border is UnderlineTopRoundedInputBorder) {
       return TextFieldBorderType.underline;
     }
     return TextFieldBorderType.other;
@@ -603,10 +610,10 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
               },
             InputBorder() => widget.inputDecoration!.border,
             // default:
-            null =>  switch (widget.buttonConfig!.buttonPosition) {
-              ButtonPosition.left => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopLeft: 0),
-              ButtonPosition.right => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopRight: 0),
-            },
+            null => switch (widget.buttonConfig!.buttonPosition) {
+                ButtonPosition.left => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopLeft: 0),
+                ButtonPosition.right => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopRight: 0),
+              },
           }
       };
     }

@@ -24,7 +24,7 @@ class _TextFieldHeightResolverState extends State<TextFieldHeightResolver> {
   @override
   void initState() {
     super.initState();
-    _height = TextFieldHeightCache.get(widget.cacheKey);
+    _height = TextFieldHeightCache.getHeight(widget.cacheKey);
   }
 
   void _onMeasured(double height) {

@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_height_cache.dart';
+import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_height_cache_key.dart';
 
 abstract class AppSize {
   AppSize({required this.zoom});
 
   /// Base scaling factor (from AppScale, or const 1.0 if no scaling)
   double zoom;
+
+  double? getHeightOfInputDecoratorEditArea(TextFieldHeightCacheKey cacheKey){
+    return TextFieldHeightCache.getHeight(cacheKey);
+  }
 
   double getBorderWidth(Set<WidgetState>? states, double defaultWidth) {
     if (states == null) return defaultWidth;

@@ -1,25 +1,22 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_height_cache_key.dart';
 
 class TextFieldHeightCache {
   static final Map<TextFieldHeightCacheKey, double> _cache = {};
+  static final Set<TextFieldHeightCacheKey> _processedKeys = {};
 
-  static double? get(TextFieldHeightCacheKey key) {
+  static double? getHeight(TextFieldHeightCacheKey key) {
     return _cache[key];
   }
 
-  static void put(
-      TextFieldHeightCacheKey key,
-      double height,
-      ) {
+  static void putHeight(TextFieldHeightCacheKey key, double height) {
     _cache[key] = height;
   }
 
-  static bool contains(TextFieldHeightCacheKey key) {
-    return _cache.containsKey(key);
+  static void startMeasuring(TextFieldHeightCacheKey key) {
+    _processedKeys.add(key);
   }
 
-  static void clear() {
-    _cache.clear();
+  static bool isMeasured(TextFieldHeightCacheKey key) {
+    return _processedKeys.contains(key);
   }
 }
