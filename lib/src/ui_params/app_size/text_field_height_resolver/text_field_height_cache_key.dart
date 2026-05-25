@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
-import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
 @immutable
 class TextFieldHeightCacheKey {
   final InputDecoration decoration;
+  final String? text;
   final TextStyle style;
   final bool expands;
   final double textScaleFactor;
@@ -17,6 +17,7 @@ class TextFieldHeightCacheKey {
 
   TextFieldHeightCacheKey._({
     required this.decoration,
+    required this.text,
     required this.style,
     required this.expands,
     required this.textScaleFactor,
@@ -27,25 +28,30 @@ class TextFieldHeightCacheKey {
     this.maxLines = null,
   });
 
-  static TextFieldHeightCacheKey fromConfig({
+  static TextFieldHeightCacheKey create({
     required BuildContext context,
     required TextFieldConfig config,
     required InputDecoration decoration,
     required double width,
+    required String? text,
   }) {
     // This reduces number of height measurements for fields with identical setup, single-lined and only different in width.
-    double? widthOrNull;
+    double? effectiveWidth;
+    String? effectiveText;
     if ((config.minLines != null && config.minLines! > 1) || (config.maxLines != null && config.maxLines! > 1)) {
-      widthOrNull = width;
+      effectiveWidth = width;
+      effectiveText = text;
     } else {
-      widthOrNull = null;
+      effectiveWidth = 100;
+      effectiveText = 'Ay';
     }
 
     return TextFieldHeightCacheKey._(
       decoration: decoration.withoutBottomWidgets(),
+      text: effectiveText,
       style: config.style ?? UiParams.of(context).appTheme.textStyle(),
       strutStyle: config.strutStyle,
-      width: widthOrNull,
+      width: effectiveWidth,
       minLines: config.minLines,
       maxLines: config.maxLines,
       expands: config.expands,
@@ -58,7 +64,8 @@ class TextFieldHeightCacheKey {
   bool operator ==(Object other) {
     return identical(this, other) ||
         other is TextFieldHeightCacheKey &&
-            decoration == other.decoration &&
+            decoration.hasSameInputDecoratorHeightAs(other.decoration) &&
+            text == other.text &&
             style == other.style &&
             strutStyle == other.strutStyle &&
             width == other.width &&
@@ -71,7 +78,8 @@ class TextFieldHeightCacheKey {
 
   @override
   int get hashCode => Object.hash(
-        decoration,
+        decoration.inputDecoratorHeightHash,
+        text,
         style,
         strutStyle,
         width,

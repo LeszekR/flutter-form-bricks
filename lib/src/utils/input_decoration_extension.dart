@@ -142,4 +142,128 @@ extension InputDecorationExtension on InputDecoration {
       visualDensity: visualDensity,
     );
   }
+
+  bool hasSameInputDecoratorHeightAs(InputDecoration other) {
+    return _edgeInsetsGeometryEquals(contentPadding, other.contentPadding) &&
+        isDense == other.isDense &&
+        isCollapsed == other.isCollapsed &&
+        visualDensity == other.visualDensity &&
+        constraints == other.constraints &&
+
+        // Border type/width can affect InputDecorator geometry.
+        _inputBorderHeightEquals(border, other.border) &&
+        _inputBorderHeightEquals(enabledBorder, other.enabledBorder) &&
+        _inputBorderHeightEquals(focusedBorder, other.focusedBorder) &&
+        _inputBorderHeightEquals(disabledBorder, other.disabledBorder) &&
+        _inputBorderHeightEquals(errorBorder, other.errorBorder) &&
+        _inputBorderHeightEquals(focusedErrorBorder, other.focusedErrorBorder) &&
+
+        // These can add vertical subtext area.
+        helperText == other.helperText &&
+        errorText == other.errorText &&
+        counterText == other.counterText &&
+        helper == other.helper &&
+        error == other.error &&
+        counter == other.counter &&
+
+        // Label/floating label affects vertical layout.
+        labelText == other.labelText &&
+        label == other.label &&
+        floatingLabelBehavior == other.floatingLabelBehavior &&
+        floatingLabelAlignment == other.floatingLabelAlignment &&
+        alignLabelWithHint == other.alignLabelWithHint &&
+
+        // Prefix/suffix widgets can affect height.
+        prefix == other.prefix &&
+        suffix == other.suffix &&
+        prefixText == other.prefixText &&
+        suffixText == other.suffixText &&
+        prefixIcon == other.prefixIcon &&
+        suffixIcon == other.suffixIcon &&
+        prefixIconConstraints == other.prefixIconConstraints &&
+        suffixIconConstraints == other.suffixIconConstraints &&
+
+        // Hint can affect height in some configurations.
+        hintText == other.hintText &&
+        hint == other.hint &&
+        hintMaxLines == other.hintMaxLines;
+  }
+
+  int get inputDecoratorHeightHash {
+    return Object.hashAll([
+      _edgeInsetsGeometryHash(contentPadding),
+      isDense,
+      isCollapsed,
+      visualDensity,
+      constraints,
+      _inputBorderHeightHash(border),
+      _inputBorderHeightHash(enabledBorder),
+      _inputBorderHeightHash(focusedBorder),
+      _inputBorderHeightHash(disabledBorder),
+      _inputBorderHeightHash(errorBorder),
+      _inputBorderHeightHash(focusedErrorBorder),
+      helperText,
+      errorText,
+      counterText,
+      helper,
+      error,
+      counter,
+      labelText,
+      label,
+      floatingLabelBehavior,
+      floatingLabelAlignment,
+      alignLabelWithHint,
+      prefix,
+      suffix,
+      prefixText,
+      suffixText,
+      prefixIcon,
+      suffixIcon,
+      prefixIconConstraints,
+      suffixIconConstraints,
+      hintText,
+      hint,
+      hintMaxLines,
+    ]);
+  }
+
+  static bool _edgeInsetsGeometryEquals(
+      EdgeInsetsGeometry? a,
+      EdgeInsetsGeometry? b,
+      ) {
+    if (a == null || b == null) return a == b;
+
+    return a.resolve(TextDirection.ltr) == b.resolve(TextDirection.ltr);
+  }
+
+  static int _edgeInsetsGeometryHash(EdgeInsetsGeometry? value) {
+    if (value == null) return 0;
+
+    return value.resolve(TextDirection.ltr).hashCode;
+  }
+
+  static bool _inputBorderHeightEquals(
+      InputBorder? a,
+      InputBorder? b,
+      ) {
+    if (a == null || b == null) return a == b;
+
+    return a.runtimeType == b.runtimeType &&
+        a.isOutline == b.isOutline &&
+        a.dimensions == b.dimensions &&
+        a.borderSide.width == b.borderSide.width &&
+        a.borderSide.style == b.borderSide.style;
+  }
+
+  static int _inputBorderHeightHash(InputBorder? border) {
+    if (border == null) return 0;
+
+    return Object.hash(
+      border.runtimeType,
+      border.isOutline,
+      border.dimensions,
+      border.borderSide.width,
+      border.borderSide.style,
+    );
+  }
 }

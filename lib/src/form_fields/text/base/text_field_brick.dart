@@ -355,11 +355,12 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       final TextField textField = _makeTextField(textEditingController, decoration, _style);
       final TextFieldBorderType effectiveBorderType = _getEffectiveBorderType(decoration);
 
-      final TextFieldHeightCacheKey heightCacheKey = TextFieldHeightCacheKey.fromConfig(
+      final TextFieldHeightCacheKey heightCacheKey = TextFieldHeightCacheKey.create(
         context: context,
         decoration: decoration,
         config: widget.textFieldConfig,
         width: _width,
+        text: textEditingController.text,
       );
 
       return LabelledBox(
@@ -388,11 +389,12 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
             final TextField textField = _makeTextField(textEditingController, decoration, _style);
             final TextFieldBorderType effectiveBorderType = _getEffectiveBorderType(decoration);
 
-            final TextFieldHeightCacheKey heightCacheKey = TextFieldHeightCacheKey.fromConfig(
+            final TextFieldHeightCacheKey heightCacheKey = TextFieldHeightCacheKey.create(
               context: context,
               decoration: decoration,
               config: widget.textFieldConfig,
               width: _width,
+              text: textEditingController.text,
             );
 
             return LabelledBox(

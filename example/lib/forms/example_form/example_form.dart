@@ -26,8 +26,8 @@ class ExampleFormState extends FormStateBrick {
 
     return Center(
       child: SizedBox(
-        width: 400,
-        height: 500,
+        width: 400 * appSize.zoom,
+        height: 500 * appSize.zoom,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -86,49 +86,49 @@ class ExampleFormState extends FormStateBrick {
             //   inputDecoration: InputDecoration(labelText: 'data'),
             // ),
 
-            // SizedBox(height: appSize.spacerVerticalMedium),
-            // DateTimeSeparatedField(
-            //   keyString: dateTimeSeparatedKeyString1,
-            //   formManager: formManager,
-            //   dateWidth: 150,
-            //   datePickerButtonConfig: TextFieldButtonConfig(width: 20),
-            //   timePickerButtonConfig: TextFieldButtonConfig(width: 20),
-            //   dateOuterLabelConfig: OuterLabelConfig(
-            //     labelText: 'Data',
-            //     side: Side.top,
-            //     height: 16,
-            //   ),
-            //   timeOuterLabelConfig: OuterLabelConfig(
-            //     labelText: 'Godzina',
-            //     side: Side.top,
-            //     height: 16,
-            //   ),
-            //   outerLabelConfig: OuterLabelConfig(
-            //     labelText: 'Data i czas',
-            //     side: Side.left,
-            //     height: 46 * appSize.zoom,
-            //     width: 80,
-            //     align: Alignment.bottomLeft,
-            //   ),
-            // ),
+              SizedBox(height: appSize.spacerVerticalMedium),
+              DateTimeSeparatedField(
+                keyString: dateTimeSeparatedKeyString1,
+                formManager: formManager,
+                dateWidth: 150,
+                datePickerButtonConfig: TextFieldButtonConfig(width: 20),
+                timePickerButtonConfig: TextFieldButtonConfig(width: 20),
+                dateOuterLabelConfig: OuterLabelConfig(
+                  labelText: 'Data',
+                  side: Side.top,
+                  height: 16,
+                ),
+                timeOuterLabelConfig: OuterLabelConfig(
+                  labelText: 'Godzina',
+                  side: Side.top,
+                  height: 16,
+                ),
+                outerLabelConfig: OuterLabelConfig(
+                  labelText: 'Data i czas',
+                  side: Side.left,
+                  height: 46 * appSize.zoom,
+                  width: 80,
+                  align: Alignment.bottomLeft,
+                ),
+              ),
             //
-            SizedBox(height: appSize.spacerVerticalMedium),
-             TimeField(
-               keyString: timeKeyString1,
-               formManager: formManager,
-               width: 130,
-               withTimePicker: true,
-               outerLabelConfig: OuterLabelConfig(
-                 labelText: 'Godzina',
-                 align: Alignment.bottomLeft,
-                 side: Side.left,
-                 width: 60,
-                 height: 22,
-               ),
-               errorPosition: ErrorPosition.dynamicSpaceBelowField,
-               textFieldBorderType: TextFieldBorderType.underline,
-               // inputDecoration: InputDecoration(labelText: 'data'),
-             ),
+            // SizedBox(height: appSize.spacerVerticalMedium),
+            //  TimeField(
+            //    keyString: timeKeyString1,
+            //    formManager: formManager,
+            //    width: 130,
+            //    withTimePicker: true,
+            //    outerLabelConfig: OuterLabelConfig(
+            //      labelText: 'Godzina',
+            //      align: Alignment.bottomLeft,
+            //      side: Side.left,
+            //      width: 60,
+            //      height: 22,
+            //    ),
+            //    errorPosition: ErrorPosition.dynamicSpaceBelowField,
+            //    textFieldBorderType: TextFieldBorderType.underline,
+            //    // inputDecoration: InputDecoration(labelText: 'data'),
+            //  ),
              //
              // SizedBox(height: appSize.spacerVerticalMedium),
              // PlainTextField(

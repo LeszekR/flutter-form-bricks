@@ -34,9 +34,7 @@ class _TextFieldHeightProbeState extends State<TextFieldHeightProbe> {
     final TextFieldHeightCacheKey cacheKey = widget.cacheKey;
 
     if (TextFieldHeightCache.isMeasured(cacheKey)) {
-      return Offstage(
-        child: SizedBox(height: 1),
-      );
+      return offstageDummy();
     }
 
     TextFieldHeightCache.startMeasuring(cacheKey);
@@ -47,7 +45,7 @@ class _TextFieldHeightProbeState extends State<TextFieldHeightProbe> {
           key: _probeKey,
           width: cacheKey.width,
           child: TextField(
-            controller: TextEditingController(text: widget.hasText ? null : 'Ay'),
+            controller: TextEditingController(text: cacheKey.text),
             decoration: cacheKey.decoration,
             style: cacheKey.style,
             expands: cacheKey.expands,
@@ -65,10 +63,10 @@ class _TextFieldHeightProbeState extends State<TextFieldHeightProbe> {
     double? height = TextFieldHeightCache.getHeight(widget.cacheKey);
 
     // Not measured yet - do it now
-    if (height == null ) {
+    if (height == null) {
       height = _measureHeight();
 
-      if(height == null) return;
+      if (height == null) return;
 
       TextFieldHeightCache.putHeight(widget.cacheKey, height);
     }
@@ -86,4 +84,10 @@ class _TextFieldHeightProbeState extends State<TextFieldHeightProbe> {
 
     return box.size.height;
   }
+}
+
+Offstage offstageDummy() {
+  return const Offstage(
+    child: const SizedBox(height: 1),
+  );
 }
