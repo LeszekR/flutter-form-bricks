@@ -14,6 +14,7 @@ class LabelledBox extends StatefulWidget {
   final TextFieldBorderType? textFieldBorderType;
   final FocusNode? targetFocusNode;
   final CompoundWidgetStatesController? compoundWidgetStatesController;
+  final bool hasText;
   final VoidCallback? onButtonTap;
 
   const LabelledBox({
@@ -26,6 +27,7 @@ class LabelledBox extends StatefulWidget {
     this.textFieldBorderType,
     this.targetFocusNode,
     this.compoundWidgetStatesController,
+    this.hasText = false,
     this.onButtonTap,
   })  : assert(buttonConfig == null ? compoundWidgetStatesController == null : true,
             'If buttonConfig is null styleControllerKit must be null'),
@@ -64,7 +66,11 @@ class LabelledBoxState extends State<LabelledBox> {
       // If ever Flutter exposes API for this - refactor and get rid of the TextFieldHeightProbe use
       if (_textEditingAreaHeight == null /*&& !TextFieldHeightCache.isMeasured(heightCacheKey)*/) {
         WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
-        return TextFieldHeightProbe(cacheKey: widget.heightCacheKey!, onMeasured: _setHeight);
+        return TextFieldHeightProbe(
+          cacheKey: widget.heightCacheKey!,
+          onMeasured: _setHeight,
+          hasText: widget.hasText,
+        );
       }
     }
 

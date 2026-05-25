@@ -75,4 +75,71 @@ extension InputDecorationExtension on InputDecoration {
       visualDensity: visualDensity ?? other.visualDensity,
     );
   }
+
+  InputDecoration withoutBottomWidgets() {
+    return InputDecoration(
+      icon: icon,
+      iconColor: iconColor,
+
+      label: label,
+      labelText: labelText,
+      labelStyle: labelStyle,
+      floatingLabelStyle: floatingLabelStyle,
+      floatingLabelBehavior: floatingLabelBehavior,
+      floatingLabelAlignment: floatingLabelAlignment,
+
+      hintText: hintText,
+      hint: hint,
+      hintStyle: hintStyle,
+      hintTextDirection: hintTextDirection,
+      hintMaxLines: hintMaxLines,
+      hintFadeDuration: hintFadeDuration,
+
+      // removed:
+      // helper: null,
+      // helperText: null,
+      // error: null,
+      // errorText: null,
+      // counter: null,
+      // counterText: null,
+
+      // TODO upgrade Flutter and uncomment floatingLabelHeight setting
+      // floatingLabelHeight: floatingLabelHeight,
+      isCollapsed: isCollapsed,
+      isDense: isDense,
+      contentPadding: contentPadding,
+
+      prefixIcon: prefixIcon,
+      prefixIconConstraints: prefixIconConstraints,
+      prefix: prefix,
+      prefixText: prefixText,
+      prefixStyle: prefixStyle,
+      prefixIconColor: prefixIconColor,
+
+      suffixIcon: suffixIcon,
+      suffixIconConstraints: suffixIconConstraints,
+      suffix: suffix,
+      suffixText: suffixText,
+      suffixStyle: suffixStyle,
+      suffixIconColor: suffixIconColor,
+
+      filled: filled,
+      fillColor: fillColor,
+      focusColor: focusColor,
+      hoverColor: hoverColor,
+
+      border: border,
+      enabledBorder: enabledBorder,
+      focusedBorder: focusedBorder,
+      disabledBorder: disabledBorder,
+      errorBorder: null,
+      focusedErrorBorder: null,
+
+      enabled: enabled,
+      semanticCounterText: semanticCounterText,
+      alignLabelWithHint: alignLabelWithHint,
+      constraints: constraints,
+      visualDensity: visualDensity,
+    );
+  }
 }

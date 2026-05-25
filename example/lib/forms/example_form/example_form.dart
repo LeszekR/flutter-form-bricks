@@ -31,87 +31,87 @@ class ExampleFormState extends FormStateBrick {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            DateField(
-              keyString: dateKeyString1,
-              formManager: formManager,
-              width: 160,
-              withDatePicker: true,
-              buttonConfig: TextFieldButtonConfig(
-                syncStyleWithTextField: true,
-                // distanceFromTextField: 3,
-                // transparentBackground: false,
-                // buttonStyle: ButtonStyle(
-                //   side: const WidgetStatePropertyAll(BorderSide.none),
-                //   backgroundColor: WidgetStatePropertyAll(Colors.transparent),
-                //   overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-                //   shadowColor: const WidgetStatePropertyAll(Colors.transparent),
-                //   surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
-                //   elevation: const WidgetStatePropertyAll(0),
-                // ),
-                iconData: Icons.calendar_month,
-                tooltipMaker: (context) => 'Kalendarz',
-              ),
-              inputDecoration: InputDecoration(labelText: 'Data'),
-              // outerLabelConfig: OuterLabelConfig(
-              //   labelText: 'Data',
-              //   align: Alignment.bottomLeft,
-              //   side: Side.left,
-              //   width: 60,
-              // ),
-              errorPosition: ErrorPosition.dynamicSpaceBelowField,
-              textFieldBorderType: TextFieldBorderType.underline,
-              // inputDecoration: InputDecoration(labelText: 'data'),
-            ),
+            // DateField(
+            //   keyString: dateKeyString1,
+            //   formManager: formManager,
+            //   width: 160,
+            //   withDatePicker: true,
+            //   buttonConfig: TextFieldButtonConfig(
+            //     syncStyleWithTextField: true,
+            //     // distanceFromTextField: 3,
+            //     // transparentBackground: false,
+            //     // buttonStyle: ButtonStyle(
+            //     //   side: const WidgetStatePropertyAll(BorderSide.none),
+            //     //   backgroundColor: WidgetStatePropertyAll(Colors.transparent),
+            //     //   overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+            //     //   shadowColor: const WidgetStatePropertyAll(Colors.transparent),
+            //     //   surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
+            //     //   elevation: const WidgetStatePropertyAll(0),
+            //     // ),
+            //     iconData: Icons.calendar_month,
+            //     tooltipMaker: (context) => 'Kalendarz',
+            //   ),
+            //   inputDecoration: InputDecoration(labelText: 'Data'),
+            //   // outerLabelConfig: OuterLabelConfig(
+            //   //   labelText: 'Data',
+            //   //   align: Alignment.bottomLeft,
+            //   //   side: Side.left,
+            //   //   width: 60,
+            //   // ),
+            //   errorPosition: ErrorPosition.dynamicSpaceBelowField,
+            //   textFieldBorderType: TextFieldBorderType.underline,
+            //   // inputDecoration: InputDecoration(labelText: 'data'),
+            // ),
+            // //
+            // SizedBox(height: appSize.spacerVerticalMedium),
+            // DateField(
+            //   keyString: dateKeyString2,
+            //   formManager: formManager,
+            //   width: 160,
+            //   withDatePicker: true,
+            //   buttonConfig: TextFieldButtonConfig(
+            //     tooltipMaker: (context) => 'Kalendarz',
+            //   ),
+            //   // outerLabelConfig: OuterLabelConfig(
+            //   //   labelText: 'Data',
+            //   //   align: Alignment.bottomLeft,
+            //   //   side: Side.left,
+            //   //   width: 50,
+            //   //   height: 26,
+            //   // ),
+            //   errorPosition: ErrorPosition.dynamicSpaceBelowField,
+            //   textFieldBorderType: TextFieldBorderType.outline,
+            //   // TU PRZERWAŁEM - when textFieldBorderType is declared - override the InputDecoration passed as param
+            //   //  and make the border as declared in textFieldBorderType
+            //   inputDecoration: InputDecoration(labelText: 'data'),
+            // ),
+
+            // SizedBox(height: appSize.spacerVerticalMedium),
+            // DateTimeSeparatedField(
+            //   keyString: dateTimeSeparatedKeyString1,
+            //   formManager: formManager,
+            //   dateWidth: 150,
+            //   datePickerButtonConfig: TextFieldButtonConfig(width: 20),
+            //   timePickerButtonConfig: TextFieldButtonConfig(width: 20),
+            //   dateOuterLabelConfig: OuterLabelConfig(
+            //     labelText: 'Data',
+            //     side: Side.top,
+            //     height: 16,
+            //   ),
+            //   timeOuterLabelConfig: OuterLabelConfig(
+            //     labelText: 'Godzina',
+            //     side: Side.top,
+            //     height: 16,
+            //   ),
+            //   outerLabelConfig: OuterLabelConfig(
+            //     labelText: 'Data i czas',
+            //     side: Side.left,
+            //     height: 46 * appSize.zoom,
+            //     width: 80,
+            //     align: Alignment.bottomLeft,
+            //   ),
+            // ),
             //
-            SizedBox(height: appSize.spacerVerticalMedium),
-            DateField(
-              keyString: dateKeyString2,
-              formManager: formManager,
-              width: 160,
-              withDatePicker: true,
-              buttonConfig: TextFieldButtonConfig(
-                tooltipMaker: (context) => 'Kalendarz',
-              ),
-              // outerLabelConfig: OuterLabelConfig(
-              //   labelText: 'Data',
-              //   align: Alignment.bottomLeft,
-              //   side: Side.left,
-              //   width: 50,
-              //   height: 26,
-              // ),
-              errorPosition: ErrorPosition.dynamicSpaceBelowField,
-              textFieldBorderType: TextFieldBorderType.outline,
-              // TU PRZERWAŁEM - when textFieldBorderType is declared - override the InputDecoration passed as param
-              //  and make the border as declared in textFieldBorderType
-              inputDecoration: InputDecoration(labelText: 'data'),
-            ),
-
-            SizedBox(height: appSize.spacerVerticalMedium),
-            DateTimeSeparatedField(
-              keyString: dateTimeSeparatedKeyString1,
-              formManager: formManager,
-              dateWidth: 150,
-              datePickerButtonConfig: TextFieldButtonConfig(width: 20),
-              timePickerButtonConfig: TextFieldButtonConfig(width: 20),
-              dateOuterLabelConfig: OuterLabelConfig(
-                labelText: 'Data',
-                side: Side.top,
-                height: 16,
-              ),
-              timeOuterLabelConfig: OuterLabelConfig(
-                labelText: 'Godzina',
-                side: Side.top,
-                height: 16,
-              ),
-              outerLabelConfig: OuterLabelConfig(
-                labelText: 'Data i czas',
-                side: Side.left,
-                height: 46 * appSize.zoom,
-                width: 80,
-                align: Alignment.bottomLeft,
-              ),
-            ),
-
             SizedBox(height: appSize.spacerVerticalMedium),
              TimeField(
                keyString: timeKeyString1,
@@ -130,21 +130,21 @@ class ExampleFormState extends FormStateBrick {
                // inputDecoration: InputDecoration(labelText: 'data'),
              ),
              //
-             SizedBox(height: appSize.spacerVerticalMedium),
-             PlainTextField(
-               keyString: plainTextKeyString2,
-               formManager: formManager,
-               width: 200,
-               maxLines: 3,
-               validateMode: ValidateModeBrick.noValidator,
-             ),
-             //
-             SizedBox(height: appSize.spacerVerticalMedium),
-             LowerCaseField(
-               keyString: lowerCaseKeyString3,
-               formManager: formManager,
-               width: 250,
-             ),
+             // SizedBox(height: appSize.spacerVerticalMedium),
+             // PlainTextField(
+             //   keyString: plainTextKeyString2,
+             //   formManager: formManager,
+             //   width: 200,
+             //   maxLines: 3,
+             //   validateMode: ValidateModeBrick.noValidator,
+             // ),
+             // //
+             // SizedBox(height: appSize.spacerVerticalMedium),
+             // LowerCaseField(
+             //   keyString: lowerCaseKeyString3,
+             //   formManager: formManager,
+             //   width: 250,
+             // ),
           ],
         ), // test your widget here
       ),

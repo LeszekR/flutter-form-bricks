@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
 import 'package:flutter_form_bricks/src/ui_params/ui_params.dart';
 
@@ -41,14 +42,7 @@ class TextFieldHeightCacheKey {
     }
 
     return TextFieldHeightCacheKey._(
-      decoration: decoration.copyWith(
-        errorText: null,
-        error: null,
-        helperText: null,
-        helper: null,
-        counterText: null,
-        counter: null,
-      ),
+      decoration: decoration.withoutBottomWidgets(),
       style: config.style ?? UiParams.of(context).appTheme.textStyle(),
       strutStyle: config.strutStyle,
       width: widthOrNull,

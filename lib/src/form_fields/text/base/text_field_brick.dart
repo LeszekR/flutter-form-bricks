@@ -404,6 +404,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
               textFieldBorderType: effectiveBorderType,
               targetFocusNode: focusNode,
               compoundWidgetStatesController: _compoundWidgetStatesController,
+              hasText: textEditingController.text != '',
               onButtonTap: onButtonTap,
             );
           },

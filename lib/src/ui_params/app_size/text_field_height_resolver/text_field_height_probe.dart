@@ -5,11 +5,13 @@ import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_res
 class TextFieldHeightProbe extends StatefulWidget {
   final TextFieldHeightCacheKey cacheKey;
   final ValueChanged<double> onMeasured;
+  final bool hasText;
 
   const TextFieldHeightProbe({
     super.key,
     required this.cacheKey,
     required this.onMeasured,
+    required this.hasText,
   });
 
   @override
@@ -45,11 +47,8 @@ class _TextFieldHeightProbeState extends State<TextFieldHeightProbe> {
           key: _probeKey,
           width: cacheKey.width,
           child: TextField(
-            decoration: cacheKey.decoration.copyWith(
-              errorText: null,
-              helperText: null,
-              counterText: '',
-            ),
+            controller: TextEditingController(text: widget.hasText ? null : 'Ay'),
+            decoration: cacheKey.decoration,
             style: cacheKey.style,
             expands: cacheKey.expands,
             strutStyle: cacheKey.strutStyle,
