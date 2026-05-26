@@ -8,38 +8,36 @@ import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_res
 
 class LabelledBox extends StatefulWidget {
   final Widget fieldBody;
-  final TextFieldHeightCacheKey? heightCacheKey;
+  final TextFieldHeightProbeConfig heightProbeConfig;
+  final TextFieldBorderType borderType;
   final double? width;
   final OuterLabelConfig? outerLabelConfig;
   final TextFieldButtonConfig? buttonConfig;
-  final TextFieldBorderType? textFieldBorderType;
   final FocusNode? targetFocusNode;
   final CompoundWidgetStatesController? compoundWidgetStatesController;
-  final bool hasText;
   final VoidCallback? onButtonTap;
 
   const LabelledBox({
     super.key,
     required this.fieldBody,
-    this.heightCacheKey,
+    required this.heightProbeConfig,
+    required this.borderType,
     this.width,
     this.outerLabelConfig,
     this.buttonConfig,
-    this.textFieldBorderType,
     this.targetFocusNode,
     this.compoundWidgetStatesController,
-    this.hasText = false,
     this.onButtonTap,
   })  : assert(buttonConfig == null ? compoundWidgetStatesController == null : true,
             'If buttonConfig is null styleControllerKit must be null'),
-        assert(buttonConfig != null ? textFieldBorderType != null : true,
+        assert(buttonConfig != null ? borderType != null : true,
             'If buttonConfig is declared textFieldBorderType must also be declared'),
         assert(buttonConfig != null ? targetFocusNode != null : true,
             'If buttonConfig is declared then targetFocusNode of the button\'s TextFieldBrick must be provided'),
-        assert(buttonConfig != null ? heightCacheKey != null : true,
-            'If buttonConfig is declared then heightCacheKey must be provided'),
-        assert(outerLabelConfig != null ? heightCacheKey != null : true,
-            'If outerLabelConfig is declared then heightCacheKey must be provided');
+        assert(buttonConfig != null ? heightProbeConfig != null : true,
+            'If buttonConfig is declared then heightProbeConfig must be provided'),
+        assert(outerLabelConfig != null ? heightProbeConfig != null : true,
+            'If outerLabelConfig is declared then heightProbeConfig must be provided');
 
   @override
   LabelledBoxState createState() => LabelledBoxState();
@@ -61,19 +59,19 @@ class LabelledBoxState extends State<LabelledBox> {
     final AppSize appSize = UiParams.of(context).appSize;
 
     if (_textEditingAreaHeight == null && (widget.buttonConfig != null || widget.outerLabelConfig != null)) {
-      _textEditingAreaHeight = appSize.getHeightOfInputDecoratorEditArea(widget.heightCacheKey!);
+      _textEditingAreaHeight = appSize.getHeightOfInputDecoratorEditArea(widget.heightProbeConfig);
 
       // Get height of the editable text area of InputDecorator
       // If ever Flutter exposes API for this - refactor and get rid of the TextFieldHeightProbe use
       if (_textEditingAreaHeight == null) {
         WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
-        if(TextFieldHeightCache.isMeasured(widget.heightCacheKey!)) {
-          return offstageDummy();
+        if (TextFieldHeightCache.isMeasured(widget.heightProbeConfig)) {
+          return OffstageDummy();
         } else {
           return TextFieldHeightProbe(
-            cacheKey: widget.heightCacheKey!,
+            heightProbeConfig: widget.heightProbeConfig,
+            borderType: widget.borderType!,
             onMeasured: _setHeight,
-            hasText: widget.hasText,
           );
         }
       }
@@ -94,7 +92,7 @@ class LabelledBoxState extends State<LabelledBox> {
         fieldBody: widget.fieldBody,
         height: _textEditingAreaHeight!,
         buttonConfig: widget.buttonConfig!,
-        textFieldBorderType: widget.textFieldBorderType!,
+        textFieldBorderType: widget.borderType!,
         targetFocusNode: widget.targetFocusNode!,
         compoundWidgetStatesController: widget.compoundWidgetStatesController,
         onButtonTap: widget.onButtonTap!,
@@ -108,7 +106,7 @@ class LabelledBoxState extends State<LabelledBox> {
       outerLabelConfig: widget.outerLabelConfig,
     );
 
-    double zoom = appSize.zoom;
+
     double buttonWidth = widget.buttonConfig == null
         ? 0
         : widget.buttonConfig!.width != null
@@ -121,13 +119,15 @@ class LabelledBoxState extends State<LabelledBox> {
             ? 0
             : switch (widget.outerLabelConfig!.side) {
                 Side.top || Side.bottom => 0,
-                Side.left ||
-                Side.right =>
-                  (widget.outerLabelConfig!.width! + UiParams.of(context).appSize.spacerHorizontalSmallest),
+                Side.left || Side.right => widget.outerLabelConfig!.width!,
               };
 
+    double? totalWidth = widget.width == null
+        ? null
+        : (widget.width! + buttonWidth + sideLabelWidth) * appSize.zoom;
+
     return SizedBox(
-      width: widget.width == null ? null : (widget.width! + buttonWidth + sideLabelWidth) * zoom,
+      width: totalWidth,
       child: bodyWithLabel,
     );
   }

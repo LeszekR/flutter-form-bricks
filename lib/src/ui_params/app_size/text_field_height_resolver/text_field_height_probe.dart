@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_decoration_maker.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_height_cache.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_height_cache_key.dart';
 
 class TextFieldHeightProbe extends StatefulWidget {
-  final TextFieldHeightCacheKey cacheKey;
+  final TextFieldHeightProbeConfig heightProbeConfig;
+  final TextFieldBorderType borderType;
   final ValueChanged<double> onMeasured;
-  final bool hasText;
 
   const TextFieldHeightProbe({
     super.key,
-    required this.cacheKey,
+    required this.heightProbeConfig,
+    required this.borderType,
     required this.onMeasured,
-    required this.hasText,
   });
 
   @override
@@ -31,13 +33,21 @@ class _TextFieldHeightProbeState extends State<TextFieldHeightProbe> {
 
   @override
   Widget build(BuildContext context) {
-    final TextFieldHeightCacheKey cacheKey = widget.cacheKey;
+    final TextFieldHeightProbeConfig cacheKey = widget.heightProbeConfig;
 
     if (TextFieldHeightCache.isMeasured(cacheKey)) {
-      return offstageDummy();
+      return OffstageDummy();
     }
 
     TextFieldHeightCache.startMeasuring(cacheKey);
+
+    InputDecoration decoration = TextFieldDecorationMaker.makeInputDecoration(
+      uiParams: UiParams.of(context),
+      borderType: widget.borderType,
+      decoration: cacheKey.decoration,
+      buttonConfig: null,
+      errorPosition: ErrorPosition.dynamicSpaceBelowField,
+    );
 
     return Offstage(
       child: Material(
@@ -46,7 +56,7 @@ class _TextFieldHeightProbeState extends State<TextFieldHeightProbe> {
           width: cacheKey.width,
           child: TextField(
             controller: TextEditingController(text: cacheKey.text),
-            decoration: cacheKey.decoration,
+            decoration: decoration,
             style: cacheKey.style,
             expands: cacheKey.expands,
             strutStyle: cacheKey.strutStyle,
@@ -60,7 +70,7 @@ class _TextFieldHeightProbeState extends State<TextFieldHeightProbe> {
 
   void _measure() {
     // Check - another widget might have already finished the measure process
-    double? height = TextFieldHeightCache.getHeight(widget.cacheKey);
+    double? height = TextFieldHeightCache.getHeight(widget.heightProbeConfig);
 
     // Not measured yet - do it now
     if (height == null) {
@@ -68,7 +78,7 @@ class _TextFieldHeightProbeState extends State<TextFieldHeightProbe> {
 
       if (height == null) return;
 
-      TextFieldHeightCache.putHeight(widget.cacheKey, height);
+      TextFieldHeightCache.putHeight(widget.heightProbeConfig, height);
     }
 
     // set the height in the widget waiting for the value
@@ -86,8 +96,6 @@ class _TextFieldHeightProbeState extends State<TextFieldHeightProbe> {
   }
 }
 
-Offstage offstageDummy() {
-  return const Offstage(
-    child: const SizedBox(height: 1),
-  );
+class OffstageDummy extends Offstage {
+  const OffstageDummy() : super(child: const SizedBox(height: 1));
 }

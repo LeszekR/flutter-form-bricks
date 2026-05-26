@@ -91,8 +91,7 @@ class ExampleFormState extends FormStateBrick {
                 keyString: dateTimeSeparatedKeyString1,
                 formManager: formManager,
                 dateWidth: 150,
-                datePickerButtonConfig: TextFieldButtonConfig(width: 20),
-                timePickerButtonConfig: TextFieldButtonConfig(width: 20),
+                pickerButtonConfig: TextFieldButtonConfig(width: 20),
                 dateOuterLabelConfig: OuterLabelConfig(
                   labelText: 'Data',
                   side: Side.top,
@@ -106,7 +105,7 @@ class ExampleFormState extends FormStateBrick {
                 outerLabelConfig: OuterLabelConfig(
                   labelText: 'Data i czas',
                   side: Side.left,
-                  height: 46 * appSize.zoom,
+                  // height: 46 * appSize.zoom,
                   width: 80,
                   align: Alignment.bottomLeft,
                 ),

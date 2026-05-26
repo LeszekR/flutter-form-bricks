@@ -34,10 +34,10 @@ class OuterLabelConfig {
 
   OuterLabelConfig fillFrom(OuterLabelConfig? other) {
     return OuterLabelConfig(
-      width: other?.width ?? this.width,
-      height: other?.height ?? this.height,
       labelWidget: labelWidget,
       labelText: labelText,
+      width: other?.width ?? this.width,
+      height: other?.height ?? this.height,
       side: other?.side ?? this.side,
       align: other?.align ?? this.align,
     );

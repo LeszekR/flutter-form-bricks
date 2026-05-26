@@ -10,6 +10,7 @@ import 'package:flutter_form_bricks/src/form_fields/components/state/field_conte
 import 'package:flutter_form_bricks/src/form_fields/text/base/compound_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/labelled_box.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_decoration_maker.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_height_cache_key.dart';
 
 enum TextFieldBorderType { outline, underline, other }
@@ -351,29 +352,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   Widget buildFieldWidget(BuildContext context) {
     // no button
     if (_compoundWidgetStatesController == null) {
-      final decoration = _makeInputDecoration(UiParams.of(context), _getStates());
-      final TextField textField = _makeTextField(textEditingController, decoration, _style);
-      final TextFieldBorderType effectiveBorderType = _getEffectiveBorderType(decoration);
-
-      final TextFieldHeightCacheKey heightCacheKey = TextFieldHeightCacheKey.create(
-        context: context,
-        decoration: decoration,
-        config: widget.textFieldConfig,
-        width: _width,
-        text: textEditingController.text,
-      );
-
-      return LabelledBox(
-        fieldBody: textField,
-        width: _width,
-        heightCacheKey: heightCacheKey,
-        outerLabelConfig: widget.outerLabelConfig,
-        buttonConfig: widget.buttonConfig,
-        textFieldBorderType: effectiveBorderType,
-        targetFocusNode: focusNode,
-        compoundWidgetStatesController: _compoundWidgetStatesController,
-        onButtonTap: onButtonTap,
-      );
+      return _makeBody(context);
     }
 
     // with button
@@ -384,35 +363,45 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         AnimatedBuilder(
           animation: _compoundWidgetStatesController!,
           builder: (context, _) {
-            final InputDecoration decoration =
-                _makeInputDecoration(UiParams.of(context), _compoundWidgetStatesController!.states);
-            final TextField textField = _makeTextField(textEditingController, decoration, _style);
-            final TextFieldBorderType effectiveBorderType = _getEffectiveBorderType(decoration);
-
-            final TextFieldHeightCacheKey heightCacheKey = TextFieldHeightCacheKey.create(
-              context: context,
-              decoration: decoration,
-              config: widget.textFieldConfig,
-              width: _width,
-              text: textEditingController.text,
-            );
-
-            return LabelledBox(
-              fieldBody: textField,
-              width: _width,
-              heightCacheKey: heightCacheKey,
-              outerLabelConfig: widget.outerLabelConfig,
-              buttonConfig: widget.buttonConfig,
-              textFieldBorderType: effectiveBorderType,
-              targetFocusNode: focusNode,
-              compoundWidgetStatesController: _compoundWidgetStatesController,
-              hasText: textEditingController.text != '',
-              onButtonTap: onButtonTap,
-            );
+            return _makeBody(context);
           },
         ),
       );
     }
+  }
+
+  LabelledBox _makeBody(BuildContext context) {
+    final decoration = TextFieldDecorationMaker.makeInputDecoration(
+      uiParams: UiParams.of(context),
+      states: _getStates(),
+      decoration: widget.textFieldConfig.decoration,
+      buttonConfig: widget.buttonConfig,
+      borderType: widget.textFieldBorderType,
+      errorPosition: widget.errorPosition,
+      errorText: errorText,
+    );
+    final TextField textField = _makeTextField(textEditingController, decoration, _style);
+    final TextFieldBorderType effectiveBorderType = _getEffectiveBorderType(decoration);
+
+    final TextFieldHeightProbeConfig heightProbeConfig = TextFieldHeightProbeConfig.create(
+      context: context,
+      decoration: decoration,
+      borderType: effectiveBorderType,
+      config: widget.textFieldConfig,
+      width: _width,
+      text: textEditingController.text,
+    );
+
+    return LabelledBox(
+      fieldBody: textField,
+      heightProbeConfig: heightProbeConfig,
+      outerLabelConfig: widget.outerLabelConfig,
+      buttonConfig: widget.buttonConfig,
+      borderType: effectiveBorderType,
+      targetFocusNode: focusNode,
+      compoundWidgetStatesController: _compoundWidgetStatesController,
+      onButtonTap: onButtonTap,
+    );
   }
 
   TextFieldBorderType _getEffectiveBorderType(InputDecoration decoration) {
@@ -435,7 +424,8 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     return TextField(
       groupId: widget.textFieldConfig.groupId,
       controller: controller,
-      focusNode: widget.buttonConfig == null ? focusNode : null, // focus node becomes parent when button is present
+      focusNode: widget.buttonConfig == null ? focusNode : null,
+      // focus node becomes parent when button is present
       undoController: widget.textFieldConfig.undoController,
       decoration: decoration,
       keyboardType: widget.textFieldConfig.keyboardType,
@@ -468,6 +458,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       onAppPrivateCommand: widget.textFieldConfig.onAppPrivateCommand,
       inputFormatters: widget.textFieldConfig.inputFormatters,
       enabled: widget.textFieldConfig.enabled,
+
       /// ignorePointers tells the TextField to ignore pointer events (taps, clicks, drags) for hit-testing. That means:
       /// user taps won’t focus it, selection/handles won’t respond, mouse interactions won’t apply.
       /// It’s different from / enabled: false / readOnly: true: enabled: false also affects styling and semantics like
@@ -513,49 +504,6 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     );
   }
 
-  InputDecoration _makeInputDecoration(UiParamsData uiParams, Set<WidgetState>? states) {
-    // TODO support errorWidget
-    bool showErrorBelowText = false ||
-        widget.errorPosition == ErrorPosition.dynamicSpaceBelowField ||
-        widget.errorPosition == ErrorPosition.fixedSpaceBelowField;
-    final TextStyle? errorStyle = showErrorBelowText ? null : TextStyle(fontSize: 0);
-
-    Color? fillColor = uiParams.appColor.getFillColor(states);
-
-    InputBorder? border = _makeInputDecorationBorder(uiParams, states);
-
-    InputDecoration? decoration = widget.textFieldConfig.decoration;
-
-    var appSize = uiParams.appSize;
-    double zoom = appSize.zoom;
-
-    if (decoration != null) {
-      return decoration.copyWith(
-        errorText: errorText,
-        errorStyle: errorStyle,
-        fillColor: fillColor,
-        border: border,
-        enabledBorder: border,
-        focusedBorder: border,
-        errorBorder: border,
-        focusedErrorBorder: border,
-        disabledBorder: border,
-      );
-    } else {
-      return InputDecoration(
-        errorText: errorText,
-        errorStyle: errorStyle,
-        fillColor: fillColor,
-        border: border,
-        enabledBorder: border,
-        focusedBorder: border,
-        errorBorder: border,
-        focusedErrorBorder: border,
-        disabledBorder: border,
-      );
-    }
-  }
-
   Set<WidgetState>? _getStates() {
     if (_compoundWidgetStatesController != null) {
       _compoundWidgetStatesController!.fieldStatesSink.setError(errorText != null && errorText!.isNotEmpty);
@@ -563,52 +511,6 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     } else {
       _statesController!.update(WidgetState.error, errorText != null && errorText!.isNotEmpty);
       return _statesController!.value;
-    }
-  }
-
-  InputBorder? _makeInputDecorationBorder(UiParamsData uiParams, Set<WidgetState>? states) {
-    BorderSide borderSide = BorderSide(
-      color: uiParams.appColor.getBorderColor(states, uiParams.appColor.borderEnabled),
-      width: uiParams.appSize.getBorderWidth(states, uiParams.appSize.borderWidth),
-    );
-
-    if (widget.buttonConfig == null) {
-      return switch (widget.textFieldBorderType) {
-        TextFieldBorderType.outline => OutlineInputBorder(),
-        TextFieldBorderType.underline => UnderlineInputBorder(),
-        TextFieldBorderType.other => widget.inputDecoration?.border,
-      };
-    } else {
-      return switch (widget.textFieldBorderType) {
-        // widget.textFieldBorderType dominates the choice of border
-        TextFieldBorderType.outline => switch (widget.buttonConfig!.buttonPosition) {
-            ButtonPosition.left => OutlineSidesInputBorder(borderSide: borderSide, sideLeft: false),
-            ButtonPosition.right => OutlineSidesInputBorder(borderSide: borderSide, sideRight: false),
-          },
-        TextFieldBorderType.underline => switch (widget.buttonConfig!.buttonPosition) {
-            ButtonPosition.left => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopLeft: 0),
-            ButtonPosition.right => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopRight: 0),
-          },
-
-        // when widget.textFieldBorderType does not define the border - use inputDecoration.border or its
-        // **FlutterFormBricks'** implementation accommodating the button if present
-        TextFieldBorderType.other => switch (widget.inputDecoration?.border) {
-            const OutlineInputBorder() => switch (widget.buttonConfig!.buttonPosition) {
-                ButtonPosition.left => OutlineSidesInputBorder(borderSide: borderSide, sideLeft: false),
-                ButtonPosition.right => OutlineSidesInputBorder(borderSide: borderSide, sideRight: false),
-              },
-            const UnderlineInputBorder() => switch (widget.buttonConfig!.buttonPosition) {
-                ButtonPosition.left => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopLeft: 0),
-                ButtonPosition.right => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopRight: 0),
-              },
-            InputBorder() => widget.inputDecoration!.border,
-            // default:
-            null => switch (widget.buttonConfig!.buttonPosition) {
-                ButtonPosition.left => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopLeft: 0),
-                ButtonPosition.right => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopRight: 0),
-              },
-          }
-      };
     }
   }
 

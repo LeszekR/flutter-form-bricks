@@ -17,6 +17,8 @@ import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_for
 import 'package:flutter_form_bricks/src/form_fields/components/base/form_field_descriptor.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/base/validate_mode_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/state/form_field_data.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/decoration/outline_sides_input_border.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/decoration/underline_top_rounded_input_border.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/time_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_formatter_validator.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_utils.dart';
@@ -28,6 +30,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/da
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_brick.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button_config.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/labelled_box.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/error_position.dart';
 
 import 'package:flutter_form_bricks/src/form_fields/text/base/outer_label_config.dart';
 import 'package:flutter_form_bricks/src/forms/base/form_brick.dart';

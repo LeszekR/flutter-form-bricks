@@ -3,10 +3,11 @@ import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
 
 @immutable
-class TextFieldHeightCacheKey {
+class TextFieldHeightProbeConfig {
   final InputDecoration decoration;
-  final String? text;
+  final TextFieldBorderType borderType;
   final TextStyle style;
+  final String? text;
   final bool expands;
   final double textScaleFactor;
   final bool useMaterial3;
@@ -15,10 +16,11 @@ class TextFieldHeightCacheKey {
   final int? minLines;
   final int? maxLines;
 
-  TextFieldHeightCacheKey._({
+  TextFieldHeightProbeConfig._({
     required this.decoration,
-    required this.text,
+    required this.borderType,
     required this.style,
+    required this.text,
     required this.expands,
     required this.textScaleFactor,
     required this.useMaterial3,
@@ -28,10 +30,11 @@ class TextFieldHeightCacheKey {
     this.maxLines = null,
   });
 
-  static TextFieldHeightCacheKey create({
+  static TextFieldHeightProbeConfig create({
     required BuildContext context,
     required TextFieldConfig config,
     required InputDecoration decoration,
+    required TextFieldBorderType borderType,
     required double width,
     required String? text,
   }) {
@@ -46,32 +49,34 @@ class TextFieldHeightCacheKey {
       effectiveText = 'Ay';
     }
 
-    return TextFieldHeightCacheKey._(
+    return TextFieldHeightProbeConfig._(
       decoration: decoration.withoutBottomWidgets(),
-      text: effectiveText,
+      borderType: borderType,
       style: config.style ?? UiParams.of(context).appTheme.textStyle(),
+      text: effectiveText,
+      expands: config.expands,
+      textScaleFactor: MediaQuery.textScalerOf(context).scale(1.0),
+      useMaterial3: Theme.of(context).useMaterial3,
       strutStyle: config.strutStyle,
       width: effectiveWidth,
       minLines: config.minLines,
       maxLines: config.maxLines,
-      expands: config.expands,
-      textScaleFactor: MediaQuery.textScalerOf(context).scale(1.0),
-      useMaterial3: Theme.of(context).useMaterial3,
     );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is TextFieldHeightCacheKey &&
+        other is TextFieldHeightProbeConfig &&
             decoration.hasSameInputDecoratorHeightAs(other.decoration) &&
-            text == other.text &&
+            borderType == other.borderType &&
             style == other.style &&
+            text == other.text &&
+            expands == other.expands &&
             strutStyle == other.strutStyle &&
             width == other.width &&
             minLines == other.minLines &&
             maxLines == other.maxLines &&
-            expands == other.expands &&
             textScaleFactor == other.textScaleFactor &&
             useMaterial3 == other.useMaterial3;
   }
@@ -79,13 +84,14 @@ class TextFieldHeightCacheKey {
   @override
   int get hashCode => Object.hash(
         decoration.inputDecoratorHeightHash,
-        text,
+        borderType,
         style,
+        text,
+        expands,
         strutStyle,
         width,
         minLines,
         maxLines,
-        expands,
         textScaleFactor,
         useMaterial3,
       );
