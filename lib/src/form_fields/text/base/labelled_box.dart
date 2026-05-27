@@ -13,6 +13,7 @@ class LabelledBox extends StatefulWidget {
   final double width;
   final OuterLabelConfig? outerLabelConfig;
   final TextFieldButtonConfig? buttonConfig;
+  final int numberOfButtons;
   final FocusNode? targetFocusNode;
   final CompoundWidgetStatesController? compoundWidgetStatesController;
   final VoidCallback? onButtonTap;
@@ -25,6 +26,7 @@ class LabelledBox extends StatefulWidget {
     required this.width,
     this.outerLabelConfig,
     this.buttonConfig,
+    this.numberOfButtons = 0,
     this.targetFocusNode,
     this.compoundWidgetStatesController,
     this.onButtonTap,
@@ -98,18 +100,20 @@ class LabelledBoxState extends State<LabelledBox> {
       );
     }
 
+    double? labelHeight = switch (widget.outerLabelConfig?.side) {
+      Side.top || Side.bottom => null,
+      Side.left || Side.right => _textEditingAreaHeight!,
+      null => null,
+    };
+
     final Widget bodyWithLabel = _wrapWithOuterLabel(
       context: context,
       fieldBody: bodyWithButton,
-      measuredHeight: _textEditingAreaHeight!,
+      labelHeight: labelHeight,
       outerLabelConfig: widget.outerLabelConfig,
     );
 
-    double buttonWidth = widget.buttonConfig == null
-        ? 0
-        : widget.buttonConfig!.width != null
-            ? widget.buttonConfig!.width!
-            : _textEditingAreaHeight!;
+    double buttonWidth = widget.buttonConfig?.width ?? _textEditingAreaHeight!;
 
     double sideLabelWidth = widget.outerLabelConfig == null
         ? 0
@@ -118,8 +122,7 @@ class LabelledBoxState extends State<LabelledBox> {
             Side.left || Side.right => widget.outerLabelConfig!.width!,
           };
 
-    double? totalWidth = (widget.width + buttonWidth + sideLabelWidth) * appSize.zoom;
-    // double? totalWidth = widget.width == null ? null : (widget.width! + buttonWidth + sideLabelWidth) * appSize.zoom;
+    double? totalWidth = (widget.width + buttonWidth * widget.numberOfButtons + sideLabelWidth) * appSize.zoom;
 
     return SizedBox(
       width: totalWidth,
@@ -181,12 +184,12 @@ class LabelledBoxState extends State<LabelledBox> {
   static Widget _wrapWithOuterLabel({
     required BuildContext context,
     required Widget fieldBody,
-    required double measuredHeight,
+    required double? labelHeight,
     OuterLabelConfig? outerLabelConfig,
   }) {
     if (outerLabelConfig == null) return fieldBody;
 
-    final Widget label = _makeOuterLabel(context, outerLabelConfig, measuredHeight);
+    final Widget label = _makeOuterLabel(context, outerLabelConfig, labelHeight);
 
     final appSize = UiParams.of(context).appSize;
 
@@ -198,7 +201,7 @@ class LabelledBoxState extends State<LabelledBox> {
           children: [
             label,
             // TODO implement padding around outer label
-            // SizedBox(height: appSize.spacerHorizontalSmallest),
+// SizedBox(height: appSize.spacerHorizontalSmallest),
             fieldBody,
           ],
         );
@@ -209,7 +212,7 @@ class LabelledBoxState extends State<LabelledBox> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             label,
-            // SizedBox(width: appSize.spacerHorizontalSmallest),
+// SizedBox(width: appSize.spacerHorizontalSmallest),
             Expanded(child: fieldBody),
           ],
         );
@@ -220,7 +223,7 @@ class LabelledBoxState extends State<LabelledBox> {
           crossAxisAlignment: _topOrBottomCrossAxisAlignment(outerLabelConfig),
           children: [
             fieldBody,
-            // SizedBox(width: appSize.spacerHorizontalSmallest),
+// SizedBox(width: appSize.spacerHorizontalSmallest),
             label,
           ],
         );
@@ -231,7 +234,7 @@ class LabelledBoxState extends State<LabelledBox> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(child: fieldBody),
-            // SizedBox(width: appSize.spacerHorizontalSmallest),
+// SizedBox(width: appSize.spacerHorizontalSmallest),
             label,
           ],
         );
@@ -247,7 +250,7 @@ class LabelledBoxState extends State<LabelledBox> {
     };
   }
 
-  static Widget _makeOuterLabel(BuildContext context, OuterLabelConfig outerLabelConfig, double height) {
+  static Widget _makeOuterLabel(BuildContext context, OuterLabelConfig outerLabelConfig, double? height) {
     if (outerLabelConfig.labelWidget != null) {
       return outerLabelConfig.labelWidget!;
     }
@@ -256,7 +259,6 @@ class LabelledBoxState extends State<LabelledBox> {
     return SizedBox(
       width: outerLabelConfig.width == null ? null : outerLabelConfig.width! * appSize.zoom,
       height: height,
-      // height: outerLabelConfig.height == null ? null : outerLabelConfig.height! * appSize.zoom,
       child: Align(
         alignment: outerLabelConfig.align,
         child: Text(

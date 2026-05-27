@@ -366,8 +366,6 @@ class DateTimeSeparatedField extends StatelessWidget {
     double datWidth = dateWidth ?? appSize.dateFieldWidth;
     double timWidth = timeWidth ?? appSize.timeFieldWidth;
     double spacer = appSize.spacerHorizontalSmall;
-    double effectiveButtonWidth = !withDateTimePicker ? 0 : buttonWidth ?? appSize.textFieldHeight;
-    // double timeButtonWidth = !withTimePicker ? 0 : buttonWidth ?? appSize.textFieldHeight;
 
     // TU PRZERWAŁEM date field does not show in ExampleForm - fix it
     List<Widget> elements = [
@@ -394,7 +392,6 @@ class DateTimeSeparatedField extends StatelessWidget {
     final TextFieldHeightProbeConfig heightProbeConfig = TextFieldHeightProbeConfig.create(
       context: context,
       decoration: decoration,
-      // borderType: borderType,
       config: dateTextFieldConfig,
       width: 100,
       text: 'Ay',
@@ -405,7 +402,9 @@ class DateTimeSeparatedField extends StatelessWidget {
       heightProbeConfig: heightProbeConfig,
       borderType: borderType,
       outerLabelConfig: outerLabelConfig,
-      width: datWidth + timWidth + spacer + effectiveButtonWidth * 2,
+      buttonConfig: pickerButtonConfig,
+      numberOfButtons: withDateTimePicker? 2 : 0,
+      width: datWidth + timWidth + spacer,
     );
   }
 

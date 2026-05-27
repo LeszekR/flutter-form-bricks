@@ -5,7 +5,6 @@ import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.
 @immutable
 class TextFieldHeightProbeConfig {
   final InputDecoration decoration;
-  // final TextFieldBorderType borderType;
   final TextStyle style;
   final String? text;
   final bool expands;
@@ -18,7 +17,6 @@ class TextFieldHeightProbeConfig {
 
   TextFieldHeightProbeConfig._({
     required this.decoration,
-    // required this.borderType,
     required this.style,
     required this.text,
     required this.expands,
@@ -34,7 +32,6 @@ class TextFieldHeightProbeConfig {
     required BuildContext context,
     required TextFieldConfig config,
     required InputDecoration decoration,
-    // required TextFieldBorderType borderType,
     required double width,
     required String? text,
   }) {
@@ -51,7 +48,6 @@ class TextFieldHeightProbeConfig {
 
     return TextFieldHeightProbeConfig._(
       decoration: decoration.withoutBottomWidgets(),
-      // borderType: borderType,
       style: config.style ?? UiParams.of(context).appTheme.textStyle(),
       text: effectiveText,
       expands: config.expands,
@@ -69,7 +65,6 @@ class TextFieldHeightProbeConfig {
     return identical(this, other) ||
         other is TextFieldHeightProbeConfig &&
             decoration.hasSameInputDecoratorHeightAs(other.decoration) &&
-            // borderType == other.borderType &&
             style == other.style &&
             text == other.text &&
             expands == other.expands &&
@@ -84,7 +79,6 @@ class TextFieldHeightProbeConfig {
   @override
   int get hashCode => Object.hash(
         decoration.inputDecoratorHeightHash,
-        // borderType,
         style,
         text,
         expands,

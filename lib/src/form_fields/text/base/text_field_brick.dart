@@ -398,6 +398,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       heightProbeConfig: heightProbeConfig,
       outerLabelConfig: widget.outerLabelConfig,
       buttonConfig: widget.buttonConfig,
+      numberOfButtons: widget.buttonConfig == null ? 0 : 1,
       borderType: effectiveBorderType,
       width: _width,
       targetFocusNode: focusNode,
