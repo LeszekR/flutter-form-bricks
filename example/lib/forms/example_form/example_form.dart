@@ -26,7 +26,7 @@ class ExampleFormState extends FormStateBrick {
 
     return Center(
       child: SizedBox(
-        width: 400 * appSize.zoom,
+        width: 500 * appSize.zoom,
         height: 500 * appSize.zoom,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -63,35 +63,35 @@ class ExampleFormState extends FormStateBrick {
             //   // inputDecoration: InputDecoration(labelText: 'data'),
             // ),
             // //
-            // SizedBox(height: appSize.spacerVerticalMedium),
-            // DateField(
-            //   keyString: dateKeyString2,
-            //   formManager: formManager,
-            //   width: 160,
-            //   withDatePicker: true,
-            //   buttonConfig: TextFieldButtonConfig(
-            //     tooltipMaker: (context) => 'Kalendarz',
-            //   ),
-            //   // outerLabelConfig: OuterLabelConfig(
-            //   //   labelText: 'Data',
-            //   //   align: Alignment.bottomLeft,
-            //   //   side: Side.left,
-            //   //   width: 50,
-            //   //   height: 26,
-            //   // ),
-            //   errorPosition: ErrorPosition.dynamicSpaceBelowField,
-            //   textFieldBorderType: TextFieldBorderType.outline,
-            //   // TU PRZERWAŁEM - when textFieldBorderType is declared - override the InputDecoration passed as param
-            //   //  and make the border as declared in textFieldBorderType
-            //   inputDecoration: InputDecoration(labelText: 'data'),
-            // ),
+            SizedBox(height: appSize.spacerVerticalMedium),
+            DateField(
+              keyString: dateKeyString2,
+              formManager: formManager,
+              width: 160,
+              withDatePicker: true,
+              buttonConfig: TextFieldButtonConfig(
+                tooltipMaker: (context) => 'Kalendarz',
+              ),
+              // outerLabelConfig: OuterLabelConfig(
+              //   labelText: 'Data',
+              //   align: Alignment.bottomLeft,
+              //   side: Side.left,
+              //   width: 50,
+              //   height: 26,
+              // ),
+              errorPosition: ErrorPosition.dynamicSpaceBelowField,
+              textFieldBorderType: TextFieldBorderType.outline,
+              // TU PRZERWAŁEM - when textFieldBorderType is declared - override the InputDecoration passed as param
+              //  and make the border as declared in textFieldBorderType
+              inputDecoration: InputDecoration(labelText: 'data'),
+            ),
 
               SizedBox(height: appSize.spacerVerticalMedium),
               DateTimeSeparatedField(
                 keyString: dateTimeSeparatedKeyString1,
                 formManager: formManager,
                 dateWidth: 150,
-                pickerButtonConfig: TextFieldButtonConfig(width: 20),
+                // pickerButtonConfig: TextFieldButtonConfig(width: 20),
                 dateOuterLabelConfig: OuterLabelConfig(
                   labelText: 'Data',
                   side: Side.top,
@@ -110,7 +110,7 @@ class ExampleFormState extends FormStateBrick {
                   align: Alignment.bottomLeft,
                 ),
               ),
-            //
+
             // SizedBox(height: appSize.spacerVerticalMedium),
             //  TimeField(
             //    keyString: timeKeyString1,

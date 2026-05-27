@@ -12,7 +12,7 @@ class TextFieldDecorationMaker {
     required TextFieldBorderType borderType,
     required InputDecoration? decoration,
     required ErrorPosition errorPosition,
-    TextFieldButtonConfig? buttonConfig,
+    required TextFieldButtonConfig? buttonConfig,
     Set<WidgetState>? states,
     String? errorText,
   }) {

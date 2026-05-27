@@ -16,7 +16,7 @@ class TextFieldHeightCache {
     _processedKeys.add(key);
   }
 
-  static bool isMeasured(TextFieldHeightProbeConfig key) {
+  static bool isBeingMeasured(TextFieldHeightProbeConfig key) {
     return _processedKeys.contains(key);
   }
 }

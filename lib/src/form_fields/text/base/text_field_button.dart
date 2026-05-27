@@ -6,6 +6,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/base/compound_widget_st
 
 class TextFieldButton extends StatefulWidget {
   final TextFieldButtonConfig buttonConfig;
+  final double width;
   final TextFieldBorderType textFieldBorderType;
   final VoidCallback onTap;
   final CompoundWidgetStatesController? compoundWidgetStatesController;
@@ -14,6 +15,7 @@ class TextFieldButton extends StatefulWidget {
   TextFieldButton({
     super.key,
     required this.buttonConfig,
+    required this.width,
     required this.textFieldBorderType,
     required this.onTap,
     required this.targetFocusNode,
@@ -38,7 +40,7 @@ class TextFieldButtonState extends State<TextFieldButton> {
   @override
   Widget build(BuildContext context) {
     AppSize appSize = UiParams.of(context).appSize;
-    double zoomedSize = (widget.buttonConfig.width ?? appSize.textFieldHeight) * appSize.zoom;
+    double zoomedSize = widget.width * appSize.zoom;
 
     CompoundWidgetStatesController? compoundWidgetStatesController = widget.compoundWidgetStatesController;
 

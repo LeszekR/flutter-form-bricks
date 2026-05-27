@@ -383,15 +383,18 @@ class DateTimeSeparatedField extends StatelessWidget {
       children: elements,
     );
 
+    final InputDecoration decoration = TextFieldDecorationMaker.makeInputDecoration(
+      uiParams: uiParams,
+      decoration: inputDecoration,
+      borderType: borderType,
+      errorPosition: errorPosition,
+      buttonConfig: pickerButtonConfig,
+    );
+
     final TextFieldHeightProbeConfig heightProbeConfig = TextFieldHeightProbeConfig.create(
       context: context,
-      decoration: TextFieldDecorationMaker.makeInputDecoration(
-        uiParams: uiParams,
-        decoration: inputDecoration,
-        borderType: borderType,
-        errorPosition: errorPosition,
-      ),
-      borderType: borderType,
+      decoration: decoration,
+      // borderType: borderType,
       config: dateTextFieldConfig,
       width: 100,
       text: 'Ay',

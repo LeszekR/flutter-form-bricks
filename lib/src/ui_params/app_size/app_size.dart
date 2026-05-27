@@ -55,7 +55,7 @@ abstract class AppSize {
 
   // dimensions
   double get textFieldWidth;
-  double get textFieldHeight;
+  // double get textFieldHeight;
   double get dateFieldWidth;
   double get timeFieldWidth;
   double get buttonDistanceFromTextField;

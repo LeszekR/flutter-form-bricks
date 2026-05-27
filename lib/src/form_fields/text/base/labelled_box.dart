@@ -10,7 +10,7 @@ class LabelledBox extends StatefulWidget {
   final Widget fieldBody;
   final TextFieldHeightProbeConfig heightProbeConfig;
   final TextFieldBorderType borderType;
-  final double? width;
+  final double width;
   final OuterLabelConfig? outerLabelConfig;
   final TextFieldButtonConfig? buttonConfig;
   final FocusNode? targetFocusNode;
@@ -22,7 +22,7 @@ class LabelledBox extends StatefulWidget {
     required this.fieldBody,
     required this.heightProbeConfig,
     required this.borderType,
-    this.width,
+    required this.width,
     this.outerLabelConfig,
     this.buttonConfig,
     this.targetFocusNode,
@@ -65,12 +65,11 @@ class LabelledBoxState extends State<LabelledBox> {
       // If ever Flutter exposes API for this - refactor and get rid of the TextFieldHeightProbe use
       if (_textEditingAreaHeight == null) {
         WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
-        if (TextFieldHeightCache.isMeasured(widget.heightProbeConfig)) {
+        if (TextFieldHeightCache.isBeingMeasured(widget.heightProbeConfig)) {
           return OffstageDummy();
         } else {
           return TextFieldHeightProbe(
             heightProbeConfig: widget.heightProbeConfig,
-            borderType: widget.borderType!,
             onMeasured: _setHeight,
           );
         }
@@ -90,9 +89,9 @@ class LabelledBoxState extends State<LabelledBox> {
       bodyWithButton = _addButton(
         context: context,
         fieldBody: widget.fieldBody,
-        height: _textEditingAreaHeight!,
+        measuredHeight: _textEditingAreaHeight!,
         buttonConfig: widget.buttonConfig!,
-        textFieldBorderType: widget.borderType!,
+        textFieldBorderType: widget.borderType,
         targetFocusNode: widget.targetFocusNode!,
         compoundWidgetStatesController: widget.compoundWidgetStatesController,
         onButtonTap: widget.onButtonTap!,
@@ -102,10 +101,9 @@ class LabelledBoxState extends State<LabelledBox> {
     final Widget bodyWithLabel = _wrapWithOuterLabel(
       context: context,
       fieldBody: bodyWithButton,
-      height: _textEditingAreaHeight,
+      measuredHeight: _textEditingAreaHeight!,
       outerLabelConfig: widget.outerLabelConfig,
     );
-
 
     double buttonWidth = widget.buttonConfig == null
         ? 0
@@ -113,18 +111,15 @@ class LabelledBoxState extends State<LabelledBox> {
             ? widget.buttonConfig!.width!
             : _textEditingAreaHeight!;
 
-    double sideLabelWidth = widget.width == null
+    double sideLabelWidth = widget.outerLabelConfig == null
         ? 0
-        : widget.outerLabelConfig == null
-            ? 0
-            : switch (widget.outerLabelConfig!.side) {
-                Side.top || Side.bottom => 0,
-                Side.left || Side.right => widget.outerLabelConfig!.width!,
-              };
+        : switch (widget.outerLabelConfig!.side) {
+            Side.top || Side.bottom => 0,
+            Side.left || Side.right => widget.outerLabelConfig!.width!,
+          };
 
-    double? totalWidth = widget.width == null
-        ? null
-        : (widget.width! + buttonWidth + sideLabelWidth) * appSize.zoom;
+    double? totalWidth = (widget.width + buttonWidth + sideLabelWidth) * appSize.zoom;
+    // double? totalWidth = widget.width == null ? null : (widget.width! + buttonWidth + sideLabelWidth) * appSize.zoom;
 
     return SizedBox(
       width: totalWidth,
@@ -135,7 +130,7 @@ class LabelledBoxState extends State<LabelledBox> {
   static _addButton({
     required BuildContext context,
     required Widget fieldBody,
-    required double height,
+    required double measuredHeight,
     required TextFieldButtonConfig buttonConfig,
     required TextFieldBorderType textFieldBorderType,
     required VoidCallback onButtonTap,
@@ -144,11 +139,17 @@ class LabelledBoxState extends State<LabelledBox> {
   }) {
     AppSize appSize = UiParams.of(context).appSize;
 
-    double width = buttonConfig.width ?? height;
-    TextFieldButtonConfig effectiveButtonConfig = buttonConfig.copyWith(width: width);
+    double width;
+    if (buttonConfig.width != null) {
+      width = buttonConfig.width! * appSize.zoom;
+    } else {
+      width = measuredHeight;
+    }
+    // TextFieldButtonConfig effectiveButtonConfig = buttonConfig.copyWith(width: width);
 
     TextFieldButton button = TextFieldButton(
-      buttonConfig: effectiveButtonConfig,
+      buttonConfig: buttonConfig,
+      width: width,
       textFieldBorderType: textFieldBorderType,
       onTap: onButtonTap,
       targetFocusNode: targetFocusNode,
@@ -163,13 +164,13 @@ class LabelledBoxState extends State<LabelledBox> {
           children: [
             Expanded(child: fieldBody),
             SizedBox(width: padding),
-            SizedBox(width: width, height: width, child: button),
+            SizedBox(width: width, height: measuredHeight, child: button),
           ],
         ),
       ButtonPosition.left => Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(width: width, height: width, child: button),
+            SizedBox(width: width, height: measuredHeight, child: button),
             SizedBox(width: padding),
             Expanded(child: fieldBody),
           ],
@@ -180,12 +181,12 @@ class LabelledBoxState extends State<LabelledBox> {
   static Widget _wrapWithOuterLabel({
     required BuildContext context,
     required Widget fieldBody,
-    required double? height,
+    required double measuredHeight,
     OuterLabelConfig? outerLabelConfig,
   }) {
     if (outerLabelConfig == null) return fieldBody;
 
-    final Widget label = _makeOuterLabel(context, outerLabelConfig, height!);
+    final Widget label = _makeOuterLabel(context, outerLabelConfig, measuredHeight);
 
     final appSize = UiParams.of(context).appSize;
 
@@ -219,7 +220,7 @@ class LabelledBoxState extends State<LabelledBox> {
           crossAxisAlignment: _topOrBottomCrossAxisAlignment(outerLabelConfig),
           children: [
             fieldBody,
-            SizedBox(width: appSize.spacerHorizontalSmallest),
+            // SizedBox(width: appSize.spacerHorizontalSmallest),
             label,
           ],
         );
@@ -230,7 +231,7 @@ class LabelledBoxState extends State<LabelledBox> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(child: fieldBody),
-            SizedBox(width: appSize.spacerHorizontalSmallest),
+            // SizedBox(width: appSize.spacerHorizontalSmallest),
             label,
           ],
         );

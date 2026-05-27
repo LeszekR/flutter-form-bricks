@@ -6,13 +6,11 @@ import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_res
 
 class TextFieldHeightProbe extends StatefulWidget {
   final TextFieldHeightProbeConfig heightProbeConfig;
-  final TextFieldBorderType borderType;
   final ValueChanged<double> onMeasured;
 
   const TextFieldHeightProbe({
     super.key,
     required this.heightProbeConfig,
-    required this.borderType,
     required this.onMeasured,
   });
 
@@ -35,19 +33,12 @@ class _TextFieldHeightProbeState extends State<TextFieldHeightProbe> {
   Widget build(BuildContext context) {
     final TextFieldHeightProbeConfig cacheKey = widget.heightProbeConfig;
 
-    if (TextFieldHeightCache.isMeasured(cacheKey)) {
+    if (TextFieldHeightCache.isBeingMeasured(cacheKey)) {
       return OffstageDummy();
     }
 
     TextFieldHeightCache.startMeasuring(cacheKey);
 
-    InputDecoration decoration = TextFieldDecorationMaker.makeInputDecoration(
-      uiParams: UiParams.of(context),
-      borderType: widget.borderType,
-      decoration: cacheKey.decoration,
-      buttonConfig: null,
-      errorPosition: ErrorPosition.dynamicSpaceBelowField,
-    );
 
     return Offstage(
       child: Material(
@@ -56,7 +47,7 @@ class _TextFieldHeightProbeState extends State<TextFieldHeightProbe> {
           width: cacheKey.width,
           child: TextField(
             controller: TextEditingController(text: cacheKey.text),
-            decoration: decoration,
+            decoration: cacheKey.decoration,
             style: cacheKey.style,
             expands: cacheKey.expands,
             strutStyle: cacheKey.strutStyle,

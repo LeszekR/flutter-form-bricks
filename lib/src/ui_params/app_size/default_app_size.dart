@@ -4,7 +4,7 @@ import 'app_size.dart';
 
 class DefaultAppSize extends AppSize {
 
-  DefaultAppSize({super.zoom = 1.5});
+  DefaultAppSize({super.zoom = 1.1});
 
   // fonts
   @override final double fontSmallest = 7;
@@ -20,7 +20,7 @@ class DefaultAppSize extends AppSize {
   @override late final fontSize9 = calculateFontSize(9);
 
   // dimensions
-  @override late final double textFieldHeight = 22;
+  // @override late final double textFieldHeight = 22;
   @override late final double textFieldWidth = 200;
   @override late final double dateFieldWidth = 130;
   @override late final double timeFieldWidth = 80;

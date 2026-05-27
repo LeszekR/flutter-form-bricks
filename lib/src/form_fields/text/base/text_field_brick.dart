@@ -381,12 +381,13 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       errorText: errorText,
     );
     final TextField textField = _makeTextField(textEditingController, decoration, _style);
+
     final TextFieldBorderType effectiveBorderType = _getEffectiveBorderType(decoration);
 
     final TextFieldHeightProbeConfig heightProbeConfig = TextFieldHeightProbeConfig.create(
       context: context,
       decoration: decoration,
-      borderType: effectiveBorderType,
+      // borderType: effectiveBorderType,
       config: widget.textFieldConfig,
       width: _width,
       text: textEditingController.text,
@@ -398,6 +399,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       outerLabelConfig: widget.outerLabelConfig,
       buttonConfig: widget.buttonConfig,
       borderType: effectiveBorderType,
+      width: _width,
       targetFocusNode: focusNode,
       compoundWidgetStatesController: _compoundWidgetStatesController,
       onButtonTap: onButtonTap,
