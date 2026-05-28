@@ -7,8 +7,10 @@ class OuterLabelConfig {
   final double? height;
   final Widget? labelWidget;
   final String? labelText;
+  final TextStyle? labelTextStyle;
   final Side side;
   final Alignment align;
+
   // TODO add style of the label - when it is not a widget but text
 
   const OuterLabelConfig({
@@ -16,21 +18,26 @@ class OuterLabelConfig {
     this.height,
     this.labelWidget,
     this.labelText,
+    this.labelTextStyle,
     this.side = Side.top,
     this.align = Alignment.bottomLeft,
-  })  : assert((labelWidget == null) != (labelText == null), 'Either labelWidget or labelText must be declared'),
-        assert(
-          (side == Side.left || side == Side.right) ? width != null : true,
+  })  : assert((labelWidget == null) != (labelText == null),
+          'Either labelWidget or labelText must be declared'),
+        assert((side == Side.left || side == Side.right) ? width != null : true,
           'width must be provided when side is left or right',
         ),
-        assert(
-          side == Side.top || side == Side.bottom ? width == null : true,
+        assert(side == Side.top || side == Side.bottom ? width == null : true,
           'width must be null when side is left or right',
         ),
-        assert(
-          side == Side.top || side == Side.bottom ? height != null : true,
+        assert(side == Side.top || side == Side.bottom ? height != null : true,
           'height must be provided when side is top or bottom',
-        );
+        ),
+        assert(labelTextStyle != null ? labelText != null : true,
+            'labelTextStyle must only be provided when labelText is provided'),
+        assert(side == Side.top || side == Side.bottom ? height != null : true,
+            'When side is top or bottom topBottomLabelHeight must be provided'),
+        assert(side == Side.left || side == Side.right ? height == null : true,
+            'When side is left or right topBottomLabelHeight must be null');
 
   OuterLabelConfig fillFrom(OuterLabelConfig? other) {
     return OuterLabelConfig(

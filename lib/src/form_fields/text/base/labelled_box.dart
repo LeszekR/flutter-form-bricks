@@ -12,6 +12,20 @@ class LabelledBox extends StatefulWidget {
   final TextFieldBorderType borderType;
   final double width;
   final OuterLabelConfig? outerLabelConfig;
+
+  /// In case the `LabelledBox` contains other `LabelledBoxes` that have labels on top or bottom
+  /// and this `LabelledBox` label is placed on one side then the `sideLabelTopOffset` should be equal
+  /// to height of labels of the contained `LabelledBoxes`.
+  ///
+  /// If the contained `LabelledBoxes` have labels on top
+  /// then use positive value, if on the bottom use negative one - positive value offsets the label from the top,
+  /// negative one offsets the same distance from the bottom. This will align the side label widget with
+  /// the contained `LabelledBoxes'` `TextFields'` editing areas.
+  ///
+  /// (You can also control the alignment of the side label with its `outerLabelConfig.align` parameter. It will
+  /// align it within `SizedBox` of the same height as the editing areas' height).
+  final double sideLabelTopOffset;
+
   final TextFieldButtonConfig? buttonConfig;
   final int numberOfButtons;
   final FocusNode? targetFocusNode;
@@ -25,6 +39,7 @@ class LabelledBox extends StatefulWidget {
     required this.borderType,
     required this.width,
     this.outerLabelConfig,
+    this.sideLabelTopOffset = 0,
     this.buttonConfig,
     this.numberOfButtons = 0,
     this.targetFocusNode,
@@ -32,14 +47,8 @@ class LabelledBox extends StatefulWidget {
     this.onButtonTap,
   })  : assert(buttonConfig == null ? compoundWidgetStatesController == null : true,
             'If buttonConfig is null styleControllerKit must be null'),
-        assert(buttonConfig != null ? borderType != null : true,
-            'If buttonConfig is declared textFieldBorderType must also be declared'),
         assert(buttonConfig != null ? targetFocusNode != null : true,
-            'If buttonConfig is declared then targetFocusNode of the button\'s TextFieldBrick must be provided'),
-        assert(buttonConfig != null ? heightProbeConfig != null : true,
-            'If buttonConfig is declared then heightProbeConfig must be provided'),
-        assert(outerLabelConfig != null ? heightProbeConfig != null : true,
-            'If outerLabelConfig is declared then heightProbeConfig must be provided');
+            'If buttonConfig is declared then targetFocusNode of the button\'s TextFieldBrick must be provided');
 
   @override
   LabelledBoxState createState() => LabelledBoxState();
@@ -48,7 +57,7 @@ class LabelledBox extends StatefulWidget {
 class LabelledBoxState extends State<LabelledBox> {
   double? _textEditingAreaHeight;
 
-  double _setHeight(double height) => _textEditingAreaHeight = height;
+  double _setHeight(double height) => _textEditingAreaHeight = (height / UiParams.of(context).appSize.zoom);
 
   @override
   void didChangeDependencies() {
@@ -86,6 +95,8 @@ class LabelledBoxState extends State<LabelledBox> {
       bodyWithButton = widget.fieldBody;
     }
 
+    // TU PRZERWAŁEM finish zoom use - now elements go awry with changing zoom
+
     // with button
     else {
       bodyWithButton = _addButton(
@@ -100,9 +111,12 @@ class LabelledBoxState extends State<LabelledBox> {
       );
     }
 
+    double? effectiveLabelHeight =
+        widget.outerLabelConfig?.height == null ? null : widget.outerLabelConfig!.height! * appSize.zoom;
+
     double? labelHeight = switch (widget.outerLabelConfig?.side) {
-      Side.top || Side.bottom => null,
-      Side.left || Side.right => _textEditingAreaHeight!,
+      Side.top || Side.bottom => effectiveLabelHeight,
+      Side.left || Side.right => effectiveLabelHeight ?? _textEditingAreaHeight!,
       null => null,
     };
 
@@ -111,6 +125,7 @@ class LabelledBoxState extends State<LabelledBox> {
       fieldBody: bodyWithButton,
       labelHeight: labelHeight,
       outerLabelConfig: widget.outerLabelConfig,
+      sideLabelTopOffset: widget.sideLabelTopOffset,
     );
 
     double buttonWidth = widget.buttonConfig?.width ?? _textEditingAreaHeight!;
@@ -122,10 +137,10 @@ class LabelledBoxState extends State<LabelledBox> {
             Side.left || Side.right => widget.outerLabelConfig!.width!,
           };
 
-    double? totalWidth = (widget.width + buttonWidth * widget.numberOfButtons + sideLabelWidth) * appSize.zoom;
+    double? totalWidth = (widget.width + buttonWidth * widget.numberOfButtons + sideLabelWidth);
 
     return SizedBox(
-      width: totalWidth,
+      width: totalWidth * appSize.zoom,
       child: bodyWithLabel,
     );
   }
@@ -140,11 +155,12 @@ class LabelledBoxState extends State<LabelledBox> {
     required FocusNode targetFocusNode,
     CompoundWidgetStatesController? compoundWidgetStatesController,
   }) {
-    AppSize appSize = UiParams.of(context).appSize;
+    final AppSize appSize = UiParams.of(context).appSize;
+    final double zoom = appSize.zoom;
 
     double width;
     if (buttonConfig.width != null) {
-      width = buttonConfig.width! * appSize.zoom;
+      width = buttonConfig.width!;
     } else {
       width = measuredHeight;
     }
@@ -153,13 +169,14 @@ class LabelledBoxState extends State<LabelledBox> {
     TextFieldButton button = TextFieldButton(
       buttonConfig: buttonConfig,
       width: width,
+      height: measuredHeight,
       textFieldBorderType: textFieldBorderType,
       onTap: onButtonTap,
       targetFocusNode: targetFocusNode,
       compoundWidgetStatesController: compoundWidgetStatesController,
     );
 
-    double padding = (buttonConfig.distanceFromTextField ?? appSize.buttonDistanceFromTextField) * appSize.zoom;
+    double padding = (buttonConfig.distanceFromTextField ?? appSize.buttonDistanceFromTextField) * zoom;
 
     return switch (buttonConfig.buttonPosition) {
       ButtonPosition.right => Row(
@@ -167,13 +184,13 @@ class LabelledBoxState extends State<LabelledBox> {
           children: [
             Expanded(child: fieldBody),
             SizedBox(width: padding),
-            SizedBox(width: width, height: measuredHeight, child: button),
+            SizedBox(width: width * zoom, height: measuredHeight * zoom, child: button),
           ],
         ),
       ButtonPosition.left => Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(width: width, height: measuredHeight, child: button),
+            SizedBox(width: width * zoom, height: measuredHeight * zoom, child: button),
             SizedBox(width: padding),
             Expanded(child: fieldBody),
           ],
@@ -185,13 +202,22 @@ class LabelledBoxState extends State<LabelledBox> {
     required BuildContext context,
     required Widget fieldBody,
     required double? labelHeight,
+    double sideLabelTopOffset = 0,
     OuterLabelConfig? outerLabelConfig,
   }) {
     if (outerLabelConfig == null) return fieldBody;
 
     final Widget label = _makeOuterLabel(context, outerLabelConfig, labelHeight);
 
-    final appSize = UiParams.of(context).appSize;
+    final double offset = sideLabelTopOffset * UiParams.of(context).appSize.zoom;
+
+    final Widget labelWithOffset = switch (outerLabelConfig.side) {
+      Side.top || Side.bottom => label,
+      Side.left || Side.right => switch (offset > 0) {
+          true => Column(children: [SizedBox(height: offset), label]),
+          false => Column(children: [label, SizedBox(height: -offset)]),
+        }
+    };
 
     switch (outerLabelConfig.side) {
       case Side.top:
@@ -211,7 +237,7 @@ class LabelledBoxState extends State<LabelledBox> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            label,
+            labelWithOffset,
 // SizedBox(width: appSize.spacerHorizontalSmallest),
             Expanded(child: fieldBody),
           ],
@@ -235,7 +261,7 @@ class LabelledBoxState extends State<LabelledBox> {
           children: [
             Expanded(child: fieldBody),
 // SizedBox(width: appSize.spacerHorizontalSmallest),
-            label,
+            labelWithOffset,
           ],
         );
     }
@@ -254,6 +280,7 @@ class LabelledBoxState extends State<LabelledBox> {
     if (outerLabelConfig.labelWidget != null) {
       return outerLabelConfig.labelWidget!;
     }
+
     AppSize appSize = UiParams.of(context).appSize;
 
     return SizedBox(

@@ -367,7 +367,6 @@ class DateTimeSeparatedField extends StatelessWidget {
     double timWidth = timeWidth ?? appSize.timeFieldWidth;
     double spacer = appSize.spacerHorizontalSmall;
 
-    // TU PRZERWAŁEM date field does not show in ExampleForm - fix it
     List<Widget> elements = [
       _makeDateField(),
       SizedBox(width: spacer),
@@ -397,13 +396,25 @@ class DateTimeSeparatedField extends StatelessWidget {
       text: 'Ay',
     );
 
+    final double sideLabelTopOffset = switch (outerLabelConfig?.side) {
+      Side.left || Side.right => switch (dateOuterLabelConfig?.side) {
+          Side.top => dateOuterLabelConfig!.height!,
+          Side.bottom => -dateOuterLabelConfig!.height!,
+          Side.left || Side.right => 0,
+          null => 0,
+        },
+      Side.top || Side.bottom => 0,
+      null => 0,
+    };
+
     return LabelledBox(
       fieldBody: body,
       heightProbeConfig: heightProbeConfig,
       borderType: borderType,
       outerLabelConfig: outerLabelConfig,
+      sideLabelTopOffset: sideLabelTopOffset,
       buttonConfig: pickerButtonConfig,
-      numberOfButtons: withDateTimePicker? 2 : 0,
+      numberOfButtons: withDateTimePicker ? 2 : 0,
       width: datWidth + timWidth + spacer,
     );
   }

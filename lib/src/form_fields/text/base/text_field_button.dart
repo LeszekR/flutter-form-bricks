@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/components/decoration/outline_sides_shape.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/base/compound_widget_st
 class TextFieldButton extends StatefulWidget {
   final TextFieldButtonConfig buttonConfig;
   final double width;
+  final double height;
   final TextFieldBorderType textFieldBorderType;
   final VoidCallback onTap;
   final CompoundWidgetStatesController? compoundWidgetStatesController;
@@ -16,6 +19,7 @@ class TextFieldButton extends StatefulWidget {
     super.key,
     required this.buttonConfig,
     required this.width,
+    required this.height,
     required this.textFieldBorderType,
     required this.onTap,
     required this.targetFocusNode,
@@ -39,13 +43,10 @@ class TextFieldButtonState extends State<TextFieldButton> {
 
   @override
   Widget build(BuildContext context) {
-    AppSize appSize = UiParams.of(context).appSize;
-    double zoomedSize = widget.width * appSize.zoom;
-
     CompoundWidgetStatesController? compoundWidgetStatesController = widget.compoundWidgetStatesController;
 
     if (compoundWidgetStatesController == null) {
-      return _makeButton(context, zoomedSize, null);
+      return _makeButton(context, widget.width, widget.height, null);
     } else {
       return CompoundWidgetStatesController.wrapWithStateDetectors(
         compoundWidgetStatesController.buttonStatesSink,
@@ -53,13 +54,13 @@ class TextFieldButtonState extends State<TextFieldButton> {
         AnimatedBuilder(
             animation: compoundWidgetStatesController,
             builder: (context, _) {
-              return _makeButton(context, zoomedSize, compoundWidgetStatesController.states);
+              return _makeButton(context, widget.width, widget.height, compoundWidgetStatesController.states);
             }),
       );
     }
   }
 
-  SizedBox _makeButton(BuildContext context, double zoomedSize, Set<WidgetState>? states) {
+  SizedBox _makeButton(BuildContext context, double width, double height, Set<WidgetState>? states) {
     UiParamsData uiParams = UiParams.of(context);
 
     WidgetStateProperty<BorderSide?>? side;
@@ -91,11 +92,13 @@ class TextFieldButtonState extends State<TextFieldButton> {
               elevation: elevation,
             );
 
+    final double zoom = UiParams.of(context).appSize.zoom;
+
     return SizedBox(
-      width: zoomedSize,
-      height: zoomedSize,
+      width: width * zoom,
+      height: height * zoom,
       child: IconButton(
-        iconSize: zoomedSize ,
+        iconSize: min(width, height) * zoom,
         icon: Icon(widget.buttonConfig.iconData),
         onPressed: () {
           widget.onTap();
