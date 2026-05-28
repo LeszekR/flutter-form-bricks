@@ -57,12 +57,18 @@ class LabelledBox extends StatefulWidget {
 class LabelledBoxState extends State<LabelledBox> {
   double? _textEditingAreaHeight;
 
-  double _setHeight(double height) => _textEditingAreaHeight = (height / UiParams.of(context).appSize.zoom);
+  void _setHeight(double? height) {
+    if (height == null) {
+      _textEditingAreaHeight = null;
+    } else {
+      _textEditingAreaHeight = height / UiParams.of(context).appSize.zoom;
+    }
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _textEditingAreaHeight = null;
+    _setHeight(null);
   }
 
   @override
@@ -70,7 +76,7 @@ class LabelledBoxState extends State<LabelledBox> {
     final AppSize appSize = UiParams.of(context).appSize;
 
     if (_textEditingAreaHeight == null && (widget.buttonConfig != null || widget.outerLabelConfig != null)) {
-      _textEditingAreaHeight = appSize.getHeightOfInputDecoratorEditArea(widget.heightProbeConfig);
+      _setHeight(appSize.getHeightOfInputDecoratorEditArea(widget.heightProbeConfig));
 
       // Get height of the editable text area of InputDecorator
       // If ever Flutter exposes API for this - refactor and get rid of the TextFieldHeightProbe use
@@ -111,12 +117,11 @@ class LabelledBoxState extends State<LabelledBox> {
       );
     }
 
-    double? effectiveLabelHeight =
-        widget.outerLabelConfig?.height == null ? null : widget.outerLabelConfig!.height! * appSize.zoom;
+    double? configLabelHeight = widget.outerLabelConfig?.height == null ? null : widget.outerLabelConfig!.height!;
 
     double? labelHeight = switch (widget.outerLabelConfig?.side) {
-      Side.top || Side.bottom => effectiveLabelHeight,
-      Side.left || Side.right => effectiveLabelHeight ?? _textEditingAreaHeight!,
+      Side.top || Side.bottom => configLabelHeight,
+      Side.left || Side.right => configLabelHeight ?? _textEditingAreaHeight!,
       null => null,
     };
 
@@ -209,13 +214,13 @@ class LabelledBoxState extends State<LabelledBox> {
 
     final Widget label = _makeOuterLabel(context, outerLabelConfig, labelHeight);
 
-    final double offset = sideLabelTopOffset * UiParams.of(context).appSize.zoom;
+    var zoom = UiParams.of(context).appSize.zoom;
 
     final Widget labelWithOffset = switch (outerLabelConfig.side) {
       Side.top || Side.bottom => label,
-      Side.left || Side.right => switch (offset > 0) {
-          true => Column(children: [SizedBox(height: offset), label]),
-          false => Column(children: [label, SizedBox(height: -offset)]),
+      Side.left || Side.right => switch (sideLabelTopOffset > 0) {
+          true => Column(children: [SizedBox(height: sideLabelTopOffset * zoom), label]),
+          false => Column(children: [label, SizedBox(height: -(sideLabelTopOffset * zoom))]),
         }
     };
 
@@ -285,7 +290,7 @@ class LabelledBoxState extends State<LabelledBox> {
 
     return SizedBox(
       width: outerLabelConfig.width == null ? null : outerLabelConfig.width! * appSize.zoom,
-      height: height,
+      height: height == null ? null : height * appSize.zoom,
       child: Align(
         alignment: outerLabelConfig.align,
         child: Text(

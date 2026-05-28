@@ -369,7 +369,7 @@ class DateTimeSeparatedField extends StatelessWidget {
 
     List<Widget> elements = [
       _makeDateField(),
-      SizedBox(width: spacer),
+      SizedBox(width: spacer * appSize.zoom),
       _makeTimeField(),
     ];
 
