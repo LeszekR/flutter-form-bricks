@@ -40,7 +40,7 @@ class TextFieldHeightProbeConfig {
     String? effectiveText;
     if ((config.minLines != null && config.minLines! > 1) || (config.maxLines != null && config.maxLines! > 1)) {
       effectiveWidth = width;
-      effectiveText = text;
+      effectiveText = text == null || text.isEmpty ? 'Ay' : text;
     } else {
       effectiveWidth = 100;
       effectiveText = 'Ay';

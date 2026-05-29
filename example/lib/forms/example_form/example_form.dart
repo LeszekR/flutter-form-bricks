@@ -31,6 +31,14 @@ class ExampleFormState extends FormStateBrick {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            SizedBox(height: appSize.spacerVerticalMedium),
+            TextField(
+              controller: TextEditingController(text: 'Ay'),
+              decoration: InputDecoration(
+                border: UnderlineInputBorder(),
+                labelText: 'data',
+              ),
+            ),
             // DateField(
             //   keyString: dateKeyString1,
             //   formManager: formManager,
@@ -80,36 +88,36 @@ class ExampleFormState extends FormStateBrick {
               //   height: 26,
               // ),
               errorPosition: ErrorPosition.dynamicSpaceBelowField,
-              textFieldBorderType: TextFieldBorderType.outline,
+              textFieldBorderType: TextFieldBorderType.underline,
               // TU PRZERWAŁEM - when textFieldBorderType is declared - override the InputDecoration passed as param
               //  and make the border as declared in textFieldBorderType
               inputDecoration: InputDecoration(labelText: 'data'),
             ),
 
-              SizedBox(height: appSize.spacerVerticalMedium),
-              DateTimeSeparatedField(
-                keyString: dateTimeSeparatedKeyString1,
-                formManager: formManager,
-                dateWidth: 150,
-                // pickerButtonConfig: TextFieldButtonConfig(width: 20),
-                dateOuterLabelConfig: OuterLabelConfig(
-                  labelText: 'Data',
-                  side: Side.top,
-                  height: 16,
-                ),
-                timeOuterLabelConfig: OuterLabelConfig(
-                  labelText: 'Godzina',
-                  side: Side.top,
-                  height: 16,
-                ),
-                outerLabelConfig: OuterLabelConfig(
-                  labelText: 'Data i czas',
-                  side: Side.left,
-                  // height: 46 * appSize.zoom,
-                  width: 80,
-                  align: Alignment.bottomLeft,
-                ),
+            SizedBox(height: appSize.spacerVerticalMedium),
+            DateTimeSeparatedField(
+              keyString: dateTimeSeparatedKeyString1,
+              formManager: formManager,
+              // dateWidth: 150,
+              pickerButtonConfig: TextFieldButtonConfig(width: 25),
+              dateOuterLabelConfig: OuterLabelConfig(
+                labelText: 'Data',
+                side: Side.top,
+                height: 16,
               ),
+              timeOuterLabelConfig: OuterLabelConfig(
+                labelText: 'Godzina',
+                side: Side.top,
+                height: 16,
+              ),
+              outerLabelConfig: OuterLabelConfig(
+                labelText: 'Data i czas',
+                side: Side.left,
+                // height: 46 * appSize.zoom,
+                width: 80,
+                align: Alignment.bottomLeft,
+              ),
+            ),
 
             // SizedBox(height: appSize.spacerVerticalMedium),
             //  TimeField(
@@ -128,22 +136,22 @@ class ExampleFormState extends FormStateBrick {
             //    textFieldBorderType: TextFieldBorderType.underline,
             //    // inputDecoration: InputDecoration(labelText: 'data'),
             //  ),
-             //
-             // SizedBox(height: appSize.spacerVerticalMedium),
-             // PlainTextField(
-             //   keyString: plainTextKeyString2,
-             //   formManager: formManager,
-             //   width: 200,
-             //   maxLines: 3,
-             //   validateMode: ValidateModeBrick.noValidator,
-             // ),
-             // //
-             // SizedBox(height: appSize.spacerVerticalMedium),
-             // LowerCaseField(
-             //   keyString: lowerCaseKeyString3,
-             //   formManager: formManager,
-             //   width: 250,
-             // ),
+            //
+            // SizedBox(height: appSize.spacerVerticalMedium),
+            // PlainTextField(
+            //   keyString: plainTextKeyString2,
+            //   formManager: formManager,
+            //   width: 200,
+            //   maxLines: 3,
+            //   validateMode: ValidateModeBrick.noValidator,
+            // ),
+            // //
+            // SizedBox(height: appSize.spacerVerticalMedium),
+            // LowerCaseField(
+            //   keyString: lowerCaseKeyString3,
+            //   formManager: formManager,
+            //   width: 250,
+            // ),
           ],
         ), // test your widget here
       ),

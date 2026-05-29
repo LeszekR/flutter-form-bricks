@@ -387,7 +387,6 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     final TextFieldHeightProbeConfig heightProbeConfig = TextFieldHeightProbeConfig.create(
       context: context,
       decoration: decoration,
-      // borderType: effectiveBorderType,
       config: widget.textFieldConfig,
       width: _width,
       text: textEditingController.text,

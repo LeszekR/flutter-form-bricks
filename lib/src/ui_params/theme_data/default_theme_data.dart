@@ -148,7 +148,7 @@ class DefaultThemeData extends BricksThemeData {
       InputDecorationTheme(
         isDense: true,
         visualDensity: VisualDensity(
-          vertical: -4,
+          vertical: -2,
           horizontal: 0,
         ),
         filled: true,

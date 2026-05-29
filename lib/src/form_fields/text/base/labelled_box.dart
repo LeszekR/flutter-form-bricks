@@ -45,10 +45,11 @@ class LabelledBox extends StatefulWidget {
     this.targetFocusNode,
     this.compoundWidgetStatesController,
     this.onButtonTap,
-  })  : assert(buttonConfig == null ? compoundWidgetStatesController == null : true,
-            'If buttonConfig is null styleControllerKit must be null'),
+  }) : assert(buttonConfig == null ? compoundWidgetStatesController == null : true,
+            'If buttonConfig is null styleControllerKit must be null') /*,
         assert(buttonConfig != null ? targetFocusNode != null : true,
-            'If buttonConfig is declared then targetFocusNode of the button\'s TextFieldBrick must be provided');
+            'If buttonConfig is declared then targetFocusNode of the button\'s TextFieldBrick must be provided')*/
+  ;
 
   @override
   LabelledBoxState createState() => LabelledBoxState();
@@ -75,7 +76,11 @@ class LabelledBoxState extends State<LabelledBox> {
   Widget build(BuildContext context) {
     final AppSize appSize = UiParams.of(context).appSize;
 
-    if (_textEditingAreaHeight == null && (widget.buttonConfig != null || widget.outerLabelConfig != null)) {
+    final bool measureForButton = widget.buttonConfig != null;
+    final bool measureForOuterLabel = widget.outerLabelConfig != null &&
+            (widget.outerLabelConfig!.side == Side.left || widget.outerLabelConfig!.side == Side.right);
+
+    if (_textEditingAreaHeight == null && (measureForButton || measureForOuterLabel)) {
       _setHeight(appSize.getHeightOfInputDecoratorEditArea(widget.heightProbeConfig));
 
       // Get height of the editable text area of InputDecorator
@@ -93,16 +98,13 @@ class LabelledBoxState extends State<LabelledBox> {
       }
     }
 
-    // Once we have height of the editable text area of InputDecorator build LabelledBox
+    // Once we have height of the editable text area of InputDecorator - we build LabelledBox
     final Widget bodyWithButton;
 
     // no button
-    if (widget.buttonConfig == null) {
+    if (widget.buttonConfig == null || widget.targetFocusNode == null ) {
       bodyWithButton = widget.fieldBody;
     }
-
-    // TU PRZERWAŁEM finish zoom use - now elements go awry with changing zoom
-
     // with button
     else {
       bodyWithButton = _addButton(
@@ -169,7 +171,6 @@ class LabelledBoxState extends State<LabelledBox> {
     } else {
       width = measuredHeight;
     }
-    // TextFieldButtonConfig effectiveButtonConfig = buttonConfig.copyWith(width: width);
 
     TextFieldButton button = TextFieldButton(
       buttonConfig: buttonConfig,
