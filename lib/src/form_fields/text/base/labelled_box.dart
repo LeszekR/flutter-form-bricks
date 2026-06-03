@@ -45,7 +45,10 @@ class LabelledBox extends StatefulWidget {
     this.targetFocusNode,
     this.compoundWidgetStatesController,
     this.onButtonTap,
-  }) : assert(buttonConfig == null ? compoundWidgetStatesController == null : true,
+  }) : assert(
+            buttonConfig == null
+                ? compoundWidgetStatesController == null
+                : true,
             'If buttonConfig is null styleControllerKit must be null') /*,
         assert(buttonConfig != null ? targetFocusNode != null : true,
             'If buttonConfig is declared then targetFocusNode of the button\'s TextFieldBrick must be provided')*/
@@ -78,17 +81,20 @@ class LabelledBoxState extends State<LabelledBox> {
 
     final bool measureForButton = widget.buttonConfig != null;
     final bool measureForOuterLabel = widget.outerLabelConfig != null &&
-            (widget.outerLabelConfig!.side == Side.left || widget.outerLabelConfig!.side == Side.right);
+        (widget.outerLabelConfig!.side == Side.left ||
+            widget.outerLabelConfig!.side == Side.right);
 
-    if (_textEditingAreaHeight == null && (measureForButton || measureForOuterLabel)) {
-      _setHeight(appSize.getHeightOfInputDecoratorEditArea(widget.heightProbeConfig));
+    if (_textEditingAreaHeight == null &&
+        (measureForButton || measureForOuterLabel)) {
+      _setHeight(
+          appSize.getHeightOfInputDecoratorEditArea(widget.heightProbeConfig));
 
       // Get height of the editable text area of InputDecorator
       // If ever Flutter exposes API for this - refactor and get rid of the TextFieldHeightProbe use
       if (_textEditingAreaHeight == null) {
         WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
         if (TextFieldHeightCache.isBeingMeasured(widget.heightProbeConfig)) {
-          return OffstageDummy();
+          return const OffstageDummy();
         } else {
           return TextFieldHeightProbe(
             heightProbeConfig: widget.heightProbeConfig,
@@ -102,7 +108,7 @@ class LabelledBoxState extends State<LabelledBox> {
     final Widget bodyWithButton;
 
     // no button
-    if (widget.buttonConfig == null || widget.targetFocusNode == null ) {
+    if (widget.buttonConfig == null || widget.targetFocusNode == null) {
       bodyWithButton = widget.fieldBody;
     }
     // with button
@@ -119,7 +125,9 @@ class LabelledBoxState extends State<LabelledBox> {
       );
     }
 
-    double? configLabelHeight = widget.outerLabelConfig?.height == null ? null : widget.outerLabelConfig!.height!;
+    double? configLabelHeight = widget.outerLabelConfig?.height == null
+        ? null
+        : widget.outerLabelConfig!.height!;
 
     double? labelHeight = switch (widget.outerLabelConfig?.side) {
       Side.top || Side.bottom => configLabelHeight,
@@ -144,7 +152,8 @@ class LabelledBoxState extends State<LabelledBox> {
             Side.left || Side.right => widget.outerLabelConfig!.width!,
           };
 
-    double? totalWidth = (widget.width + buttonWidth * widget.numberOfButtons + sideLabelWidth);
+    double? totalWidth =
+        (widget.width + buttonWidth * widget.numberOfButtons + sideLabelWidth);
 
     return SizedBox(
       width: totalWidth * appSize.zoom,
@@ -182,7 +191,9 @@ class LabelledBoxState extends State<LabelledBox> {
       compoundWidgetStatesController: compoundWidgetStatesController,
     );
 
-    double padding = (buttonConfig.distanceFromTextField ?? appSize.buttonDistanceFromTextField) * zoom;
+    double padding = (buttonConfig.distanceFromTextField ??
+            appSize.buttonDistanceFromTextField) *
+        zoom;
 
     return switch (buttonConfig.buttonPosition) {
       ButtonPosition.right => Row(
@@ -190,13 +201,19 @@ class LabelledBoxState extends State<LabelledBox> {
           children: [
             Expanded(child: fieldBody),
             SizedBox(width: padding),
-            SizedBox(width: width * zoom, height: measuredHeight * zoom, child: button),
+            SizedBox(
+                width: width * zoom,
+                height: measuredHeight * zoom,
+                child: button),
           ],
         ),
       ButtonPosition.left => Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(width: width * zoom, height: measuredHeight * zoom, child: button),
+            SizedBox(
+                width: width * zoom,
+                height: measuredHeight * zoom,
+                child: button),
             SizedBox(width: padding),
             Expanded(child: fieldBody),
           ],
@@ -213,15 +230,20 @@ class LabelledBoxState extends State<LabelledBox> {
   }) {
     if (outerLabelConfig == null) return fieldBody;
 
-    final Widget label = _makeOuterLabel(context, outerLabelConfig, labelHeight);
+    final Widget label =
+        _makeOuterLabel(context, outerLabelConfig, labelHeight);
 
     var zoom = UiParams.of(context).appSize.zoom;
 
     final Widget labelWithOffset = switch (outerLabelConfig.side) {
       Side.top || Side.bottom => label,
       Side.left || Side.right => switch (sideLabelTopOffset > 0) {
-          true => Column(children: [SizedBox(height: sideLabelTopOffset * zoom), label]),
-          false => Column(children: [label, SizedBox(height: -(sideLabelTopOffset * zoom))]),
+          true => Column(
+              children: [SizedBox(height: sideLabelTopOffset * zoom), label]),
+          false => Column(children: [
+              label,
+              SizedBox(height: -(sideLabelTopOffset * zoom))
+            ]),
         }
     };
 
@@ -273,16 +295,28 @@ class LabelledBoxState extends State<LabelledBox> {
     }
   }
 
-  static CrossAxisAlignment _topOrBottomCrossAxisAlignment(OuterLabelConfig outerLabelConfig) {
+  static CrossAxisAlignment _topOrBottomCrossAxisAlignment(
+      OuterLabelConfig outerLabelConfig) {
     return switch (outerLabelConfig.align) {
-      Alignment.bottomLeft || Alignment.centerLeft || Alignment.topLeft => CrossAxisAlignment.start,
-      Alignment.bottomCenter || Alignment.center || Alignment.topCenter => CrossAxisAlignment.center,
-      Alignment.bottomRight || Alignment.centerRight || Alignment.topRight => CrossAxisAlignment.end,
-      Alignment() => throw UnimplementedError('Only alignment constant values are supported for outerLabelAlign'),
+      Alignment.bottomLeft ||
+      Alignment.centerLeft ||
+      Alignment.topLeft =>
+        CrossAxisAlignment.start,
+      Alignment.bottomCenter ||
+      Alignment.center ||
+      Alignment.topCenter =>
+        CrossAxisAlignment.center,
+      Alignment.bottomRight ||
+      Alignment.centerRight ||
+      Alignment.topRight =>
+        CrossAxisAlignment.end,
+      Alignment() => throw UnimplementedError(
+          'Only alignment constant values are supported for outerLabelAlign'),
     };
   }
 
-  static Widget _makeOuterLabel(BuildContext context, OuterLabelConfig outerLabelConfig, double? height) {
+  static Widget _makeOuterLabel(
+      BuildContext context, OuterLabelConfig outerLabelConfig, double? height) {
     if (outerLabelConfig.labelWidget != null) {
       return outerLabelConfig.labelWidget!;
     }
@@ -290,14 +324,18 @@ class LabelledBoxState extends State<LabelledBox> {
     AppSize appSize = UiParams.of(context).appSize;
 
     return SizedBox(
-      width: outerLabelConfig.width == null ? null : outerLabelConfig.width! * appSize.zoom,
+      width: outerLabelConfig.width == null
+          ? null
+          : outerLabelConfig.width! * appSize.zoom,
       height: height == null ? null : height * appSize.zoom,
-      child: Align(
-        alignment: outerLabelConfig.align,
-        child: Text(
-          outerLabelConfig.labelText!,
-          // TODO make this style declarable in params of OuterLabelConfig
-          style: TextStyle(fontSize: appSize.fontSize3),
+      child: Padding(
+        padding: outerLabelConfig.padding,
+        child: Align(
+          alignment: outerLabelConfig.align,
+          child: Text(
+            outerLabelConfig.labelText!,
+            style: outerLabelConfig.labelTextStyle ?? TextStyle(fontSize: appSize.fontSize3),
+          ),
         ),
       ),
     );

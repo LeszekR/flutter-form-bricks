@@ -79,6 +79,16 @@ class ExampleFormState extends FormStateBrick {
               withDatePicker: true,
               buttonConfig: TextFieldButtonConfig(
                 tooltipMaker: (context) => 'Kalendarz',
+                buttonStyle: ButtonStyle(
+                  shape: WidgetStatePropertyAll(
+                    BeveledRectangleBorder(
+                      side: BorderSide(
+                        width: 0.3,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                ),
               ),
               // outerLabelConfig: OuterLabelConfig(
               //   labelText: 'Data',
@@ -89,9 +99,10 @@ class ExampleFormState extends FormStateBrick {
               // ),
               errorPosition: ErrorPosition.dynamicSpaceBelowField,
               // textFieldBorderType: TextFieldBorderType.underline,
-              // TU PRZERWAŁEM - when textFieldBorderType is declared - override the InputDecoration
-              // passed as param and make the border as declared in textFieldBorderType
-              inputDecoration: InputDecoration(labelText: 'data 2', border: OutlineInputBorder()),
+              inputDecoration: InputDecoration(
+                labelText: 'data 2',
+                border: OutlineInputBorder(),
+              ),
             ),
 
             SizedBox(height: appSize.spacerVerticalMedium),
@@ -103,7 +114,8 @@ class ExampleFormState extends FormStateBrick {
               dateOuterLabelConfig: OuterLabelConfig(
                 labelText: 'Data',
                 side: Side.top,
-                height: 16,
+                height: 22,
+                padding: EdgeInsetsGeometry.only(bottom: 4),
               ),
               timeOuterLabelConfig: OuterLabelConfig(
                 labelText: 'Godzina',
@@ -115,7 +127,8 @@ class ExampleFormState extends FormStateBrick {
                 side: Side.left,
                 // height: 46 * appSize.zoom,
                 width: 80,
-                align: Alignment.bottomLeft,
+                align: Alignment.centerRight,
+                padding: EdgeInsetsGeometry.only(right: 10),
               ),
             ),
 

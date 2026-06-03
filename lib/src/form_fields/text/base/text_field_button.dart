@@ -69,7 +69,7 @@ class TextFieldButtonState extends State<TextFieldButton> {
 
     if (widget.buttonConfig.transparentBackground) {
       side = const WidgetStatePropertyAll(BorderSide.none);
-      backgroundColor = WidgetStatePropertyAll(Colors.transparent);
+      backgroundColor = const WidgetStatePropertyAll(Colors.transparent);
       overlayColor = const WidgetStatePropertyAll(Colors.transparent);
       shadowColor = const WidgetStatePropertyAll(Colors.transparent);
       surfaceTintColor = const WidgetStatePropertyAll(Colors.transparent);

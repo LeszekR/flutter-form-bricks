@@ -10,6 +10,7 @@ class OuterLabelConfig {
   final TextStyle? labelTextStyle;
   final Side side;
   final Alignment align;
+  final EdgeInsetsGeometry padding;
 
   // TODO add style of the label - when it is not a widget but text
 
@@ -21,6 +22,7 @@ class OuterLabelConfig {
     this.labelTextStyle,
     this.side = Side.top,
     this.align = Alignment.bottomLeft,
+    this.padding = EdgeInsets.zero,
   })  : assert((labelWidget == null) != (labelText == null),
           'Either labelWidget or labelText must be declared'),
         assert((side == Side.left || side == Side.right) ? width != null : true,
@@ -43,10 +45,11 @@ class OuterLabelConfig {
     return OuterLabelConfig(
       labelWidget: labelWidget,
       labelText: labelText,
-      width: other?.width ?? this.width,
-      height: other?.height ?? this.height,
-      side: other?.side ?? this.side,
-      align: other?.align ?? this.align,
+      width: other?.width ?? width,
+      height: other?.height ?? height,
+      side: other?.side ?? side,
+      align: other?.align ?? align,
+      padding: other?.padding ?? padding,
     );
   }
 }
