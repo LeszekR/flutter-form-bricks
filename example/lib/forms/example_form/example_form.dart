@@ -88,10 +88,10 @@ class ExampleFormState extends FormStateBrick {
               //   height: 26,
               // ),
               errorPosition: ErrorPosition.dynamicSpaceBelowField,
-              textFieldBorderType: TextFieldBorderType.underline,
-              // TU PRZERWAŁEM - when textFieldBorderType is declared - override the InputDecoration passed as param
-              //  and make the border as declared in textFieldBorderType
-              inputDecoration: InputDecoration(labelText: 'data'),
+              // textFieldBorderType: TextFieldBorderType.underline,
+              // TU PRZERWAŁEM - when textFieldBorderType is declared - override the InputDecoration
+              // passed as param and make the border as declared in textFieldBorderType
+              inputDecoration: InputDecoration(labelText: 'data 2', border: OutlineInputBorder()),
             ),
 
             SizedBox(height: appSize.spacerVerticalMedium),

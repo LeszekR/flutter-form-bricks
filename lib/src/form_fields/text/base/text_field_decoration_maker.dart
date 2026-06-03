@@ -76,8 +76,8 @@ class TextFieldDecorationMaker {
 
     if (buttonConfig == null) {
       return switch (borderType) {
-        TextFieldBorderType.outline => OutlineInputBorder(),
-        TextFieldBorderType.underline => UnderlineInputBorder(),
+        TextFieldBorderType.outline => const OutlineInputBorder(),
+        TextFieldBorderType.underline => const UnderlineInputBorder(),
         TextFieldBorderType.other => inputDecoration?.border,
       };
     } else {
