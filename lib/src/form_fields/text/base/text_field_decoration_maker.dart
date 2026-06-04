@@ -20,7 +20,7 @@ class TextFieldDecorationMaker {
     bool showErrorBelowText = false ||
         errorPosition == ErrorPosition.dynamicSpaceBelowField ||
         errorPosition == ErrorPosition.fixedSpaceBelowField;
-    final TextStyle? errorStyle = showErrorBelowText ? null : TextStyle(fontSize: 0);
+    final TextStyle? errorStyle = showErrorBelowText ? null : const TextStyle(fontSize: 0);
 
     Color? fillColor = uiParams.appColor.getFillColor(states);
 

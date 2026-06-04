@@ -31,14 +31,14 @@ class ExampleFormState extends FormStateBrick {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: appSize.spacerVerticalMedium),
-            TextField(
-              controller: TextEditingController(text: 'Ay'),
-              decoration: InputDecoration(
-                border: UnderlineInputBorder(),
-                labelText: 'data',
-              ),
-            ),
+            // SizedBox(height: appSize.spacerVerticalMedium),
+            // TextField(
+            //   controller: TextEditingController(text: 'Ay'),
+            //   decoration: InputDecoration(
+            //     border: UnderlineInputBorder(),
+            //     labelText: 'data',
+            //   ),
+            // ),
             // DateField(
             //   keyString: dateKeyString1,
             //   formManager: formManager,
@@ -97,7 +97,7 @@ class ExampleFormState extends FormStateBrick {
               //   width: 50,
               //   height: 26,
               // ),
-              errorPosition: ErrorPosition.dynamicSpaceBelowField,
+              errorPosition: ErrorPosition.never,
               // textFieldBorderType: TextFieldBorderType.underline,
               inputDecoration: InputDecoration(
                 labelText: 'data 2',
@@ -109,6 +109,7 @@ class ExampleFormState extends FormStateBrick {
             DateTimeSeparatedField(
               keyString: dateTimeSeparatedKeyString1,
               formManager: formManager,
+              errorPosition: ErrorPosition.never,
               // dateWidth: 150,
               pickerButtonConfig: TextFieldButtonConfig(width: 25),
               dateOuterLabelConfig: OuterLabelConfig(
@@ -130,6 +131,7 @@ class ExampleFormState extends FormStateBrick {
                 align: Alignment.centerRight,
                 padding: EdgeInsetsGeometry.only(right: 10),
               ),
+              inputDecoration: InputDecoration(helperText: 'Gucio'),
             ),
 
             // SizedBox(height: appSize.spacerVerticalMedium),

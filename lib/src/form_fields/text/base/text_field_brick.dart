@@ -625,11 +625,16 @@ abstract class TextFieldStateBrick<V extends Object,
   void _updateUi(FieldContent<TextEditingValue, V> fieldContent) {
     _skipOnChanged = true;
     setState(() {
-      errorText = fieldContent.error;
       setInput(fieldContent.input);
-      bool isError = errorText != null && errorText!.isNotEmpty;
-      if (_compoundWidgetStatesController != null)
+      // TU PRZERWAŁEM - finish setting state to error with null errorText
+      if (widget.errorPosition == ErrorPosition.dynamicSpaceBelowField ||
+          widget.errorPosition == ErrorPosition.fixedSpaceBelowField) {
+        errorText = fieldContent.error;
+      }
+      bool isError = fieldContent.error != null && fieldContent.error!.isNotEmpty;
+      if (_compoundWidgetStatesController != null) {
         _compoundWidgetStatesController!.fieldStatesSink.setError(isError);
+      }
     });
     _skipOnChanged = false;
   }
