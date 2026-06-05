@@ -321,8 +321,7 @@ abstract class TextFieldBrick<V extends Object>
         );
 }
 
-abstract class TextFieldStateBrick<V extends Object,
-        B extends TextFieldBrick<V>>
+abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>>
     extends FormFieldStateBrick<TextEditingValue, V, B> {
   //
   @visibleForTesting
@@ -333,6 +332,7 @@ abstract class TextFieldStateBrick<V extends Object,
   late final CompoundWidgetStatesController? _compoundWidgetStatesController;
   late final WidgetStatesController? _statesController;
   TextEditingValue? oldValue;
+  late final bool _showErrorBelowField;
 
   void onButtonTap() => throw UnimplementedError('onButtonTap not implemented');
 
@@ -348,9 +348,12 @@ abstract class TextFieldStateBrick<V extends Object,
 
   @override
   void initState() {
+    _showErrorBelowField =
+        widget.errorPosition == ErrorPosition.dynamicSpaceBelowField ||
+            widget.errorPosition == ErrorPosition.fixedSpaceBelowField;
+
     // must be called before super.initState()
-    textEditingController =
-        widget.textFieldConfig.controller ?? TextEditingController();
+    textEditingController = widget.textFieldConfig.controller ?? TextEditingController();
 
     // uses textEditingController, sets focusNode
     super.initState();
@@ -361,12 +364,10 @@ abstract class TextFieldStateBrick<V extends Object,
     if (widget.buttonConfig?.syncStyleWithTextField == true) {
       _compoundWidgetStatesController = CompoundWidgetStatesController();
       _statesController = null;
-      _compoundWidgetStatesController!.fieldStatesSink
-          .setError(errorText != null && errorText!.isNotEmpty);
+      _showError(errorText);
     } else {
       _compoundWidgetStatesController = null;
-      _statesController =
-          widget.textFieldConfig.statesController ?? WidgetStatesController();
+      _statesController = widget.textFieldConfig.statesController ?? WidgetStatesController();
     }
   }
 
@@ -422,7 +423,7 @@ abstract class TextFieldStateBrick<V extends Object,
       buttonConfig: widget.buttonConfig,
       borderType: widget.textFieldBorderType,
       errorPosition: widget.errorPosition,
-      errorText: errorText,
+      errorText: _showErrorBelowField ? errorText : null,
     );
     final TextField textField =
         _makeTextField(textEditingController, decoration, _style);
@@ -558,13 +559,12 @@ abstract class TextFieldStateBrick<V extends Object,
   }
 
   Set<WidgetState>? _getStates() {
+    var isError = errorText != null && errorText!.isNotEmpty;
     if (_compoundWidgetStatesController != null) {
-      _compoundWidgetStatesController!.fieldStatesSink
-          .setError(errorText != null && errorText!.isNotEmpty);
+      _compoundWidgetStatesController!.fieldStatesSink.setError(isError);
       return _compoundWidgetStatesController!.states;
     } else {
-      _statesController!.update(
-          WidgetState.error, errorText != null && errorText!.isNotEmpty);
+      _statesController!.update(WidgetState.error, isError);
       return _statesController!.value;
     }
   }
@@ -626,16 +626,18 @@ abstract class TextFieldStateBrick<V extends Object,
     _skipOnChanged = true;
     setState(() {
       setInput(fieldContent.input);
-      // TU PRZERWAŁEM - finish setting state to error with null errorText
-      if (widget.errorPosition == ErrorPosition.dynamicSpaceBelowField ||
-          widget.errorPosition == ErrorPosition.fixedSpaceBelowField) {
-        errorText = fieldContent.error;
-      }
-      bool isError = fieldContent.error != null && fieldContent.error!.isNotEmpty;
-      if (_compoundWidgetStatesController != null) {
-        _compoundWidgetStatesController!.fieldStatesSink.setError(isError);
-      }
+      errorText = fieldContent.error;
+      _showError(fieldContent.error);
     });
     _skipOnChanged = false;
+  }
+
+  void _showError(String? error) {
+      bool isError = error != null && error.isNotEmpty;
+    if (_compoundWidgetStatesController != null) {
+      _compoundWidgetStatesController!.fieldStatesSink.setError(isError);
+    } else {
+      _statesController!.update(WidgetState.error, isError);
+    }
   }
 }

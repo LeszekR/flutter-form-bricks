@@ -45,14 +45,10 @@ class LabelledBox extends StatefulWidget {
     this.targetFocusNode,
     this.compoundWidgetStatesController,
     this.onButtonTap,
-  }) : assert(
-            buttonConfig == null
-                ? compoundWidgetStatesController == null
-                : true,
-            'If buttonConfig is null styleControllerKit must be null') /*,
+  }) : assert(buttonConfig == null ? compoundWidgetStatesController == null : true,
+            'If buttonConfig is null styleControllerKit must be null'); /*,
         assert(buttonConfig != null ? targetFocusNode != null : true,
-            'If buttonConfig is declared then targetFocusNode of the button\'s TextFieldBrick must be provided')*/
-  ;
+            'If buttonConfig is declared then targetFocusNode of the button\'s TextFieldBrick must be provided');*/
 
   @override
   LabelledBoxState createState() => LabelledBoxState();
@@ -84,10 +80,8 @@ class LabelledBoxState extends State<LabelledBox> {
         (widget.outerLabelConfig!.side == Side.left ||
             widget.outerLabelConfig!.side == Side.right);
 
-    if (_textEditingAreaHeight == null &&
-        (measureForButton || measureForOuterLabel)) {
-      _setHeight(
-          appSize.getHeightOfInputDecoratorEditArea(widget.heightProbeConfig));
+    if (_textEditingAreaHeight == null && (measureForButton || measureForOuterLabel)) {
+      _setHeight(appSize.getHeightOfInputDecoratorEditArea(widget.heightProbeConfig));
 
       // Get height of the editable text area of InputDecorator
       // If ever Flutter exposes API for this - refactor and get rid of the TextFieldHeightProbe use
@@ -143,7 +137,7 @@ class LabelledBoxState extends State<LabelledBox> {
       sideLabelTopOffset: widget.sideLabelTopOffset,
     );
 
-    double buttonWidth = widget.buttonConfig?.width ?? _textEditingAreaHeight!;
+    double buttonWidth = widget.buttonConfig?.width ?? _textEditingAreaHeight ?? 0;
 
     double sideLabelWidth = widget.outerLabelConfig == null
         ? 0

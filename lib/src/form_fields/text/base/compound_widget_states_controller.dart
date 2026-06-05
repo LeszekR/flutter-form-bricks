@@ -2,12 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class CompoundWidgetStatesController extends ChangeNotifier {
-  late final _WidgetStatesSink fieldStatesSink;
-  late final _WidgetStatesSink buttonStatesSink;
+  late final WidgetStatesSink fieldStatesSink;
+  late final WidgetStatesSink buttonStatesSink;
 
   CompoundWidgetStatesController() {
-    fieldStatesSink = _WidgetStatesSink(this);
-    buttonStatesSink = _WidgetStatesSink(this);
+    fieldStatesSink = WidgetStatesSink(this);
+    buttonStatesSink = WidgetStatesSink(this);
   }
 
   Set<WidgetState> get states => {
@@ -27,7 +27,7 @@ class CompoundWidgetStatesController extends ChangeNotifier {
   }
 
   static Focus wrapWithStateDetectors(
-    _WidgetStatesSink statesSink,
+    WidgetStatesSink statesSink,
     FocusNode focusNode,
     Widget child,
   ) {
@@ -55,7 +55,7 @@ class CompoundWidgetStatesController extends ChangeNotifier {
   }
 }
 
-class _WidgetStatesSink {
+class WidgetStatesSink {
   CompoundWidgetStatesController controller;
 
   bool hovered = false;
@@ -64,7 +64,7 @@ class _WidgetStatesSink {
   bool disabled = false;
   bool error = false;
 
-  _WidgetStatesSink(this.controller);
+  WidgetStatesSink(this.controller);
 
   void setHovered(bool value) => controller.setWidgetState(() => hovered = value);
 

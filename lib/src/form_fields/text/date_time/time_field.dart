@@ -164,9 +164,6 @@ class TimeFieldState extends TextFieldStateBrick<DateTime, TimeField> {
     final String formattedTime = DateTimeUtils.formatTimeOfDay(time);
     onEditingComplete(formattedTime.toTextEditingValue());
     restoreSelection(selectionBefore);
-    // controller.selection = selectionBefore;
-    //
-    //
   }
 
   void restoreSelection(TextSelection selectionBefore) {

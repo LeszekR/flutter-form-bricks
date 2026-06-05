@@ -82,7 +82,8 @@ class DateTimeSeparatedField extends StatelessWidget {
   final OuterLabelConfig? outerLabelConfig;
   final double? dateWidth;
   final double? timeWidth;
-  final InputDecoration? inputDecoration;
+  final InputDecoration? dateInputDecoration;
+  final InputDecoration? timeInputDecoration;
   final OuterLabelConfig? dateOuterLabelConfig;
   final OuterLabelConfig? timeOuterLabelConfig;
   final bool withDateTimePicker;
@@ -95,6 +96,7 @@ class DateTimeSeparatedField extends StatelessWidget {
   final ErrorPosition errorPosition;
 
   DateTimeSeparatedField({
+    super.key,
     // FormFieldBrick
     required this.keyString,
     required this.formManager,
@@ -104,8 +106,8 @@ class DateTimeSeparatedField extends StatelessWidget {
     this.dateWidth,
     this.timeWidth,
     // TODO implement buttons for date-time-separate fields
-    this.inputDecoration,
-    // this.timeInputDecoration,
+    this.dateInputDecoration,
+    this.timeInputDecoration,
     // this.copyDateDecorationToTime = true,
     this.dateOuterLabelConfig,
     this.timeOuterLabelConfig,
@@ -219,7 +221,7 @@ class DateTimeSeparatedField extends StatelessWidget {
           groupId: groupId,
           controller: controller,
           focusNode: focusNode,
-          decoration: inputDecoration,
+          decoration: dateInputDecoration,
           keyboardType: keyboardType,
           textInputAction: textInputAction,
           textCapitalization: TextCapitalization.none,
@@ -290,7 +292,7 @@ class DateTimeSeparatedField extends StatelessWidget {
           groupId: groupId,
           controller: controller,
           focusNode: focusNode,
-          decoration: InputDecoration().fillGapsFrom(inputDecoration),
+          decoration: (timeInputDecoration ?? const InputDecoration()).fillGapsFrom(dateInputDecoration),
           // create separate object for time field
           keyboardType: keyboardType,
           textInputAction: textInputAction,
@@ -382,7 +384,7 @@ class DateTimeSeparatedField extends StatelessWidget {
 
     final InputDecoration decoration = TextFieldDecorationMaker.makeInputDecoration(
       uiParams: uiParams,
-      decoration: inputDecoration,
+      decoration: dateInputDecoration,
       borderType: borderType,
       errorPosition: errorPosition,
       buttonConfig: pickerButtonConfig,
@@ -427,7 +429,7 @@ class DateTimeSeparatedField extends StatelessWidget {
       //
       // TextFieldBrick
       width: dateWidth,
-      inputDecoration: inputDecoration,
+      inputDecoration: dateTextFieldConfig.decoration,
       buttonConfig: !withDateTimePicker
           ? null
           : pickerButtonConfig != null

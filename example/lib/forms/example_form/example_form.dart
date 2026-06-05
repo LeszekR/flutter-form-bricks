@@ -76,20 +76,20 @@ class ExampleFormState extends FormStateBrick {
               keyString: dateKeyString2,
               formManager: formManager,
               width: 160,
-              withDatePicker: true,
-              buttonConfig: TextFieldButtonConfig(
-                tooltipMaker: (context) => 'Kalendarz',
-                buttonStyle: ButtonStyle(
-                  shape: WidgetStatePropertyAll(
-                    BeveledRectangleBorder(
-                      side: BorderSide(
-                        width: 0.3,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              withDatePicker: false,
+              // buttonConfig: TextFieldButtonConfig(
+              //   tooltipMaker: (context) => 'Kalendarz',
+              //   buttonStyle: ButtonStyle(
+              //     shape: WidgetStatePropertyAll(
+              //       BeveledRectangleBorder(
+              //         side: BorderSide(
+              //           width: 0.3,
+              //           color: Colors.red,
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
               // outerLabelConfig: OuterLabelConfig(
               //   labelText: 'Data',
               //   align: Alignment.bottomLeft,
@@ -131,7 +131,8 @@ class ExampleFormState extends FormStateBrick {
                 align: Alignment.centerRight,
                 padding: EdgeInsetsGeometry.only(right: 10),
               ),
-              inputDecoration: InputDecoration(helperText: 'Gucio'),
+              dateInputDecoration: InputDecoration(helperText: 'Gucio'),
+              timeInputDecoration: InputDecoration(helperText: 'Misia'),
             ),
 
             // SizedBox(height: appSize.spacerVerticalMedium),
