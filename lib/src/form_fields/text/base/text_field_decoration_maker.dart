@@ -80,7 +80,14 @@ class TextFieldDecorationMaker {
         TextFieldBorderType.underline => const UnderlineInputBorder(),
         TextFieldBorderType.other => inputDecoration?.border,
       };
-    } else {
+    } else if (buttonConfig.distanceFromTextField != null && buttonConfig.distanceFromTextField! > 0) {
+      return switch (borderType) {
+        TextFieldBorderType.outline => const OutlineInputBorder(),
+        TextFieldBorderType.underline => const UnderlineInputBorder(),
+        TextFieldBorderType.other => inputDecoration?.border,
+      };
+    }
+    else {
       return switch (borderType) {
         // textFieldBorderType dominates the choice of border
         TextFieldBorderType.outline => switch (buttonConfig.buttonPosition) {

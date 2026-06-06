@@ -185,9 +185,7 @@ class LabelledBoxState extends State<LabelledBox> {
       compoundWidgetStatesController: compoundWidgetStatesController,
     );
 
-    double padding = (buttonConfig.distanceFromTextField ??
-            appSize.buttonDistanceFromTextField) *
-        zoom;
+    double padding = (buttonConfig.distanceFromTextField ?? appSize.buttonDistanceFromTextField) * zoom;
 
     return switch (buttonConfig.buttonPosition) {
       ButtonPosition.right => Row(

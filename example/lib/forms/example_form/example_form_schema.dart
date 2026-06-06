@@ -15,6 +15,14 @@ class ExampleFormSchema extends FormSchema {
                 keyString: dateKeyString2,
                 initialInput: TextEditingValue(text: 'yyy'),
               ),
+              DateFieldDescriptor(
+                keyString: dateKeyString3,
+                initialInput: TextEditingValue(text: 'zzz'),
+              ),
+              DateFieldDescriptor(
+                keyString: dateKeyString4,
+                initialInput: TextEditingValue(text: '5/15'),
+              ),
               TimeFieldDescriptor(
                 keyString: timeKeyString1,
                 initialInput: TextEditingValue(text: '00'),

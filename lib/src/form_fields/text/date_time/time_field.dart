@@ -42,7 +42,7 @@ class TimeField extends TextFieldBrick<DateTime> {
     super.width,
     super.inputDecoration,
     super.errorPosition,
-    super.textFieldBorderType,
+    super.borderType,
     //
     // TimeField
     bool withTimePicker = true,

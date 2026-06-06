@@ -42,7 +42,7 @@ abstract class TextFieldBrick<V extends Object>
   /// If `textFieldBorderType` is `TextFieldBorderType.outline` or `TextFieldBorderType.underline`,
   /// then `OutlineInputBorder` or `UnderlineInputBorder` (or their `FlutterFormBricks` implementations for use
   /// with `TexFieldButton`: `OutlineSidesInputBorder` or `UnderlineTopRoundedBorder`) will be used.
-  final TextFieldBorderType textFieldBorderType;
+  final TextFieldBorderType borderType;
 
   /// See `enum ErrorPosition`. Error can be positioned:
   /// - in Flutter's dynamic space below the field
@@ -77,7 +77,7 @@ abstract class TextFieldBrick<V extends Object>
     // TextFieldBrick
     this.width,
     this.inputDecoration,
-    this.textFieldBorderType = TextFieldBorderType.other,
+    this.borderType = TextFieldBorderType.other,
     this.errorPosition = ErrorPosition.dynamicSpaceBelowField,
     this.buttonConfig,
     this.heightOfTextArea,
@@ -220,27 +220,27 @@ abstract class TextFieldBrick<V extends Object>
         ),
         assert(
             inputDecoration?.border == null ||
-                textFieldBorderType == TextFieldBorderType.other,
+                borderType == TextFieldBorderType.other,
             'When inputDecoration.border is not null, textFieldBorderType must be TextFieldBorderType.other (keyString: $keyString).'),
         assert(
             inputDecoration?.disabledBorder == null ||
-                textFieldBorderType == TextFieldBorderType.other,
+                borderType == TextFieldBorderType.other,
             'When inputDecoration.disabledBorder is not null, textFieldBorderType must be TextFieldBorderType.other (keyString: $keyString).'),
         assert(
             inputDecoration?.enabledBorder == null ||
-                textFieldBorderType == TextFieldBorderType.other,
+                borderType == TextFieldBorderType.other,
             'When inputDecoration.enabledBorder is not null, textFieldBorderType must be TextFieldBorderType.other (keyString: $keyString).'),
         assert(
             inputDecoration?.errorBorder == null ||
-                textFieldBorderType == TextFieldBorderType.other,
+                borderType == TextFieldBorderType.other,
             'When inputDecoration.errorBorder is not null, textFieldBorderType must be TextFieldBorderType.other (keyString: $keyString).'),
         assert(
             inputDecoration?.focusedBorder == null ||
-                textFieldBorderType == TextFieldBorderType.other,
+                borderType == TextFieldBorderType.other,
             'When inputDecoration.focusedBorder is not null, textFieldBorderType must be TextFieldBorderType.other (keyString: $keyString).'),
         assert(
             inputDecoration?.focusedErrorBorder == null ||
-                textFieldBorderType == TextFieldBorderType.other,
+                borderType == TextFieldBorderType.other,
             'When inputDecoration.focusedErrorBorder is not null, textFieldBorderType must be TextFieldBorderType.other (keyString: $keyString).'),
         assert(
             buttonConfig?.syncStyleWithTextField == true
@@ -421,7 +421,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       states: _getStates(),
       decoration: widget.textFieldConfig.decoration,
       buttonConfig: widget.buttonConfig,
-      borderType: widget.textFieldBorderType,
+      borderType: widget.borderType,
       errorPosition: widget.errorPosition,
       errorText: _showErrorBelowField ? errorText : null,
     );
@@ -633,7 +633,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   }
 
   void _showError(String? error) {
-      bool isError = error != null && error.isNotEmpty;
+    bool isError = error != null && error.isNotEmpty;
     if (_compoundWidgetStatesController != null) {
       _compoundWidgetStatesController!.fieldStatesSink.setError(isError);
     } else {

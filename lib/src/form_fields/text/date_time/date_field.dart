@@ -51,7 +51,7 @@ class DateField extends TextFieldBrick<DateTime> {
     super.width,
     super.inputDecoration,
     super.errorPosition,
-    super.textFieldBorderType,
+    super.borderType,
     //
     // DateField
     bool withDatePicker = true,

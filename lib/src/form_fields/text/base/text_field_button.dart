@@ -15,7 +15,7 @@ class TextFieldButton extends StatefulWidget {
   final CompoundWidgetStatesController? compoundWidgetStatesController;
   final FocusNode targetFocusNode;
 
-  TextFieldButton({
+  const TextFieldButton({
     super.key,
     required this.buttonConfig,
     required this.width,
@@ -118,16 +118,32 @@ class TextFieldButtonState extends State<TextFieldButton> {
       width: uiParams.appSize.getBorderWidth(states, uiParams.appSize.borderWidth),
     );
 
-    return switch (widget.textFieldBorderType) {
-      TextFieldBorderType.outline => switch (widget.buttonConfig.buttonPosition) {
-          ButtonPosition.left => OutlineSidesShape(side: borderSide, sideRight: false),
-          ButtonPosition.right => OutlineSidesShape(side: borderSide, sideLeft: false),
+    bool noDistance = widget.buttonConfig.distanceFromTextField == null ||
+        widget.buttonConfig.distanceFromTextField! <= 0;
+
+    return switch (noDistance) {
+      true => switch (widget.textFieldBorderType) {
+          TextFieldBorderType.outline => switch (widget.buttonConfig.buttonPosition) {
+              ButtonPosition.left => OutlineSidesShape(side: borderSide, sideRight: false),
+              ButtonPosition.right => OutlineSidesShape(side: borderSide, sideLeft: false),
+            },
+          TextFieldBorderType.underline => switch (widget.buttonConfig.buttonPosition) {
+              ButtonPosition.left => UnderlineTopRoundedShape(side: borderSide, radiusTopRight: 0),
+              ButtonPosition.right => UnderlineTopRoundedShape(side: borderSide, radiusTopLeft: 0),
+            },
+          TextFieldBorderType.other => null,
         },
-      TextFieldBorderType.underline => switch (widget.buttonConfig.buttonPosition) {
-          ButtonPosition.left => UnderlineTopRoundedShape(side: borderSide, radiusTopRight: 0),
-          ButtonPosition.right => UnderlineTopRoundedShape(side: borderSide, radiusTopLeft: 0),
+      false => switch (widget.textFieldBorderType) {
+          TextFieldBorderType.outline => switch (widget.buttonConfig.buttonPosition) {
+              ButtonPosition.left => OutlineSidesShape(side: borderSide),
+              ButtonPosition.right => OutlineSidesShape(side: borderSide),
+            },
+          TextFieldBorderType.underline => switch (widget.buttonConfig.buttonPosition) {
+              ButtonPosition.left => UnderlineTopRoundedShape(side: borderSide),
+              ButtonPosition.right => UnderlineTopRoundedShape(side: borderSide),
+            },
+          TextFieldBorderType.other => null,
         },
-      TextFieldBorderType.other => null,
     };
   }
 }

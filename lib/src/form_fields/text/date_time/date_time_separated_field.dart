@@ -440,7 +440,7 @@ class DateTimeSeparatedField extends StatelessWidget {
                   tooltipMaker: DatePicker.datePickerTooltipMaker,
                 ),
       outerLabelConfig: dateOuterLabelConfig,
-      textFieldBorderType: borderType,
+      borderType: borderType,
       errorPosition: errorPosition,
       //
       // TextField
@@ -506,7 +506,7 @@ class DateTimeSeparatedField extends StatelessWidget {
       width: timeWidth,
       inputDecoration: timeTextFieldConfig.decoration,
       outerLabelConfig: timeOuterLabelConfig == null ? null : timeOuterLabelConfig!.fillFrom(dateOuterLabelConfig),
-      textFieldBorderType: borderType,
+      borderType: borderType,
       errorPosition: errorPosition,
       //
       // TimeField
