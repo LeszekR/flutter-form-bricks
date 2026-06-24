@@ -15,8 +15,7 @@ import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_res
 
 enum TextFieldBorderType { outline, underline, other }
 
-abstract class TextFieldBrick<V extends Object>
-    extends FormFieldBrick<TextEditingValue, V> {
+abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditingValue, V> {
   final double? width;
 
   // TODO docs for all my params added to flutter API
@@ -148,8 +147,7 @@ abstract class TextFieldBrick<V extends Object>
     Iterable<String>? autofillHints,
     Clip clipBehavior = Clip.hardEdge,
     String? restorationId,
-    bool stylusHandwritingEnabled =
-        EditableText.defaultStylusHandwritingEnabled,
+    bool stylusHandwritingEnabled = EditableText.defaultStylusHandwritingEnabled,
     bool enableIMEPersonalizedLearning = true,
     // TODO turn off and lock it for strictly formatting fields like DateField
     ContentInsertionConfiguration? contentInsertionConfiguration,
@@ -172,9 +170,7 @@ abstract class TextFieldBrick<V extends Object>
           (inputDecoration?.suffix != null ? 1 : 0) +
                   (inputDecoration?.suffixText != null ? 1 : 0) +
                   (inputDecoration?.suffixIcon != null ? 1 : 0) +
-                  ((buttonConfig?.buttonPosition == ButtonPosition.right)
-                      ? 1
-                      : 0) <=
+                  ((buttonConfig?.buttonPosition == ButtonPosition.right) ? 1 : 0) <=
               1,
           'Only one can be declared: textFieldButtonConfig.buttonPosition.right, '
           'inputDecoration.suffix, inputDecoration.suffixText, or inputDecoration.suffixIcon (keyString: $keyString).',
@@ -183,9 +179,7 @@ abstract class TextFieldBrick<V extends Object>
           (inputDecoration?.prefix != null ? 1 : 0) +
                   (inputDecoration?.prefixText != null ? 1 : 0) +
                   (inputDecoration?.prefixIcon != null ? 1 : 0) +
-                  ((buttonConfig?.buttonPosition == ButtonPosition.left)
-                      ? 1
-                      : 0) <=
+                  ((buttonConfig?.buttonPosition == ButtonPosition.left) ? 1 : 0) <=
               1,
           'Only one can be declared: textFieldButtonConfig.buttonPosition.left, '
           'inputDecoration.prefix, inputDecoration.prefixText, or inputDecoration.prefixIcon (keyString: $keyString).',
@@ -199,53 +193,34 @@ abstract class TextFieldBrick<V extends Object>
           'Only one can be declared: inputDecoration.hint or inputDecoration.hintText (keyString: $keyString).',
         ),
         assert(
-          inputDecoration?.helper == null ||
-              inputDecoration?.helperText == null,
+          inputDecoration?.helper == null || inputDecoration?.helperText == null,
           'Only one can be declared: inputDecoration.helper or inputDecoration.helperText (keyString: $keyString).',
         ),
         assert(
-          inputDecoration?.counter == null ||
-              inputDecoration?.counterText == null,
+          inputDecoration?.counter == null || inputDecoration?.counterText == null,
           'Only one can be declared: inputDecoration.counter or inputDecoration.counterText (keyString: $keyString).',
         ),
         assert(
-          inputDecoration?.prefix == null ||
-              inputDecoration?.prefixText == null,
+          inputDecoration?.prefix == null || inputDecoration?.prefixText == null,
           'Only one can be declared: inputDecoration.prefix or inputDecoration.prefixText (keyString: $keyString).',
         ),
         assert(
-          inputDecoration?.suffix == null ||
-              inputDecoration?.suffixText == null,
+          inputDecoration?.suffix == null || inputDecoration?.suffixText == null,
           'Only one can be declared: inputDecoration.suffix or inputDecoration.suffixText (keyString: $keyString).',
         ),
-        assert(
-            inputDecoration?.border == null ||
-                borderType == TextFieldBorderType.other,
+        assert(inputDecoration?.border == null || borderType == TextFieldBorderType.other,
             'When inputDecoration.border is not null, textFieldBorderType must be TextFieldBorderType.other (keyString: $keyString).'),
-        assert(
-            inputDecoration?.disabledBorder == null ||
-                borderType == TextFieldBorderType.other,
+        assert(inputDecoration?.disabledBorder == null || borderType == TextFieldBorderType.other,
             'When inputDecoration.disabledBorder is not null, textFieldBorderType must be TextFieldBorderType.other (keyString: $keyString).'),
-        assert(
-            inputDecoration?.enabledBorder == null ||
-                borderType == TextFieldBorderType.other,
+        assert(inputDecoration?.enabledBorder == null || borderType == TextFieldBorderType.other,
             'When inputDecoration.enabledBorder is not null, textFieldBorderType must be TextFieldBorderType.other (keyString: $keyString).'),
-        assert(
-            inputDecoration?.errorBorder == null ||
-                borderType == TextFieldBorderType.other,
+        assert(inputDecoration?.errorBorder == null || borderType == TextFieldBorderType.other,
             'When inputDecoration.errorBorder is not null, textFieldBorderType must be TextFieldBorderType.other (keyString: $keyString).'),
-        assert(
-            inputDecoration?.focusedBorder == null ||
-                borderType == TextFieldBorderType.other,
+        assert(inputDecoration?.focusedBorder == null || borderType == TextFieldBorderType.other,
             'When inputDecoration.focusedBorder is not null, textFieldBorderType must be TextFieldBorderType.other (keyString: $keyString).'),
-        assert(
-            inputDecoration?.focusedErrorBorder == null ||
-                borderType == TextFieldBorderType.other,
+        assert(inputDecoration?.focusedErrorBorder == null || borderType == TextFieldBorderType.other,
             'When inputDecoration.focusedErrorBorder is not null, textFieldBorderType must be TextFieldBorderType.other (keyString: $keyString).'),
-        assert(
-            buttonConfig?.syncStyleWithTextField == true
-                ? statesController == null
-                : true,
+        assert(buttonConfig?.syncStyleWithTextField == true ? statesController == null : true,
             'When syncStyleWithTextField is true, statesController must not be declared(keyString: $keyString).'),
         assert(buttonConfig == null ? statesController == null : true,
             'When buttonConfig is declared then statesController must not be declared, because it will be ignored (keyString: $keyString).'),
@@ -348,9 +323,8 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   @override
   void initState() {
-    _showErrorBelowField =
-        widget.errorPosition == ErrorPosition.dynamicSpaceBelowField ||
-            widget.errorPosition == ErrorPosition.fixedSpaceBelowField;
+    _showErrorBelowField = widget.errorPosition == ErrorPosition.dynamicSpaceBelowField ||
+        widget.errorPosition == ErrorPosition.fixedSpaceBelowField;
 
     // must be called before super.initState()
     textEditingController = widget.textFieldConfig.controller ?? TextEditingController();
@@ -397,17 +371,22 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   Widget buildFieldWidget(BuildContext context) {
     // no button
     if (_compoundWidgetStatesController == null) {
-      return _makeBody(context);
+      return ValueListenableBuilder<Set<WidgetState>>(
+        valueListenable: _statesController!,
+        builder: (context, states, _) {
+          return _makeBody(context);
+        },
+      );
     }
 
     // with button
     else {
       return CompoundWidgetStatesController.wrapWithStateDetectors(
-        _compoundWidgetStatesController!.fieldStatesSink,
-        focusNode,
-        AnimatedBuilder(
-          animation: _compoundWidgetStatesController!,
-          builder: (context, _) {
+        statesSink: _compoundWidgetStatesController!.fieldStatesSink,
+        focusNode: focusNode,
+        child: ValueListenableBuilder<Set<WidgetState>>(
+          valueListenable: _compoundWidgetStatesController!,
+          builder: (context, states, _) {
             return _makeBody(context);
           },
         ),
@@ -425,14 +404,11 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       errorPosition: widget.errorPosition,
       errorText: _showErrorBelowField ? errorText : null,
     );
-    final TextField textField =
-        _makeTextField(textEditingController, decoration, _style);
+    final TextField textField = _makeTextField(textEditingController, decoration, _style);
 
-    final TextFieldBorderType effectiveBorderType =
-        _getEffectiveBorderType(decoration);
+    final TextFieldBorderType effectiveBorderType = _getEffectiveBorderType(decoration);
 
-    final TextFieldHeightProbeConfig heightProbeConfig =
-        TextFieldHeightProbeConfig.create(
+    final TextFieldHeightProbeConfig heightProbeConfig = TextFieldHeightProbeConfig.create(
       context: context,
       decoration: decoration,
       config: widget.textFieldConfig,
@@ -460,8 +436,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     if (border is OutlineInputBorder || border is OutlineSidesInputBorder) {
       return TextFieldBorderType.outline;
     }
-    if (border is UnderlineInputBorder ||
-        border is UnderlineTopRoundedInputBorder) {
+    if (border is UnderlineInputBorder || border is UnderlineTopRoundedInputBorder) {
       return TextFieldBorderType.underline;
     }
     return TextFieldBorderType.other;
@@ -529,8 +504,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       keyboardAppearance: widget.textFieldConfig.keyboardAppearance,
       scrollPadding: widget.textFieldConfig.scrollPadding,
       dragStartBehavior: widget.textFieldConfig.dragStartBehavior,
-      enableInteractiveSelection:
-          widget.textFieldConfig.enableInteractiveSelection,
+      enableInteractiveSelection: widget.textFieldConfig.enableInteractiveSelection,
       selectAllOnFocus: widget.textFieldConfig.selectAllOnFocus,
       selectionControls: widget.textFieldConfig.selectionControls,
       onTap: widget.textFieldConfig.onTap,
@@ -542,14 +516,12 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       scrollController: widget.textFieldConfig.scrollController,
       scrollPhysics: widget.textFieldConfig.scrollPhysics,
       autofillHints: widget.textFieldConfig.autofillHints,
-      contentInsertionConfiguration:
-          widget.textFieldConfig.contentInsertionConfiguration,
+      contentInsertionConfiguration: widget.textFieldConfig.contentInsertionConfiguration,
       clipBehavior: widget.textFieldConfig.clipBehavior,
       restorationId: widget.textFieldConfig.restorationId,
       // Deprecated: scribbleEnabled - not used
       stylusHandwritingEnabled: widget.textFieldConfig.stylusHandwritingEnabled,
-      enableIMEPersonalizedLearning:
-          widget.textFieldConfig.enableIMEPersonalizedLearning,
+      enableIMEPersonalizedLearning: widget.textFieldConfig.enableIMEPersonalizedLearning,
       contextMenuBuilder: widget.textFieldConfig.contextMenuBuilder,
       canRequestFocus: widget.textFieldConfig.canRequestFocus,
       spellCheckConfiguration: widget.textFieldConfig.spellCheckConfiguration,
@@ -583,8 +555,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     // - validates the input and shows error message
     // - formats the input and returns formatted input text in TextEditingValue
     // - saves results of format and validation in FormData -> FormFieldData -> FieldContent
-    FieldContent<TextEditingValue, V> fieldContent =
-        super.onInputChanged(input)!;
+    FieldContent<TextEditingValue, V> fieldContent = super.onInputChanged(input)!;
 
     // draw formatted input in UI
     _updateUi(fieldContent);
@@ -603,8 +574,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     // - validates the input and shows error message
     // - formats the input and returns formatted input text in TextEditingValue
     // - saves results of format-validation in FormData -> FormFieldData -> FieldContent
-    FieldContent<TextEditingValue, V> fieldContent =
-        super.onInputChanged(input)!;
+    FieldContent<TextEditingValue, V> fieldContent = super.onInputChanged(input)!;
 
     // draw formatted input in UI
     _updateUi(fieldContent);

@@ -1,36 +1,44 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class CompoundWidgetStatesController extends ChangeNotifier {
+class CompoundWidgetStatesController extends ValueNotifier<Set<WidgetState>> {
   late final WidgetStatesSink fieldStatesSink;
   late final WidgetStatesSink buttonStatesSink;
 
-  CompoundWidgetStatesController() {
+  CompoundWidgetStatesController() : super(const {}) {
     fieldStatesSink = WidgetStatesSink(this);
     buttonStatesSink = WidgetStatesSink(this);
+    value = _computeStates();
   }
 
-  Set<WidgetState> get states => {
-        if (buttonStatesSink.disabled || fieldStatesSink.disabled) WidgetState.disabled,
-        if (fieldStatesSink.error) WidgetState.error,
-        if (buttonStatesSink.pressed || fieldStatesSink.pressed) WidgetState.pressed,
-        if (buttonStatesSink.focused || fieldStatesSink.focused) WidgetState.focused,
-        if (fieldStatesSink.hovered) WidgetState.hovered,
-      };
+  Set<WidgetState> get states => value;
 
   void setWidgetState(VoidCallback change) {
-    final oldStates = states;
+    final oldStates = value;
+
     change();
-    if (!setEquals(oldStates, states)) {
-      notifyListeners();
+
+    final newStates = _computeStates();
+    if (!setEquals(oldStates, newStates)) {
+      value = newStates;
     }
   }
 
-  static Focus wrapWithStateDetectors(
-    WidgetStatesSink statesSink,
-    FocusNode focusNode,
-    Widget child,
-  ) {
+  Set<WidgetState> _computeStates() {
+    return {
+      if (buttonStatesSink.disabled || fieldStatesSink.disabled) WidgetState.disabled,
+      if (fieldStatesSink.error) WidgetState.error,
+      if (buttonStatesSink.pressed || fieldStatesSink.pressed) WidgetState.pressed,
+      if (buttonStatesSink.focused || fieldStatesSink.focused) WidgetState.focused,
+      if (fieldStatesSink.hovered) WidgetState.hovered,
+    };
+  }
+
+  static Focus wrapWithStateDetectors({
+    required WidgetStatesSink statesSink,
+    required FocusNode focusNode,
+    required Widget child,
+  }) {
     return Focus(
       focusNode: focusNode,
       onFocusChange: (_) {

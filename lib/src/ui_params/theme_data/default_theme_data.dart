@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/decoration/underline_top_rounded_input_border.dart';
-import 'package:flutter_form_bricks/src/form_fields/components/decoration/underline_top_rounded_shape.dart';
 import 'package:flutter_form_bricks/src/ui_params/theme_data/bricks_theme_data.dart';
 
 class DefaultThemeData extends BricksThemeData {
@@ -147,13 +145,36 @@ class DefaultThemeData extends BricksThemeData {
       sourceTheme?.inputDecorationTheme ??
       InputDecorationTheme(
         isDense: true,
-        visualDensity: VisualDensity(
-          vertical: -2,
+        visualDensity: const VisualDensity(
+          vertical: -4,
           horizontal: 0,
         ),
         filled: true,
         fillColor: WidgetStateColor.resolveWith((Set<WidgetState> states) => appColor.getFillColor(states)),
-        border: OutlineInputBorder(),
+        border: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: appColor.getBorderColor({}, Colors.black),
+            width: appSize.getBorderWidth({}, appSize.borderWidth),
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: appColor.getBorderColor({}, Colors.black),
+            width: appSize.getBorderWidth({WidgetState.focused}, appSize.borderWidth),
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: appColor.getBorderColor({WidgetState.error}, Colors.black),
+            width: appSize.getBorderWidth({WidgetState.error}, appSize.borderWidth),
+          ),
+        ),
+        focusedErrorBorder:  OutlineInputBorder(
+            borderSide: BorderSide(
+              color: appColor.getBorderColor({WidgetState.error}, Colors.black),
+              width: appSize.getBorderWidth({WidgetState.focused}, appSize.borderWidth),
+            ),
+        ),
       ).data;
 
   @override

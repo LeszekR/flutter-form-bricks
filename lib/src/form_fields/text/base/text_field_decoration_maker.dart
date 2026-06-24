@@ -33,7 +33,6 @@ class TextFieldDecorationMaker {
     );
 
     var appSize = uiParams.appSize;
-    double zoom = appSize.zoom;
 
     if (decoration != null) {
       return decoration.copyWith(
@@ -69,6 +68,7 @@ class TextFieldDecorationMaker {
     TextFieldButtonConfig? buttonConfig,
     TextFieldBorderType borderType,
   ) {
+    print('${states.toString()}');
     BorderSide borderSide = BorderSide(
       color: uiParams.appColor.getBorderColor(states, uiParams.appColor.borderEnabled),
       width: uiParams.appSize.getBorderWidth(states, uiParams.appSize.borderWidth),
@@ -76,14 +76,18 @@ class TextFieldDecorationMaker {
 
     if (buttonConfig == null) {
       return switch (borderType) {
-        TextFieldBorderType.outline => const OutlineInputBorder(),
-        TextFieldBorderType.underline => const UnderlineInputBorder(),
+        TextFieldBorderType.outline => OutlineInputBorder(borderSide: borderSide),
+        TextFieldBorderType.underline => UnderlineInputBorder(borderSide: borderSide),
         TextFieldBorderType.other => inputDecoration?.border,
       };
-    } else if (buttonConfig.distanceFromTextField != null && buttonConfig.distanceFromTextField! > 0) {
+    }
+    else if (buttonConfig.distanceFromTextField != null && buttonConfig.distanceFromTextField! > 0) {
+      print('borderType: $borderType');
+      print('${borderSide.color.toString()}');
+      print('${borderSide.width}');
       return switch (borderType) {
-        TextFieldBorderType.outline => const OutlineInputBorder(),
-        TextFieldBorderType.underline => const UnderlineInputBorder(),
+        TextFieldBorderType.outline => OutlineInputBorder(borderSide: borderSide),
+        TextFieldBorderType.underline => UnderlineInputBorder(borderSide: borderSide),
         TextFieldBorderType.other => inputDecoration?.border,
       };
     }

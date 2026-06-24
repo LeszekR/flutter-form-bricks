@@ -66,7 +66,7 @@ abstract class FormFieldDescriptor<I extends Object, V extends Object, F extends
 FormatterValidatorChain<I, V>?
     _buildFormatterValidatorChainForDescriptor<I extends Object, V extends Object, F extends Widget>(
         FormFieldDescriptor<I, V, F> d) {
-  List<FormatterValidator<I, V>>? formatterValidatorList = null;
+  List<FormatterValidator<I, V>>? formatterValidatorList;
   final List<FormatterValidator<I, V>>? defaults = d.defaultFormatterValidatorsMaker?.call();
   final List<FormatterValidator<I, V>>? additions = d.additionalFormatterValidatorsMaker?.call();
 

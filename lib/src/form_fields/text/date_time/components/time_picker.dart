@@ -14,10 +14,10 @@ class TimePicker {
     final inheritedTheme = Theme.of(context);
     final uiParams = UiParams.of(context);
 
-    final config = timePickerConfig ?? TimePickerConfig();
+    final config = timePickerConfig ?? const TimePickerConfig();
     final style = config.style ?? TimePickerStyle.fromAppStyle(uiParams.appColor);
 
-    final initialTime = config.initialTime ?? TimeOfDay(hour: 0, minute: 0);
+    final initialTime = config.initialTime ?? const TimeOfDay(hour: 0, minute: 0);
 
     return showTimePicker(
       context: context,

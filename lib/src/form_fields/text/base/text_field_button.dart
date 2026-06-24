@@ -49,9 +49,9 @@ class TextFieldButtonState extends State<TextFieldButton> {
       return _makeButton(context, widget.width, widget.height, null);
     } else {
       return CompoundWidgetStatesController.wrapWithStateDetectors(
-        compoundWidgetStatesController.buttonStatesSink,
-        _focusNode,
-        AnimatedBuilder(
+        statesSink: compoundWidgetStatesController.buttonStatesSink,
+        focusNode: _focusNode,
+        child: AnimatedBuilder(
             animation: compoundWidgetStatesController,
             builder: (context, _) {
               return _makeButton(context, widget.width, widget.height, compoundWidgetStatesController.states);
@@ -118,8 +118,8 @@ class TextFieldButtonState extends State<TextFieldButton> {
       width: uiParams.appSize.getBorderWidth(states, uiParams.appSize.borderWidth),
     );
 
-    bool noDistance = widget.buttonConfig.distanceFromTextField == null ||
-        widget.buttonConfig.distanceFromTextField! <= 0;
+    bool noDistance =
+        widget.buttonConfig.distanceFromTextField == null || widget.buttonConfig.distanceFromTextField! <= 0;
 
     return switch (noDistance) {
       true => switch (widget.textFieldBorderType) {

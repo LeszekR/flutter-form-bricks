@@ -33,46 +33,50 @@ class ExampleFormState extends FormStateBrick {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // SizedBox(height: appSize.spacerVerticalMedium),
-            // TextField(
-            //   controller: TextEditingController(text: 'Ay'),
-            //   decoration: InputDecoration(
-            //     border: UnderlineInputBorder(),
-            //     labelText: 'data',
-            //   ),
-            // ),
-            // DateField(
-            //   keyString: dateKeyString1,
-            //   formManager: formManager,
-            //   width: 160,
-            //   withDatePicker: true,
-            //   buttonConfig: TextFieldButtonConfig(
-            //     syncStyleWithTextField: true,
-            //     // distanceFromTextField: 3,
-            //     // transparentBackground: false,
-            //     // buttonStyle: ButtonStyle(
-            //     //   side: const WidgetStatePropertyAll(BorderSide.none),
-            //     //   backgroundColor: WidgetStatePropertyAll(Colors.transparent),
-            //     //   overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-            //     //   shadowColor: const WidgetStatePropertyAll(Colors.transparent),
-            //     //   surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
-            //     //   elevation: const WidgetStatePropertyAll(0),
-            //     // ),
-            //     iconData: Icons.calendar_month,
-            //     tooltipMaker: (context) => 'Kalendarz',
-            //   ),
-            //   inputDecoration: InputDecoration(labelText: 'Data'),
-            //   // outerLabelConfig: OuterLabelConfig(
-            //   //   labelText: 'Data',
-            //   //   align: Alignment.bottomLeft,
-            //   //   side: Side.left,
-            //   //   width: 60,
-            //   // ),
-            //   errorPosition: ErrorPosition.dynamicSpaceBelowField,
-            //   textFieldBorderType: TextFieldBorderType.underline,
-            //   // inputDecoration: InputDecoration(labelText: 'data'),
-            // ),
-            // //
+            SizedBox(height: appSize.spacerVerticalMedium),
+            TextField(
+              controller: TextEditingController(text: 'Ay'),
+              decoration: InputDecoration(
+                visualDensity: VisualDensity(vertical: -2),
+                border: UnderlineInputBorder(),
+                // labelText: 'data',
+                label: DecoratedBox(decoration: BoxDecoration(color: Colors.yellow), child: SizedBox(height: 35, child: Text('Smoczydło'))),
+                error: DecoratedBox(decoration: BoxDecoration(color: Colors.yellow), child: SizedBox(height: 35, child: Text('Smoczydło'))),
+              ),
+            ),
+
+            DateField(
+              keyString: dateKeyString1,
+              formManager: formManager,
+              width: 160,
+              withDatePicker: true,
+              buttonConfig: TextFieldButtonConfig(
+                syncStyleWithTextField: true,
+                // distanceFromTextField: 3,
+                // transparentBackground: false,
+                // buttonStyle: ButtonStyle(
+                //   side: const WidgetStatePropertyAll(BorderSide.none),
+                //   backgroundColor: WidgetStatePropertyAll(Colors.transparent),
+                //   overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+                //   shadowColor: const WidgetStatePropertyAll(Colors.transparent),
+                //   surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
+                //   elevation: const WidgetStatePropertyAll(0),
+                // ),
+                iconData: Icons.calendar_month,
+                tooltipMaker: (context) => 'Kalendarz',
+              ),
+              inputDecoration: InputDecoration(labelText: 'Data'),
+              // outerLabelConfig: OuterLabelConfig(
+              //   labelText: 'Data',
+              //   align: Alignment.bottomLeft,
+              //   side: Side.left,
+              //   width: 60,
+              // ),
+              errorPosition: ErrorPosition.dynamicSpaceBelowField,
+              borderType: TextFieldBorderType.underline,
+              // inputDecoration: InputDecoration(labelText: 'data'),
+            ),
+
             SizedBox(height: appSize.spacerVerticalMedium),
             DateField(
               keyString: dateKeyString2,
@@ -100,7 +104,7 @@ class ExampleFormState extends FormStateBrick {
               //   height: 26,
               // ),
               errorPosition: ErrorPosition.never,
-              // textFieldBorderType: TextFieldBorderType.underline,
+              // borderType: TextFieldBorderType.underline,
               inputDecoration: InputDecoration(
                 labelText: 'data 2',
                 border: OutlineInputBorder(),
@@ -115,12 +119,15 @@ class ExampleFormState extends FormStateBrick {
               buttonConfig: TextFieldButtonConfig(
                 tooltipMaker: (context) => 'Kalendarz',
                 distanceFromTextField: 4,
+                buttonStyle: ButtonStyle(shape: WidgetStatePropertyAll(BeveledRectangleBorder(side: BorderSide()))),
               ),
               errorPosition: ErrorPosition.fixedSpaceBelowField,
-              // textFieldBorderType: TextFieldBorderType.underline,
+              // borderType: TextFieldBorderType.underline,
               inputDecoration: InputDecoration(
                 labelText: 'data 2',
-                border: OutlineInputBorder(),
+                // border: OutlineInputBorder(),
+                // label: DecoratedBox(decoration: BoxDecoration(color: Colors.yellow), child: SizedBox(height: 35, child: Text('Smoczydło'))),
+                helper: DecoratedBox(decoration: BoxDecoration(color: Colors.yellow), child: SizedBox(height: 35, child: Text('Smoczydło'))),
               ),
             ),
 
@@ -132,11 +139,13 @@ class ExampleFormState extends FormStateBrick {
               buttonConfig: TextFieldButtonConfig(
                 tooltipMaker: (context) => 'Kalendarz',
                 distanceFromTextField: 10,
+                syncStyleWithTextField: false,
               ),
               errorPosition: ErrorPosition.fixedSpaceBelowField,
-              borderType: TextFieldBorderType.underline,
+              borderType: TextFieldBorderType.outline,
               inputDecoration: InputDecoration(
                 labelText: 'data 2',
+                filled: true,
               ),
             ),
 
@@ -184,7 +193,7 @@ class ExampleFormState extends FormStateBrick {
             //      height: 22,
             //    ),
             //    errorPosition: ErrorPosition.dynamicSpaceBelowField,
-            //    textFieldBorderType: TextFieldBorderType.underline,
+            //    borderType: TextFieldBorderType.underline,
             //    // inputDecoration: InputDecoration(labelText: 'data'),
             //  ),
             //
