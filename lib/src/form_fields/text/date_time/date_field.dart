@@ -164,6 +164,8 @@ class DateFieldState extends TextFieldStateBrick<DateTime, DateField> {
   @override
   void onButtonTap() async {
     DateTime? date = await DatePicker(widget.currentDate, datePickerConfig: widget.datePickerConfig).open(context);
+    focusNode.requestFocus();
+
     if (date == null) return;
 
     final String formattedDate = DateTimeUtils.dateFormat.format(date);

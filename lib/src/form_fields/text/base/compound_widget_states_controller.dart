@@ -34,32 +34,38 @@ class CompoundWidgetStatesController extends ValueNotifier<Set<WidgetState>> {
     };
   }
 
-  static Focus wrapWithStateDetectors({
+  /// Wraps [child] with state detectors. If [focusNode] is provided, it uses a Focus wrapper.
+  /// If [focusNode] is null, it only detects Hover and Tap/Press states.
+  static Widget wrapWithStateDetectors({
     required WidgetStatesSink statesSink,
-    required FocusNode focusNode,
+    FocusNode? focusNode,
     required Widget child,
   }) {
-    return Focus(
-      focusNode: focusNode,
-      onFocusChange: (_) {
-        if (focusNode.hasFocus) {
-          statesSink.setFocused(true);
-        } else {
-          statesSink.setFocused(false);
-          statesSink.setPressed(false);
-        }
-      },
-      child: MouseRegion(
-        onEnter: (_) => statesSink.setHovered(true),
-        onExit: (_) => statesSink.setHovered(false),
-        child: GestureDetector(
-          onTapDown: (_) => statesSink.setPressed(true),
-          onTapUp: (_) => statesSink.setPressed(false),
-          onTapCancel: () => statesSink.setPressed(false),
-          child: child,
-        ),
+    Widget current = MouseRegion(
+      onEnter: (_) => statesSink.setHovered(true),
+      onExit: (_) => statesSink.setHovered(false),
+      child: GestureDetector(
+        onTapDown: (_) => statesSink.setPressed(true),
+        onTapUp: (_) => statesSink.setPressed(false),
+        onTapCancel: () => statesSink.setPressed(false),
+        behavior: HitTestBehavior.translucent,
+        child: child,
       ),
     );
+
+    if (focusNode != null) {
+      return Focus(
+        focusNode: focusNode,
+        onFocusChange: (hasFocus) {
+          statesSink.setFocused(hasFocus);
+          if (!hasFocus) {
+            statesSink.setPressed(false);
+          }
+        },
+        child: current,
+      );
+    }
+    return current;
   }
 }
 

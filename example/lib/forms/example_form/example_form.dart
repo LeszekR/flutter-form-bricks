@@ -40,8 +40,12 @@ class ExampleFormState extends FormStateBrick {
                 visualDensity: VisualDensity(vertical: -2),
                 border: UnderlineInputBorder(),
                 // labelText: 'data',
-                label: DecoratedBox(decoration: BoxDecoration(color: Colors.yellow), child: SizedBox(height: 35, child: Text('Smoczydło'))),
-                error: DecoratedBox(decoration: BoxDecoration(color: Colors.yellow), child: SizedBox(height: 35, child: Text('Smoczydło'))),
+                label: DecoratedBox(
+                    decoration: BoxDecoration(color: Colors.yellow),
+                    child: SizedBox(height: 35, child: Text('Smoczydło'))),
+                error: DecoratedBox(
+                    decoration: BoxDecoration(color: Colors.yellow),
+                    child: SizedBox(height: 35, child: Text('Smoczydło'))),
               ),
             ),
 
@@ -119,15 +123,17 @@ class ExampleFormState extends FormStateBrick {
               buttonConfig: TextFieldButtonConfig(
                 tooltipMaker: (context) => 'Kalendarz',
                 distanceFromTextField: 4,
-                buttonStyle: ButtonStyle(shape: WidgetStatePropertyAll(BeveledRectangleBorder(side: BorderSide()))),
+                // buttonStyle: ButtonStyle(shape: WidgetStatePropertyAll(BeveledRectangleBorder(side: BorderSide()))),
               ),
               errorPosition: ErrorPosition.fixedSpaceBelowField,
-              // borderType: TextFieldBorderType.underline,
+              borderType: TextFieldBorderType.outline,
               inputDecoration: InputDecoration(
-                labelText: 'data 2',
+                labelText: 'data 3',
                 // border: OutlineInputBorder(),
                 // label: DecoratedBox(decoration: BoxDecoration(color: Colors.yellow), child: SizedBox(height: 35, child: Text('Smoczydło'))),
-                helper: DecoratedBox(decoration: BoxDecoration(color: Colors.yellow), child: SizedBox(height: 35, child: Text('Smoczydło'))),
+                helper: DecoratedBox(
+                    decoration: BoxDecoration(color: Colors.yellow),
+                    child: SizedBox(height: 35, child: Text('Smoczydło'))),
               ),
             ),
 
@@ -179,24 +185,24 @@ class ExampleFormState extends FormStateBrick {
               timeInputDecoration: InputDecoration(helperText: 'Misia'),
             ),
 
-            // SizedBox(height: appSize.spacerVerticalMedium),
-            //  TimeField(
-            //    keyString: timeKeyString1,
-            //    formManager: formManager,
-            //    width: 130,
-            //    withTimePicker: true,
-            //    outerLabelConfig: OuterLabelConfig(
-            //      labelText: 'Godzina',
-            //      align: Alignment.bottomLeft,
-            //      side: Side.left,
-            //      width: 60,
-            //      height: 22,
-            //    ),
-            //    errorPosition: ErrorPosition.dynamicSpaceBelowField,
-            //    borderType: TextFieldBorderType.underline,
-            //    // inputDecoration: InputDecoration(labelText: 'data'),
-            //  ),
-            //
+            SizedBox(height: appSize.spacerVerticalMedium),
+            TimeField(
+              keyString: timeKeyString1,
+              formManager: formManager,
+              width: 130,
+              withTimePicker: true,
+              outerLabelConfig: OuterLabelConfig(
+                labelText: 'Godzina',
+                align: Alignment.bottomLeft,
+                side: Side.left,
+                width: 60,
+                // height: 22,
+              ),
+              errorPosition: ErrorPosition.dynamicSpaceBelowField,
+              borderType: TextFieldBorderType.underline,
+              // inputDecoration: InputDecoration(labelText: 'data'),
+            ),
+
             // SizedBox(height: appSize.spacerVerticalMedium),
             // PlainTextField(
             //   keyString: plainTextKeyString2,

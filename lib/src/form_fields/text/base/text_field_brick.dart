@@ -369,27 +369,27 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   @override
   Widget buildFieldWidget(BuildContext context) {
-    // no button
-    if (_compoundWidgetStatesController == null) {
-      return ValueListenableBuilder<Set<WidgetState>>(
-        valueListenable: _statesController!,
-        builder: (context, states, _) {
-          return _makeBody(context);
-        },
-      );
-    }
-
     // with button
-    else {
+    if (widget.buttonConfig?.syncStyleWithTextField == true) {
       return CompoundWidgetStatesController.wrapWithStateDetectors(
         statesSink: _compoundWidgetStatesController!.fieldStatesSink,
-        focusNode: focusNode,
+        focusNode: null,
         child: ValueListenableBuilder<Set<WidgetState>>(
           valueListenable: _compoundWidgetStatesController!,
           builder: (context, states, _) {
             return _makeBody(context);
           },
         ),
+      );
+    }
+
+    // no button
+    else {
+      return ValueListenableBuilder<Set<WidgetState>>(
+        valueListenable: _statesController!,
+        builder: (context, states, _) {
+          return _makeBody(context);
+        },
       );
     }
   }
@@ -450,7 +450,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     return TextField(
       groupId: widget.textFieldConfig.groupId,
       controller: controller,
-      focusNode: widget.buttonConfig == null ? focusNode : null,
+      focusNode: focusNode,
       // focus node becomes parent when button is present
       undoController: widget.textFieldConfig.undoController,
       decoration: decoration,
@@ -584,6 +584,11 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   }
 
   void _onFocusChange() {
+    if (_compoundWidgetStatesController != null) {
+      _compoundWidgetStatesController!.fieldStatesSink.setFocused(focusNode.hasFocus);
+    } else {
+      _statesController!.update(WidgetState.focused, focusNode.hasFocus);
+    }
     if (!focusNode.hasFocus) {
       if (textEditingController.value != oldValue) {
         oldValue = textEditingController.value;

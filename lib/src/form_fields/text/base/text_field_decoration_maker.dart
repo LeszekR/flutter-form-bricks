@@ -68,7 +68,6 @@ class TextFieldDecorationMaker {
     TextFieldButtonConfig? buttonConfig,
     TextFieldBorderType borderType,
   ) {
-    print('${states.toString()}');
     BorderSide borderSide = BorderSide(
       color: uiParams.appColor.getBorderColor(states, uiParams.appColor.borderEnabled),
       width: uiParams.appSize.getBorderWidth(states, uiParams.appSize.borderWidth),
@@ -82,9 +81,6 @@ class TextFieldDecorationMaker {
       };
     }
     else if (buttonConfig.distanceFromTextField != null && buttonConfig.distanceFromTextField! > 0) {
-      print('borderType: $borderType');
-      print('${borderSide.color.toString()}');
-      print('${borderSide.width}');
       return switch (borderType) {
         TextFieldBorderType.outline => OutlineInputBorder(borderSide: borderSide),
         TextFieldBorderType.underline => UnderlineInputBorder(borderSide: borderSide),
