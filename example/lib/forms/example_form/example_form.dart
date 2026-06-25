@@ -143,16 +143,16 @@ class ExampleFormState extends FormStateBrick {
               formManager: formManager,
               width: 160,
               buttonConfig: TextFieldButtonConfig(
-                tooltipMaker: (context) => 'Kalendarz',
+                tooltipMaker: (context) => 'Kalendarz 4',
                 distanceFromTextField: 10,
                 syncStyleWithTextField: false,
               ),
               errorPosition: ErrorPosition.fixedSpaceBelowField,
               borderType: TextFieldBorderType.outline,
-              inputDecoration: InputDecoration(
-                labelText: 'data 2',
-                filled: true,
-              ),
+              // inputDecoration: InputDecoration(
+              //   labelText: 'data 2',
+              //   filled: true,
+              // ),
             ),
 
             SizedBox(height: appSize.spacerVerticalMedium),

@@ -34,31 +34,26 @@ class TextFieldDecorationMaker {
 
     var appSize = uiParams.appSize;
 
-    if (decoration != null) {
-      return decoration.copyWith(
-        errorText: errorText,
-        errorStyle: errorStyle,
-        fillColor: fillColor,
-        border: border,
-        enabledBorder: border,
-        focusedBorder: border,
-        errorBorder: border,
-        focusedErrorBorder: border,
-        disabledBorder: border,
-      );
-    } else {
-      return InputDecoration(
-        errorText: errorText,
-        errorStyle: errorStyle,
-        fillColor: fillColor,
-        border: border,
-        enabledBorder: border,
-        focusedBorder: border,
-        errorBorder: border,
-        focusedErrorBorder: border,
-        disabledBorder: border,
-      );
-    }
+    bool fixSpaceBelow = errorPosition == ErrorPosition.fixedSpaceBelowField &&
+        (decoration == null || decoration.helper == null && decoration.helperText == null);
+    String? helperText = fixSpaceBelow ? ' ' : decoration?.helperText;
+    TextStyle? helperStyle = fixSpaceBelow ? decoration?.errorStyle : decoration?.helperStyle;
+
+    decoration ??= const InputDecoration();
+
+    return decoration.copyWith(
+      errorText: errorText,
+      errorStyle: errorStyle,
+      fillColor: fillColor,
+      border: border,
+      enabledBorder: border,
+      focusedBorder: border,
+      errorBorder: border,
+      focusedErrorBorder: border,
+      disabledBorder: border,
+      helperText: helperText,
+      helperStyle: helperStyle,
+    );
   }
 
   static InputBorder? _makeInputDecorationBorder(
@@ -79,17 +74,15 @@ class TextFieldDecorationMaker {
         TextFieldBorderType.underline => UnderlineInputBorder(borderSide: borderSide),
         TextFieldBorderType.other => inputDecoration?.border,
       };
-    }
-    else if (buttonConfig.distanceFromTextField != null && buttonConfig.distanceFromTextField! > 0) {
+    } else if (buttonConfig.distanceFromTextField != null && buttonConfig.distanceFromTextField! > 0) {
       return switch (borderType) {
         TextFieldBorderType.outline => OutlineInputBorder(borderSide: borderSide),
         TextFieldBorderType.underline => UnderlineInputBorder(borderSide: borderSide),
         TextFieldBorderType.other => inputDecoration?.border,
       };
-    }
-    else {
+    } else {
       return switch (borderType) {
-        // textFieldBorderType dominates the choice of border
+// textFieldBorderType dominates the choice of border
         TextFieldBorderType.outline => switch (buttonConfig.buttonPosition) {
             ButtonPosition.left => OutlineSidesInputBorder(borderSide: borderSide, sideLeft: false),
             ButtonPosition.right => OutlineSidesInputBorder(borderSide: borderSide, sideRight: false),
@@ -99,8 +92,8 @@ class TextFieldDecorationMaker {
             ButtonPosition.right => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopRight: 0),
           },
 
-        // when textFieldBorderType does not define the border - use inputDecoration.border or its
-        // **FlutterFormBricks'** implementation accommodating the button if present
+// when textFieldBorderType does not define the border - use inputDecoration.border or its
+// **FlutterFormBricks'** implementation accommodating the button if present
         TextFieldBorderType.other => switch (inputDecoration?.border) {
             const OutlineInputBorder() => switch (buttonConfig.buttonPosition) {
                 ButtonPosition.left => OutlineSidesInputBorder(borderSide: borderSide, sideLeft: false),
@@ -111,7 +104,7 @@ class TextFieldDecorationMaker {
                 ButtonPosition.right => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopRight: 0),
               },
             InputBorder() => inputDecoration!.border,
-            // default:
+// default:
             null => switch (buttonConfig.buttonPosition) {
                 ButtonPosition.left => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopLeft: 0),
                 ButtonPosition.right => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopRight: 0),
