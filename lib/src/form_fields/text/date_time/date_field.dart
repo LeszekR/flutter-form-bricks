@@ -59,6 +59,7 @@ class DateField extends TextFieldBrick<DateTime> {
     this.datePickerConfig,
     this.currentDate,
     super.heightOfTextArea,
+    super.errorBuilder,
     //
     // TextField
     super.groupId = EditableText,

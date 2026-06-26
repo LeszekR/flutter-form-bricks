@@ -63,6 +63,15 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
   /// `heightOfTextArea`.
   final double? heightOfTextArea;
 
+  /// `Widget` builder to be used when error is to be predefined `Widget` not just text formatted with `errorStyle` in
+  /// `inputDecoration`.
+  ///
+  /// In order to preserve both original Flutter functionality of declaring error `Widget`
+  /// and this lib's functionality of automatic filling error text on validation it was necessary to
+  /// block native Flutter's `error` declaration in `inputDecoration` and use builder instead.
+  /// Other than that the functionality of using `Widget` error is the same.
+  final Widget Function(BuildContext context, String errorText)? errorBuilder;
+
   TextFieldBrick({
     super.key,
     //
@@ -80,6 +89,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     this.errorPosition = ErrorPosition.dynamicSpaceBelowField,
     this.buttonConfig,
     this.heightOfTextArea,
+    this.errorBuilder,
     //
     // Flutter TextField
     TextMagnifierConfiguration? magnifierConfiguration,
@@ -224,6 +234,19 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
             'When syncStyleWithTextField is true, statesController must not be declared(keyString: $keyString).'),
         assert(buttonConfig == null ? statesController == null : true,
             'When buttonConfig is declared then statesController must not be declared, because it will be ignored (keyString: $keyString).'),
+        assert(
+          inputDecoration?.error == null && inputDecoration?.errorText == null,
+          'Do not declare InputDecoration.error or InputDecoration.errorText. '
+          'Validation errors are managed by TextFieldBrick. '
+          'Use TextFieldBrick.errorBuilder to customize validation error UI.',
+        ),
+        assert(
+            (errorPosition == ErrorPosition.never || errorPosition == ErrorPosition.formErrorArea)
+                ? errorBuilder == null
+                : true,
+            'Do not declare errorBuilder when the error is never to be shown below the TextField'),
+        assert(errorBuilder != null ? inputDecoration?.errorStyle == null : true,
+            'Do not declare errorStyle when errorBuilder is declared'),
         textFieldConfig = TextFieldConfig(
           magnifierConfiguration: magnifierConfiguration,
           groupId: groupId,
@@ -396,12 +419,14 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   LabelledBox _makeBody(BuildContext context) {
     final decoration = TextFieldDecorationMaker.makeInputDecoration(
+      context: context,
       uiParams: UiParams.of(context),
-      states: _getStates(),
-      decoration: widget.textFieldConfig.decoration,
-      buttonConfig: widget.buttonConfig,
       borderType: widget.borderType,
+      decoration: widget.textFieldConfig.decoration,
       errorPosition: widget.errorPosition,
+      buttonConfig: widget.buttonConfig,
+      errorBuilder: widget.errorBuilder,
+      states: _getStates(),
       errorText: _showErrorBelowField ? errorText : null,
     );
     final TextField textField = _makeTextField(textEditingController, decoration, _style);

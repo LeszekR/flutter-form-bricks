@@ -148,11 +148,18 @@ class ExampleFormState extends FormStateBrick {
                 syncStyleWithTextField: false,
               ),
               errorPosition: ErrorPosition.fixedSpaceBelowField,
+              errorBuilder: (context, errorText) => DecoratedBox(
+                decoration: BoxDecoration(color: Colors.yellow),
+                child: SizedBox(
+                  height: 35,
+                  child: Text('Smoczydło'),
+                ),
+              ),
               borderType: TextFieldBorderType.outline,
-              // inputDecoration: InputDecoration(
-              //   labelText: 'data 2',
-              //   filled: true,
-              // ),
+              inputDecoration: InputDecoration(
+                labelText: 'data 2',
+                filled: true,
+              ),
             ),
 
             SizedBox(height: appSize.spacerVerticalMedium),

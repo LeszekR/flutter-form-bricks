@@ -8,11 +8,13 @@ import 'package:flutter_form_bricks/src/ui_params/ui_params_data.dart';
 
 class TextFieldDecorationMaker {
   static InputDecoration makeInputDecoration({
+    required BuildContext context,
     required UiParamsData uiParams,
     required TextFieldBorderType borderType,
     required InputDecoration? decoration,
     required ErrorPosition errorPosition,
     required TextFieldButtonConfig? buttonConfig,
+    Widget Function(BuildContext context, String errorText)? errorBuilder,
     Set<WidgetState>? states,
     String? errorText,
   }) {
@@ -36,14 +38,30 @@ class TextFieldDecorationMaker {
 
     bool fixSpaceBelow = errorPosition == ErrorPosition.fixedSpaceBelowField &&
         (decoration == null || decoration.helper == null && decoration.helperText == null);
-    String? helperText = fixSpaceBelow ? ' ' : decoration?.helperText;
-    TextStyle? helperStyle = fixSpaceBelow ? decoration?.errorStyle : decoration?.helperStyle;
 
-    decoration ??= const InputDecoration();
+    final ({String? helperText, Widget? helper, TextStyle? helperStyle}) bottomSpaceParams = _makeBottomSpaceParams(
+      context,
+      fixSpaceBelow,
+      decoration!,
+      errorBuilder,
+      errorStyle,
+      decoration.helperStyle,
+      decoration.helper,
+    );
 
-    return decoration.copyWith(
-      errorText: errorText,
+    String? effectiveErrorText = errorBuilder == null ? decoration?.errorText : null;
+    Widget? error = errorBuilder == null
+        ? null
+        : decoration?.errorText == null
+            ? null
+            : errorBuilder(context, decoration!.errorText!);
+
+    InputDecoration inputDecoration = decoration ?? const InputDecoration();
+
+    return inputDecoration.copyWith(
+      errorText: effectiveErrorText,
       errorStyle: errorStyle,
+      error: error,
       fillColor: fillColor,
       border: border,
       enabledBorder: border,
@@ -51,8 +69,9 @@ class TextFieldDecorationMaker {
       errorBorder: border,
       focusedErrorBorder: border,
       disabledBorder: border,
-      helperText: helperText,
-      helperStyle: helperStyle,
+      helperText: bottomSpaceParams.helperText,
+      helperStyle: bottomSpaceParams.helperStyle,
+      helper: bottomSpaceParams.helper,
     );
   }
 
@@ -113,4 +132,53 @@ class TextFieldDecorationMaker {
       };
     }
   }
+
+  static ({
+    String? helperText,
+    Widget? helper,
+    TextStyle? helperStyle,
+  }) _makeBottomSpaceParams(
+    BuildContext context,
+    bool fixSpaceBelow,
+    InputDecoration decoration,
+    Function(BuildContext, String)? errorBuilder,
+    TextStyle? errorStyle,
+    TextStyle? helperStyle,
+    Widget? helper,
+  ) {
+    bool hasHelper = decoration.helper != null;
+    bool hasHelperText = decoration.helperText != null;
+    bool noHelper = !hasHelper && !hasHelperText;
+    bool noError = decoration.errorText == null;
+    bool hasErrorBuilder = errorBuilder != null;
+
+    Widget? helper;
+    String? helperText;
+    TextStyle? effectiveHelperStyle;
+
+    if (fixSpaceBelow) {
+      if (noError) {
+        if (noHelper) {
+          if (hasErrorBuilder) {
+            helper = errorBuilder(context, ' ');
+          } else {
+            helperText = '';
+            effectiveHelperStyle = errorStyle;
+          }
+        }
+      }
+    } // TODO compute height
+    return (
+      helperText: helperText,
+      helper: helper,
+      helperStyle: effectiveHelperStyle,
+    );
+  }
+
+  static double? _getBottomSpaceHeight(
+    TextStyle? errorStyle,
+    Function(BuildContext, String)? errorBuilder,
+    TextStyle? helperStyle,
+    Widget? helper,
+  ) {}
 }

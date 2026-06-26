@@ -91,9 +91,41 @@ class DateTimeSeparatedField extends StatelessWidget {
   final DatePickerConfig? pickerConfig;
   final TextFieldConfig dateTextFieldConfig;
   final TextFieldConfig timeTextFieldConfig;
-  final TextFieldBorderType borderType;
   final double? buttonWidth;
+
+  /// If `textFieldBorderType` is `TextFieldBorderType.other`, then
+  /// - if `inputDecoration.border` is defined this border will be used
+  /// - if `inputDecoration.border` is not defined then `UnderlineInputBorder` will be used as default
+  /// (See: `inputDecoration' field docs to understand how it works when the `buttonConfig` is not null.)
+  ///
+  /// If `textFieldBorderType` is `TextFieldBorderType.outline` or `TextFieldBorderType.underline`,
+  /// then `OutlineInputBorder` or `UnderlineInputBorder` (or their `FlutterFormBricks` implementations for use
+  /// with `TexFieldButton`: `OutlineSidesInputBorder` or `UnderlineTopRoundedBorder`) will be used.
+  final TextFieldBorderType borderType;
+
+  /// See `enum ErrorPosition`. Error can be positioned:
+  /// - in Flutter's dynamic space below the field
+  /// - in Flutter's fixed space below the field
+  /// - in `FlutterFormBricks` error area of `FormBrick` where error of currently focused field is shown; this
+  /// solution allows for building dense UIs for professionals, who will use the app on daily basis, where errors do not
+  /// take space in the form making it possible to fit more fields on the screen. This functionality works in unison
+  /// with marking **red** the border and/or background of every field and tab, that failed validation. The user clicks
+  /// such a field or tab and immediately sees the error message in the error area.
   final ErrorPosition errorPosition;
+
+  /// Defines the height of the actual `TextField` widget, and the height and width of its `TextFieldButton` if present.
+  /// It does not affect the error/helper/counter area of `InputDecoration` - those are added below the defined
+  /// `heightOfTextArea`.
+  final double? heightOfTextArea;
+
+  /// `Widget` builder to be used when error is to be predefined `Widget` not just text formatted with `errorStyle` in
+  /// `inputDecoration`.
+  ///
+  /// In order to preserve both original Flutter functionality of declaring error `Widget`
+  /// and this lib's functionality of automatic filling error text on validation it was necessary to
+  /// block native Flutter's `error` declaration in `inputDecoration` and use builder instead.
+  /// Other than that the functionality of using `Widget` error is the same.
+  final Widget Function(BuildContext context, String errorText)? errorBuilder;
 
   DateTimeSeparatedField({
     super.key,
@@ -121,6 +153,8 @@ class DateTimeSeparatedField extends StatelessWidget {
     this.borderType = TextFieldBorderType.outline,
     this.buttonWidth,
     this.errorPosition = ErrorPosition.dynamicSpaceBelowField,
+    this.heightOfTextArea,
+    this.errorBuilder,
     //
     // Flutter TextField
     TextMagnifierConfiguration? magnifierConfiguration,
@@ -383,6 +417,7 @@ class DateTimeSeparatedField extends StatelessWidget {
     );
 
     final InputDecoration decoration = TextFieldDecorationMaker.makeInputDecoration(
+      context: context,
       uiParams: uiParams,
       decoration: dateInputDecoration,
       borderType: borderType,
@@ -432,9 +467,7 @@ class DateTimeSeparatedField extends StatelessWidget {
       inputDecoration: dateTextFieldConfig.decoration,
       buttonConfig: !withDateTimePicker
           ? null
-          : pickerButtonConfig != null
-              ? pickerButtonConfig
-              : const TextFieldButtonConfig(
+          : pickerButtonConfig ?? const TextFieldButtonConfig(
                   iconData: Icons.arrow_drop_down,
                   buttonPosition: ButtonPosition.right,
                   tooltipMaker: DatePicker.datePickerTooltipMaker,
@@ -442,6 +475,8 @@ class DateTimeSeparatedField extends StatelessWidget {
       outerLabelConfig: dateOuterLabelConfig,
       borderType: borderType,
       errorPosition: errorPosition,
+      heightOfTextArea: heightOfTextArea,
+      errorBuilder: errorBuilder,
       //
       // TextField
       groupId: dateTextFieldConfig.groupId,
@@ -505,20 +540,21 @@ class DateTimeSeparatedField extends StatelessWidget {
       // TextFieldBrick
       width: timeWidth,
       inputDecoration: timeTextFieldConfig.decoration,
-      outerLabelConfig: timeOuterLabelConfig == null ? null : timeOuterLabelConfig!.fillFrom(dateOuterLabelConfig),
+      outerLabelConfig: timeOuterLabelConfig?.fillFrom(dateOuterLabelConfig),
       borderType: borderType,
       errorPosition: errorPosition,
       //
       // TimeField
       timePickerButtonConfig: !withDateTimePicker
           ? null
-          : pickerButtonConfig != null
-              ? pickerButtonConfig
-              : const TextFieldButtonConfig(
-                  iconData: Icons.arrow_drop_down,
-                  buttonPosition: ButtonPosition.right,
-                  tooltipMaker: TimePicker.timePickerTooltipMaker,
-                ),
+          : pickerButtonConfig ??
+              const TextFieldButtonConfig(
+                iconData: Icons.arrow_drop_down,
+                buttonPosition: ButtonPosition.right,
+                tooltipMaker: TimePicker.timePickerTooltipMaker,
+              ),
+      heightOfTextArea: heightOfTextArea,
+      errorBuilder: errorBuilder,
       //
       // TextField
       groupId: timeTextFieldConfig.groupId,

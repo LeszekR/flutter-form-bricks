@@ -15,17 +15,17 @@ class TextFieldHeightProbeConfig {
   final int? minLines;
   final int? maxLines;
 
-  TextFieldHeightProbeConfig._({
+  const TextFieldHeightProbeConfig._({
     required this.decoration,
     required this.style,
     required this.text,
     required this.expands,
     required this.textScaleFactor,
     required this.useMaterial3,
-    this.strutStyle = null,
-    this.width = null,
-    this.minLines = null,
-    this.maxLines = null,
+    this.strutStyle,
+    this.width,
+    this.minLines,
+    this.maxLines,
   });
 
   static TextFieldHeightProbeConfig create({

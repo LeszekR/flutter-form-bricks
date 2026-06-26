@@ -26,6 +26,7 @@ export 'src/form_fields/text/base/text_field_button_config.dart';
 export 'src/form_fields/text/base/outer_label_config.dart';
 export 'src/form_fields/text/base/error_position.dart';
 export 'src/form_fields/text/base/text_field_brick.dart';
+export 'src/form_fields/text/base/input_decoration_brick.dart';
 export 'src/form_fields/text/date_time/date_field.dart';
 export 'src/form_fields/text/date_time/time_field.dart';
 export 'src/form_fields/text/date_time/date_time_separated_field.dart';

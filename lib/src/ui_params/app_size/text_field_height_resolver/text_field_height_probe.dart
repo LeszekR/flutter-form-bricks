@@ -34,11 +34,10 @@ class _TextFieldHeightProbeState extends State<TextFieldHeightProbe> {
     final TextFieldHeightProbeConfig cacheKey = widget.heightProbeConfig;
 
     if (TextFieldHeightCache.isBeingMeasured(cacheKey)) {
-      return OffstageDummy();
+      return const OffstageDummy();
     }
 
     TextFieldHeightCache.startMeasuring(cacheKey);
-
 
     return Offstage(
       child: Material(
