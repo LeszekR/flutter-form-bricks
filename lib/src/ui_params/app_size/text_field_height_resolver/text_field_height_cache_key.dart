@@ -1,9 +1,10 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
 
 @immutable
-class TextFieldHeightProbeConfig {
+class TextFieldHeightProbeConfig extends Equatable {
   final InputDecoration decoration;
   final TextStyle style;
   final String? text;
@@ -60,24 +61,38 @@ class TextFieldHeightProbeConfig {
     );
   }
 
+  // @override
+  // bool operator ==(Object other) {
+  //   return identical(this, other) ||
+  //       other is TextFieldHeightProbeConfig &&
+  //           decoration.hasSameInputDecoratorHeightAs(other.decoration) &&
+  //           style == other.style &&
+  //           text == other.text &&
+  //           expands == other.expands &&
+  //           strutStyle == other.strutStyle &&
+  //           width == other.width &&
+  //           minLines == other.minLines &&
+  //           maxLines == other.maxLines &&
+  //           textScaleFactor == other.textScaleFactor &&
+  //           useMaterial3 == other.useMaterial3;
+  // }
+  //
+  // @override
+  // int get hashCode => Object.hash(
+  //       decoration.inputDecoratorHeightHash,
+  //       style,
+  //       text,
+  //       expands,
+  //       strutStyle,
+  //       width,
+  //       minLines,
+  //       maxLines,
+  //       textScaleFactor,
+  //       useMaterial3,
+  //     );
+  //
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is TextFieldHeightProbeConfig &&
-            decoration.hasSameInputDecoratorHeightAs(other.decoration) &&
-            style == other.style &&
-            text == other.text &&
-            expands == other.expands &&
-            strutStyle == other.strutStyle &&
-            width == other.width &&
-            minLines == other.minLines &&
-            maxLines == other.maxLines &&
-            textScaleFactor == other.textScaleFactor &&
-            useMaterial3 == other.useMaterial3;
-  }
-
-  @override
-  int get hashCode => Object.hash(
+  List<Object?> get props => [
         decoration.inputDecoratorHeightHash,
         style,
         text,
@@ -88,5 +103,5 @@ class TextFieldHeightProbeConfig {
         maxLines,
         textScaleFactor,
         useMaterial3,
-      );
+      ];
 }

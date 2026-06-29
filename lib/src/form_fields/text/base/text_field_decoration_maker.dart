@@ -49,12 +49,12 @@ class TextFieldDecorationMaker {
       decoration.helper,
     );
 
-    String? effectiveErrorText = errorBuilder == null ? decoration?.errorText : null;
+    String? effectiveErrorText = errorBuilder == null ? errorText : null;
     Widget? error = errorBuilder == null
         ? null
-        : decoration?.errorText == null
+        : errorText == null
             ? null
-            : errorBuilder(context, decoration!.errorText!);
+            : errorBuilder(context, errorText);
 
     InputDecoration inputDecoration = decoration ?? const InputDecoration();
 
@@ -101,7 +101,7 @@ class TextFieldDecorationMaker {
       };
     } else {
       return switch (borderType) {
-// textFieldBorderType dominates the choice of border
+        // textFieldBorderType dominates the choice of border
         TextFieldBorderType.outline => switch (buttonConfig.buttonPosition) {
             ButtonPosition.left => OutlineSidesInputBorder(borderSide: borderSide, sideLeft: false),
             ButtonPosition.right => OutlineSidesInputBorder(borderSide: borderSide, sideRight: false),
@@ -111,8 +111,8 @@ class TextFieldDecorationMaker {
             ButtonPosition.right => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopRight: 0),
           },
 
-// when textFieldBorderType does not define the border - use inputDecoration.border or its
-// **FlutterFormBricks'** implementation accommodating the button if present
+        // when textFieldBorderType does not define the border - use inputDecoration.border or its
+        // **FlutterFormBricks'** implementation accommodating the button if present
         TextFieldBorderType.other => switch (inputDecoration?.border) {
             const OutlineInputBorder() => switch (buttonConfig.buttonPosition) {
                 ButtonPosition.left => OutlineSidesInputBorder(borderSide: borderSide, sideLeft: false),
@@ -123,7 +123,7 @@ class TextFieldDecorationMaker {
                 ButtonPosition.right => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopRight: 0),
               },
             InputBorder() => inputDecoration!.border,
-// default:
+            // default:
             null => switch (buttonConfig.buttonPosition) {
                 ButtonPosition.left => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopLeft: 0),
                 ButtonPosition.right => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopRight: 0),
@@ -162,7 +162,7 @@ class TextFieldDecorationMaker {
           if (hasErrorBuilder) {
             helper = errorBuilder(context, ' ');
           } else {
-            helperText = '';
+            helperText = ' ';
             effectiveHelperStyle = errorStyle;
           }
         }

@@ -34,86 +34,86 @@ class ExampleFormState extends FormStateBrick {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: appSize.spacerVerticalMedium),
-            TextField(
-              controller: TextEditingController(text: 'Ay'),
-              decoration: InputDecoration(
-                visualDensity: VisualDensity(vertical: -2),
-                border: UnderlineInputBorder(),
-                // labelText: 'data',
-                label: DecoratedBox(
-                    decoration: BoxDecoration(color: Colors.yellow),
-                    child: SizedBox(height: 35, child: Text('Smoczydło'))),
-                error: DecoratedBox(
-                    decoration: BoxDecoration(color: Colors.yellow),
-                    child: SizedBox(height: 35, child: Text('Smoczydło'))),
-              ),
-            ),
-
-            DateField(
-              keyString: dateKeyString1,
-              formManager: formManager,
-              width: 160,
-              withDatePicker: true,
-              buttonConfig: TextFieldButtonConfig(
-                syncStyleWithTextField: true,
-                // distanceFromTextField: 3,
-                // transparentBackground: false,
-                // buttonStyle: ButtonStyle(
-                //   side: const WidgetStatePropertyAll(BorderSide.none),
-                //   backgroundColor: WidgetStatePropertyAll(Colors.transparent),
-                //   overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-                //   shadowColor: const WidgetStatePropertyAll(Colors.transparent),
-                //   surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
-                //   elevation: const WidgetStatePropertyAll(0),
-                // ),
-                iconData: Icons.calendar_month,
-                tooltipMaker: (context) => 'Kalendarz',
-              ),
-              inputDecoration: InputDecoration(labelText: 'Data'),
-              // outerLabelConfig: OuterLabelConfig(
-              //   labelText: 'Data',
-              //   align: Alignment.bottomLeft,
-              //   side: Side.left,
-              //   width: 60,
-              // ),
-              errorPosition: ErrorPosition.dynamicSpaceBelowField,
-              borderType: TextFieldBorderType.underline,
-              // inputDecoration: InputDecoration(labelText: 'data'),
-            ),
-
-            SizedBox(height: appSize.spacerVerticalMedium),
-            DateField(
-              keyString: dateKeyString2,
-              formManager: formManager,
-              width: 160,
-              withDatePicker: false,
-              // buttonConfig: TextFieldButtonConfig(
-              //   tooltipMaker: (context) => 'Kalendarz',
-              //   buttonStyle: ButtonStyle(
-              //     shape: WidgetStatePropertyAll(
-              //       BeveledRectangleBorder(
-              //         side: BorderSide(
-              //           width: 0.3,
-              //           color: Colors.red,
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              // outerLabelConfig: OuterLabelConfig(
-              //   labelText: 'Data',
-              //   align: Alignment.bottomLeft,
-              //   side: Side.left,
-              //   width: 50,
-              //   height: 26,
-              // ),
-              errorPosition: ErrorPosition.never,
-              // borderType: TextFieldBorderType.underline,
-              inputDecoration: InputDecoration(
-                labelText: 'data 2',
-                border: OutlineInputBorder(),
-              ),
-            ),
+            // TextField(
+            //   controller: TextEditingController(text: 'Ay'),
+            //   decoration: InputDecoration(
+            //     visualDensity: VisualDensity(vertical: -2),
+            //     border: UnderlineInputBorder(),
+            //     // labelText: 'data',
+            //     label: DecoratedBox(
+            //         decoration: BoxDecoration(color: Colors.yellow),
+            //         child: SizedBox(height: 35, child: Text('Smoczydło'))),
+            //     error: DecoratedBox(
+            //         decoration: BoxDecoration(color: Colors.yellow),
+            //         child: SizedBox(height: 35, child: Text('Smoczydło'))),
+            //   ),
+            // ),
+            //
+            // DateField(
+            //   keyString: dateKeyString1,
+            //   formManager: formManager,
+            //   width: 160,
+            //   withDatePicker: true,
+            //   buttonConfig: TextFieldButtonConfig(
+            //     syncStyleWithTextField: true,
+            //     // distanceFromTextField: 3,
+            //     // transparentBackground: false,
+            //     // buttonStyle: ButtonStyle(
+            //     //   side: const WidgetStatePropertyAll(BorderSide.none),
+            //     //   backgroundColor: WidgetStatePropertyAll(Colors.transparent),
+            //     //   overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+            //     //   shadowColor: const WidgetStatePropertyAll(Colors.transparent),
+            //     //   surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
+            //     //   elevation: const WidgetStatePropertyAll(0),
+            //     // ),
+            //     iconData: Icons.calendar_month,
+            //     tooltipMaker: (context) => 'Kalendarz',
+            //   ),
+            //   inputDecoration: InputDecoration(labelText: 'Data'),
+            //   // outerLabelConfig: OuterLabelConfig(
+            //   //   labelText: 'Data',
+            //   //   align: Alignment.bottomLeft,
+            //   //   side: Side.left,
+            //   //   width: 60,
+            //   // ),
+            //   errorPosition: ErrorPosition.dynamicSpaceBelowField,
+            //   borderType: TextFieldBorderType.underline,
+            //   // inputDecoration: InputDecoration(labelText: 'data'),
+            // ),
+            //
+            // SizedBox(height: appSize.spacerVerticalMedium),
+            // DateField(
+            //   keyString: dateKeyString2,
+            //   formManager: formManager,
+            //   width: 160,
+            //   withDatePicker: false,
+            //   // buttonConfig: TextFieldButtonConfig(
+            //   //   tooltipMaker: (context) => 'Kalendarz',
+            //   //   buttonStyle: ButtonStyle(
+            //   //     shape: WidgetStatePropertyAll(
+            //   //       BeveledRectangleBorder(
+            //   //         side: BorderSide(
+            //   //           width: 0.3,
+            //   //           color: Colors.red,
+            //   //         ),
+            //   //       ),
+            //   //     ),
+            //   //   ),
+            //   // ),
+            //   // outerLabelConfig: OuterLabelConfig(
+            //   //   labelText: 'Data',
+            //   //   align: Alignment.bottomLeft,
+            //   //   side: Side.left,
+            //   //   width: 50,
+            //   //   height: 26,
+            //   // ),
+            //   errorPosition: ErrorPosition.never,
+            //   // borderType: TextFieldBorderType.underline,
+            //   inputDecoration: InputDecoration(
+            //     labelText: 'data 2',
+            //     border: OutlineInputBorder(),
+            //   ),
+            // ),
 
             SizedBox(height: appSize.spacerVerticalMedium),
             DateField(
@@ -128,7 +128,7 @@ class ExampleFormState extends FormStateBrick {
               errorPosition: ErrorPosition.fixedSpaceBelowField,
               borderType: TextFieldBorderType.outline,
               inputDecoration: InputDecoration(
-                labelText: 'data 3',
+                labelText: 'data 3 fixedSpace',
                 // border: OutlineInputBorder(),
                 // label: DecoratedBox(decoration: BoxDecoration(color: Colors.yellow), child: SizedBox(height: 35, child: Text('Smoczydło'))),
                 helper: DecoratedBox(
@@ -157,58 +157,58 @@ class ExampleFormState extends FormStateBrick {
               ),
               borderType: TextFieldBorderType.outline,
               inputDecoration: InputDecoration(
-                labelText: 'data 2',
+                labelText: 'data 4 fixedSpace',
                 filled: true,
               ),
             ),
 
-            SizedBox(height: appSize.spacerVerticalMedium),
-            DateTimeSeparatedField(
-              keyString: dateTimeSeparatedKeyString1,
-              formManager: formManager,
-              errorPosition: ErrorPosition.never,
-              // dateWidth: 150,
-              pickerButtonConfig: TextFieldButtonConfig(width: 25),
-              dateOuterLabelConfig: OuterLabelConfig(
-                labelText: 'Data',
-                side: Side.top,
-                height: 22,
-                padding: EdgeInsetsGeometry.only(bottom: 4),
-              ),
-              timeOuterLabelConfig: OuterLabelConfig(
-                labelText: 'Godzina',
-                side: Side.top,
-                height: 16,
-              ),
-              outerLabelConfig: OuterLabelConfig(
-                labelText: 'Data i czas',
-                side: Side.left,
-                // height: 46 * appSize.zoom,
-                width: 80,
-                align: Alignment.centerRight,
-                padding: EdgeInsetsGeometry.only(right: 10),
-              ),
-              dateInputDecoration: InputDecoration(helperText: 'Gucio'),
-              timeInputDecoration: InputDecoration(helperText: 'Misia'),
-            ),
+            // SizedBox(height: appSize.spacerVerticalMedium),
+            // DateTimeSeparatedField(
+            //   keyString: dateTimeSeparatedKeyString1,
+            //   formManager: formManager,
+            //   errorPosition: ErrorPosition.never,
+            //   // dateWidth: 150,
+            //   pickerButtonConfig: TextFieldButtonConfig(width: 25),
+            //   dateOuterLabelConfig: OuterLabelConfig(
+            //     labelText: 'Data',
+            //     side: Side.top,
+            //     height: 22,
+            //     padding: EdgeInsetsGeometry.only(bottom: 4),
+            //   ),
+            //   timeOuterLabelConfig: OuterLabelConfig(
+            //     labelText: 'Godzina',
+            //     side: Side.top,
+            //     height: 16,
+            //   ),
+            //   outerLabelConfig: OuterLabelConfig(
+            //     labelText: 'Data i czas',
+            //     side: Side.left,
+            //     // height: 46 * appSize.zoom,
+            //     width: 80,
+            //     align: Alignment.centerRight,
+            //     padding: EdgeInsetsGeometry.only(right: 10),
+            //   ),
+            //   dateInputDecoration: InputDecoration(helperText: 'Gucio'),
+            //   timeInputDecoration: InputDecoration(helperText: 'Misia'),
+            // ),
 
-            SizedBox(height: appSize.spacerVerticalMedium),
-            TimeField(
-              keyString: timeKeyString1,
-              formManager: formManager,
-              width: 130,
-              withTimePicker: true,
-              outerLabelConfig: OuterLabelConfig(
-                labelText: 'Godzina',
-                align: Alignment.bottomLeft,
-                side: Side.left,
-                width: 60,
-                // height: 22,
-              ),
-              errorPosition: ErrorPosition.dynamicSpaceBelowField,
-              borderType: TextFieldBorderType.underline,
-              // inputDecoration: InputDecoration(labelText: 'data'),
-            ),
+            // SizedBox(height: appSize.spacerVerticalMedium),
+            // TimeField(
+            //   keyString: timeKeyString1,
+            //   formManager: formManager,
+            //   width: 130,
+            //   withTimePicker: true,
+            //   outerLabelConfig: OuterLabelConfig(
+            //     labelText: 'Godzina',
+            //     align: Alignment.bottomLeft,
+            //     side: Side.left,
+            //     width: 60,
+            //     // height: 22,
+            //   ),
+            //   errorPosition: ErrorPosition.dynamicSpaceBelowField,
+            //   borderType: TextFieldBorderType.underline,
+            //   // inputDecoration: InputDecoration(labelText: 'data'),
+            // ),
 
             // SizedBox(height: appSize.spacerVerticalMedium),
             // PlainTextField(

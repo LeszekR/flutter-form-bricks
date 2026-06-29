@@ -1,22 +1,23 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_height_cache_key.dart';
 
 class TextFieldHeightCache {
-  static final Map<TextFieldHeightProbeConfig, double> _cache = {};
-  static final Set<TextFieldHeightProbeConfig> _processedKeys = {};
+  static final Map<Equatable, double> _cache = {};
+  static final Set<Equatable> _processedKeys = {};
 
-  static double? getHeight(TextFieldHeightProbeConfig key) {
+  static double? getHeight(Equatable key) {
     return _cache[key];
   }
 
-  static void putHeight(TextFieldHeightProbeConfig key, double height) {
+  static void putHeight(Equatable key, double height) {
     _cache[key] = height;
   }
 
-  static void startMeasuring(TextFieldHeightProbeConfig key) {
+  static void startMeasuring(Equatable key) {
     _processedKeys.add(key);
   }
 
-  static bool isBeingMeasured(TextFieldHeightProbeConfig key) {
+  static bool isBeingMeasured(Equatable key) {
     return _processedKeys.contains(key);
   }
 }

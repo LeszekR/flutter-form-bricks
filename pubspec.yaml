@@ -5,6 +5,7 @@ environment:
   sdk: ">=3.0.0 <=3.9.2"
 description: Elements for creating responsive forms
 dependencies:
+  equatable: ^2.0.8
   flutter:
     sdk: flutter
   flutter_form_builder: ^10.2.0
