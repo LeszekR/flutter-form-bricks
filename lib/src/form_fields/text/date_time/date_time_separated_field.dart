@@ -14,7 +14,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/da
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_required_fields.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/time_picker.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_separate_fields_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_height_cache_key.dart';
+import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_editing_area_config.dart';
 
 class DateTimeSeparatedFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime, DateTimeSeparatedField> {
   String _dateKeyString;
@@ -425,7 +425,7 @@ class DateTimeSeparatedField extends StatelessWidget {
       buttonConfig: pickerButtonConfig,
     );
 
-    final TextFieldHeightProbeConfig heightProbeConfig = TextFieldHeightProbeConfig.create(
+    final TextFieldEditingAreaConfig heightProbeConfig = TextFieldEditingAreaConfig.create(
       context: context,
       decoration: decoration,
       config: dateTextFieldConfig,
@@ -446,7 +446,7 @@ class DateTimeSeparatedField extends StatelessWidget {
 
     return LabelledBox(
       fieldBody: body,
-      heightProbeConfig: heightProbeConfig,
+      editingAreaConfig: heightProbeConfig,
       borderType: borderType,
       outerLabelConfig: outerLabelConfig,
       sideLabelTopOffset: sideLabelTopOffset,

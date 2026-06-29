@@ -11,7 +11,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/base/compound_widget_st
 import 'package:flutter_form_bricks/src/form_fields/text/base/labelled_box.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_decoration_maker.dart';
-import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_height_cache_key.dart';
+import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_editing_area_config.dart';
 
 enum TextFieldBorderType { outline, underline, other }
 
@@ -433,7 +433,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
     final TextFieldBorderType effectiveBorderType = _getEffectiveBorderType(decoration);
 
-    final TextFieldHeightProbeConfig heightProbeConfig = TextFieldHeightProbeConfig.create(
+    final TextFieldEditingAreaConfig heightProbeConfig = TextFieldEditingAreaConfig.create(
       context: context,
       decoration: decoration,
       config: widget.textFieldConfig,
@@ -443,7 +443,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
     return LabelledBox(
       fieldBody: textField,
-      heightProbeConfig: heightProbeConfig,
+      editingAreaConfig: heightProbeConfig,
       outerLabelConfig: widget.outerLabelConfig,
       buttonConfig: widget.buttonConfig,
       numberOfButtons: widget.buttonConfig == null ? 0 : 1,

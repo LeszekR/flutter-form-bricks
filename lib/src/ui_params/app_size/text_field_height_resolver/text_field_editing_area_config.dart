@@ -4,7 +4,7 @@ import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
 
 @immutable
-class TextFieldHeightProbeConfig extends Equatable {
+class TextFieldEditingAreaConfig extends Equatable {
   final InputDecoration decoration;
   final TextStyle style;
   final String? text;
@@ -16,7 +16,7 @@ class TextFieldHeightProbeConfig extends Equatable {
   final int? minLines;
   final int? maxLines;
 
-  const TextFieldHeightProbeConfig._({
+  const TextFieldEditingAreaConfig._({
     required this.decoration,
     required this.style,
     required this.text,
@@ -29,7 +29,7 @@ class TextFieldHeightProbeConfig extends Equatable {
     this.maxLines,
   });
 
-  static TextFieldHeightProbeConfig create({
+  static TextFieldEditingAreaConfig create({
     required BuildContext context,
     required TextFieldConfig config,
     required InputDecoration decoration,
@@ -47,7 +47,7 @@ class TextFieldHeightProbeConfig extends Equatable {
       effectiveText = 'Ay';
     }
 
-    return TextFieldHeightProbeConfig._(
+    return TextFieldEditingAreaConfig._(
       decoration: decoration.withoutBottomWidgets(),
       style: config.style ?? UiParams.of(context).appTheme.textStyle(),
       text: effectiveText,

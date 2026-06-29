@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/widget_height_cache.dart';
-import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_height_cache_key.dart';
+import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_editing_area_config.dart';
 
 abstract class AppSize {
   AppSize({required this.zoom});
@@ -8,7 +9,7 @@ abstract class AppSize {
   /// Base scaling factor (from AppScale, or const 1.0 if no scaling)
   double zoom;
 
-  double? getHeightOfInputDecoratorEditArea(TextFieldHeightProbeConfig cacheKey){
+  double? getCachedWidgetHeight({required Equatable cacheKey}){
     return WidgetHeightCache.getHeight(cacheKey);
   }
 
