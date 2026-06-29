@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_height_cache_key.dart';
 
-class TextFieldHeightCache {
+class WidgetHeightCache {
   static final Map<Equatable, double> _cache = {};
   static final Set<Equatable> _processedKeys = {};
 

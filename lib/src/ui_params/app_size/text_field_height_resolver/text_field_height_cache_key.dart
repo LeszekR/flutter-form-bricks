@@ -61,36 +61,6 @@ class TextFieldHeightProbeConfig extends Equatable {
     );
   }
 
-  // @override
-  // bool operator ==(Object other) {
-  //   return identical(this, other) ||
-  //       other is TextFieldHeightProbeConfig &&
-  //           decoration.hasSameInputDecoratorHeightAs(other.decoration) &&
-  //           style == other.style &&
-  //           text == other.text &&
-  //           expands == other.expands &&
-  //           strutStyle == other.strutStyle &&
-  //           width == other.width &&
-  //           minLines == other.minLines &&
-  //           maxLines == other.maxLines &&
-  //           textScaleFactor == other.textScaleFactor &&
-  //           useMaterial3 == other.useMaterial3;
-  // }
-  //
-  // @override
-  // int get hashCode => Object.hash(
-  //       decoration.inputDecoratorHeightHash,
-  //       style,
-  //       text,
-  //       expands,
-  //       strutStyle,
-  //       width,
-  //       minLines,
-  //       maxLines,
-  //       textScaleFactor,
-  //       useMaterial3,
-  //     );
-  //
   @override
   List<Object?> get props => [
         decoration.inputDecoratorHeightHash,

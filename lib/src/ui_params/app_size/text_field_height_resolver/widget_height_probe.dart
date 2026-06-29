@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_height_cache.dart';
+import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/widget_height_cache.dart';
 
 class WidgetHeightProbe extends StatefulWidget {
   final Equatable cacheKey;
@@ -31,11 +31,11 @@ class _WidgetHeightProbeState extends State<WidgetHeightProbe> {
 
   @override
   Widget build(BuildContext context) {
-    if (TextFieldHeightCache.isBeingMeasured(widget.cacheKey)) {
+    if (WidgetHeightCache.isBeingMeasured(widget.cacheKey)) {
       return const _OffstageDummy();
     }
 
-    TextFieldHeightCache.startMeasuring(widget.cacheKey);
+    WidgetHeightCache.startMeasuring(widget.cacheKey);
 
     return Offstage(
       child: Material(
@@ -47,7 +47,7 @@ class _WidgetHeightProbeState extends State<WidgetHeightProbe> {
 
   void _measure() {
     // Check - another widget might have already finished the measure process
-    double? height = TextFieldHeightCache.getHeight(widget.cacheKey);
+    double? height = WidgetHeightCache.getHeight(widget.cacheKey);
 
     // Not measured yet - do it now
     if (height == null) {
@@ -55,7 +55,7 @@ class _WidgetHeightProbeState extends State<WidgetHeightProbe> {
 
       if (height == null) return;
 
-      TextFieldHeightCache.putHeight(widget.cacheKey, height);
+      WidgetHeightCache.putHeight(widget.cacheKey, height);
     }
 
     // set the height in the widget waiting for the value
@@ -74,5 +74,5 @@ class _WidgetHeightProbeState extends State<WidgetHeightProbe> {
 }
 
 class _OffstageDummy extends Offstage {
-  const _OffstageDummy({super.key}) : super(child: const SizedBox());
+  const _OffstageDummy() : super(child: const SizedBox());
 }
