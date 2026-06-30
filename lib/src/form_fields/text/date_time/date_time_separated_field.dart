@@ -14,6 +14,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/da
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_required_fields.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/time_picker.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/date_time_separate_fields_formatter_validator.dart';
+import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_bottom_space_config.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_editing_area_config.dart';
 
 class DateTimeSeparatedFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime, DateTimeSeparatedField> {
@@ -444,9 +445,11 @@ class DateTimeSeparatedField extends StatelessWidget {
       null => 0,
     };
 
+
     return LabelledBox(
       fieldBody: body,
       editingAreaConfig: heightProbeConfig,
+      bottomSpaceConfig: const TextFieldBottomSpaceConfig.empty(),
       borderType: borderType,
       outerLabelConfig: outerLabelConfig,
       sideLabelTopOffset: sideLabelTopOffset,
@@ -467,11 +470,12 @@ class DateTimeSeparatedField extends StatelessWidget {
       inputDecoration: dateTextFieldConfig.decoration,
       buttonConfig: !withDateTimePicker
           ? null
-          : pickerButtonConfig ?? const TextFieldButtonConfig(
-                  iconData: Icons.arrow_drop_down,
-                  buttonPosition: ButtonPosition.right,
-                  tooltipMaker: DatePicker.datePickerTooltipMaker,
-                ),
+          : pickerButtonConfig ??
+              const TextFieldButtonConfig(
+                iconData: Icons.arrow_drop_down,
+                buttonPosition: ButtonPosition.right,
+                tooltipMaker: DatePicker.datePickerTooltipMaker,
+              ),
       outerLabelConfig: dateOuterLabelConfig,
       borderType: borderType,
       errorPosition: errorPosition,

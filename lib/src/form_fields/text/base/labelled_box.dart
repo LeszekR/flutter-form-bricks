@@ -58,21 +58,27 @@ class LabelledBox extends StatefulWidget {
 
 class LabelledBoxState extends State<LabelledBox> {
   double? _textEditingAreaHeight;
-  double? _errorHeight;
-  double? _helperHeight;
-  double? _counterHeight;
+  double? _bottomSpaceAreaHeight;
+  double _errorHeight = 0;
+  double _helperHeight = 0;
+  double _counterHeight = 0;
 
   void _setTextEditingAreaHeight(double? height) =>
       _textEditingAreaHeight = height == null ? null : height / UiParams.of(context).appSize.zoom;
 
   void _setErrorHeight(double? height) =>
-      _errorHeight = height == null ? null : height / UiParams.of(context).appSize.zoom;
+      _errorHeight = height == null ? 0 : height / UiParams.of(context).appSize.zoom;
 
   void _setHelperHeight(double? height) =>
-      _helperHeight = height == null ? null : height / UiParams.of(context).appSize.zoom;
+      _helperHeight = height == null ? 0 : height / UiParams.of(context).appSize.zoom;
 
   void _setCounterHeight(double? height) =>
-      _counterHeight = height == null ? null : height / UiParams.of(context).appSize.zoom;
+      _counterHeight = height == null ? 0 : height / UiParams.of(context).appSize.zoom;
+
+  double get bottomSpaceAreaHeight {
+    _bottomSpaceAreaHeight ??= max(_errorHeight, max(_helperHeight, _counterHeight));
+    return _bottomSpaceAreaHeight!;
+  }
 
   @override
   void didChangeDependencies() {
@@ -93,9 +99,16 @@ class LabelledBoxState extends State<LabelledBox> {
 
       // Get height of the editable text area of InputDecorator
       // If ever Flutter exposes API for this - refactor and get rid of the TextFieldHeightProbe use
-      if (_textEditingAreaHeight == null) {
+      if (_textEditingAreaHeight == null || _bottomSpaceAreaHeight == null) {
         WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
-        return _buildHeightMeasuringProbes();
+        return _buildHeightMeasuringProbes(
+          widget.editingAreaConfig,
+          widget.bottomSpaceConfig,
+          _setTextEditingAreaHeight,
+          _setErrorHeight,
+          _setHelperHeight,
+          _setCounterHeight,
+        );
       }
     }
 
@@ -153,44 +166,49 @@ class LabelledBoxState extends State<LabelledBox> {
     );
   }
 
-  Column _buildHeightMeasuringProbes() {
+  static Column _buildHeightMeasuringProbes(
+    TextFieldEditingAreaConfig editingAreaConfig,
+    TextFieldBottomSpaceConfig bottomSpaceConfig,
+    ValueChanged<double> setTextEditingAreaHeight,
+    ValueChanged<double> setErrorHeight,
+    ValueChanged<double> setHelperHeight,
+    ValueChanged<double> setCounterHeight,
+  ) {
     List<Widget> children = [];
     children.add(
       WidgetHeightProbe(
-        cacheKey: widget.editingAreaConfig,
-        measuredWidgetBuilder: _buildChild,
-        onMeasured: _setTextEditingAreaHeight,
+        cacheKey: editingAreaConfig,
+        measuredWidgetBuilder: (context) => _buildTextFieldEditingArea(editingAreaConfig),
+        onMeasured: setTextEditingAreaHeight,
       ),
     );
 
-    TextFieldBottomSpaceConfig bottomSpaceConfig = widget.bottomSpaceConfig;
-
     if (bottomSpaceConfig.errorConfig != null) {
-      children.add(_addHeightProbe(bottomSpaceConfig.errorConfig, _setErrorHeight));
+      children.add(_addBottomHeightProbe(bottomSpaceConfig.errorConfig, setErrorHeight));
     }
     if (bottomSpaceConfig.helperConfig != null) {
-      children.add(_addHeightProbe(bottomSpaceConfig.helperConfig, _setHelperHeight));
+      children.add(_addBottomHeightProbe(bottomSpaceConfig.helperConfig, setHelperHeight));
     }
     if (bottomSpaceConfig.counterConfig != null) {
-      children.add(_addHeightProbe(bottomSpaceConfig.counterConfig, _setErrorHeight));
+      children.add(_addBottomHeightProbe(bottomSpaceConfig.counterConfig, setErrorHeight));
     }
 
     return Column(children: children);
   }
 
-  Widget _addHeightProbe(
-    TextFieldElementConfig? bottomSpaceConfig,
+  static Widget _addBottomHeightProbe(
+    TextFieldBottomWidgetConfig? bottomWidgetConfig,
     ValueChanged<double> onMeasured,
   ) {
-    if (bottomSpaceConfig?.widget != null) {
+    if (bottomWidgetConfig?.widget != null) {
       return WidgetHeightProbe(
-        cacheKey: bottomSpaceConfig!,
-        measuredWidgetBuilder: (context) => bottomSpaceConfig.widget!,
+        cacheKey: bottomWidgetConfig!,
+        measuredWidgetBuilder: (context) => bottomWidgetConfig.widget!,
         onMeasured: onMeasured,
       );
     } else {
       return WidgetHeightProbe(
-        cacheKey: bottomSpaceConfig!,
+        cacheKey: bottomWidgetConfig!,
         measuredWidgetBuilder: (context) => const Text('Ay'),
         onMeasured: onMeasured,
       );
@@ -350,17 +368,17 @@ class LabelledBoxState extends State<LabelledBox> {
     );
   }
 
-  SizedBox _buildChild(BuildContext context) {
+  static SizedBox _buildTextFieldEditingArea(TextFieldEditingAreaConfig editingAreaConfig) {
     return SizedBox(
-      width: widget.editingAreaConfig.width,
+      width: editingAreaConfig.width,
       child: TextField(
-        controller: TextEditingController(text: widget.editingAreaConfig.text),
-        decoration: widget.editingAreaConfig.decoration,
-        style: widget.editingAreaConfig.style,
-        expands: widget.editingAreaConfig.expands,
-        strutStyle: widget.editingAreaConfig.strutStyle,
-        minLines: widget.editingAreaConfig.minLines,
-        maxLines: widget.editingAreaConfig.maxLines,
+        controller: TextEditingController(text: editingAreaConfig.text),
+        decoration: editingAreaConfig.decoration,
+        style: editingAreaConfig.style,
+        expands: editingAreaConfig.expands,
+        strutStyle: editingAreaConfig.strutStyle,
+        minLines: editingAreaConfig.minLines,
+        maxLines: editingAreaConfig.maxLines,
       ),
     );
   }

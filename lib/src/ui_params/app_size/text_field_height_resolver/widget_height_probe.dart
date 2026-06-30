@@ -24,14 +24,16 @@ class _WidgetHeightProbeState extends State<WidgetHeightProbe> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _measure();
-    });
+    if (!WidgetHeightCache.isMeasured(widget.cacheKey)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _measure();
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (WidgetHeightCache.isBeingMeasured(widget.cacheKey)) {
+    if (WidgetHeightCache.isMeasured(widget.cacheKey)) {
       return const _OffstageDummy();
     }
 

@@ -16,7 +16,7 @@ class WidgetHeightCache {
     _processedKeys.add(key);
   }
 
-  static bool isBeingMeasured(Equatable key) {
+  static bool isMeasured(Equatable key) {
     return _processedKeys.contains(key);
   }
 }

@@ -11,6 +11,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/base/compound_widget_st
 import 'package:flutter_form_bricks/src/form_fields/text/base/labelled_box.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_decoration_maker.dart';
+import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_bottom_space_config.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_editing_area_config.dart';
 
 enum TextFieldBorderType { outline, underline, other }
@@ -433,7 +434,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
     final TextFieldBorderType effectiveBorderType = _getEffectiveBorderType(decoration);
 
-    final TextFieldEditingAreaConfig heightProbeConfig = TextFieldEditingAreaConfig.create(
+    final TextFieldEditingAreaConfig editingAreaConfig = TextFieldEditingAreaConfig.create(
       context: context,
       decoration: decoration,
       config: widget.textFieldConfig,
@@ -441,9 +442,28 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       text: textEditingController.text,
     );
 
+    final TextFieldBottomSpaceConfig bottomSpaceConfig = TextFieldBottomSpaceConfig(
+      errorConfig: TextFieldBottomWidgetConfig(
+        text: errorText,
+        widget: widget.errorBuilder?.call(context, errorText ?? ''),
+        textStyle: decoration.errorStyle,
+      ),
+      helperConfig: TextFieldBottomWidgetConfig(
+        text: decoration.helperText,
+        widget: null,
+        textStyle: decoration.helperStyle,
+      ),
+      counterConfig: TextFieldBottomWidgetConfig(
+        text: decoration.counterText,
+        widget: null,
+        textStyle: decoration.counterStyle,
+      ),
+    );
+
     return LabelledBox(
       fieldBody: textField,
-      editingAreaConfig: heightProbeConfig,
+      editingAreaConfig: editingAreaConfig,
+      bottomSpaceConfig: bottomSpaceConfig,
       outerLabelConfig: widget.outerLabelConfig,
       buttonConfig: widget.buttonConfig,
       numberOfButtons: widget.buttonConfig == null ? 0 : 1,

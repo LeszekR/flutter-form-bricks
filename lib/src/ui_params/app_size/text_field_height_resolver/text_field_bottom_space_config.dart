@@ -2,15 +2,17 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class TextFieldBottomSpaceConfig extends Equatable {
-  final TextFieldElementConfig? errorConfig;
-  final TextFieldElementConfig? helperConfig;
-  final TextFieldElementConfig? counterConfig;
+  final TextFieldBottomWidgetConfig? errorConfig;
+  final TextFieldBottomWidgetConfig? helperConfig;
+  final TextFieldBottomWidgetConfig? counterConfig;
 
   const TextFieldBottomSpaceConfig({
     required this.errorConfig,
     required this.helperConfig,
     required this.counterConfig,
   });
+
+  const TextFieldBottomSpaceConfig.empty() : errorConfig = null, helperConfig = null, counterConfig = null;
 
   @override
   List<Object?> get props => [
@@ -20,12 +22,12 @@ class TextFieldBottomSpaceConfig extends Equatable {
       ];
 }
 
-class TextFieldElementConfig extends Equatable {
+class TextFieldBottomWidgetConfig extends Equatable {
   final String? text;
   final Widget? widget;
   final TextStyle? textStyle;
 
-  const TextFieldElementConfig({
+  const TextFieldBottomWidgetConfig({
     required this.text,
     required this.widget,
     required this.textStyle,
