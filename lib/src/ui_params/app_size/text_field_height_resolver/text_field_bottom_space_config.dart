@@ -12,7 +12,10 @@ class TextFieldBottomSpaceConfig extends Equatable {
     required this.counterConfig,
   });
 
-  const TextFieldBottomSpaceConfig.empty() : errorConfig = null, helperConfig = null, counterConfig = null;
+  const TextFieldBottomSpaceConfig.empty()
+      : errorConfig = null,
+        helperConfig = null,
+        counterConfig = null;
 
   @override
   List<Object?> get props => [
@@ -22,7 +25,7 @@ class TextFieldBottomSpaceConfig extends Equatable {
       ];
 }
 
-class TextFieldBottomWidgetConfig extends Equatable {
+abstract class TextFieldBottomWidgetConfig extends Equatable {
   final String? text;
   final Widget? widget;
   final TextStyle? textStyle;
@@ -39,4 +42,16 @@ class TextFieldBottomWidgetConfig extends Equatable {
         widget,
         textStyle,
       ];
+}
+
+class ErrorWidgetConfig extends TextFieldBottomWidgetConfig {
+  const ErrorWidgetConfig({required super.text, required super.widget, required super.textStyle});
+}
+
+class HelperWidgetConfig extends TextFieldBottomWidgetConfig {
+  const HelperWidgetConfig({required super.text, required super.widget, required super.textStyle});
+}
+
+class CounterWidgetConfig extends TextFieldBottomWidgetConfig {
+  const CounterWidgetConfig({required super.text, required super.widget, required super.textStyle});
 }

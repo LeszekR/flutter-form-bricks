@@ -443,17 +443,17 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     );
 
     final TextFieldBottomSpaceConfig bottomSpaceConfig = TextFieldBottomSpaceConfig(
-      errorConfig: TextFieldBottomWidgetConfig(
+      errorConfig: ErrorWidgetConfig(
         text: errorText,
         widget: widget.errorBuilder?.call(context, errorText ?? ''),
         textStyle: decoration.errorStyle,
       ),
-      helperConfig: TextFieldBottomWidgetConfig(
+      helperConfig: HelperWidgetConfig(
         text: decoration.helperText,
         widget: null,
         textStyle: decoration.helperStyle,
       ),
-      counterConfig: TextFieldBottomWidgetConfig(
+      counterConfig: CounterWidgetConfig(
         text: decoration.counterText,
         widget: null,
         textStyle: decoration.counterStyle,
@@ -469,6 +469,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       numberOfButtons: widget.buttonConfig == null ? 0 : 1,
       borderType: effectiveBorderType,
       width: _width,
+      errorPosition: widget.errorPosition,
       targetFocusNode: focusNode,
       compoundWidgetStatesController: _compoundWidgetStatesController,
       onButtonTap: onButtonTap,
