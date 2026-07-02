@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/compound_widget_states_controller.dart';
@@ -75,6 +76,7 @@ class LabelledBoxState extends State<LabelledBox> {
 
   double get totalTextFieldHeight {
     _totalTextFieldHeight ??= max(_heightWithError, max(_heightWithHelper, _heightWithCounter));
+    // TU PRZERWAŁEM: bugs in measuring - heights are often 0 - must never be
     return _totalTextFieldHeight!;
   }
 
@@ -111,9 +113,9 @@ class LabelledBoxState extends State<LabelledBox> {
     }
 
     // Once we have height of the editable text area of InputDecorator - we build LabelledBox
-    final Widget fieldBody = _buildTextField(
+    final Widget sizedFieldBody = _buildTextField(
       context,
-      widget.editingAreaConfig,
+      widget.fieldBody,
       widget.errorPosition,
       totalTextFieldHeight,
     );
@@ -128,7 +130,7 @@ class LabelledBoxState extends State<LabelledBox> {
     else {
       bodyWithButton = _addButton(
         context: context,
-        fieldBody: widget.fieldBody,
+        fieldBody: sizedFieldBody,
         measuredHeight: _textEditingAreaHeight!,
         buttonConfig: widget.buttonConfig!,
         textFieldBorderType: widget.borderType,
@@ -180,65 +182,59 @@ class LabelledBoxState extends State<LabelledBox> {
     ValueChanged<double> setCounterHeight,
   ) {
     List<Widget> children = [];
-    children.add(
-      WidgetHeightProbe(
-        cacheKey: editingAreaConfig,
-        measuredWidgetBuilder: (context) => _buildTextFieldEditingArea(editingAreaConfig),
-        onMeasured: setTextEditingAreaHeight,
-      ),
-    );
+    TextFieldBottomWidgetConfig? config;
 
-    if (bottomSpaceConfig.errorConfig != null) {
-      children.add(_buildBottomHeightProbe(editingAreaConfig, bottomSpaceConfig.errorConfig, setErrorHeight));
-    }
-    if (bottomSpaceConfig.helperConfig != null) {
-      children.add(_buildBottomHeightProbe(editingAreaConfig, bottomSpaceConfig.helperConfig, setHelperHeight));
-    }
-    if (bottomSpaceConfig.counterConfig != null) {
-      children.add(_buildBottomHeightProbe(editingAreaConfig, bottomSpaceConfig.counterConfig, setErrorHeight));
-    }
+    children.add(_buildHeightProbe(editingAreaConfig, editingAreaConfig, null, setTextEditingAreaHeight));
+
+    config = bottomSpaceConfig.errorConfig;
+    if (config != null) children.add(_buildHeightProbe(config, editingAreaConfig, config, setErrorHeight));
+
+    config = bottomSpaceConfig.helperConfig;
+    if (config != null) children.add(_buildHeightProbe(config, editingAreaConfig, config, setHelperHeight));
+
+    config = bottomSpaceConfig.counterConfig;
+    if (config != null) children.add(_buildHeightProbe(config, editingAreaConfig, config, setCounterHeight));
 
     return Column(children: children);
   }
 
-  static WidgetHeightProbe _buildBottomHeightProbe(
+  static SizedBox _buildHeightProbe(
+    Equatable cacheKey,
     TextFieldEditingAreaConfig editingAreaConfig,
     TextFieldBottomWidgetConfig? bottomWidgetConfig,
     ValueChanged<double> onMeasured,
   ) {
-    if (bottomWidgetConfig?.widget != null) {
-      return WidgetHeightProbe(
-        cacheKey: bottomWidgetConfig!,
+    return SizedBox(
+      width: editingAreaConfig.width ?? 500,
+      child: WidgetHeightProbe(
+        cacheKey: cacheKey,
         measuredWidgetBuilder: (context) => _buildTextFieldForMeasuring(editingAreaConfig, bottomWidgetConfig),
         onMeasured: onMeasured,
-      );
-    } else {
-      return WidgetHeightProbe(
-        cacheKey: bottomWidgetConfig!,
-        measuredWidgetBuilder: (context) => const Text('Ay'),
-        onMeasured: onMeasured,
-      );
-    }
+      ),
+    );
   }
 
   static Widget _buildTextFieldForMeasuring(
     TextFieldEditingAreaConfig editingAreaConfig,
-    TextFieldBottomWidgetConfig bottomWidgetConfig,
+    TextFieldBottomWidgetConfig? bottomWidgetConfig,
   ) {
-    return TextField(
-      controller: TextEditingController(text: editingAreaConfig.text),
-      decoration: _copyInputDecoration(editingAreaConfig, bottomWidgetConfig),
-      style: editingAreaConfig.style,
-      expands: editingAreaConfig.expands,
-      strutStyle: editingAreaConfig.strutStyle,
-      minLines: editingAreaConfig.minLines,
-      maxLines: editingAreaConfig.maxLines,
+    return SizedBox(
+      width: editingAreaConfig.width ?? 500,
+      child: TextField(
+        controller: TextEditingController(text: editingAreaConfig.text),
+        decoration: _copyInputDecoration(editingAreaConfig, bottomWidgetConfig),
+        style: editingAreaConfig.style,
+        expands: editingAreaConfig.expands,
+        strutStyle: editingAreaConfig.strutStyle,
+        minLines: editingAreaConfig.minLines,
+        maxLines: editingAreaConfig.maxLines,
+      ),
     );
   }
 
   static InputDecoration _copyInputDecoration(
     TextFieldEditingAreaConfig editingAreaConfig,
-    TextFieldBottomWidgetConfig bottomWidgetConfig,
+    TextFieldBottomWidgetConfig? bottomWidgetConfig,
   ) {
     final withError = bottomWidgetConfig is ErrorWidgetConfig;
     final withHelper = bottomWidgetConfig is HelperWidgetConfig;
@@ -433,39 +429,26 @@ class LabelledBoxState extends State<LabelledBox> {
   }
 
   static Widget _buildTextField(
-      BuildContext context,
-    TextFieldEditingAreaConfig editingAreaConfig,
+    BuildContext context,
+    Widget fieldBody,
     ErrorPosition? errorPosition,
     double totalTextFieldHeight,
   ) {
-    if (errorPosition != null && errorPosition == ErrorPosition.fixedSpaceBelowField) {
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 0,
-            // TU PRZERWAŁEM - still height jumps on change between error and helper in "data 4 fixed space"
-            height: totalTextFieldHeight * UiParams.of(context).appSize.zoom,
-          ),
-          _buildTextFieldEditingArea(editingAreaConfig),
-        ],
-      );
+    //
+    if (errorPosition == null || errorPosition != ErrorPosition.fixedSpaceBelowField) {
+      return fieldBody;
     }
-    return _buildTextFieldEditingArea(editingAreaConfig);
-  }
 
-  static SizedBox _buildTextFieldEditingArea(TextFieldEditingAreaConfig editingAreaConfig) {
-    return SizedBox(
-      width: editingAreaConfig.width,
-      child: TextField(
-        controller: TextEditingController(text: editingAreaConfig.text),
-        decoration: editingAreaConfig.decoration,
-        style: editingAreaConfig.style,
-        expands: editingAreaConfig.expands,
-        strutStyle: editingAreaConfig.strutStyle,
-        minLines: editingAreaConfig.minLines,
-        maxLines: editingAreaConfig.maxLines,
-      ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 0,
+          // TU PRZERWAŁEM - still height jumps on change between error and helper in "data 4 fixed space"
+          height: totalTextFieldHeight * UiParams.of(context).appSize.zoom,
+        ),
+        Expanded(child: fieldBody),
+      ],
     );
   }
 }
