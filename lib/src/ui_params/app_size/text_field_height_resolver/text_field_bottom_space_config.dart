@@ -29,11 +29,13 @@ abstract class TextFieldBottomWidgetConfig extends Equatable {
   final String? text;
   final Widget? widget;
   final TextStyle? textStyle;
+  final int? errorMaxLines;
 
   const TextFieldBottomWidgetConfig({
     required this.text,
     required this.widget,
     required this.textStyle,
+    this.errorMaxLines
   });
 
   @override
@@ -41,11 +43,12 @@ abstract class TextFieldBottomWidgetConfig extends Equatable {
         text,
         widget,
         textStyle,
+        errorMaxLines,
       ];
 }
 
 class ErrorWidgetConfig extends TextFieldBottomWidgetConfig {
-  const ErrorWidgetConfig({required super.text, required super.widget, required super.textStyle});
+  const ErrorWidgetConfig({required super.text, required super.widget, required super.textStyle, super.errorMaxLines});
 }
 
 class HelperWidgetConfig extends TextFieldBottomWidgetConfig {

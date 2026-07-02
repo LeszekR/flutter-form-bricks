@@ -447,6 +447,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         text: errorText,
         widget: widget.errorBuilder?.call(context, errorText ?? ''),
         textStyle: decoration.errorStyle,
+        errorMaxLines: decoration.errorMaxLines,
       ),
       helperConfig: HelperWidgetConfig(
         text: decoration.helperText,

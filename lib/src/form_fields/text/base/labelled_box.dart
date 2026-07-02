@@ -261,12 +261,13 @@ class LabelledBoxState extends State<LabelledBox> {
       fillColor: srcDecoration.fillColor,
       //
       error: withError ? bottomWidgetConfig.widget : null,
+      errorStyle: withError ? bottomWidgetConfig.textStyle : null,
+      errorMaxLines: withError ? bottomWidgetConfig.errorMaxLines : null,
       errorText: withError
           ? bottomWidgetConfig.widget == null
               ? 'Ay'
               : null
           : null,
-      errorStyle: withError ? bottomWidgetConfig.textStyle : null,
       //
       helper: withHelper ? bottomWidgetConfig.widget : null,
       helperText: withHelper ? bottomWidgetConfig.text : null,
