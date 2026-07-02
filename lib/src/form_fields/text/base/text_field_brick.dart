@@ -196,10 +196,6 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
           'inputDecoration.prefix, inputDecoration.prefixText, or inputDecoration.prefixIcon (keyString: $keyString).',
         ),
         assert(
-          inputDecoration?.error == null || inputDecoration?.errorText == null,
-          'Only one can be declared: inputDecoration.error or inputDecoration.errorText (keyString: $keyString).',
-        ),
-        assert(
           inputDecoration?.hint == null || inputDecoration?.hintText == null,
           'Only one can be declared: inputDecoration.hint or inputDecoration.hintText (keyString: $keyString).',
         ),
@@ -239,7 +235,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
           inputDecoration?.error == null && inputDecoration?.errorText == null,
           'Do not declare InputDecoration.error or InputDecoration.errorText. '
           'Validation errors are managed by TextFieldBrick. '
-          'Use TextFieldBrick.errorBuilder to customize validation error UI.',
+          'Use TextFieldBrick.errorBuilder to customize validation error UI. (keyString: $keyString).',
         ),
         assert(
             (errorPosition == ErrorPosition.never || errorPosition == ErrorPosition.formErrorArea)
@@ -332,6 +328,8 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
   late final WidgetStatesController? _statesController;
   TextEditingValue? oldValue;
   late final bool _showErrorBelowField;
+  late TextFieldEditingAreaConfig editingAreaConfig;
+  late TextFieldBottomSpaceConfig bottomSpaceConfig;
 
   void onButtonTap() => throw UnimplementedError('onButtonTap not implemented');
 
@@ -427,7 +425,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       errorPosition: widget.errorPosition,
       buttonConfig: widget.buttonConfig,
       errorBuilder: widget.errorBuilder,
-      states: _getStates(),
+      states: _updateAndGetStates(),
       errorText: _showErrorBelowField ? errorText : null,
     );
     final TextField textField = _makeTextField(textEditingController, decoration, _style);
@@ -577,7 +575,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     );
   }
 
-  Set<WidgetState>? _getStates() {
+  Set<WidgetState>? _updateAndGetStates() {
     var isError = errorText != null && errorText!.isNotEmpty;
     if (_compoundWidgetStatesController != null) {
       _compoundWidgetStatesController!.fieldStatesSink.setError(isError);
