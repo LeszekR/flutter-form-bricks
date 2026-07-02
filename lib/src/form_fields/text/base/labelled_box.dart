@@ -65,6 +65,7 @@ class LabelledBoxState extends State<LabelledBox> {
   double _heightWithError = 0;
   double _heightWithHelper = 0;
   double _heightWithCounter = 0;
+  final List<TextEditingController> controllers = [];
 
   void _setHeightOfTextEditingArea(double? height) => _textEditingAreaHeight = height;
 
@@ -76,14 +77,14 @@ class LabelledBoxState extends State<LabelledBox> {
 
   double get totalTextFieldHeight {
     _totalTextFieldHeight ??= max(_heightWithError, max(_heightWithHelper, _heightWithCounter));
-    // TU PRZERWAŁEM: bugs in measuring - heights are often 0 - must never be
     return _totalTextFieldHeight!;
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _setHeightOfTextEditingArea(null);
+    _textEditingAreaHeight = null;
+    _totalTextFieldHeight = null;
   }
 
   @override
@@ -101,23 +102,30 @@ class LabelledBoxState extends State<LabelledBox> {
     if (_textEditingAreaHeight == null && (measureForButton || measureForOuterLabel || measureForBottomSpace)) {
       _setHeightOfTextEditingArea(appSize.getCachedWidgetHeight(cacheKey: widget.editingAreaConfig));
 
-      // Get height of the editable text area of InputDecorator
-      // If ever Flutter exposes API for this - refactor and get rid of the TextFieldHeightProbe use
-      if (_textEditingAreaHeight == null || _totalTextFieldHeight == null) {
-        WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+      // Get height of the editable text area of InputDecorator and the total height
+      // of TextField with error/helper/counter - text-s/widget-s if needed for fixedSpaceBelowField.
+      // If ever Flutter exposes API for getting the heights - refactor and get rid of the TextFieldHeightProbe use.
+      if (_textEditingAreaHeight == null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          setState(() {});   // now use measured heights and build the LabelledBox
+        });
         return _buildHeightMeasuringProbes(
           widget.editingAreaConfig,
           widget.bottomSpaceConfig,
+          controllers,
           _setHeightOfTextEditingArea,
           _setHeightWithError,
           _setHeightWithHelper,
           _setHeightWithCounter,
         );
+      } else {
+        _disposeControllers(controllers);
       }
     }
 
     // Once we have height of the editable text area of InputDecorator - we build LabelledBox
-    final Widget sizedFieldBody = _buildTextField(
+    final Widget sizedFieldBody = _wrapTextFieldWithFixedBottomSpace(
       context,
       widget.fieldBody,
       widget.errorPosition,
@@ -128,7 +136,7 @@ class LabelledBoxState extends State<LabelledBox> {
 
     // no button
     if (widget.buttonConfig == null || widget.targetFocusNode == null) {
-      bodyWithButton = widget.fieldBody;
+      bodyWithButton = sizedFieldBody;
     }
     // with button
     else {
@@ -177,9 +185,17 @@ class LabelledBoxState extends State<LabelledBox> {
     );
   }
 
+  static void _disposeControllers(List<TextEditingController> controllers) {
+    for (final TextEditingController controller in controllers) {
+      controller.dispose();
+    }
+    controllers.clear();
+  }
+
   static Column _buildHeightMeasuringProbes(
     TextFieldEditingAreaConfig editingAreaConfig,
     TextFieldBottomSpaceConfig bottomSpaceConfig,
+    List<TextEditingController> controllers,
     ValueChanged<double> setTextEditingAreaHeight,
     ValueChanged<double> setHeightWithError,
     ValueChanged<double> setHeightWithHelper,
@@ -188,18 +204,24 @@ class LabelledBoxState extends State<LabelledBox> {
     List<Widget> children = [];
     TextFieldBottomWidgetConfig? config;
 
-    children.add(_buildHeightProbe(editingAreaConfig, editingAreaConfig, null, setTextEditingAreaHeight));
+    children.add(_buildHeightProbe(editingAreaConfig, editingAreaConfig, null, setTextEditingAreaHeight, controllers));
 
     config = bottomSpaceConfig.errorConfig;
-    if (config != null) children.add(_buildHeightProbe(config, editingAreaConfig, config, setHeightWithError));
+    if (config != null) {
+      children.add(_buildHeightProbe(config, editingAreaConfig, config, setHeightWithError, controllers));
+    }
 
     config = bottomSpaceConfig.helperConfig;
-    if (config != null) children.add(_buildHeightProbe(config, editingAreaConfig, config, setHeightWithHelper));
+    if (config != null) {
+      children.add(_buildHeightProbe(config, editingAreaConfig, config, setHeightWithHelper, controllers));
+    }
 
     config = bottomSpaceConfig.counterConfig;
-    if (config != null) children.add(_buildHeightProbe(config, editingAreaConfig, config, setHeightWithCounter));
+    if (config != null) {
+      children.add(_buildHeightProbe(config, editingAreaConfig, config, setHeightWithCounter, controllers));
+    }
 
-    return Column(children: children);
+    return Column(mainAxisSize: MainAxisSize.min, children: children);
   }
 
   static SizedBox _buildHeightProbe(
@@ -207,12 +229,14 @@ class LabelledBoxState extends State<LabelledBox> {
     TextFieldEditingAreaConfig editingAreaConfig,
     TextFieldBottomWidgetConfig? bottomWidgetConfig,
     ValueChanged<double> onMeasured,
+    List<TextEditingController> controllers,
   ) {
     return SizedBox(
       width: editingAreaConfig.width ?? 500,
       child: WidgetHeightProbe(
         cacheKey: cacheKey,
-        measuredWidgetBuilder: (context) => _buildTextFieldForMeasuring(editingAreaConfig, bottomWidgetConfig),
+        measuredWidgetBuilder: (context) =>
+            _buildTextFieldForMeasuring(editingAreaConfig, bottomWidgetConfig, controllers),
         onMeasured: onMeasured,
       ),
     );
@@ -221,11 +245,14 @@ class LabelledBoxState extends State<LabelledBox> {
   static Widget _buildTextFieldForMeasuring(
     TextFieldEditingAreaConfig editingAreaConfig,
     TextFieldBottomWidgetConfig? bottomWidgetConfig,
+    List<TextEditingController> controllers,
   ) {
+    final controller = TextEditingController(text: editingAreaConfig.text);
+    controllers.add(controller);
     return SizedBox(
       width: editingAreaConfig.width ?? 500,
       child: TextField(
-        controller: TextEditingController(text: editingAreaConfig.text),
+        controller: controller,
         decoration: _copyInputDecoration(editingAreaConfig, bottomWidgetConfig),
         style: editingAreaConfig.style,
         expands: editingAreaConfig.expands,
@@ -279,23 +306,21 @@ class LabelledBoxState extends State<LabelledBox> {
     );
   }
 
-  static Widget _buildTextField(
+  static Widget _wrapTextFieldWithFixedBottomSpace(
     BuildContext context,
     Widget fieldBody,
     ErrorPosition? errorPosition,
     double totalTextFieldHeight,
   ) {
+    //
     if (errorPosition == null || errorPosition != ErrorPosition.fixedSpaceBelowField) {
       return fieldBody;
     }
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          width: 0,
-          // TU PRZERWAŁEM - still height jumps on change between error and helper in "data 4 fixed space"
-          height: totalTextFieldHeight * UiParams.of(context).appSize.zoom,
-        ),
+        SizedBox(width: 0, height: totalTextFieldHeight * UiParams.of(context).appSize.zoom), // height pillar, 0 width
         Expanded(child: fieldBody),
       ],
     );
