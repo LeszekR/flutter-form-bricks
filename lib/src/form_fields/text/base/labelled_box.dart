@@ -66,13 +66,13 @@ class LabelledBoxState extends State<LabelledBox> {
   double _heightWithHelper = 0;
   double _heightWithCounter = 0;
 
-  void _setTextEditingAreaHeight(double? height) => _textEditingAreaHeight = height;
+  void _setHeightOfTextEditingArea(double? height) => _textEditingAreaHeight = height;
 
-  void _setErrorHeight(double? height) => _heightWithError = height ?? 0;
+  void _setHeightWithError(double? height) => _heightWithError = height ?? 0;
 
-  void _setHelperHeight(double? height) => _heightWithHelper = height ?? 0;
+  void _setHeightWithHelper(double? height) => _heightWithHelper = height ?? 0;
 
-  void _setCounterHeight(double? height) => _heightWithCounter = height ?? 0;
+  void _setHeightWithCounter(double? height) => _heightWithCounter = height ?? 0;
 
   double get totalTextFieldHeight {
     _totalTextFieldHeight ??= max(_heightWithError, max(_heightWithHelper, _heightWithCounter));
@@ -83,7 +83,7 @@ class LabelledBoxState extends State<LabelledBox> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _setTextEditingAreaHeight(null);
+    _setHeightOfTextEditingArea(null);
   }
 
   @override
@@ -91,11 +91,15 @@ class LabelledBoxState extends State<LabelledBox> {
     final AppSize appSize = UiParams.of(context).appSize;
 
     final bool measureForButton = widget.buttonConfig != null;
-    final bool measureForOuterLabel = widget.outerLabelConfig != null &&
-        (widget.outerLabelConfig!.side == Side.left || widget.outerLabelConfig!.side == Side.right);
 
-    if (_textEditingAreaHeight == null && (measureForButton || measureForOuterLabel)) {
-      _setTextEditingAreaHeight(appSize.getCachedWidgetHeight(cacheKey: widget.editingAreaConfig));
+    final isOuterLabelHorizontal =
+        widget.outerLabelConfig?.side == Side.left || widget.outerLabelConfig?.side == Side.right;
+    final bool measureForOuterLabel = widget.outerLabelConfig != null && isOuterLabelHorizontal;
+
+    final bool measureForBottomSpace = !widget.bottomSpaceConfig.isEmpty;
+
+    if (_textEditingAreaHeight == null && (measureForButton || measureForOuterLabel || measureForBottomSpace)) {
+      _setHeightOfTextEditingArea(appSize.getCachedWidgetHeight(cacheKey: widget.editingAreaConfig));
 
       // Get height of the editable text area of InputDecorator
       // If ever Flutter exposes API for this - refactor and get rid of the TextFieldHeightProbe use
@@ -104,10 +108,10 @@ class LabelledBoxState extends State<LabelledBox> {
         return _buildHeightMeasuringProbes(
           widget.editingAreaConfig,
           widget.bottomSpaceConfig,
-          _setTextEditingAreaHeight,
-          _setErrorHeight,
-          _setHelperHeight,
-          _setCounterHeight,
+          _setHeightOfTextEditingArea,
+          _setHeightWithError,
+          _setHeightWithHelper,
+          _setHeightWithCounter,
         );
       }
     }
@@ -177,9 +181,9 @@ class LabelledBoxState extends State<LabelledBox> {
     TextFieldEditingAreaConfig editingAreaConfig,
     TextFieldBottomSpaceConfig bottomSpaceConfig,
     ValueChanged<double> setTextEditingAreaHeight,
-    ValueChanged<double> setErrorHeight,
-    ValueChanged<double> setHelperHeight,
-    ValueChanged<double> setCounterHeight,
+    ValueChanged<double> setHeightWithError,
+    ValueChanged<double> setHeightWithHelper,
+    ValueChanged<double> setHeightWithCounter,
   ) {
     List<Widget> children = [];
     TextFieldBottomWidgetConfig? config;
@@ -187,13 +191,13 @@ class LabelledBoxState extends State<LabelledBox> {
     children.add(_buildHeightProbe(editingAreaConfig, editingAreaConfig, null, setTextEditingAreaHeight));
 
     config = bottomSpaceConfig.errorConfig;
-    if (config != null) children.add(_buildHeightProbe(config, editingAreaConfig, config, setErrorHeight));
+    if (config != null) children.add(_buildHeightProbe(config, editingAreaConfig, config, setHeightWithError));
 
     config = bottomSpaceConfig.helperConfig;
-    if (config != null) children.add(_buildHeightProbe(config, editingAreaConfig, config, setHelperHeight));
+    if (config != null) children.add(_buildHeightProbe(config, editingAreaConfig, config, setHeightWithHelper));
 
     config = bottomSpaceConfig.counterConfig;
-    if (config != null) children.add(_buildHeightProbe(config, editingAreaConfig, config, setCounterHeight));
+    if (config != null) children.add(_buildHeightProbe(config, editingAreaConfig, config, setHeightWithCounter));
 
     return Column(children: children);
   }
@@ -236,9 +240,9 @@ class LabelledBoxState extends State<LabelledBox> {
     TextFieldEditingAreaConfig editingAreaConfig,
     TextFieldBottomWidgetConfig? bottomWidgetConfig,
   ) {
-    final withError = bottomWidgetConfig is ErrorWidgetConfig;
-    final withHelper = bottomWidgetConfig is HelperWidgetConfig;
-    final withCounter = bottomWidgetConfig is CounterWidgetConfig;
+    final withError = bottomWidgetConfig is ErrorWidgetConfig && !bottomWidgetConfig.isEmpty;
+    final withHelper = bottomWidgetConfig is HelperWidgetConfig && !bottomWidgetConfig.isEmpty;
+    final withCounter = bottomWidgetConfig is CounterWidgetConfig && !bottomWidgetConfig.isEmpty;
 
     final InputDecoration srcDecoration = editingAreaConfig.decoration;
 
@@ -272,6 +276,28 @@ class LabelledBoxState extends State<LabelledBox> {
       counter: withCounter ? bottomWidgetConfig.widget : null,
       counterText: withCounter ? bottomWidgetConfig.text : null,
       counterStyle: withCounter ? bottomWidgetConfig.textStyle : null,
+    );
+  }
+
+  static Widget _buildTextField(
+    BuildContext context,
+    Widget fieldBody,
+    ErrorPosition? errorPosition,
+    double totalTextFieldHeight,
+  ) {
+    if (errorPosition == null || errorPosition != ErrorPosition.fixedSpaceBelowField) {
+      return fieldBody;
+    }
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 0,
+          // TU PRZERWAŁEM - still height jumps on change between error and helper in "data 4 fixed space"
+          height: totalTextFieldHeight * UiParams.of(context).appSize.zoom,
+        ),
+        Expanded(child: fieldBody),
+      ],
     );
   }
 
@@ -425,30 +451,6 @@ class LabelledBoxState extends State<LabelledBox> {
           ),
         ),
       ),
-    );
-  }
-
-  static Widget _buildTextField(
-    BuildContext context,
-    Widget fieldBody,
-    ErrorPosition? errorPosition,
-    double totalTextFieldHeight,
-  ) {
-    //
-    if (errorPosition == null || errorPosition != ErrorPosition.fixedSpaceBelowField) {
-      return fieldBody;
-    }
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 0,
-          // TU PRZERWAŁEM - still height jumps on change between error and helper in "data 4 fixed space"
-          height: totalTextFieldHeight * UiParams.of(context).appSize.zoom,
-        ),
-        Expanded(child: fieldBody),
-      ],
     );
   }
 }

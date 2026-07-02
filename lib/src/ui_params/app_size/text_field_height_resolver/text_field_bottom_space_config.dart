@@ -17,6 +17,8 @@ class TextFieldBottomSpaceConfig extends Equatable {
         helperConfig = null,
         counterConfig = null;
 
+  bool get isEmpty => errorConfig == null && helperConfig == null && counterConfig == null;
+
   @override
   List<Object?> get props => [
         errorConfig,
@@ -37,6 +39,8 @@ abstract class TextFieldBottomWidgetConfig extends Equatable {
     required this.textStyle,
     this.errorMaxLines
   });
+
+  bool get isEmpty => text == null && widget == null && errorMaxLines == null;
 
   @override
   List<Object?> get props => [

@@ -117,28 +117,6 @@ class ExampleFormState extends FormStateBrick {
 
             SizedBox(height: appSize.spacerVerticalMedium),
             DateField(
-              keyString: dateKeyString3,
-              formManager: formManager,
-              width: 160,
-              buttonConfig: TextFieldButtonConfig(
-                tooltipMaker: (context) => 'Kalendarz',
-                distanceFromTextField: 4,
-                // buttonStyle: ButtonStyle(shape: WidgetStatePropertyAll(BeveledRectangleBorder(side: BorderSide()))),
-              ),
-              errorPosition: ErrorPosition.fixedSpaceBelowField,
-              borderType: TextFieldBorderType.outline,
-              inputDecoration: InputDecoration(
-                labelText: 'data 3 fixedSpace',
-                // border: OutlineInputBorder(),
-                // label: DecoratedBox(decoration: BoxDecoration(color: Colors.yellow), child: SizedBox(height: 35, child: Text('Smoczydło'))),
-                helper: DecoratedBox(
-                    decoration: BoxDecoration(color: Colors.yellow),
-                    child: SizedBox(height: 35, child: Text('Smoczydło'))),
-              ),
-            ),
-
-            SizedBox(height: appSize.spacerVerticalMedium),
-            DateField(
               keyString: dateKeyString4,
               formManager: formManager,
               width: 160,
@@ -161,6 +139,32 @@ class ExampleFormState extends FormStateBrick {
                 labelText: 'data 4 fixedSpace',
                 filled: true,
                 helper: SizedBox(height: 45, child: Text('Burba bum bum TRACH!')),
+              ),
+            ),
+
+            SizedBox(height: appSize.spacerVerticalMedium),
+            DateField(
+              keyString: dateKeyString3,
+              formManager: formManager,
+              width: 250,
+              buttonConfig: TextFieldButtonConfig(
+                tooltipMaker: (context) => 'Kalendarz',
+                distanceFromTextField: 4,
+                // buttonStyle: ButtonStyle(shape: WidgetStatePropertyAll(BeveledRectangleBorder(side: BorderSide()))),
+              ),
+              errorPosition: ErrorPosition.fixedSpaceBelowField,
+              borderType: TextFieldBorderType.outline,
+              inputDecoration: InputDecoration(
+                labelText: 'data 3 fixedSpace',
+                // border: OutlineInputBorder(),
+                // label: DecoratedBox(decoration: BoxDecoration(color: Colors.yellow), child: SizedBox(height: 35, child: Text('Smoczydło'))),
+                helper: DecoratedBox(
+                    decoration: BoxDecoration(color: Colors.yellow),
+                    child: SizedBox(height: 35, child: Text('Smoczydło'))),
+                // counter: DecoratedBox(
+                //     decoration: BoxDecoration(color: Colors.yellow),
+                //     child: SizedBox(height: 45, child: Text('liczyk...'))),
+                counterText: 'liczyk 2...',
               ),
             ),
 

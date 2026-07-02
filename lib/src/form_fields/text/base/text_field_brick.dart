@@ -445,18 +445,18 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     final TextFieldBottomSpaceConfig bottomSpaceConfig = TextFieldBottomSpaceConfig(
       errorConfig: ErrorWidgetConfig(
         text: errorText,
-        widget: widget.errorBuilder?.call(context, errorText ?? ''),
+        widget: widget.errorBuilder?.call(context, errorText ?? 'Ay'),
         textStyle: decoration.errorStyle,
         errorMaxLines: decoration.errorMaxLines,
       ),
       helperConfig: HelperWidgetConfig(
         text: decoration.helperText,
-        widget: null,
+        widget: decoration.helper,
         textStyle: decoration.helperStyle,
       ),
       counterConfig: CounterWidgetConfig(
         text: decoration.counterText,
-        widget: null,
+        widget: decoration.counter,
         textStyle: decoration.counterStyle,
       ),
     );
