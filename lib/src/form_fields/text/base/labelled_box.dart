@@ -9,7 +9,17 @@ import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_res
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_editing_area_config.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/widget_height_probe.dart';
 
+/// Wrapper for a `TextField` that introduces the following features:
+/// - integrated button on the left or right of the  `TextField`.
+/// Can be positioned flush with the `TextField` drop-box-style or separated
+/// from the `TextField` by controlled distance. The button can be assigned any callback.
+/// (E.g. `DateField` where the button opens `DatePicker`)
+/// - outer label above, on the right, on the left or below the `TextField`
+/// - fixed error/helper/counter space below the `TextField`. This stops jumping of the UI
+/// on failed validation that shows error below the field, making the height of the `TextField` bigger.
+/// - multiple fields inside one `LabelledBox` with outer label on top, left, right bottom.
 class LabelledBox extends StatefulWidget {
+  /// The widget to be wrapped in `LabelledBox`.
   final Widget fieldBody;
   final TextFieldEditingAreaConfig editingAreaConfig;
   final TextFieldBottomSpaceConfig bottomSpaceConfig;
