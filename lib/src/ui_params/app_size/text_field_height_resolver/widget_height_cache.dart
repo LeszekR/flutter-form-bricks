@@ -12,7 +12,7 @@ class WidgetHeightCache {
     _cache[key] = height;
   }
 
-  static void startMeasuring(Equatable key) {
+  static void registerAsMeasured(Equatable key) {
     _processedKeys.add(key);
   }
 

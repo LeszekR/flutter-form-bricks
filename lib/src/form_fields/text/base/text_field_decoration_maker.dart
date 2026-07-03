@@ -18,12 +18,6 @@ class TextFieldDecorationMaker {
     Set<WidgetState>? states,
     String? errorText,
   }) {
-    // TODO support errorWidget
-    bool showErrorBelowText = false ||
-        errorPosition == ErrorPosition.dynamicSpaceBelowField ||
-        errorPosition == ErrorPosition.fixedSpaceBelowField;
-    final TextStyle? errorStyle = showErrorBelowText ? null : const TextStyle(fontSize: 0);
-
     Color? fillColor = uiParams.appColor.getFillColor(states);
 
     InputBorder? border = _makeInputDecorationBorder(
@@ -34,33 +28,19 @@ class TextFieldDecorationMaker {
       borderType,
     );
 
-    var appSize = uiParams.appSize;
+    String? effectiveErrorText;
+    Widget? error;
 
-    bool fixSpaceBelow = errorPosition == ErrorPosition.fixedSpaceBelowField &&
-        (decoration == null || decoration.helper == null && decoration.helperText == null);
-
-    final ({String? helperText, Widget? helper, TextStyle? helperStyle}) bottomSpaceParams = _makeBottomSpaceParams(
-      context,
-      fixSpaceBelow,
-      decoration!,
-      errorBuilder,
-      errorStyle,
-      decoration.helperStyle,
-      decoration.helper,
-    );
-
-    String? effectiveErrorText = errorBuilder == null ? errorText : null;
-    Widget? error = errorBuilder == null
-        ? null
-        : errorText == null
-            ? null
-            : errorBuilder(context, errorText);
+    if (errorBuilder == null) {
+      effectiveErrorText = errorText;
+    } else if ( errorText != null) {
+      error = errorBuilder(context, errorText);;
+    }
 
     InputDecoration inputDecoration = decoration ?? const InputDecoration();
 
     return inputDecoration.copyWith(
       errorText: effectiveErrorText,
-      errorStyle: errorStyle,
       error: error,
       fillColor: fillColor,
       border: border,
@@ -69,9 +49,6 @@ class TextFieldDecorationMaker {
       errorBorder: border,
       focusedErrorBorder: border,
       disabledBorder: border,
-      helperText: bottomSpaceParams.helperText,
-      helperStyle: bottomSpaceParams.helperStyle,
-      helper: bottomSpaceParams.helper,
     );
   }
 
@@ -132,53 +109,4 @@ class TextFieldDecorationMaker {
       };
     }
   }
-
-  static ({
-    String? helperText,
-    Widget? helper,
-    TextStyle? helperStyle,
-  }) _makeBottomSpaceParams(
-    BuildContext context,
-    bool fixSpaceBelow,
-    InputDecoration decoration,
-    Function(BuildContext, String)? errorBuilder,
-    TextStyle? errorStyle,
-    TextStyle? helperStyle,
-    Widget? helper,
-  ) {
-    bool hasHelper = decoration.helper != null;
-    bool hasHelperText = decoration.helperText != null;
-    bool noHelper = !hasHelper && !hasHelperText;
-    bool noError = decoration.errorText == null;
-    bool hasErrorBuilder = errorBuilder != null;
-
-    Widget? helper;
-    String? helperText;
-    TextStyle? effectiveHelperStyle;
-
-    if (fixSpaceBelow) {
-      if (noError) {
-        if (noHelper) {
-          if (hasErrorBuilder) {
-            helper = errorBuilder(context, ' ');
-          } else {
-            helperText = ' ';
-            effectiveHelperStyle = errorStyle;
-          }
-        }
-      }
-    } // TODO compute height
-    return (
-      helperText: helperText,
-      helper: helper,
-      helperStyle: effectiveHelperStyle,
-    );
-  }
-
-  static double? _getBottomSpaceHeight(
-    TextStyle? errorStyle,
-    Function(BuildContext, String)? errorBuilder,
-    TextStyle? helperStyle,
-    Widget? helper,
-  ) {}
 }

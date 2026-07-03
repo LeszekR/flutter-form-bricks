@@ -202,14 +202,19 @@ extension InputDecorationExtension on InputDecoration {
       _inputBorderHeightHash(disabledBorder),
       _inputBorderHeightHash(errorBorder),
       _inputBorderHeightHash(focusedErrorBorder),
-      helperText,
-      errorText,
-      counterText,
-      helper,
+      errorText == null ? null : 'Ay',  // remove changeable text to avoid measuring on different errors but use cache instead
       error,
+      errorStyle,
+      errorMaxLines,
+      helperText == null ? null : 'Ay',  // remove changeable text to avoid measuring on different errors but use cache instead
+      helper,
+      helperStyle,
+      helperMaxLines,
+      counterText,
       counter,
-      labelText,
-      label,
+      counterStyle,
+      labelText == null ? null : 'Ay',  // remove changeable text to avoid measuring on different errors but use cache instead
+      label,  // trade-off - if label is used we have no access to its height so it will trigger measuring even with identical InputDecoration
       floatingLabelBehavior,
       floatingLabelAlignment,
       alignLabelWithHint,

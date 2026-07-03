@@ -17,7 +17,11 @@ class ExampleFormSchema extends FormSchema {
               ),
               DateFieldDescriptor(
                 keyString: dateKeyString3,
-                initialInput: TextEditingValue(text: 'zzz'),
+                initialInput: TextEditingValue(text: '8/31'),
+              ),
+              DateFieldDescriptor(
+                keyString: dateKeyString5,
+                initialInput: TextEditingValue(text: '8/31'),
               ),
               DateFieldDescriptor(
                 keyString: dateKeyString4,

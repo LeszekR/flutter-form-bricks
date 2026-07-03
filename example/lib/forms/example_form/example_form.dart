@@ -9,6 +9,7 @@ final String dateKeyString1 = 'dateKeyString1';
 final String dateKeyString2 = 'dateKeyString2';
 final String dateKeyString3 = 'dateKeyString3';
 final String dateKeyString4 = 'dateKeyString4';
+final String dateKeyString5 = 'dateKeyString5';
 final String timeKeyString1 = 'timeKeyString1';
 final String plainTextKeyString2 = 'plainKeyString1';
 final String lowerCaseKeyString3 = 'lowerCaseKeyString1';
@@ -158,45 +159,71 @@ class ExampleFormState extends FormStateBrick {
                 labelText: 'data 3 fixedSpace',
                 // border: OutlineInputBorder(),
                 // label: DecoratedBox(decoration: BoxDecoration(color: Colors.yellow), child: SizedBox(height: 35, child: Text('Smoczydło'))),
-                helper: DecoratedBox(
-                    decoration: BoxDecoration(color: Colors.yellow),
-                    child: SizedBox(height: 35, child: Text('Smoczydło'))),
+                // helper: DecoratedBox(
+                //     decoration: BoxDecoration(color: Colors.yellow),
+                //     child: SizedBox(height: 35, child: Text('Smoczydło'))),
                 // counter: DecoratedBox(
                 //     decoration: BoxDecoration(color: Colors.yellow),
                 //     child: SizedBox(height: 45, child: Text('liczyk...'))),
-                counterText: 'liczyk 2...',
+                // counterText: 'liczyk 2...',
               ),
             ),
 
             SizedBox(height: appSize.spacerVerticalMedium),
-            DateTimeSeparatedField(
-              keyString: dateTimeSeparatedKeyString1,
+            DateField(
+              keyString: dateKeyString5,
               formManager: formManager,
-              errorPosition: ErrorPosition.never,
-              // dateWidth: 150,
-              pickerButtonConfig: TextFieldButtonConfig(width: 25),
-              dateOuterLabelConfig: OuterLabelConfig(
-                labelText: 'Data',
-                side: Side.top,
-                height: 22,
-                padding: EdgeInsetsGeometry.only(bottom: 4),
+              width: 250,
+              buttonConfig: TextFieldButtonConfig(
+                tooltipMaker: (context) => 'Kalendarz',
+                distanceFromTextField: 4,
+                // buttonStyle: ButtonStyle(shape: WidgetStatePropertyAll(BeveledRectangleBorder(side: BorderSide()))),
               ),
-              timeOuterLabelConfig: OuterLabelConfig(
-                labelText: 'Godzina',
-                side: Side.top,
-                height: 16,
+              errorPosition: ErrorPosition.fixedSpaceBelowField,
+              borderType: TextFieldBorderType.outline,
+              inputDecoration: InputDecoration(
+                labelText: 'data 5 fixedSpace',
+                // border: OutlineInputBorder(),
+                // label: DecoratedBox(decoration: BoxDecoration(color: Colors.yellow), child: SizedBox(height: 35, child: Text('Smoczydło'))),
+                // helper: DecoratedBox(
+                //     decoration: BoxDecoration(color: Colors.yellow),
+                //     child: SizedBox(height: 35, child: Text('Smoczydło'))),
+                // counter: DecoratedBox(
+                //     decoration: BoxDecoration(color: Colors.yellow),
+                //     child: SizedBox(height: 45, child: Text('liczyk...'))),
+                // counterText: 'liczyk 2...',
               ),
-              outerLabelConfig: OuterLabelConfig(
-                labelText: 'Data i czas',
-                side: Side.left,
-                // height: 46 * appSize.zoom,
-                width: 80,
-                align: Alignment.centerRight,
-                padding: EdgeInsetsGeometry.only(right: 10),
-              ),
-              dateInputDecoration: InputDecoration(helperText: 'Gucio'),
-              timeInputDecoration: InputDecoration(helperText: 'Misia'),
             ),
+
+            // SizedBox(height: appSize.spacerVerticalMedium),
+            // DateTimeSeparatedField(
+            //   keyString: dateTimeSeparatedKeyString1,
+            //   formManager: formManager,
+            //   errorPosition: ErrorPosition.never,
+            //   // dateWidth: 150,
+            //   pickerButtonConfig: TextFieldButtonConfig(width: 25),
+            //   dateOuterLabelConfig: OuterLabelConfig(
+            //     labelText: 'Data',
+            //     side: Side.top,
+            //     height: 22,
+            //     padding: EdgeInsetsGeometry.only(bottom: 4),
+            //   ),
+            //   timeOuterLabelConfig: OuterLabelConfig(
+            //     labelText: 'Godzina',
+            //     side: Side.top,
+            //     height: 16,
+            //   ),
+            //   outerLabelConfig: OuterLabelConfig(
+            //     labelText: 'Data i czas',
+            //     side: Side.left,
+            //     // height: 46 * appSize.zoom,
+            //     width: 80,
+            //     align: Alignment.centerRight,
+            //     padding: EdgeInsetsGeometry.only(right: 10),
+            //   ),
+            //   dateInputDecoration: InputDecoration(helperText: 'Gucio'),
+            //   timeInputDecoration: InputDecoration(helperText: 'Misia'),
+            // ),
 
             // SizedBox(height: appSize.spacerVerticalMedium),
             // TimeField(

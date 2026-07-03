@@ -59,7 +59,7 @@ class _WidgetHeightProbeState extends State<WidgetHeightProbe> {
       return const _OffstageDummy();
     }
 
-    WidgetHeightCache.startMeasuring(widget.cacheKey);
+    WidgetHeightCache.registerAsMeasured(widget.cacheKey);
 
     return Offstage(
       child: Material(

@@ -14,6 +14,8 @@ import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_decorat
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_bottom_space_config.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_editing_area_config.dart';
 
+import '../../../ui_params/app_size/text_field_height_resolver/widget_height_probe.dart';
+
 enum TextFieldBorderType { outline, underline, other }
 
 abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditingValue, V> {
@@ -391,6 +393,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   @override
   Widget buildFieldWidget(BuildContext context) {
+
     // with button
     if (widget.buttonConfig?.syncStyleWithTextField == true) {
       return CompoundWidgetStatesController.wrapWithStateDetectors(
@@ -428,36 +431,11 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       states: _updateAndGetStates(),
       errorText: _showErrorBelowField ? errorText : null,
     );
+
     final TextField textField = _makeTextField(textEditingController, decoration, _style);
-
     final TextFieldBorderType effectiveBorderType = _getEffectiveBorderType(decoration);
-
-    final TextFieldEditingAreaConfig editingAreaConfig = TextFieldEditingAreaConfig.create(
-      context: context,
-      decoration: decoration,
-      config: widget.textFieldConfig,
-      width: _width,
-      text: textEditingController.text,
-    );
-
-    final TextFieldBottomSpaceConfig bottomSpaceConfig = TextFieldBottomSpaceConfig(
-      errorConfig: ErrorWidgetConfig(
-        text: errorText,
-        widget: widget.errorBuilder?.call(context, errorText ?? 'Ay'),
-        textStyle: decoration.errorStyle,
-        errorMaxLines: decoration.errorMaxLines,
-      ),
-      helperConfig: HelperWidgetConfig(
-        text: decoration.helperText,
-        widget: decoration.helper,
-        textStyle: decoration.helperStyle,
-      ),
-      counterConfig: CounterWidgetConfig(
-        text: decoration.counterText,
-        widget: decoration.counter,
-        textStyle: decoration.counterStyle,
-      ),
-    );
+    TextFieldEditingAreaConfig editingAreaConfig = _makeEditingAreaConfig(context, decoration);
+    TextFieldBottomSpaceConfig bottomSpaceConfig = _buildBottomSpaceConfig(context, decoration, widget.errorPosition);
 
     return LabelledBox(
       fieldBody: textField,
@@ -473,6 +451,57 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       compoundWidgetStatesController: _compoundWidgetStatesController,
       onButtonTap: onButtonTap,
     );
+  }
+
+  TextFieldEditingAreaConfig _makeEditingAreaConfig(BuildContext context, InputDecoration decoration) {
+    final TextFieldEditingAreaConfig editingAreaConfig = TextFieldEditingAreaConfig.create(
+      context: context,
+      decoration: decoration,
+      config: widget.textFieldConfig,
+      width: _width,
+      text: textEditingController.text,
+    );
+    return editingAreaConfig;
+  }
+
+  TextFieldBottomSpaceConfig _buildBottomSpaceConfig(
+    BuildContext context,
+    InputDecoration decoration,
+    ErrorPosition errorPosition,
+  ) {
+    if (errorPosition != ErrorPosition.fixedSpaceBelowField) {
+      return const TextFieldBottomSpaceConfig.empty();
+    }
+
+    final bool withError = errorText != null && errorText!.isNotEmpty || widget.errorBuilder != null;
+    final bool withHelper = decoration.helperText != null || decoration.helper != null;
+    final bool withCounter = decoration.counterText != null || decoration.counter != null;
+
+    final TextFieldBottomSpaceConfig bottomSpaceConfig = TextFieldBottomSpaceConfig(
+      errorConfig: !withError
+          ? null
+          : ErrorWidgetConfig(
+              text: errorText,
+              widget: widget.errorBuilder?.call(context, errorText ?? 'Ay'),
+              textStyle: decoration.errorStyle,
+              errorMaxLines: decoration.errorMaxLines,
+            ),
+      helperConfig: !withHelper
+          ? null
+          : HelperWidgetConfig(
+              text: decoration.helperText,
+              widget: decoration.helper,
+              textStyle: decoration.helperStyle,
+            ),
+      counterConfig: !withCounter
+          ? null
+          : CounterWidgetConfig(
+              text: decoration.counterText,
+              widget: decoration.counter,
+              textStyle: decoration.counterStyle,
+            ),
+    );
+    return bottomSpaceConfig;
   }
 
   TextFieldBorderType _getEffectiveBorderType(InputDecoration decoration) {
