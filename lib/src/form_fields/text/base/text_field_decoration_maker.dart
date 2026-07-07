@@ -34,7 +34,7 @@ class TextFieldDecorationMaker {
     if (errorBuilder == null) {
       effectiveErrorText = errorText;
     } else if ( errorText != null) {
-      error = errorBuilder(context, errorText);;
+      error = errorBuilder(context, errorText);
     }
 
     InputDecoration inputDecoration = decoration ?? const InputDecoration();

@@ -23,13 +23,17 @@ class PlainTextField extends TextFieldBrick<String> {
     required super.keyString,
     required super.formManager,
     required super.validateMode,
+    super.outerLabelConfig,
     super.statesController,
     //
-    // BrickTextField
+    // TextFieldBrick
     super.width,
     super.inputDecoration,
-    super.outerLabelConfig,
+    super.borderType,
+    super.errorPosition,
     super.buttonConfig,
+    super.heightOfTextArea,
+    super.errorBuilder,
     //
     // TextField
     super.groupId = EditableText,

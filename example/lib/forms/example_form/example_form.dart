@@ -11,6 +11,7 @@ final String dateKeyString3 = 'dateKeyString3';
 final String dateKeyString4 = 'dateKeyString4';
 final String dateKeyString5 = 'dateKeyString5';
 final String timeKeyString1 = 'timeKeyString1';
+final String plainTextKeyString1 = 'plainKeyString1';
 final String plainTextKeyString2 = 'plainKeyString1';
 final String lowerCaseKeyString3 = 'lowerCaseKeyString1';
 final String dateTimeSeparatedKeyString1 = 'dateTimeSeparatedKeString1';
@@ -115,6 +116,24 @@ class ExampleFormState extends FormStateBrick {
             //     border: OutlineInputBorder(),
             //   ),
             // ),
+
+            SizedBox(height: appSize.spacerVerticalMedium),
+            PlainTextField(
+              keyString: plainTextKeyString2,
+              formManager: formManager,
+              validateMode: ValidateModeBrick.noValidator,
+              errorPosition: ErrorPosition.fixedSpaceBelowField,
+              buttonConfig: TextFieldButtonConfig(),
+              outerLabelConfig: OuterLabelConfig(
+                labelText: 'outer label',
+                side: Side.bottom,
+                height: 20,
+              ),
+              inputDecoration: InputDecoration(
+                labelText: 'text',
+                errorText: 'error text try',
+              ),
+            ),
 
             SizedBox(height: appSize.spacerVerticalMedium),
             DateField(
