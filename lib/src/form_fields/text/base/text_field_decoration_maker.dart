@@ -33,7 +33,7 @@ class TextFieldDecorationMaker {
 
     if (errorBuilder == null) {
       effectiveErrorText = errorText;
-    } else if ( errorText != null) {
+    } else if (errorText != null) {
       error = errorBuilder(context, errorText);
     }
 
@@ -79,6 +79,7 @@ class TextFieldDecorationMaker {
     } else {
       return switch (borderType) {
         // textFieldBorderType dominates the choice of border
+        //--------------------------------------------------
         TextFieldBorderType.outline => switch (buttonConfig.buttonPosition) {
             ButtonPosition.left => OutlineSidesInputBorder(borderSide: borderSide, sideLeft: false),
             ButtonPosition.right => OutlineSidesInputBorder(borderSide: borderSide, sideRight: false),
@@ -90,6 +91,7 @@ class TextFieldDecorationMaker {
 
         // when textFieldBorderType does not define the border - use inputDecoration.border or its
         // **FlutterFormBricks'** implementation accommodating the button if present
+        //--------------------------------------------------
         TextFieldBorderType.other => switch (inputDecoration?.border) {
             const OutlineInputBorder() => switch (buttonConfig.buttonPosition) {
                 ButtonPosition.left => OutlineSidesInputBorder(borderSide: borderSide, sideLeft: false),
@@ -100,7 +102,9 @@ class TextFieldDecorationMaker {
                 ButtonPosition.right => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopRight: 0),
               },
             InputBorder() => inputDecoration!.border,
+
             // default:
+            //--------------------------------------------------
             null => switch (buttonConfig.buttonPosition) {
                 ButtonPosition.left => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopLeft: 0),
                 ButtonPosition.right => UnderlineTopRoundedInputBorder(borderSide: borderSide, radiusTopRight: 0),

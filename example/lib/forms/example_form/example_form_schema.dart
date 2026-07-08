@@ -37,7 +37,7 @@ class ExampleFormSchema extends FormSchema {
           initialInput: TextEditingValue(text: '00'),
         ),
         PlainTextFieldDescriptor(
-          keyString: plainTextKeyString2,
+          keyString: plainTextKeyString1,
           initialInput: TextEditingValue(text: 'Marian'),
         ),
         LowerCaseFieldDescriptor(

@@ -75,7 +75,7 @@ class LabelledBoxState extends State<LabelledBox> {
   double _heightWithError = 0;
   double _heightWithHelper = 0;
   double _heightWithCounter = 0;
-  final List<TextEditingController> controllers = [];
+  final List<TextEditingController> tmpControllers = [];
 
   void _setHeightOfTextEditingArea(double? height) => _textEditingAreaHeight = height;
 
@@ -103,9 +103,9 @@ class LabelledBoxState extends State<LabelledBox> {
 
     final bool measureForButton = widget.buttonConfig != null;
 
-    final isOuterLabelHorizontal =
+    final isOuterLabelLocatedHorizontally =
         widget.outerLabelConfig?.side == Side.left || widget.outerLabelConfig?.side == Side.right;
-    final bool measureForOuterLabel = widget.outerLabelConfig != null && isOuterLabelHorizontal;
+    final bool measureForOuterLabel = widget.outerLabelConfig != null && isOuterLabelLocatedHorizontally;
 
     final bool measureForBottomSpace = !widget.bottomSpaceConfig.isEmpty;
 
@@ -118,19 +118,20 @@ class LabelledBoxState extends State<LabelledBox> {
       if (_textEditingAreaHeight == null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (!mounted) return;
-          setState(() {});   // now use measured heights and build the LabelledBox
+          setState(() {}); // now use measured heights and build the LabelledBox
         });
         return _buildHeightMeasuringProbes(
           widget.editingAreaConfig,
           widget.bottomSpaceConfig,
-          controllers,
+          widget.errorPosition,
+          tmpControllers,
           _setHeightOfTextEditingArea,
           _setHeightWithError,
           _setHeightWithHelper,
           _setHeightWithCounter,
         );
       } else {
-        _disposeControllers(controllers);
+        _disposeControllers(tmpControllers);
       }
     }
 
@@ -205,6 +206,7 @@ class LabelledBoxState extends State<LabelledBox> {
   static Column _buildHeightMeasuringProbes(
     TextFieldEditingAreaConfig editingAreaConfig,
     TextFieldBottomSpaceConfig bottomSpaceConfig,
+    ErrorPosition? errorPosition,
     List<TextEditingController> controllers,
     ValueChanged<double> setTextEditingAreaHeight,
     ValueChanged<double> setHeightWithError,
@@ -263,7 +265,7 @@ class LabelledBoxState extends State<LabelledBox> {
       width: editingAreaConfig.width ?? 500,
       child: TextField(
         controller: controller,
-        decoration: _copyInputDecoration(editingAreaConfig, bottomWidgetConfig),
+        decoration: _copyInputDecorationForOneBottomWidget(editingAreaConfig, bottomWidgetConfig),
         style: editingAreaConfig.style,
         expands: editingAreaConfig.expands,
         strutStyle: editingAreaConfig.strutStyle,
@@ -273,7 +275,7 @@ class LabelledBoxState extends State<LabelledBox> {
     );
   }
 
-  static InputDecoration _copyInputDecoration(
+  static InputDecoration _copyInputDecorationForOneBottomWidget(
     TextFieldEditingAreaConfig editingAreaConfig,
     TextFieldBottomWidgetConfig? bottomWidgetConfig,
   ) {
@@ -299,16 +301,17 @@ class LabelledBoxState extends State<LabelledBox> {
       //
       error: withError ? bottomWidgetConfig.widget : null,
       errorStyle: withError ? bottomWidgetConfig.textStyle : null,
-      errorMaxLines: withError ? bottomWidgetConfig.errorMaxLines : null,
+      errorMaxLines: withError ? bottomWidgetConfig.maxLines : null,
       errorText: withError
           ? bottomWidgetConfig.widget == null
-              ? 'Ay'
+              ? bottomWidgetConfig.text
               : null
           : null,
       //
       helper: withHelper ? bottomWidgetConfig.widget : null,
       helperText: withHelper ? bottomWidgetConfig.text : null,
       helperStyle: withHelper ? bottomWidgetConfig.textStyle : null,
+      helperMaxLines: withHelper ? bottomWidgetConfig.maxLines : null,
       //
       counter: withCounter ? bottomWidgetConfig.widget : null,
       counterText: withCounter ? bottomWidgetConfig.text : null,

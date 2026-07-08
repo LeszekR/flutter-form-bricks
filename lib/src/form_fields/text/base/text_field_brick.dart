@@ -14,8 +14,6 @@ import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_decorat
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_bottom_space_config.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_editing_area_config.dart';
 
-import '../../../ui_params/app_size/text_field_height_resolver/widget_height_probe.dart';
-
 enum TextFieldBorderType { outline, underline, other }
 
 abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditingValue, V> {
@@ -393,7 +391,6 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
 
   @override
   Widget buildFieldWidget(BuildContext context) {
-
     // with button
     if (widget.buttonConfig?.syncStyleWithTextField == true) {
       return CompoundWidgetStatesController.wrapWithStateDetectors(
@@ -469,29 +466,30 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     InputDecoration decoration,
     ErrorPosition errorPosition,
   ) {
-    if (errorPosition != ErrorPosition.fixedSpaceBelowField) {
+    var errorInFixedSpace = errorPosition == ErrorPosition.fixedSpaceBelowField;
+    if (!errorInFixedSpace) {
       return const TextFieldBottomSpaceConfig.empty();
     }
 
-    final bool withError = errorText != null && errorText!.isNotEmpty || widget.errorBuilder != null;
     final bool withHelper = decoration.helperText != null || decoration.helper != null;
     final bool withCounter = decoration.counterText != null || decoration.counter != null;
 
+    final String errorDummyText = TextFieldBottomWidgetConfig.makeDummyText(errorText, decoration.errorMaxLines, true);
+
     final TextFieldBottomSpaceConfig bottomSpaceConfig = TextFieldBottomSpaceConfig(
-      errorConfig: !withError
-          ? null
-          : ErrorWidgetConfig(
-              text: errorText,
-              widget: widget.errorBuilder?.call(context, errorText ?? 'Ay'),
-              textStyle: decoration.errorStyle,
-              errorMaxLines: decoration.errorMaxLines,
-            ),
+      errorConfig: ErrorWidgetConfig(
+        text: errorDummyText,
+        widget: widget.errorBuilder?.call(context, errorText ?? errorDummyText),
+        textStyle: decoration.errorStyle,
+        maxLines: decoration.errorMaxLines,
+      ),
       helperConfig: !withHelper
           ? null
           : HelperWidgetConfig(
-              text: decoration.helperText,
+              text: TextFieldBottomWidgetConfig.makeDummyText(decoration.helperText, decoration.helperMaxLines, false),
               widget: decoration.helper,
               textStyle: decoration.helperStyle,
+              maxLines: decoration.helperMaxLines,
             ),
       counterConfig: !withCounter
           ? null
