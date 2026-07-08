@@ -107,7 +107,7 @@ class ExampleFormState extends FormStateBrick {
                 labelText: 'Data',
                 helperText: 'helper text\nsecond line\nthird line\nfourth line\nfifth line\nsixth line',
                 helperMaxLines: 3,
-                errorMaxLines: 2,
+                errorMaxLines: 6,
               ),
               // outerLabelConfig: OuterLabelConfig(
               //   labelText: 'Data',

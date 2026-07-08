@@ -7,6 +7,7 @@ import 'package:flutter_form_bricks/src/form_fields/text/base/compound_widget_st
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_bottom_space_config.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_editing_area_config.dart';
+import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/widget_height_cache.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/widget_height_probe.dart';
 
 /// Wrapper for a `TextField` that introduces the following features:
@@ -72,9 +73,9 @@ class LabelledBox extends StatefulWidget {
 class LabelledBoxState extends State<LabelledBox> {
   double? _textEditingAreaHeight;
   double? _totalTextFieldHeight;
-  double _heightWithError = 0;
-  double _heightWithHelper = 0;
-  double _heightWithCounter = 0;
+  double? _heightWithError;
+  double? _heightWithHelper;
+  double? _heightWithCounter;
   final List<TextEditingController> tmpControllers = [];
 
   void _setHeightOfTextEditingArea(double? height) => _textEditingAreaHeight = height;
@@ -86,9 +87,21 @@ class LabelledBoxState extends State<LabelledBox> {
   void _setHeightWithCounter(double? height) => _heightWithCounter = height ?? 0;
 
   double get totalTextFieldHeight {
-    _totalTextFieldHeight ??= max(_heightWithError, max(_heightWithHelper, _heightWithCounter));
+    double errorHeight = _heightWithError == null ? 0 : _heightWithError!;
+    double helperHeight = _heightWithHelper == null ? 0 : _heightWithHelper!;
+    double counterHeight = _heightWithCounter == null ? 0 : _heightWithCounter!;
+    _totalTextFieldHeight ??= max(errorHeight, max(helperHeight, counterHeight));
     return _totalTextFieldHeight!;
   }
+
+  @override
+  void initState() {
+    super.initState();
+    _heightWithError = WidgetHeightCache.getHeight(widget.bottomSpaceConfig.errorConfig);
+    _heightWithHelper = WidgetHeightCache.getHeight(widget.bottomSpaceConfig.helperConfig);
+    _heightWithCounter = WidgetHeightCache.getHeight(widget.bottomSpaceConfig.counterConfig);
+  }
+
 
   @override
   void didChangeDependencies() {
@@ -140,7 +153,7 @@ class LabelledBoxState extends State<LabelledBox> {
       context,
       widget.fieldBody,
       widget.errorPosition,
-      totalTextFieldHeight,
+      totalTextFieldHeight!,
     );
 
     final Widget bodyWithButton;

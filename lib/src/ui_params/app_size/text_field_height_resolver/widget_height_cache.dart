@@ -4,7 +4,8 @@ class WidgetHeightCache {
   static final Map<Equatable, double> _cache = {};
   static final Set<Equatable> _processedKeys = {};
 
-  static double? getHeight(Equatable key) {
+  static double? getHeight(Equatable? key) {
+    if (key == null) return null;
     return _cache[key];
   }
 
