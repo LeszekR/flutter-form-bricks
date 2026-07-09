@@ -36,52 +36,52 @@ class ExampleFormState extends FormStateBrick {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
 
-            // SizedBox(height: appSize.spacerVerticalMedium),
-            // PlainTextField(
-            //   keyString: plainTextKeyString1,
-            //   formManager: formManager,
-            //   validateMode: ValidateModeBrick.noValidator,
-            //   errorPosition: ErrorPosition.fixedSpaceBelowField,
-            //   buttonConfig: TextFieldButtonConfig(distanceFromTextField: 4),
-            //   // borderType: TextFieldBorderType.other,
-            //   outerLabelConfig: OuterLabelConfig(
-            //     labelText: 'outer label',
-            //     side: Side.top,
-            //     height: 20,
-            //   ),
-            //   errorBuilder: (context, _) => Text('error text try'),
-            //   // TU PRZERWAŁEM - bottom space changes height on reload - and check how many times LabelledBox builds
-            //   inputDecoration: InputDecoration(
-            //     // helperText: 'helper text\njeszcze\ni tu tez\ni teraz\ni tu tez',
-            //     helperMaxLines: 6,
-            //     // helperText: 'helper text\nsecond line\nthird line',
-            //     // labelText: 'data 2',
-            //     border: UnderlineInputBorder(),
-            //     // visualDensity: VisualDensity(vertical: 3),
-            //   ),
-            // ),
-            //
-            // SizedBox(
-            //   width: 300,
-            //   height: 3,
-            //   child: DecoratedBox(decoration: BoxDecoration(color: Colors.orange)),
-            // ),
-            //
-            // SizedBox(height: appSize.spacerVerticalMedium),
-            // TextField(
-            //   controller: TextEditingController(text: 'Ay'),
-            //   decoration: InputDecoration(
-            //     visualDensity: VisualDensity(vertical: -2),
-            //     border: UnderlineInputBorder(),
-            //     // labelText: 'data',
-            //     label: DecoratedBox(
-            //         decoration: BoxDecoration(color: Colors.yellow),
-            //         child: SizedBox(height: 35, child: Text('Smoczydło'))),
-            //     error: DecoratedBox(
-            //         decoration: BoxDecoration(color: Colors.yellow),
-            //         child: SizedBox(height: 35, child: Text('Smoczydło'))),
-            //   ),
-            // ),
+            SizedBox(height: appSize.spacerVerticalMedium),
+            PlainTextField(
+              keyString: plainTextKeyString1,
+              formManager: formManager,
+              validateMode: ValidateModeBrick.noValidator,
+              errorPosition: ErrorPosition.fixedSpaceBelowField,
+              buttonConfig: TextFieldButtonConfig(distanceFromTextField: 4),
+              // borderType: TextFieldBorderType.other,
+              outerLabelConfig: OuterLabelConfig(
+                labelText: 'outer label',
+                side: Side.top,
+                height: 20,
+              ),
+              errorBuilder: (context, _) => Text('error text try'),
+              // TU PRZERWAŁEM - bottom space changes height on reload - and check how many times LabelledBox builds
+              inputDecoration: InputDecoration(
+                // helperText: 'helper text\njeszcze\ni tu tez\ni teraz\ni tu tez',
+                helperMaxLines: 6,
+                // helperText: 'helper text\nsecond line\nthird line',
+                // labelText: 'data 2',
+                border: UnderlineInputBorder(),
+                // visualDensity: VisualDensity(vertical: 3),
+              ),
+            ),
+
+            SizedBox(
+              width: 300,
+              height: 3,
+              child: DecoratedBox(decoration: BoxDecoration(color: Colors.orange)),
+            ),
+
+            SizedBox(height: appSize.spacerVerticalMedium),
+            TextField(
+              controller: TextEditingController(text: 'Ay'),
+              decoration: InputDecoration(
+                visualDensity: VisualDensity(vertical: -2),
+                border: UnderlineInputBorder(),
+                // labelText: 'data',
+                label: DecoratedBox(
+                    decoration: BoxDecoration(color: Colors.yellow),
+                    child: SizedBox(height: 35, child: Text('Smoczydło'))),
+                error: DecoratedBox(
+                    decoration: BoxDecoration(color: Colors.yellow),
+                    child: SizedBox(height: 35, child: Text('Smoczydło'))),
+              ),
+            ),
 
             SizedBox(height: appSize.spacerVerticalMedium),
             DateField(
@@ -132,6 +132,10 @@ class ExampleFormState extends FormStateBrick {
               formManager: formManager,
               width: 160,
               withDatePicker: false,
+              errorPosition: ErrorPosition.never,
+              inputDecoration: InputDecoration(
+                labelText: 'data 2',
+                border: OutlineInputBorder(),
               // buttonConfig: TextFieldButtonConfig(
               //   tooltipMaker: (context) => 'Kalendarz',
               //   buttonStyle: ButtonStyle(
@@ -145,10 +149,6 @@ class ExampleFormState extends FormStateBrick {
               //     ),
               //   ),
               // ),
-              errorPosition: ErrorPosition.never,
-              inputDecoration: InputDecoration(
-                labelText: 'data 2',
-                border: OutlineInputBorder(),
               ),
             ),
 

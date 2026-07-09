@@ -357,15 +357,16 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     // must be called after super.initState()
     focusNode.addListener(_onFocusChange);
 
+    // TODO fix bug -
+    setInput(formManager.getFieldContent(keyString).input as TextEditingValue?);
+
     if (widget.buttonConfig?.syncStyleWithTextField == true) {
       _compoundWidgetStatesController = CompoundWidgetStatesController();
       _statesController = null;
-      _showError(errorText);
     } else {
       _compoundWidgetStatesController = null;
       _statesController = widget.textFieldConfig.statesController ?? WidgetStatesController();
     }
-    // _showError(errorText);
   }
 
   @override
@@ -603,8 +604,17 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     );
   }
 
+  bool isError() => errorText != null && errorText!.isNotEmpty;
+
   Set<WidgetState>? _getStates() {
-    return _compoundWidgetStatesController != null ? _compoundWidgetStatesController!.states : _statesController!.value;
+    Set<WidgetState> states = {
+      ...(_compoundWidgetStatesController?.states ?? _statesController!.value),
+    };
+    if (isError()) {
+      states.add(WidgetState.error);
+    }
+    return states;
+    // return _compoundWidgetStatesController != null ? _compoundWidgetStatesController!.states : _statesController!.value;
   }
 
   bool _skipOnChanged = false;
@@ -670,24 +680,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     setState(() {
       setInput(fieldContent.input);
       errorText = fieldContent.error;
-      _showError(fieldContent.error);
     });
     _skipOnChanged = false;
-  }
-
-  void _showError(String? error) {
-    bool isError = error != null && error.isNotEmpty;
-    if (_compoundWidgetStatesController != null) {
-      _compoundWidgetStatesController!.fieldStatesSink.setError(isError);
-    } else {
-      if (error == null || error.isEmpty) {
-        _statesController!.value.remove(WidgetState.error);
-      } else {
-        _statesController!.value.add(WidgetState.error);
-      }
-      // WidgetsBinding.instance.addPostFrameCallback((_) {
-      //   _statesController!.update(WidgetState.error, isError);
-      // });
-    }
   }
 }

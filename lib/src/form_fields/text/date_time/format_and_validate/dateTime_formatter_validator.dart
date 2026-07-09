@@ -40,8 +40,6 @@ class DateTimeFormatterValidator extends FormatterValidator<TextEditingValue, Da
     }
 
     var elementsList = textTrimmed.split(RegExp(' '));
-    DateTimeFieldContent dateFieldContent = DateTimeFieldContent.transient(elementsList[0].toTextEditingValue());
-    DateTimeFieldContent timeFieldContent = DateTimeFieldContent.transient(elementsList[1].toTextEditingValue());
 
     DateTimeFieldContent parseResultDate = _dateFormatterValidator.run(localizations, keyString, input);
     DateTimeFieldContent parseResultTime = _timeFormatterValidator.run(localizations, keyString, input);
