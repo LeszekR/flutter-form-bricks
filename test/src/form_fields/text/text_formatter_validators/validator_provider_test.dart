@@ -187,7 +187,7 @@ void main() {
 
         //given
         var formManager = SingleFormManager();
-        var validatorMaker = () => ValidatorProvider.validatorEmail(localizations);
+        FormFieldValidator<String> validatorMaker() => ValidatorProvider.validatorEmail(localizations);
         await prepareTextSimpleInForm(tester, validatorMaker, formManager);
 
         //when

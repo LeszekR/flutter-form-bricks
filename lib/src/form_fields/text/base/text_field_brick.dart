@@ -365,6 +365,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       _compoundWidgetStatesController = null;
       _statesController = widget.textFieldConfig.statesController ?? WidgetStatesController();
     }
+    // _showError(errorText);
   }
 
   @override
@@ -425,7 +426,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       errorPosition: widget.errorPosition,
       buttonConfig: widget.buttonConfig,
       errorBuilder: widget.errorBuilder,
-      states: _updateAndGetStates(),
+      states: _getStates(),
       errorText: _showErrorBelowField ? errorText : null,
     );
 
@@ -602,15 +603,8 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     );
   }
 
-  Set<WidgetState>? _updateAndGetStates() {
-    var isError = errorText != null && errorText!.isNotEmpty;
-    if (_compoundWidgetStatesController != null) {
-      _compoundWidgetStatesController!.fieldStatesSink.setError(isError);
-      return _compoundWidgetStatesController!.states;
-    } else {
-      _statesController!.update(WidgetState.error, isError);
-      return _statesController!.value;
-    }
+  Set<WidgetState>? _getStates() {
+    return _compoundWidgetStatesController != null ? _compoundWidgetStatesController!.states : _statesController!.value;
   }
 
   bool _skipOnChanged = false;
@@ -659,7 +653,9 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     if (_compoundWidgetStatesController != null) {
       _compoundWidgetStatesController!.fieldStatesSink.setFocused(focusNode.hasFocus);
     } else {
-      _statesController!.update(WidgetState.focused, focusNode.hasFocus);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _statesController!.update(WidgetState.focused, focusNode.hasFocus);
+      });
     }
     if (!focusNode.hasFocus) {
       if (textEditingController.value != oldValue) {
@@ -684,7 +680,14 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     if (_compoundWidgetStatesController != null) {
       _compoundWidgetStatesController!.fieldStatesSink.setError(isError);
     } else {
-      _statesController!.update(WidgetState.error, isError);
+      if (error == null || error.isEmpty) {
+        _statesController!.value.remove(WidgetState.error);
+      } else {
+        _statesController!.value.add(WidgetState.error);
+      }
+      // WidgetsBinding.instance.addPostFrameCallback((_) {
+      //   _statesController!.update(WidgetState.error, isError);
+      // });
     }
   }
 }

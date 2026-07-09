@@ -64,7 +64,6 @@ void main() {
 Future<void> _prepareDateField(WidgetTester tester, String keyString) async {
   var schema = TestFormSchema.fromDescriptors(
       initiallyFocusedKeyString: keyString, fieldDescriptors: [DateFieldDescriptor(keyString: keyString)]);
-  var widgetMaker =
-      (BuildContext context) => DateField(keyString: keyString, formManager: TestFormManager(schema: schema));
+  DateField widgetMaker(BuildContext context) => DateField(keyString: keyString, formManager: TestFormManager(schema: schema));
   await prepareWidget(tester, widgetMaker);
 }

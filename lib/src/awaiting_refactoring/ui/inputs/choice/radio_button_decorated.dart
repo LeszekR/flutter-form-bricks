@@ -28,7 +28,7 @@ class RadioButtonDecorated extends StatelessWidget {
 }
 
 class _RadioButtonCustom extends StatefulWidget {
-  _RadioButtonCustom({
+  const _RadioButtonCustom({
     required this.label,
     required this.value,
     required this.labelOnTheLeft,

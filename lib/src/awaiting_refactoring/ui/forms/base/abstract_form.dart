@@ -116,7 +116,7 @@ abstract class AbstractFormState<T extends AbstractForm> extends State<T> {
       //
       SizedBox(width: appSize.spacerHorizontalMedium),
       //
-      Container(
+      SizedBox(
         height: appSize.bottomPanelHeight,
         child: Column(
           mainAxisSize: MainAxisSize.min,

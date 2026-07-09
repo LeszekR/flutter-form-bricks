@@ -130,6 +130,7 @@ class TestDateTimeFormatter implements ATestDateTimeFormatter {
   TestDateTimeFormatter(this.dateTimeFormatter);
 
   /*@override*/
+  @override
   DateTimeFieldContent makeDateTime(
     BricksLocalizations localizations,
     String fieldKeyString,

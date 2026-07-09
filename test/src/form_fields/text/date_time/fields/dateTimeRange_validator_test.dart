@@ -1,8 +1,6 @@
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_span.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/dateTimeRange_formatter_validator.dart';
-import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
@@ -33,7 +31,7 @@ void main() {
   final dateTimeRangeSpan = DateTimeRangeSpan(minDateTimeSpanMinutes: 15, maxDateTimeSpanMinutes: 10080);
 
   testWidgets('correct input', (WidgetTester tester) async {
-    String? errMsg = null;
+    String? errMsg;
     var expectedValues = [errMsg, errMsg, errMsg, errMsg];
     var testCases = [
       // date-start
@@ -181,7 +179,7 @@ void main() {
     var context = await pumpAppGetContext(tester);
 
     final DateFormat format = DateFormat("HH:mm");
-    final String dateTx = '2024-12-31';
+    const String dateTx = '2024-12-31';
     final DateTime startTime = DateTime.parse('$dateTx 00:10');
     final int minMinutesSpan = dateTimeRangeSpan.minDateTimeSpanMinutes!;
     final DateTime endTime = startTime.add(Duration(minutes: minMinutesSpan - 1));
@@ -203,7 +201,7 @@ void main() {
     final context = await pumpAppGetContext(tester);
 
     final DateFormat format = DateFormat("HH:mm");
-    final String dateTx = '2024-12-31';
+    const String dateTx = '2024-12-31';
     final DateTime startTime = DateTime.parse('$dateTx 00:10');
     final int minMinutesSpan = dateTimeRangeSpan.minDateTimeSpanMinutes!;
     final DateTime endTime = startTime.add(Duration(minutes: minMinutesSpan - 1));

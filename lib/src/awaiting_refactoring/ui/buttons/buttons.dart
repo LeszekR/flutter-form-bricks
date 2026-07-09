@@ -32,7 +32,7 @@ class Buttons {
     final appStyle = getAppStyle(context);
     final appColor = getAppColor(context);
 
-    final isAllowed = true; // replace with permissions check
+    const isAllowed = true; // replace with permissions check
     // final isAllowed = requiredRoles?.contains(SecurityService().getRole()) ?? true;
 
     // TODO refactor - set not-allowed-action as onPressed after prior permitions check
@@ -47,7 +47,7 @@ class Buttons {
       minimumSize: WidgetStateProperty.all(Size(width ?? appSize.buttonWidth, height ?? appSize.buttonHeight)),
       backgroundColor: WidgetStateProperty.all(appColor.formButtonBackground),
       foregroundColor: WidgetStateProperty.all(isAllowed ? appColor.buttonFontEnabled : appColor.buttonFontDisabled),
-      textStyle: WidgetStateProperty.all(TextStyle(fontStyle: isAllowed ? FontStyle.normal : FontStyle.italic)),
+      textStyle: WidgetStateProperty.all(const TextStyle(fontStyle: isAllowed ? FontStyle.normal : FontStyle.italic)),
     );
 
     return ElevatedButtonWithDisabling(

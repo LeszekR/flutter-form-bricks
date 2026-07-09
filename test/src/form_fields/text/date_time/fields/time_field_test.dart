@@ -66,7 +66,6 @@ Future<void> _prepareTimeField(WidgetTester tester, String keyString) async {
     initiallyFocusedKeyString: keyString,
     fieldDescriptors: [TimeFieldDescriptor(keyString: keyString)],
   );
-  var widgetMaker =
-      (BuildContext context) => TimeField(keyString: keyString, formManager: TestFormManager(schema: schema));
+  TimeField widgetMaker(BuildContext context) => TimeField(keyString: keyString, formManager: TestFormManager(schema: schema));
   await prepareWidget(tester, widgetMaker);
 }

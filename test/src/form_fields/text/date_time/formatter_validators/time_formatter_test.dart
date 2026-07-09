@@ -64,15 +64,15 @@ void main() {
       // -------------------------------------------------
       DateTimeTestCase("123${placeholder}5", "123${placeholder}5", false, local.timeStringErrorTooManyDigitsHours),
       DateTimeTestCase("100${placeholder}235", "100${placeholder}235", false,
-          local.timeStringErrorTooManyDigitsHours + '\n' + local.timeStringErrorTooManyDigitsMinutes),
+          '${local.timeStringErrorTooManyDigitsHours}\n${local.timeStringErrorTooManyDigitsMinutes}'),
       DateTimeTestCase("123888${placeholder}3335", "123888${placeholder}3335", false,
-          local.timeStringErrorTooManyDigitsHours + '\n' + local.timeStringErrorTooManyDigitsMinutes),
+          '${local.timeStringErrorTooManyDigitsHours}\n${local.timeStringErrorTooManyDigitsMinutes}'),
       // -------------------------------------------------
       DateTimeTestCase("1${placeholder}61", "01:61", false, local.timeErrorTooBigMinute),
       DateTimeTestCase("25${placeholder}5", "25:05", false, local.timeErrorTooBigHour),
       // -------------------------------------------------
       DateTimeTestCase("0991${placeholder}66235", "0991${placeholder}66235", false,
-          local.timeStringErrorTooManyDigitsHours + '\n' + local.timeStringErrorTooManyDigitsMinutes),
+          '${local.timeStringErrorTooManyDigitsHours}\n${local.timeStringErrorTooManyDigitsMinutes}'),
       DateTimeTestCase("000${placeholder}12", "000${placeholder}12", false, local.timeStringErrorTooManyDigitsHours),
       DateTimeTestCase("000${placeholder}12 ", "000${placeholder}12 ", false, local.timeStringErrorTooManyDigitsHours),
       DateTimeTestCase("000 12 ", "000 12 ", false, local.timeStringErrorTooManyDigitsHours),

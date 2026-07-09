@@ -15,8 +15,8 @@ abstract class DateTimeMultiFieldFormatterValidator extends FormatterValidator<T
   final Map<String, DateTimeFieldContent> resultsCache = {};
   final Map<String, FormatterValidator> formatterValidators = {};
 
-  void set formManager(FormManager formManager) {
-    if (_formManager == null) _formManager = formManager;
+  set formManager(FormManager formManager) {
+    _formManager ??= formManager;
   }
 
   FormManager get formManager => _formManager!;

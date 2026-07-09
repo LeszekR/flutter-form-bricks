@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/tabbed_form/tab_status.dart';
-import 'package:flutter_form_bricks/src/forms/base/form_brick.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 class TabData {

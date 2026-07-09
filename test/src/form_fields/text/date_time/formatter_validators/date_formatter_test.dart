@@ -1,6 +1,5 @@
 import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
-import 'package:flutter_form_bricks/src/utils/date_time_extension.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -42,23 +41,19 @@ void main() {
       DateTimeTestCase('3/132', '3/132', false, local.dateStringErrorTooManyDigitsDay),
       // --------------------------------------------
       DateTimeTestCase('112,312', '112,312', false,
-          local.dateStringErrorTooManyDigitsDay + '\n' + local.dateStringErrorTooManyDigitsMonth),
+          '${local.dateStringErrorTooManyDigitsDay}\n${local.dateStringErrorTooManyDigitsMonth}'),
       // --------------------------------------------
       DateTimeTestCase('000,12', '000,12', false, local.dateStringErrorTooManyDigitsMonth),
       DateTimeTestCase('112,12', '112,12', false, local.dateStringErrorTooManyDigitsMonth),
       // --------------------------------------------
       DateTimeTestCase('21000,12,9', '21000,12,9', false, local.dateStringErrorTooManyDigitsYear),
       DateTimeTestCase('21000,124,9', '21000,124,9', false,
-          local.dateStringErrorTooManyDigitsMonth + '\n' + local.dateStringErrorTooManyDigitsYear),
+          '${local.dateStringErrorTooManyDigitsMonth}\n${local.dateStringErrorTooManyDigitsYear}'),
       DateTimeTestCase(
           '21000,124,911',
           '21000,124,911',
           false,
-          local.dateStringErrorTooManyDigitsDay +
-              '\n' +
-              local.dateStringErrorTooManyDigitsMonth +
-              '\n' +
-              local.dateStringErrorTooManyDigitsYear),
+          '${local.dateStringErrorTooManyDigitsDay}\n${local.dateStringErrorTooManyDigitsMonth}\n${local.dateStringErrorTooManyDigitsYear}'),
       // --------------------------------------------
       DateTimeTestCase('01-0', '2024-01-00', false, local.dateErrorDay0),
       DateTimeTestCase('0100', '2024-01-00', false, local.dateErrorDay0),
@@ -225,19 +220,19 @@ void main() {
         '39/18/00',
         '2039-18-00',
         false,
-        local.dateErrorMonthOver12 + '\n' + local.dateErrorDay0,
+        '${local.dateErrorMonthOver12}\n${local.dateErrorDay0}',
       ),
       DateTimeTestCase(
         '01-0-80',
         '2001-00-80',
         false,
-        local.dateErrorMonth0 + '\n' + local.dateErrorTooManyDaysInMonth,
+        '${local.dateErrorMonth0}\n${local.dateErrorTooManyDaysInMonth}',
       ),
       DateTimeTestCase(
         '01-0-00',
         '2001-00-00',
         false,
-        local.dateErrorMonth0 + '\n' + local.dateErrorDay0,
+        '${local.dateErrorMonth0}\n${local.dateErrorDay0}',
       ),
       DateTimeTestCase(
         '01-0-31',
@@ -246,13 +241,13 @@ void main() {
         local.dateErrorMonth0,
       ),
       DateTimeTestCase(
-          '268855', '2026-88-55', false, local.dateErrorMonthOver12 + '\n' + local.dateErrorTooManyDaysInMonth),
-      DateTimeTestCase('0000 0 0', '0000-00-00', false, local.dateErrorMonth0 + '\n' + local.dateErrorDay0),
+          '268855', '2026-88-55', false, '${local.dateErrorMonthOver12}\n${local.dateErrorTooManyDaysInMonth}'),
+      DateTimeTestCase('0000 0 0', '0000-00-00', false, '${local.dateErrorMonth0}\n${local.dateErrorDay0}'),
       DateTimeTestCase(
         '558855',
         '2055-88-55',
         false,
-        local.dateErrorMonthOver12 + '\n' + local.dateErrorTooManyDaysInMonth,
+        '${local.dateErrorMonthOver12}\n${local.dateErrorTooManyDaysInMonth}',
       ),
     ];
     var passedOk = runDateTimeFormatterTest<DateTime>(local, testCases, dateFormatterWithLimits);

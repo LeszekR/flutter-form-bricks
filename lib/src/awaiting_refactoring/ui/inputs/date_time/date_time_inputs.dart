@@ -3,11 +3,6 @@ import 'package:flutter_form_bricks/shelf.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/state/double_widget_states_controller.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/inputs/text/text_input_base/basic_text_input.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_limits.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_multi_initial_set.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_required_fields.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/date_time/components/date_time_range_span.dart';
-import 'package:flutter_form_bricks/src/utils/date_time_extension.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/date_time/format_and_validate/dateTimeRange_formatter_validator.dart';
 
 import '../../buttons/buttons.dart';
 import '../../shortcuts/keyboard_shortcuts.dart';
@@ -166,7 +161,9 @@ class DateTimeInputs {
       onEditingComplete: () => _onEditingComplete(
         formManager,
         keyString,
-        (inputString) {},
+        (inputString) {
+          return null;
+        },
         // (inputString) => _dateFormatter.makeDateString(localizations, inputString, dateLimits),
         // rangeController,
       ),
@@ -256,7 +253,9 @@ class DateTimeInputs {
       onEditingComplete: () => _onEditingComplete(
         formManager,
         keyString,
-        (inputString) {},
+        (inputString) {
+          return null;
+        },
         // (inputString) => _timeFormatter.makeTimeString(localizations, inputString),
         // rangeController,
       ),
@@ -399,7 +398,7 @@ class DateTimeInputs {
     Duration? maxDateSpan,
   }) {
     final now = DateTime.now();
-    var dateSpan = maxDateSpan ?? Duration(days: 365);
+    var dateSpan = maxDateSpan ?? const Duration(days: 365);
     showDatePicker(
       context: context,
       initialDate: now,

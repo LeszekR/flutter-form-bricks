@@ -14,5 +14,5 @@ void main() {
 ///
 /// Intentionally empty: this file is the parameterized test machine only.
 final List<TextFieldBrickLayoutTestCase> textFieldBrickLayoutCases = <TextFieldBrickLayoutTestCase>[
-  TextFieldBrickLayoutTestCase(),
+  const TextFieldBrickLayoutTestCase(),
 ];

@@ -4,7 +4,7 @@ class ExampleFormSchema extends FormSchema {
   ExampleFormSchema()
       : super(
           formKey: GlobalKey<FormStateBrick>(),
-          initiallyFocusedKeyString: plainTextKeyString1,
+          initiallyFocusedKeyString: dateKeyString2,
         );
 
   @override
@@ -14,7 +14,7 @@ class ExampleFormSchema extends FormSchema {
         ),
         DateFieldDescriptor(
           keyString: dateKeyString1,
-          initialInput: TextEditingValue(),
+          initialInput: TextEditingValue(text: 'Gucio'),
         ),
         DateFieldDescriptor(
           keyString: dateKeyString2,

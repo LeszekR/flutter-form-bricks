@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/form_manager/form_state.dart';
 import 'package:flutter_form_bricks/src/awaiting_refactoring/ui/forms/single_form/single_form_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -12,7 +11,7 @@ void main() {
   const key = "key";
 
   setUp(() async {
-    await loadGlobalConfigurationForTests();
+    loadGlobalConfigurationForTests();
   });
 
   group('Decimal input field will allow to put incorrect chars but validator will complain about it', () {

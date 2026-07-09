@@ -1,11 +1,10 @@
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/forms/base/form_brick.dart';
 
 import '../test_implementations/test_form_manager.dart';
 
 
-typedef Widget TestWidgetBuilder(BuildContext context, FormManager formManager);
+typedef TestWidgetBuilder = Widget Function(BuildContext context, FormManager formManager);
 
 class TestSingleForm extends FormBrick {
   final TestWidgetBuilder widgetBuilder;

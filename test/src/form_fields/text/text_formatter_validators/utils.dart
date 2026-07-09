@@ -52,7 +52,7 @@ Future<void> enterTextAndUnfocusWidget(
   String enteredText,
 ) async {
   await tester.enterText(find.byKey(Key(keyString)), enteredText);
-  (await tester.state(find.byKey(ValueKey(keyString))) as FormFieldStateBrick).focusNode.unfocus();
+  (tester.state(find.byKey(ValueKey(keyString))) as FormFieldStateBrick).focusNode.unfocus();
   await tester.pump();
 }
 
@@ -158,11 +158,11 @@ Future<void> performAndCheckInputActions(
 }
 
 Future<FocusNode> getFocusNode(WidgetTester tester, String keyString) async {
-  return (await tester.state(find.byKey(ValueKey(keyString))) as FormFieldStateBrick).focusNode;
+  return (tester.state(find.byKey(ValueKey(keyString))) as FormFieldStateBrick).focusNode;
 }
 
 Future<TextEditingController> getTextEditingController(WidgetTester tester, String keyString) async {
-  return (await tester.state(find.byKey(ValueKey(keyString))) as TextFieldStateBrick).textEditingController;
+  return (tester.state(find.byKey(ValueKey(keyString))) as TextFieldStateBrick).textEditingController;
 }
 
 Map<String, Future<void> Function()> getInputs(WidgetTester tester) {

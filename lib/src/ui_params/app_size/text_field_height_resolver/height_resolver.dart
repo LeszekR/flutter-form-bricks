@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/src/form_fields/text/base/error_position.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_bottom_space_config.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_editing_area_config.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/widget_height_probe.dart';
-import 'package:flutter_form_bricks/src/form_fields/text/base/error_position.dart';
 
 /// Provides method for measuring TextField with error/helper/counter space below it. Then the measured
 /// height can be used in `LabelledBox` to create pixel-perfect layout with a button or outer label.

@@ -35,20 +35,22 @@ class ExampleFormState extends FormStateBrick {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+
             // SizedBox(height: appSize.spacerVerticalMedium),
             // PlainTextField(
-            //   keyString: plainTextKeyString2,
+            //   keyString: plainTextKeyString1,
             //   formManager: formManager,
             //   validateMode: ValidateModeBrick.noValidator,
             //   errorPosition: ErrorPosition.fixedSpaceBelowField,
             //   buttonConfig: TextFieldButtonConfig(distanceFromTextField: 4),
-            //   borderType: TextFieldBorderType.other,
-            //   // outerLabelConfig: OuterLabelConfig(
-            //   //   labelText: 'outer label',
-            //   //   side: Side.top,
-            //   //   height: 20,
-            //   // ),
+            //   // borderType: TextFieldBorderType.other,
+            //   outerLabelConfig: OuterLabelConfig(
+            //     labelText: 'outer label',
+            //     side: Side.top,
+            //     height: 20,
+            //   ),
             //   errorBuilder: (context, _) => Text('error text try'),
+            //   // TU PRZERWAŁEM - bottom space changes height on reload - and check how many times LabelledBox builds
             //   inputDecoration: InputDecoration(
             //     // helperText: 'helper text\njeszcze\ni tu tez\ni teraz\ni tu tez',
             //     helperMaxLines: 6,
@@ -64,7 +66,7 @@ class ExampleFormState extends FormStateBrick {
             //   height: 3,
             //   child: DecoratedBox(decoration: BoxDecoration(color: Colors.orange)),
             // ),
-
+            //
             // SizedBox(height: appSize.spacerVerticalMedium),
             // TextField(
             //   controller: TextEditingController(text: 'Ay'),
@@ -123,41 +125,34 @@ class ExampleFormState extends FormStateBrick {
               height: 3,
               child: DecoratedBox(decoration: BoxDecoration(color: Colors.orange)),
             ),
-            //
-            // SizedBox(height: appSize.spacerVerticalMedium),
-            // DateField(
-            //   keyString: dateKeyString2,
-            //   formManager: formManager,
-            //   width: 160,
-            //   withDatePicker: false,
-            //   // buttonConfig: TextFieldButtonConfig(
-            //   //   tooltipMaker: (context) => 'Kalendarz',
-            //   //   buttonStyle: ButtonStyle(
-            //   //     shape: WidgetStatePropertyAll(
-            //   //       BeveledRectangleBorder(
-            //   //         side: BorderSide(
-            //   //           width: 0.3,
-            //   //           color: Colors.red,
-            //   //         ),
-            //   //       ),
-            //   //     ),
-            //   //   ),
-            //   // ),
-            //   // outerLabelConfig: OuterLabelConfig(
-            //   //   labelText: 'Data',
-            //   //   align: Alignment.bottomLeft,
-            //   //   side: Side.left,
-            //   //   width: 50,
-            //   //   height: 26,
-            //   // ),
-            //   errorPosition: ErrorPosition.never,
-            //   // borderType: TextFieldBorderType.underline,
-            //   inputDecoration: InputDecoration(
-            //     labelText: 'data 2',
-            //     border: OutlineInputBorder(),
-            //   ),
-            // ),
 
+            SizedBox(height: appSize.spacerVerticalMedium),
+            DateField(
+              keyString: dateKeyString2,
+              formManager: formManager,
+              width: 160,
+              withDatePicker: false,
+              // buttonConfig: TextFieldButtonConfig(
+              //   tooltipMaker: (context) => 'Kalendarz',
+              //   buttonStyle: ButtonStyle(
+              //     shape: WidgetStatePropertyAll(
+              //       BeveledRectangleBorder(
+              //         side: BorderSide(
+              //           width: 0.3,
+              //           color: Colors.red,
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              errorPosition: ErrorPosition.never,
+              inputDecoration: InputDecoration(
+                labelText: 'data 2',
+                border: OutlineInputBorder(),
+              ),
+            ),
+
+            // ==================================================================
             // SizedBox(height: appSize.spacerVerticalMedium),
             // DateField(
             //   keyString: dateKeyString4,

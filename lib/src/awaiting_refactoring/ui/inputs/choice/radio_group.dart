@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
 
-import '../../../../ui_params/ui_params.dart';
-import '../../forms/form_manager/form_manager_OLD.dart';
-import 'checkbox_custom.dart';
-import 'choice_inputs.dart';
 
 class RadioGroup extends StatefulWidget {
   final String groupLabel;
@@ -36,7 +32,7 @@ class _RadioGroupState extends State<RadioGroup> {
   final Map<String, CheckboxCustom> _radioButtons = {};
   final Map<String, bool> _radioValues = {};
 
-  var _width = -10.0;
+  final _width = -10.0;
 
   var tmpBool = false;
 

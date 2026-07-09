@@ -19,7 +19,7 @@ abstract class FormManager extends ChangeNotifier {
   // TODO make flat map for tabbed form too and implement here
   Map<String, dynamic> collectInputs();
 
-  void set localizations(BricksLocalizations localizations) => _localizations = localizations;
+  set localizations(BricksLocalizations localizations) => _localizations = localizations;
 
   GlobalKey<FormStateBrick> get formKey => _formKey;
 

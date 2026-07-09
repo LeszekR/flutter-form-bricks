@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/string_literals/gen/bricks_localizations.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../../../test_implementations/test_form_manager.dart';
-import '../../../../../test_implementations/test_single_form.dart';
-import 'date_time_test_data.dart';
-import '../../../../../tools/test_utils.dart';
 
-Future<BricksLocalizations> getLocalizations() => BricksLocalizations.delegate.load(Locale('en'));
+Future<BricksLocalizations> getLocalizations() => BricksLocalizations.delegate.load(const Locale('en'));
 
 String? tryExpect(String input, dynamic actual, dynamic expected, String? errors, String testCaseTitle) {
   try {

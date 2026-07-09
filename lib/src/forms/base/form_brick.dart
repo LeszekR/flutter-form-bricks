@@ -19,7 +19,7 @@ abstract class FormBrick extends StatefulWidget {
   final String _errorTextKeyString = 'error_text_area';
   final FormManager _formManager;
 
-  FormBrick({super.key, required FormManager formManager}) : _formManager = formManager;
+  const FormBrick({super.key, required FormManager formManager}) : _formManager = formManager;
 
   get errorKeyString => _errorTextKeyString;
 
@@ -140,7 +140,7 @@ abstract class FormStateBrick<T extends FormBrick> extends State<T> {
   Widget buildErrorDisplayArea(BuildContext context) {
     var uiParams = UiParams.of(context);
     return Container(
-      constraints: BoxConstraints.expand(),
+      constraints: const BoxConstraints.expand(),
       padding: EdgeInsets.all(uiParams.appSize.paddingForm),
       // TODO 1 global error-area background color
       decoration: BoxDecoration(color: uiParams.appColor.greyLightest),

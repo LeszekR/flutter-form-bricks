@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
-import 'package:flutter_form_bricks/src/utils/string_extension.dart';
+import 'package:flutter_form_bricks/src/form_fields/components/formatter_validator_base/formatter_validator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../test_implementations/mock_formatter_validator.dart';
@@ -64,7 +64,7 @@ Future<void> _runInputChangeTest(
 ) async {
   final fieldKeyString = fieldKeyString1;
 
-  final FormatterValidatorListMaker<TextEditingValue, String> mockTextFormatValidListMaker = () => [
+  List<FormatterValidator> mockTextFormatValidListMaker() => [
         MockTextFormatterValidator(
           returnInputTxEdVal: testCase.newInput.toTextEditingValue(),
           mockError: testCase.error,

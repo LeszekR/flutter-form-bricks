@@ -123,9 +123,7 @@ class TimeField extends TextFieldBrick<DateTime> {
         super(
           buttonConfig: !withTimePicker
               ? null
-              : timePickerButtonConfig != null
-                  ? timePickerButtonConfig
-                  : const TextFieldButtonConfig(
+              : timePickerButtonConfig ?? const TextFieldButtonConfig(
                       iconData: Icons.arrow_drop_down,
                       buttonPosition: ButtonPosition.right,
                       tooltipMaker: TimePicker.timePickerTooltipMaker,

@@ -259,7 +259,7 @@ class DateTimeRangeFormatterValidator extends DateTimeMultiFieldFormatterValidat
   }
 
   DateTime _makeDateTimeOptional(String dateStartText, String? timeStartText) {
-    final String time = (timeStartText == null || timeStartText.isEmpty) ? '00:00' : '$timeStartText';
+    final String time = (timeStartText == null || timeStartText.isEmpty) ? '00:00' : timeStartText;
     return DateTime.parse('$dateStartText $time');
   }
 
@@ -282,6 +282,7 @@ class DateTimeRangeFormatterValidator extends DateTimeMultiFieldFormatterValidat
     return formManager.getFieldValue(keyString);
   }
 
+  @override
   void setComponentFieldsKeyStrings(String keyString) {
     _dateStartKeyString = DateTimeUtils.rangeDateStartKeyString(keyString);
     _timeStartKeyString = DateTimeUtils.rangeTimeStartKeyString(keyString);
@@ -296,6 +297,7 @@ class DateTimeRangeFormatterValidator extends DateTimeMultiFieldFormatterValidat
     ];
   }
 
+  @override
   void fillDateTimeFormatterValidatorsMap() {
     formatterValidators[_dateStartKeyString] = DateFormatterValidator(
       dateTimeUtils,

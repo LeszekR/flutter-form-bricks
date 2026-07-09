@@ -151,7 +151,7 @@ class LabelledBoxState extends State<LabelledBox> {
       context,
       widget.fieldBody,
       widget.errorPosition,
-      totalTextFieldHeight!,
+      totalTextFieldHeight,
     );
 
     final Widget bodyWithButton;

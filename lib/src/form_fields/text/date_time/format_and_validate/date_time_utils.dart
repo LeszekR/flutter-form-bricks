@@ -43,8 +43,9 @@ class DateTimeUtils {
     // text must contain allowed chars only
     RegExp allowedRegex = RegExp('([0-9]|$stringDelimiterPattern)');
     var allowedCharsLength = allowedRegex.allMatches(textEditingValue.text).length;
-    if (allowedCharsLength < textEditingValue.text.length)
+    if (allowedCharsLength < textEditingValue.text.length) {
       return DateTimeFieldContent.err(textEditingValue, errMsgForbiddenChars(bricksLocalizations, dateTimeOrBoth));
+    }
 
     // remove forbidden chars
     // replace all delimiter-type elements and groups with single '-'
@@ -58,15 +59,18 @@ class DateTimeUtils {
 
     // too many groups of digits
     var nDelimiters = RegExp(stringDelimiter).allMatches(textClean).length;
-    if (nDelimiters > maxNumberDelimiters)
+    if (nDelimiters > maxNumberDelimiters) {
       return DateTimeFieldContent.err(textEditingValue, erMsgTooManyDelimiters(bricksLocalizations, dateTimeOrBoth));
+    }
 
     // too few digits or too many digits
     var nDigits = RegExp('[0-9]').allMatches(textEditingValue.text).length;
-    if (nDigits + nDelimiters < minNumberOfDigits)
+    if (nDigits + nDelimiters < minNumberOfDigits) {
       return DateTimeFieldContent.err(textEditingValue, errMsgTooFewDigits(bricksLocalizations, dateTimeOrBoth));
-    if (nDigits > maxNDigits && nDelimiters == 0)
+    }
+    if (nDigits > maxNDigits && nDelimiters == 0) {
       return DateTimeFieldContent.err(textEditingValue, errMsgTooManyDigits(bricksLocalizations, dateTimeOrBoth));
+    }
 
     return DateTimeFieldContent.transient(textClean.toTextEditingValue());
   }
@@ -211,13 +215,13 @@ class DateTimeUtils {
   static const String datePostfix = '~date';
   static const String timePostfix = '~time';
 
-  static String makeRangeKeyStringStart(String rangeKeyString) => "${rangeKeyString}$startPostfix";
+  static String makeRangeKeyStringStart(String rangeKeyString) => "$rangeKeyString$startPostfix";
 
-  static String makeRangeKeyStringEnd(String rangeKeyString) => "${rangeKeyString}$endPostfix";
+  static String makeRangeKeyStringEnd(String rangeKeyString) => "$rangeKeyString$endPostfix";
 
-  static String makeDateKeyString(String rangePartKeyString) => "${rangePartKeyString}$datePostfix";
+  static String makeDateKeyString(String rangePartKeyString) => "$rangePartKeyString$datePostfix";
 
-  static String makeTimeKeyString(String rangePartKeyString) => "${rangePartKeyString}$timePostfix";
+  static String makeTimeKeyString(String rangePartKeyString) => "$rangePartKeyString$timePostfix";
 
   static String rangeDateStartKeyString(String rangeKeyString) =>
       makeDateKeyString(makeRangeKeyStringStart(rangeKeyString));

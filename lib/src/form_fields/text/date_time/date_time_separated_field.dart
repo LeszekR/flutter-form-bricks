@@ -18,8 +18,8 @@ import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_res
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_editing_area_config.dart';
 
 class DateTimeSeparatedFieldDescriptor extends FormFieldDescriptor<TextEditingValue, DateTime, DateTimeSeparatedField> {
-  String _dateKeyString;
-  String _timeKeyString;
+  final String _dateKeyString;
+  final String _timeKeyString;
   DateTimeSeparatedInitialSet? initialInputSet;
 
   DateTimeSeparatedFieldDescriptor({

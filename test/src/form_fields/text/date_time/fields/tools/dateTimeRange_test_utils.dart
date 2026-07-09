@@ -27,7 +27,7 @@ Future<TestSingleForm> prepDateTimeRangeTest(
   DateTimeRangeSpan dateTimeRangeSpan,
 ) async {
   // do not remove this - default Flutter test screen can be to narrow for default width of dateTimeRange
-  await tester.binding.setSurfaceSize(Size(1000, 1000));
+  await tester.binding.setSurfaceSize(const Size(1000, 1000));
 
   var globalKey = GlobalKey<TestSingleFormState>();
 

@@ -43,14 +43,12 @@ class DefaultAppColor extends AppColor {
 
   Color _lerp(String name, Color from, Color to, double factor) {
     Color? color = _lerpMap[name];
-    if (color == null) {
-      color = Color.lerp(from,to, factor)!;
-    }
+    color ??= Color.lerp(from,to, factor)!;
     _lerpMap[name] = color;
     return color;
   }
 
-  Map<String, Color> _lerpMap = {};
+  final Map<String, Color> _lerpMap = {};
   
   @override late final Color formFieldBorderOk = colorSchemeMain.primary;
   @override late final Color formFieldBorderHovered = colorSchemeMain.primary;

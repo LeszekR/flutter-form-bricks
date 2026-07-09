@@ -63,8 +63,9 @@ class TimeFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
   }
 
   DateTimeFieldContent makeTimeStringNoDelimiters(BricksLocalizations localizations, String text) {
-    if (text.length < 3)
+    if (text.length < 3) {
       return DateTimeFieldContent.err(text.toTextEditingValue(), localizations.timeStringErrorTooFewDigits);
+    }
 
     String formattedResult = '';
     String element = '';
@@ -137,8 +138,9 @@ class TimeFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
     DateTime parsedTime = _dateTimeUtils.timeMinutePrecisionFromString(timeString);
     resultContent = DateTimeFieldContent.ok(resultContent.input, parsedTime);
 
-    if (dateTimeLimits != null)
+    if (dateTimeLimits != null) {
       resultContent = _validateTimeLimits(localizations, resultContent, dateTimeLimits, timeString);
+    }
 
     return resultContent;
   }
@@ -188,16 +190,18 @@ class TimeFormatterValidator extends FormatterValidator<TextEditingValue, DateTi
         bool hasExcludedTimeWindow = minBeforeMaxDate && minAfterMaxTime;
 
         if (minMaxDatesEqual || hasExcludedTimeWindow) {
-          if (parsedTime.isBefore(minTime))
+          if (parsedTime.isBefore(minTime)) {
             return DateTimeFieldContent.err(
               timeString.toTextEditingValue(),
               localizations.timeErrorTooFarBack(minTime.toTimeStringMinutePrecision()),
             );
-          if (parsedTime.isAfter(maxTime))
+          }
+          if (parsedTime.isAfter(maxTime)) {
             return DateTimeFieldContent.err(
               timeString.toTextEditingValue(),
               localizations.timeErrorTooFarForward(maxTime.toTimeStringMinutePrecision()),
             );
+          }
         }
       }
     }

@@ -15,12 +15,13 @@ class DateTimeFormatterValidator extends FormatterValidator<TextEditingValue, Da
   final TimeFormatterValidator _timeFormatterValidator;
 
   DateTimeFormatterValidator(
-    DateTimeUtils _dateTimeUtils,
-    CurrentDate _currentDate, [
-    DateTimeLimits? _dateTimeLimits,
-  ])  : _dateFormatterValidator = DateFormatterValidator(_dateTimeUtils, _currentDate, _dateTimeLimits),
-        _timeFormatterValidator = TimeFormatterValidator(_dateTimeUtils, _dateTimeLimits);
+    DateTimeUtils dateTimeUtils,
+    CurrentDate currentDate, [
+    DateTimeLimits? dateTimeLimits,
+  ])  : _dateFormatterValidator = DateFormatterValidator(dateTimeUtils, currentDate, dateTimeLimits),
+        _timeFormatterValidator = TimeFormatterValidator(dateTimeUtils, dateTimeLimits);
 
+  @override
   DateTimeFieldContent run(
     BricksLocalizations localizations,
     String keyString,
@@ -31,10 +32,12 @@ class DateTimeFormatterValidator extends FormatterValidator<TextEditingValue, Da
     textTrimmed = textTrimmed.replaceAll(RegExp(' +'), ' ');
 
     var nSpaces = RegExp(' ').allMatches(textTrimmed).length;
-    if (nSpaces == 0)
+    if (nSpaces == 0) {
       return DateTimeFieldContent.err(textTrimmed.toTextEditingValue(), localizations.datetimeStringErrorNoSpace);
-    if (nSpaces > 1)
+    }
+    if (nSpaces > 1) {
       return DateTimeFieldContent.err(textTrimmed.toTextEditingValue(), localizations.datetimeStringErrorTooManySpaces);
+    }
 
     var elementsList = textTrimmed.split(RegExp(' '));
     DateTimeFieldContent dateFieldContent = DateTimeFieldContent.transient(elementsList[0].toTextEditingValue());

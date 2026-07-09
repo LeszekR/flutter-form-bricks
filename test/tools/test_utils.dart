@@ -48,12 +48,12 @@ Future<BricksLocalizations> prepareLocalizations(WidgetTester tester) async {
     MaterialApp(
       localizationsDelegates: BricksLocalizations.localizationsDelegates,
       supportedLocales: BricksLocalizations.supportedLocales,
-      locale: Locale('pl'),
+      locale: const Locale('pl'),
       home: Scaffold(
         body: Builder(
           builder: (BuildContext context) {
             localizations = BricksLocalizations.of(context);
-            return SizedBox();
+            return const SizedBox();
           },
         ),
       ),

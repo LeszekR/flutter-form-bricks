@@ -1,7 +1,6 @@
 import 'package:flutter_form_bricks/src/form_fields/text/no_whitespaces/no_whitespaces_formatter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../../tools/test_utils.dart';
 import 'utils.dart';
 
 void main() {
