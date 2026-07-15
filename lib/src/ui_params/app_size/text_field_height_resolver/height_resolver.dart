@@ -1,9 +1,10 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/error_position.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_bottom_space_config.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_editing_area_config.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/widget_height_probe.dart';
+
+import 'height_cache_resolver.dart';
 
 /// Provides method for measuring TextField with error/helper/counter space below it. Then the measured
 /// height can be used in `LabelledBox` to create pixel-perfect layout with a button or outer label.
@@ -42,7 +43,7 @@ class HeightResolver {
   }
 
   static SizedBox _buildHeightProbe(
-    Equatable cacheKey,
+    HeightCacheResolver? cacheKey,
     TextFieldEditingAreaConfig editingAreaConfig,
     TextFieldBottomWidgetConfig? bottomWidgetConfig,
     ValueChanged<double> onMeasured,
@@ -52,8 +53,11 @@ class HeightResolver {
       width: editingAreaConfig.width ?? 500,
       child: WidgetHeightProbe(
         cacheKey: cacheKey,
-        measuredWidgetBuilder: (context) =>
-            _buildTextFieldForMeasuring(editingAreaConfig, bottomWidgetConfig, controllers),
+        measuredWidgetBuilder: (context) => _buildTextFieldForMeasuring(
+          editingAreaConfig,
+          bottomWidgetConfig,
+          controllers,
+        ),
         onMeasured: onMeasured,
       ),
     );
@@ -66,11 +70,12 @@ class HeightResolver {
   ) {
     final controller = TextEditingController(text: editingAreaConfig.text);
     controllers.add(controller);
+
     return SizedBox(
       width: editingAreaConfig.width ?? 500,
       child: TextField(
         controller: controller,
-        decoration: _copyInputDecorationForOneBottomWidget(editingAreaConfig, bottomWidgetConfig),
+        decoration: _copyInputDecoration(editingAreaConfig, bottomWidgetConfig),
         style: editingAreaConfig.style,
         expands: editingAreaConfig.expands,
         strutStyle: editingAreaConfig.strutStyle,
@@ -80,7 +85,7 @@ class HeightResolver {
     );
   }
 
-  static InputDecoration _copyInputDecorationForOneBottomWidget(
+  static InputDecoration _copyInputDecoration(
     TextFieldEditingAreaConfig editingAreaConfig,
     TextFieldBottomWidgetConfig? bottomWidgetConfig,
   ) {

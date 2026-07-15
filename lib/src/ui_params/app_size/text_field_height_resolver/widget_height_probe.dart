@@ -1,5 +1,5 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/height_cache_resolver.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/widget_height_cache.dart';
 
 /// Object of this class measures height of rendered widget which it be builds with `measuredWidgetBuilder`.
@@ -18,8 +18,6 @@ import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_res
 ///
 /// Example use: see `LabelledBox`.
 class WidgetHeightProbe extends StatefulWidget {
-  final Equatable cacheKey;
-
   /// Builds the widget to be measured.
   final Widget Function(BuildContext) measuredWidgetBuilder;
 
@@ -29,11 +27,13 @@ class WidgetHeightProbe extends StatefulWidget {
   /// then cached value will be used.
   final ValueChanged<double> onMeasured;
 
+  final HeightCacheResolver? cacheKey;
+
   const WidgetHeightProbe({
     super.key,
-    required this.cacheKey,
     required this.measuredWidgetBuilder,
     required this.onMeasured,
+    this.cacheKey,
   });
 
   @override
@@ -41,12 +41,14 @@ class WidgetHeightProbe extends StatefulWidget {
 }
 
 class _WidgetHeightProbeState extends State<WidgetHeightProbe> {
-  final GlobalKey _probeKey = GlobalKey();
+  final GlobalKey _probeGlobalKey = GlobalKey();
+
+  bool get _shouldCacheTheResult => widget.cacheKey != null && widget.cacheKey!.isCacheable();
 
   @override
   void initState() {
     super.initState();
-    if (!WidgetHeightCache.isMeasured(widget.cacheKey)) {
+    if (!_shouldCacheTheResult || !WidgetHeightCache.isMeasured(widget.cacheKey!)) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _measure();
       });
@@ -55,15 +57,15 @@ class _WidgetHeightProbeState extends State<WidgetHeightProbe> {
 
   @override
   Widget build(BuildContext context) {
-    if (WidgetHeightCache.isMeasured(widget.cacheKey)) {
+    if (_shouldCacheTheResult && WidgetHeightCache.isMeasured(widget.cacheKey!)) {
       return const _OffstageDummy();
     }
 
-    WidgetHeightCache.registerAsMeasured(widget.cacheKey);
+    if (_shouldCacheTheResult) WidgetHeightCache.registerAsMeasured(widget.cacheKey!);
 
     return Offstage(
       child: Material(
-        key: _probeKey,
+        key: _probeGlobalKey,
         child: widget.measuredWidgetBuilder(context),
       ),
     );
@@ -79,7 +81,7 @@ class _WidgetHeightProbeState extends State<WidgetHeightProbe> {
 
       if (height == null) return;
 
-      WidgetHeightCache.putHeight(widget.cacheKey, height);
+      if (_shouldCacheTheResult) WidgetHeightCache.putHeight(widget.cacheKey!, height);
     }
 
     // set the height in the widget waiting for the value
@@ -87,7 +89,7 @@ class _WidgetHeightProbeState extends State<WidgetHeightProbe> {
   }
 
   double? _measureHeight() {
-    final BuildContext? context = _probeKey.currentContext;
+    final BuildContext? context = _probeGlobalKey.currentContext;
     if (context == null) return null;
 
     final renderObject = context.findRenderObject();

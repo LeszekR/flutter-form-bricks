@@ -35,7 +35,6 @@ class ExampleFormState extends FormStateBrick {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-
             SizedBox(height: appSize.spacerVerticalMedium),
             PlainTextField(
               keyString: plainTextKeyString1,
@@ -44,11 +43,11 @@ class ExampleFormState extends FormStateBrick {
               errorPosition: ErrorPosition.fixedSpaceBelowField,
               buttonConfig: TextFieldButtonConfig(distanceFromTextField: 4),
               // borderType: TextFieldBorderType.other,
-              outerLabelConfig: OuterLabelConfig(
-                labelText: 'outer label',
-                side: Side.top,
-                height: 20,
-              ),
+              // outerLabelConfig: OuterLabelConfig(
+              //   labelText: 'outer label',
+              //   side: Side.top,
+              //   height: 20,
+              // ),
               errorBuilder: (context, _) => Text('error text try'),
               // TU PRZERWAŁEM - bottom space changes height on reload - and check how many times LabelledBox builds
               inputDecoration: InputDecoration(
@@ -67,22 +66,22 @@ class ExampleFormState extends FormStateBrick {
               child: DecoratedBox(decoration: BoxDecoration(color: Colors.orange)),
             ),
 
-            SizedBox(height: appSize.spacerVerticalMedium),
-            TextField(
-              controller: TextEditingController(text: 'Ay'),
-              decoration: InputDecoration(
-                visualDensity: VisualDensity(vertical: -2),
-                border: UnderlineInputBorder(),
-                // labelText: 'data',
-                label: DecoratedBox(
-                    decoration: BoxDecoration(color: Colors.yellow),
-                    child: SizedBox(height: 35, child: Text('Smoczydło'))),
-                error: DecoratedBox(
-                    decoration: BoxDecoration(color: Colors.yellow),
-                    child: SizedBox(height: 35, child: Text('Smoczydło'))),
-              ),
-            ),
-
+            // SizedBox(height: appSize.spacerVerticalMedium),
+            // TextField(
+            //   controller: TextEditingController(text: 'Ay'),
+            //   decoration: InputDecoration(
+            //     visualDensity: VisualDensity(vertical: -2),
+            //     border: UnderlineInputBorder(),
+            //     // labelText: 'data',
+            //     label: DecoratedBox(
+            //         decoration: BoxDecoration(color: Colors.yellow),
+            //         child: SizedBox(height: 35, child: Text('Smoczydło'))),
+            //     error: DecoratedBox(
+            //         decoration: BoxDecoration(color: Colors.yellow),
+            //         child: SizedBox(height: 35, child: Text('Smoczydło'))),
+            //   ),
+            // ),
+            //
             SizedBox(height: appSize.spacerVerticalMedium),
             DateField(
               keyString: dateKeyString1,
@@ -136,51 +135,58 @@ class ExampleFormState extends FormStateBrick {
               inputDecoration: InputDecoration(
                 labelText: 'data 2',
                 border: OutlineInputBorder(),
-              // buttonConfig: TextFieldButtonConfig(
-              //   tooltipMaker: (context) => 'Kalendarz',
-              //   buttonStyle: ButtonStyle(
-              //     shape: WidgetStatePropertyAll(
-              //       BeveledRectangleBorder(
-              //         side: BorderSide(
-              //           width: 0.3,
-              //           color: Colors.red,
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              // ),
+                // buttonConfig: TextFieldButtonConfig(
+                //   tooltipMaker: (context) => 'Kalendarz',
+                //   buttonStyle: ButtonStyle(
+                //     shape: WidgetStatePropertyAll(
+                //       BeveledRectangleBorder(
+                //         side: BorderSide(
+                //           width: 0.3,
+                //           color: Colors.red,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ),
             ),
 
             // ==================================================================
-            // SizedBox(height: appSize.spacerVerticalMedium),
-            // DateField(
-            //   keyString: dateKeyString4,
-            //   formManager: formManager,
-            //   width: 160,
-            //   buttonConfig: TextFieldButtonConfig(
-            //     tooltipMaker: (context) => 'Kalendarz 4',
-            //     distanceFromTextField: 10,
-            //     syncStyleWithTextField: false,
-            //   ),
-            //   errorPosition: ErrorPosition.fixedSpaceBelowField,
-            //   errorBuilder: (context, errorText) => DecoratedBox(
-            //     decoration: BoxDecoration(color: Colors.orange),
-            //     child: SizedBox(
-            //       width: errorText.trim().isEmpty ? 0 : null,
-            //       height: 35,
-            //       child: Text(errorText),
-            //     ),
-            //   ),
-            //   borderType: TextFieldBorderType.underline,
-            //   inputDecoration: InputDecoration(
-            //     // visualDensity: VisualDensity(vertical:-4),
-            //     labelText: 'data 4 fixedSpace',
-            //     filled: true,
-            //     helper: SizedBox(height: 45, child: Text('Burba bum bum TRACH!')),
-            //   ),
-            // ),
-            //
+            // TU PRZERWAŁEM - error/no error changes height
+            SizedBox(height: appSize.spacerVerticalMedium),
+            DateField(
+              keyString: dateKeyString4,
+              formManager: formManager,
+              width: 160,
+              buttonConfig: TextFieldButtonConfig(
+                tooltipMaker: (context) => 'Kalendarz 4',
+                distanceFromTextField: 10,
+                syncStyleWithTextField: false,
+              ),
+              errorPosition: ErrorPosition.fixedSpaceBelowField,
+              errorBuilder: (context, errorText) => DecoratedBox(
+                decoration: BoxDecoration(color: Colors.orange),
+                child: SizedBox(
+                  width: errorText.trim().isEmpty ? 0 : null,
+                  height: 35,
+                  child: Text(errorText),
+                ),
+              ),
+              borderType: TextFieldBorderType.underline,
+              inputDecoration: InputDecoration(
+                // visualDensity: VisualDensity(vertical:-4),
+                labelText: 'data 4 fixedSpace',
+                filled: true,
+                helper: SizedBox(height: 45, child: Text('Burba bum bum TRACH!')),
+              ),
+            ),
+
+            SizedBox(
+              width: 300,
+              height: 3,
+              child: DecoratedBox(decoration: BoxDecoration(color: Colors.orange)),
+            ),
+
             // SizedBox(height: appSize.spacerVerticalMedium),
             // DateField(
             //   keyString: dateKeyString3,

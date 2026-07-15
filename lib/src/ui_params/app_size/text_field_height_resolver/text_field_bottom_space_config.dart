@@ -1,9 +1,11 @@
 import 'dart:math';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/height_cache_resolver.dart';
 
-class TextFieldBottomSpaceConfig extends Equatable {
+typedef HeightCacheKey = List<Object?>;
+
+class TextFieldBottomSpaceConfig extends HeightCacheResolver {
   final TextFieldBottomWidgetConfig? errorConfig;
   final TextFieldBottomWidgetConfig? helperConfig;
   final TextFieldBottomWidgetConfig? counterConfig;
@@ -27,9 +29,12 @@ class TextFieldBottomSpaceConfig extends Equatable {
         helperConfig,
         counterConfig,
       ];
+
+  @override
+  bool isCacheable() => true;
 }
 
-abstract class TextFieldBottomWidgetConfig extends Equatable {
+abstract class TextFieldBottomWidgetConfig extends HeightCacheResolver {
   final String? text;
   final Widget? widget;
   final TextStyle? textStyle;
@@ -44,7 +49,7 @@ abstract class TextFieldBottomWidgetConfig extends Equatable {
 
   static String makeDummyText(String? text, int? maxLines, bool followMaxLines) {
     if (maxLines == null) {
-      return 'Ay';  // even if text is null we declare some text to measure the height of the widget with error
+      return 'Ay'; // even if text is null we declare some text to measure the height of the widget with error
     } else {
       if (maxLines < 2) {
         return 'Ay';
@@ -78,13 +83,39 @@ abstract class TextFieldBottomWidgetConfig extends Equatable {
 
   bool get isEmpty => text == null && widget == null && maxLines == null;
 
+  List<Object?> _makeHeightCacheKey(Widget? widget) {
+    if (widget == null) return [];
+    if (widget is! Text) return [widget];
+
+    String text = widget.data!.split('\n').map((e) => 'Ay\n').reduce((v, e) => '$v$e');
+    text = text.substring(0, text.length - 1);
+
+    return [
+      text,
+      widget.textSpan,
+      widget.style,
+      widget.strutStyle,
+      widget.textDirection,
+      widget.locale,
+      widget.softWrap,
+      widget.overflow,
+      widget.textScaler,
+      widget.maxLines,
+      widget.textWidthBasis,
+      widget.textHeightBehavior,
+    ];
+  }
+
   @override
   List<Object?> get props => [
         text,
-        widget,
         textStyle,
         maxLines,
+        ..._makeHeightCacheKey(widget),
       ];
+
+  @override
+  bool isCacheable() => widget is Text;
 }
 
 class ErrorWidgetConfig extends TextFieldBottomWidgetConfig {
@@ -96,5 +127,5 @@ class HelperWidgetConfig extends TextFieldBottomWidgetConfig {
 }
 
 class CounterWidgetConfig extends TextFieldBottomWidgetConfig {
-  const CounterWidgetConfig({required super.text, required super.widget, required super.textStyle});
+  const CounterWidgetConfig({required super.text, required super.widget, required super.textStyle, super.maxLines});
 }

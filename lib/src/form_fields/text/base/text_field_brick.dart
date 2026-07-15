@@ -16,6 +16,8 @@ import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_res
 
 enum TextFieldBorderType { outline, underline, other }
 
+typedef ErrorBuilder = Widget Function(BuildContext context, String errorText);
+
 abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditingValue, V> {
   final double? width;
 
@@ -64,14 +66,12 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
   /// `heightOfTextArea`.
   final double? heightOfTextArea;
 
-  /// `Widget` builder to be used when error is to be predefined `Widget` not just text formatted with `errorStyle` in
-  /// `inputDecoration`.
-  ///
   /// In order to preserve both original Flutter functionality of declaring error `Widget`
-  /// and this lib's functionality of automatic filling error text on validation it was necessary to
-  /// block native Flutter's `error` declaration in `inputDecoration` and use builder instead.
-  /// Other than that the functionality of using `Widget` error is the same.
-  final Widget Function(BuildContext context, String errorText)? errorBuilder;
+  /// and **Flutter Form Bricks'** functionality of automatic filling error text on validation
+  /// it was necessary to block native Flutter's `error` declaration in `inputDecoration` and use builder instead.
+  /// In its simplest form `errorBuilder` should build `Text` widget with error text.
+  /// However it can build any widget displaying the errorText.
+  final ErrorBuilder errorBuilder;
 
   TextFieldBrick({
     super.key,
@@ -90,7 +90,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
     this.errorPosition = ErrorPosition.dynamicSpaceBelowField,
     this.buttonConfig,
     this.heightOfTextArea,
-    this.errorBuilder,
+    ErrorBuilder? errorBuilder,
     //
     // Flutter TextField
     TextMagnifierConfiguration? magnifierConfiguration,
@@ -244,6 +244,7 @@ abstract class TextFieldBrick<V extends Object> extends FormFieldBrick<TextEditi
             'Do not declare errorBuilder when the error is never to be shown below the TextField'),
         assert(errorBuilder != null ? inputDecoration?.errorStyle == null : true,
             'Do not declare errorStyle when errorBuilder is declared'),
+        errorBuilder = errorBuilder ?? ((context, errorText) => Text(errorText)),
         textFieldConfig = TextFieldConfig(
           magnifierConfiguration: magnifierConfiguration,
           groupId: groupId,
@@ -401,7 +402,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
         child: ValueListenableBuilder<Set<WidgetState>>(
           valueListenable: _compoundWidgetStatesController!,
           builder: (context, states, _) {
-            return _makeBody(context);
+            return _buildBody(context);
           },
         ),
       );
@@ -412,13 +413,13 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       return ValueListenableBuilder<Set<WidgetState>>(
         valueListenable: _statesController!,
         builder: (context, states, _) {
-          return _makeBody(context);
+          return _buildBody(context);
         },
       );
     }
   }
 
-  LabelledBox _makeBody(BuildContext context) {
+  LabelledBox _buildBody(BuildContext context) {
     final decoration = TextFieldDecorationMaker.makeInputDecoration(
       context: context,
       uiParams: UiParams.of(context),
@@ -431,12 +432,13 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       errorText: _showErrorBelowField ? errorText : null,
     );
 
-    final TextField textField = _makeTextField(textEditingController, decoration, _style);
+    final TextField textField = _buildTextField(textEditingController, decoration, _style);
     final TextFieldBorderType effectiveBorderType = _getEffectiveBorderType(decoration);
     TextFieldEditingAreaConfig editingAreaConfig = _makeEditingAreaConfig(context, decoration);
-    TextFieldBottomSpaceConfig bottomSpaceConfig = _buildBottomSpaceConfig(context, decoration, widget.errorPosition);
+    TextFieldBottomSpaceConfig bottomSpaceConfig = _makeBottomSpaceConfig(context, decoration, widget.errorPosition);
 
     return LabelledBox(
+      key: ValueKey('LabelledBox-$keyString'),
       fieldBody: textField,
       editingAreaConfig: editingAreaConfig,
       bottomSpaceConfig: bottomSpaceConfig,
@@ -463,7 +465,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     return editingAreaConfig;
   }
 
-  TextFieldBottomSpaceConfig _buildBottomSpaceConfig(
+  TextFieldBottomSpaceConfig _makeBottomSpaceConfig(
     BuildContext context,
     InputDecoration decoration,
     ErrorPosition errorPosition,
@@ -473,19 +475,24 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       return const TextFieldBottomSpaceConfig.empty();
     }
 
-    final bool withHelper = decoration.helperText != null || decoration.helper != null;
-    final bool withCounter = decoration.counterText != null || decoration.counter != null;
+    final bool withErrorConfig = widget.errorPosition == ErrorPosition.fixedSpaceBelowField;
+    final bool withHelperConfig = decoration.helperText != null || decoration.helper != null;
+    final bool withCounterConfig = decoration.counterText != null || decoration.counter != null;
 
     final String errorDummyText = TextFieldBottomWidgetConfig.makeDummyText(errorText, decoration.errorMaxLines, true);
 
+    final Widget errorWidget = widget.errorBuilder.call(context, errorText ?? errorDummyText);
+
     final TextFieldBottomSpaceConfig bottomSpaceConfig = TextFieldBottomSpaceConfig(
-      errorConfig: ErrorWidgetConfig(
-        text: errorDummyText,
-        widget: widget.errorBuilder?.call(context, errorText ?? errorDummyText),
-        textStyle: decoration.errorStyle,
-        maxLines: decoration.errorMaxLines,
-      ),
-      helperConfig: !withHelper
+      errorConfig: !withErrorConfig
+          ? null
+          : ErrorWidgetConfig(
+              text: errorDummyText,
+              widget: errorWidget,
+              textStyle: decoration.errorStyle,
+              maxLines: decoration.errorMaxLines,
+            ),
+      helperConfig: !withHelperConfig
           ? null
           : HelperWidgetConfig(
               text: TextFieldBottomWidgetConfig.makeDummyText(decoration.helperText, decoration.helperMaxLines, false),
@@ -493,7 +500,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
               textStyle: decoration.helperStyle,
               maxLines: decoration.helperMaxLines,
             ),
-      counterConfig: !withCounter
+      counterConfig: !withCounterConfig
           ? null
           : CounterWidgetConfig(
               text: decoration.counterText,
@@ -516,7 +523,7 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
     return TextFieldBorderType.other;
   }
 
-  TextField _makeTextField(
+  TextField _buildTextField(
     TextEditingController controller,
     InputDecoration decoration,
     TextStyle style,
@@ -614,7 +621,6 @@ abstract class TextFieldStateBrick<V extends Object, B extends TextFieldBrick<V>
       states.add(WidgetState.error);
     }
     return states;
-    // return _compoundWidgetStatesController != null ? _compoundWidgetStatesController!.states : _statesController!.value;
   }
 
   bool _skipOnChanged = false;

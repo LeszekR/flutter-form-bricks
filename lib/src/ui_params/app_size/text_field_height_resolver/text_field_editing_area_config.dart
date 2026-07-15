@@ -1,10 +1,11 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bricks/shelf.dart';
+import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/height_cache_resolver.dart';
 import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_config.dart';
 
 @immutable
-class TextFieldEditingAreaConfig extends Equatable {
+class TextFieldEditingAreaConfig extends HeightCacheResolver {
+  final double zoom;
   final InputDecoration decoration;
   final TextStyle style;
   final String? text;
@@ -17,6 +18,7 @@ class TextFieldEditingAreaConfig extends Equatable {
   final int? maxLines;
 
   const TextFieldEditingAreaConfig._({
+    required this.zoom,
     required this.decoration,
     required this.style,
     required this.text,
@@ -48,6 +50,7 @@ class TextFieldEditingAreaConfig extends Equatable {
     }
 
     return TextFieldEditingAreaConfig._(
+      zoom: UiParams.of(context).appSize.zoom,
       decoration: decoration.withoutBottomWidgets(),
       style: config.style ?? UiParams.of(context).appTheme.textStyle(),
       text: effectiveText,
@@ -74,4 +77,7 @@ class TextFieldEditingAreaConfig extends Equatable {
         textScaleFactor,
         useMaterial3,
       ];
+
+  @override
+  bool isCacheable() => true;
 }

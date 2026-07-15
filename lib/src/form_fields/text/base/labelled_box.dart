@@ -7,7 +7,6 @@ import 'package:flutter_form_bricks/src/form_fields/text/base/text_field_button.
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/height_resolver.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_bottom_space_config.dart';
 import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/text_field_editing_area_config.dart';
-import 'package:flutter_form_bricks/src/ui_params/app_size/text_field_height_resolver/widget_height_cache.dart';
 
 /// Wrapper for a `TextField` that introduces the following features:
 /// - integrated button on the left or right of the  `TextField`.
@@ -94,14 +93,6 @@ class LabelledBoxState extends State<LabelledBox> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _heightWithError = WidgetHeightCache.getHeight(widget.bottomSpaceConfig.errorConfig);
-    _heightWithHelper = WidgetHeightCache.getHeight(widget.bottomSpaceConfig.helperConfig);
-    _heightWithCounter = WidgetHeightCache.getHeight(widget.bottomSpaceConfig.counterConfig);
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _textEditingAreaHeight = null;
@@ -111,25 +102,39 @@ class LabelledBoxState extends State<LabelledBox> {
   @override
   Widget build(BuildContext context) {
     final AppSize appSize = UiParams.of(context).appSize;
+    _textEditingAreaHeight = appSize.getCachedWidgetHeight(widget.editingAreaConfig);
+    _heightWithError = appSize.getCachedWidgetHeight(widget.bottomSpaceConfig.errorConfig);
+    _heightWithHelper = appSize.getCachedWidgetHeight(widget.bottomSpaceConfig.helperConfig);
+    _heightWithCounter = appSize.getCachedWidgetHeight(widget.bottomSpaceConfig.counterConfig);
 
     final bool measureForButton = widget.buttonConfig != null;
 
-    final isOuterLabelLocatedHorizontally =
+    final bool isOuterLabelLocatedHorizontally =
         widget.outerLabelConfig?.side == Side.left || widget.outerLabelConfig?.side == Side.right;
     final bool measureForOuterLabel = widget.outerLabelConfig != null && isOuterLabelLocatedHorizontally;
 
-    final bool measureForBottomSpace = !widget.bottomSpaceConfig.isEmpty;
+    bool measureForBottomSpace;
+    if (widget.errorPosition == ErrorPosition.fixedSpaceBelowField) {
+      final bool measureForError = widget.bottomSpaceConfig.errorConfig != null && _heightWithError == null;
+      final bool measureForHelper = widget.bottomSpaceConfig.helperConfig != null && _heightWithHelper == null;
+      final bool measureForCounter = widget.bottomSpaceConfig.counterConfig != null && _heightWithCounter == null;
+      measureForBottomSpace = measureForError || measureForHelper || measureForCounter;
+    } else {
+      measureForBottomSpace = false;
+    }
 
-    if (_textEditingAreaHeight == null && (measureForButton || measureForOuterLabel || measureForBottomSpace)) {
-      _setHeightOfTextEditingArea(appSize.getCachedWidgetHeight(cacheKey: widget.editingAreaConfig));
+    // TU PRZERWAŁEM - broken, fix it, infinite loop
+    if (measureForButton || measureForOuterLabel || measureForBottomSpace) {
 
-      // Get height of the editable text area of InputDecorator and the total height
-      // of TextField with error/helper/counter - text-s/widget-s if needed for fixedSpaceBelowField.
-      // If ever Flutter exposes API for getting the heights - refactor and get rid of the TextFieldHeightProbe use.
-      if (_textEditingAreaHeight == null) {
+      if (!_areHeightsMeasured()) {
+        // Get height of the editable text area of InputDecorator and the total height
+        // of TextField with error/helper/counter - text-s/widget-s if needed for fixedSpaceBelowField.
+        // If ever Flutter exposes API for getting the heights - refactor and get rid of the TextFieldHeightProbe use.
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!mounted) return;
-          setState(() {}); // now use measured heights and build the LabelledBox
+          if (!mounted) {
+            return;
+          }
+          setState(() {}); // trigger second build - now with already measured heights
         });
         return HeightResolver.buildHeightMeasuringProbes(
           widget.editingAreaConfig,
@@ -147,6 +152,12 @@ class LabelledBoxState extends State<LabelledBox> {
     }
 
     // Once we have height of the editable text area of InputDecorator - we build LabelledBox
+    return _buildBody(context, appSize);
+  }
+
+  bool _areHeightsMeasured() => _textEditingAreaHeight != null;
+
+  SizedBox _buildBody(BuildContext context, AppSize appSize) {
     final Widget sizedFieldBody = _wrapTextFieldWithFixedBottomSpace(
       context,
       widget.fieldBody,

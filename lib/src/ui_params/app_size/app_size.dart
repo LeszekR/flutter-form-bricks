@@ -8,7 +8,7 @@ abstract class AppSize {
   /// Base scaling factor (from AppScale, or const 1.0 if no scaling)
   double zoom;
 
-  double? getCachedWidgetHeight({required Equatable cacheKey}){
+  double? getCachedWidgetHeight(Equatable? cacheKey){
     return WidgetHeightCache.getHeight(cacheKey);
   }
 
